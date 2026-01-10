@@ -47,12 +47,20 @@ struct MarkdownWebView: NSViewRepresentable {
     }
 
     private func loadMarkedJS() -> String {
-        // Try to load from bundle resources
-        guard let url = Bundle.main.url(forResource: "marked.min", withExtension: "js", subdirectory: "Resources"),
-              let js = try? String(contentsOf: url, encoding: .utf8) else {
-            // Fallback: return empty string (will show raw markdown)
+        // Try to load from bundle resources (file is at bundle root, not in subdirectory)
+        guard let url = Bundle.main.url(forResource: "marked.min", withExtension: "js") else {
+            print("[MarkdownWebView] ERROR: Could not find marked.min.js in bundle")
+            print("[MarkdownWebView] Bundle path: \(Bundle.main.bundlePath)")
+            print("[MarkdownWebView] Bundle JS resources: \(Bundle.main.paths(forResourcesOfType: "js", inDirectory: nil))")
             return ""
         }
+
+        guard let js = try? String(contentsOf: url, encoding: .utf8) else {
+            print("[MarkdownWebView] ERROR: Could not read marked.min.js from \(url)")
+            return ""
+        }
+
+        print("[MarkdownWebView] Successfully loaded marked.js (\(js.count) characters)")
         return js
     }
 
@@ -71,6 +79,52 @@ struct MarkdownWebView: NSViewRepresentable {
             .replacingOccurrences(of: "`", with: "\\`")
             .replacingOccurrences(of: "$", with: "\\$")
 
+        // If marked.js failed to load, show error message instead
+        if markedJS.isEmpty {
+            return """
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <style>
+                body {
+                    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
+                    padding: 20px;
+                    background: #fff;
+                    color: #333;
+                }
+                .error {
+                    color: #ff3b30;
+                    padding: 20px;
+                    background: #fff3cd;
+                    border-radius: 8px;
+                    border: 1px solid #ffb020;
+                    margin-bottom: 20px;
+                }
+                pre {
+                    background: #f5f5f5;
+                    padding: 15px;
+                    border-radius: 6px;
+                    overflow-x: auto;
+                    white-space: pre-wrap;
+                    font-family: 'SF Mono', Menlo, monospace;
+                    font-size: 13px;
+                }
+                </style>
+            </head>
+            <body>
+                <div class="error">
+                    <h2>⚠️ Markdown Rendering Failed</h2>
+                    <p>The marked.js library failed to load from the bundle.</p>
+                    <p>Showing raw markdown instead.</p>
+                </div>
+                <pre>\(escapedMarkdown)</pre>
+            </body>
+            </html>
+            """
+        }
+
         return """
         <!DOCTYPE html>
         <html>
@@ -87,13 +141,23 @@ struct MarkdownWebView: NSViewRepresentable {
             \(markedJS)
             </script>
             <script>
-                marked.setOptions({
-                    gfm: true,
-                    breaks: true,
-                    headerIds: true,
-                    mangle: false
-                });
-                document.getElementById('content').innerHTML = marked.parse(`\(escapedMarkdown)`);
+                // Check if marked.js loaded successfully
+                if (typeof marked === 'undefined') {
+                    document.getElementById('content').innerHTML =
+                        '<div style="color: #ff3b30; padding: 20px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffb020;">' +
+                        '<h2>⚠️ Markdown Rendering Failed</h2>' +
+                        '<p>The marked.js library failed to initialize.</p>' +
+                        '<p>Showing raw markdown instead.</p>' +
+                        '</div><pre>' + `\(escapedMarkdown)` + '</pre>';
+                } else {
+                    marked.setOptions({
+                        gfm: true,
+                        breaks: true,
+                        headerIds: true,
+                        mangle: false
+                    });
+                    document.getElementById('content').innerHTML = marked.parse(`\(escapedMarkdown)`);
+                }
             </script>
         </body>
         </html>

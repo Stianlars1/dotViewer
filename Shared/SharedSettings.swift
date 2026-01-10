@@ -107,7 +107,7 @@ final class SharedSettings: @unchecked Sendable {
 
     /// Markdown render mode: "raw" or "rendered"
     var markdownRenderMode: String {
-        get { userDefaults.string(forKey: "markdownRenderMode") ?? "raw" }
+        get { userDefaults.string(forKey: "markdownRenderMode") ?? "rendered" }
         set {
             userDefaults.set(newValue, forKey: "markdownRenderMode")
             userDefaults.synchronize()
