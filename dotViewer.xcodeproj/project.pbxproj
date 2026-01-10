@@ -16,6 +16,7 @@
 		80F9F4FA2F1228E100412E97 /* AddCustomExtensionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F82F1228E100412E97 /* AddCustomExtensionSheet.swift */; };
 		80F9F4FB2F1228E100412E97 /* FileTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F92F1228E100412E97 /* FileTypesView.swift */; };
 		80F9F4FD2F1228F500412E97 /* PreviewContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */; };
+		80F9F4FF2F12A43500412E97 /* marked.min.js in Resources */ = {isa = PBXBuildFile; fileRef = 80F9F4FE2F12A43500412E97 /* marked.min.js */; };
 		A1000001 /* dotViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* dotViewerApp.swift */; };
 		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
 		A1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000003 /* Assets.xcassets */; };
@@ -65,6 +66,7 @@
 		80F9F4F82F1228E100412E97 /* AddCustomExtensionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCustomExtensionSheet.swift; sourceTree = "<group>"; };
 		80F9F4F92F1228E100412E97 /* FileTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypesView.swift; sourceTree = "<group>"; };
 		80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContentView.swift; sourceTree = "<group>"; };
+		80F9F4FE2F12A43500412E97 /* marked.min.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = marked.min.js; sourceTree = "<group>"; };
 		A2000001 /* dotViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dotViewerApp.swift; sourceTree = "<group>"; };
 		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		A2000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 		A6000003 /* QuickLookPreview */ = {
 			isa = PBXGroup;
 			children = (
+				80F9F4FE2F12A43500412E97 /* marked.min.js */,
 				80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */,
 				A2000020 /* PreviewViewController.swift */,
 				A2000023 /* MarkdownWebView.swift */,
@@ -261,6 +264,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80F9F4FF2F12A43500412E97 /* marked.min.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

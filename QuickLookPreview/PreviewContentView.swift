@@ -70,10 +70,9 @@ struct PreviewContentView: View {
 
                 // Content (fades in when ready)
                 if isMarkdown && showRenderedMarkdown {
-                    // Rendered markdown view using WKWebView
-                    MarkdownWebView(
-                        markdown: state.content,
-                        baseURL: state.fileURL?.deletingLastPathComponent(),
+                    // Rendered markdown view (Typora-inspired native SwiftUI)
+                    MarkdownRenderedViewLegacy(
+                        content: state.content,
                         fontSize: settings.fontSize
                     )
                     .opacity(isReady ? 1 : 0)
@@ -498,6 +497,67 @@ struct MarkdownRenderedViewLegacy: View {
                 let alt = String(imageMatch.1)
                 let url = String(imageMatch.2)
                 blocks.append(MarkdownBlock(type: .image, content: alt, imageURL: url))
+            } else if trimmed.hasPrefix("|") && trimmed.hasSuffix("|") {
+                // Table row - collect all table rows
+                flushParagraph()
+                var tableRows: [[String]] = []
+                var tableIndex = currentIndex
+
+                while tableIndex < lines.count {
+                    let tableLine = lines[tableIndex].trimmingCharacters(in: .whitespaces)
+                    if tableLine.hasPrefix("|") && tableLine.hasSuffix("|") {
+                        // Parse cells from this row
+                        let inner = String(tableLine.dropFirst().dropLast())
+                        let cells = inner.split(separator: "|").map { String($0).trimmingCharacters(in: .whitespaces) }
+
+                        // Skip separator rows (e.g., |---|---|)
+                        let isSeparator = cells.allSatisfy { cell in
+                            cell.replacingOccurrences(of: "-", with: "")
+                                .replacingOccurrences(of: ":", with: "")
+                                .isEmpty
+                        }
+
+                        if !isSeparator {
+                            tableRows.append(cells)
+                        }
+                        tableIndex += 1
+                    } else {
+                        break
+                    }
+                }
+
+                if !tableRows.isEmpty {
+                    var block = MarkdownBlock(type: .table, content: "")
+                    block.tableRows = tableRows
+                    blocks.append(block)
+                }
+                currentIndex = tableIndex - 1  // -1 because loop will increment
+            } else if trimmed.hasPrefix("- [") || trimmed.hasPrefix("* [") {
+                // Task list item
+                flushParagraph()
+                var taskItems: [(checked: Bool, text: String)] = []
+
+                while currentIndex < lines.count {
+                    let taskLine = lines[currentIndex].trimmingCharacters(in: .whitespaces)
+                    if let match = taskLine.firstMatch(of: /^[-*]\s*\[([ xX])\]\s*(.*)$/) {
+                        let isChecked = String(match.1).lowercased() == "x"
+                        let text = String(match.2)
+                        taskItems.append((checked: isChecked, text: text))
+                        currentIndex += 1
+                    } else if taskLine.hasPrefix("- [") || taskLine.hasPrefix("* [") {
+                        // Malformed task item - skip
+                        currentIndex += 1
+                    } else {
+                        break
+                    }
+                }
+
+                if !taskItems.isEmpty {
+                    var block = MarkdownBlock(type: .taskList, content: "")
+                    block.taskItems = taskItems
+                    blocks.append(block)
+                }
+                currentIndex -= 1  // -1 because loop will increment
             } else if trimmed.hasPrefix("- ") || trimmed.hasPrefix("* ") {
                 flushParagraph()
                 // Collect consecutive list items
@@ -568,6 +628,8 @@ struct MarkdownBlock: Identifiable {
     let content: String
     var language: String? = nil
     var imageURL: String? = nil
+    var tableRows: [[String]]? = nil  // For tables: array of rows, each row is array of cells
+    var taskItems: [(checked: Bool, text: String)]? = nil  // For task lists
 }
 
 enum MarkdownBlockType {
@@ -580,6 +642,8 @@ enum MarkdownBlockType {
     case horizontalRule
     case spacer
     case image
+    case table
+    case taskList
 }
 
 struct MarkdownBlockView: View {
@@ -783,6 +847,63 @@ struct MarkdownBlockView: View {
                     )
                 }
                 .padding(.vertical, 8)
+
+            case .table:
+                // Render markdown table
+                if let rows = block.tableRows, !rows.isEmpty {
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(Array(rows.enumerated()), id: \.offset) { rowIndex, row in
+                            HStack(spacing: 0) {
+                                ForEach(Array(row.enumerated()), id: \.offset) { _, cell in
+                                    Text(parseInlineMarkdown(cell))
+                                        .font(rowIndex == 0 ?
+                                              .system(size: fontSize * 0.9, weight: .semibold) :
+                                              .system(size: fontSize * 0.9))
+                                        .foregroundStyle(rowIndex == 0 ? headingColor : bodyColor)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(
+                                            rowIndex == 0 ? codeBlockBg :
+                                            (rowIndex % 2 == 0 ? Color.clear : codeBlockBg.opacity(0.5))
+                                        )
+                                        .overlay(
+                                            Rectangle()
+                                                .stroke(hrColor, lineWidth: 0.5)
+                                        )
+                                }
+                            }
+                        }
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(hrColor, lineWidth: 1)
+                    )
+                    .padding(.vertical, 8)
+                }
+
+            case .taskList:
+                // Render task list with checkboxes
+                if let items = block.taskItems {
+                    VStack(alignment: .leading, spacing: 6) {
+                        ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                            HStack(alignment: .top, spacing: 10) {
+                                Image(systemName: item.checked ? "checkmark.square.fill" : "square")
+                                    .font(.system(size: fontSize * 1.1))
+                                    .foregroundStyle(item.checked ? Color.green : blockquoteText)
+                                    .frame(width: 20)
+                                Text(parseInlineMarkdown(item.text))
+                                    .font(bodyFont)
+                                    .foregroundStyle(item.checked ? blockquoteText : bodyColor)
+                                    .strikethrough(item.checked, color: blockquoteText)
+                                    .lineSpacing(fontSize * 0.4)
+                            }
+                        }
+                    }
+                    .padding(.leading, 8)
+                    .padding(.vertical, 6)
+                }
             }
         }
     }
