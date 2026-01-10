@@ -70,9 +70,13 @@ struct PreviewContentView: View {
 
                 // Content (fades in when ready)
                 if isMarkdown && showRenderedMarkdown {
-                    // Rendered markdown view
-                    MarkdownRenderedView(content: state.content, fontSize: settings.fontSize)
-                        .opacity(isReady ? 1 : 0)
+                    // Rendered markdown view using WKWebView
+                    MarkdownWebView(
+                        markdown: state.content,
+                        baseURL: state.fileURL?.deletingLastPathComponent(),
+                        fontSize: settings.fontSize
+                    )
+                    .opacity(isReady ? 1 : 0)
                 } else {
                     // Code view
                     GeometryReader { geometry in
@@ -381,9 +385,10 @@ struct CodeContentView: View {
     }
 }
 
-// MARK: - Markdown Rendered View (Typora-inspired)
+// MARK: - Legacy Markdown Rendered View (Typora-inspired SwiftUI version)
+// Preserved as fallback in case WKWebView has issues
 
-struct MarkdownRenderedView: View {
+struct MarkdownRenderedViewLegacy: View {
     let content: String
     let fontSize: Double
 
