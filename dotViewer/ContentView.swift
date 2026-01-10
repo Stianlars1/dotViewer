@@ -56,7 +56,7 @@ struct StatusView: View {
                     Image(systemName: "eye.fill")
                         .font(.system(size: 64))
                         .foregroundStyle(.blue.gradient)
-
+                        .modifier(BounceEffectModifier())
                     Text("dotViewer")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -65,6 +65,7 @@ struct StatusView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
+            
                 .padding(.top, 20)
 
                 // Extension Status Card
@@ -516,6 +517,33 @@ struct SettingsView: View {
                     .background(themeManager.backgroundColor, in: RoundedRectangle(cornerRadius: 12))
                 }
 
+                // Danger Zone Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Danger Zone")
+                        .font(.headline)
+                        .foregroundStyle(.red)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Remove dotViewer from your system")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Button(role: .destructive) {
+                            uninstallApp()
+                        } label: {
+                            Label("Uninstall dotViewer", systemImage: "trash")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                    }
+                    .padding()
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.red.opacity(0.3), lineWidth: 1)
+                    )
+                }
+
                 Spacer()
             }
             .padding(32)
@@ -544,6 +572,29 @@ struct SettingsView: View {
                 SharedSettings.shared.preferredEditorBundleId = bundleId
                 SharedSettings.shared.preferredEditorName = appName
                 preferredEditorName = appName
+            }
+        }
+    }
+
+    private func uninstallApp() {
+        let alert = NSAlert()
+        alert.messageText = "Uninstall dotViewer?"
+        alert.informativeText = "This will move dotViewer to the Trash. You can restore it from the Trash if needed."
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: "Uninstall")
+        alert.addButton(withTitle: "Cancel")
+
+        if alert.runModal() == .alertFirstButtonReturn {
+            let appURL = Bundle.main.bundleURL
+            do {
+                try FileManager.default.trashItem(at: appURL, resultingItemURL: nil)
+                NSApplication.shared.terminate(nil)
+            } catch {
+                let errorAlert = NSAlert()
+                errorAlert.messageText = "Failed to Uninstall"
+                errorAlert.informativeText = "Could not move dotViewer to Trash: \(error.localizedDescription)"
+                errorAlert.alertStyle = .critical
+                errorAlert.runModal()
             }
         }
     }
@@ -646,6 +697,19 @@ struct CustomEditorButton: View {
         }
         .buttonStyle(.plain)
         .help(isCustomSelected ? "Custom app: \(customAppName ?? "Unknown")" : "Choose a custom app")
+    }
+}
+
+// MARK: - Bounce Effect Modifier
+
+struct BounceEffectModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(macOS 15.0, *) {
+            content
+                .symbolEffect(.bounce.up.byLayer, options: .nonRepeating)
+        } else {
+            content
+        }
     }
 }
 

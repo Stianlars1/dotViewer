@@ -30,6 +30,8 @@
 		A1000032 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ThemeManager.swift */; };
 		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
 		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
+		A1000033 /* MarkdownWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* MarkdownWebView.swift */; };
+		A1000034 /* MarkdownStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000024 /* MarkdownStyles.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +77,8 @@
 		A2000020 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		A2000021 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A2000022 /* QuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookPreview.entitlements; sourceTree = "<group>"; };
+		A2000023 /* MarkdownWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownWebView.swift; sourceTree = "<group>"; };
+		A2000024 /* MarkdownStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownStyles.swift; sourceTree = "<group>"; };
 		A3000002 /* QuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -142,6 +146,8 @@
 			children = (
 				80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */,
 				A2000020 /* PreviewViewController.swift */,
+				A2000023 /* MarkdownWebView.swift */,
+				A2000024 /* MarkdownStyles.swift */,
 				A2000021 /* Info.plist */,
 				A2000022 /* QuickLookPreview.entitlements */,
 			);
@@ -287,6 +293,8 @@
 				A1000030 /* LanguageDetector.swift in Sources */,
 				A1000031 /* SyntaxHighlighter.swift in Sources */,
 				A1000032 /* ThemeManager.swift in Sources */,
+				A1000033 /* MarkdownWebView.swift in Sources */,
+				A1000034 /* MarkdownStyles.swift in Sources */,
 				80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */,
 				80F9F4F32F1228C700412E97 /* FileTypeModel.swift in Sources */,
 				80F9F4F42F1228C700412E97 /* FileTypeRegistry.swift in Sources */,
