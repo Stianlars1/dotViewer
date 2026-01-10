@@ -25,6 +25,10 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     // MARK: - QLPreviewingController
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
+        // DEBUG: Log that the extension is being invoked
+        NSLog("[dotViewer QL] preparePreviewOfFile called for: \(url.lastPathComponent)")
+        print("[dotViewer QL] preparePreviewOfFile called for: \(url.lastPathComponent)")
+
         let filename = url.lastPathComponent
         let ext = url.pathExtension.lowercased()
 

@@ -1,181 +1,179 @@
 import SwiftUI
-import WebKit
 
-/// WKWebView-based markdown renderer with full HTML, table, and image support
-struct MarkdownWebView: NSViewRepresentable {
+/// Native markdown renderer using SwiftUI Text with AttributedString
+/// Much simpler than WKWebView - no JavaScript, no bundle loading issues
+struct MarkdownWebView: View {
     let markdown: String
     let baseURL: URL?
     let fontSize: Double
 
-    func makeNSView(context: Context) -> WKWebView {
-        let config = WKWebViewConfiguration()
-        config.preferences.isTextInteractionEnabled = true
+    @State private var attributedContent: AttributedString?
+    @State private var parseError: String?
 
-        let webView = WKWebView(frame: .zero, configuration: config)
-        webView.navigationDelegate = context.coordinator
-
-        // Disable zoom and scroll bounce for cleaner preview
-        webView.allowsMagnification = false
-
-        // Set transparent background initially
-        webView.setValue(false, forKey: "drawsBackground")
-
-        return webView
-    }
-
-    func updateNSView(_ webView: WKWebView, context: Context) {
-        let html = generateHTML()
-        webView.loadHTMLString(html, baseURL: baseURL)
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator()
-    }
-
-    class Coordinator: NSObject, WKNavigationDelegate {
-        // Prevent navigation to external links
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            if navigationAction.navigationType == .linkActivated {
-                if let url = navigationAction.request.url {
-                    NSWorkspace.shared.open(url)
+    var body: some View {
+        ScrollView {
+            if let error = parseError {
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Markdown parsing error")
+                        .font(.headline)
+                        .foregroundColor(.red)
+                    Text(error)
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Divider()
+                    Text(markdown)
+                        .font(.system(size: fontSize, design: .monospaced))
+                        .textSelection(.enabled)
                 }
-                decisionHandler(.cancel)
+                .padding()
+            } else if let content = attributedContent {
+                Text(content)
+                    .font(.system(size: fontSize))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
             } else {
-                decisionHandler(.allow)
+                // Fallback: show raw markdown while parsing
+                Text(markdown)
+                    .font(.system(size: fontSize, design: .monospaced))
+                    .textSelection(.enabled)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding()
+            }
+        }
+        .background(backgroundColor)
+        .onAppear {
+            parseMarkdown()
+        }
+    }
+
+    private var backgroundColor: Color {
+        ThemeManager.shared.backgroundColor
+    }
+
+    private func parseMarkdown() {
+        NSLog("[MarkdownWebView] Parsing markdown (\(markdown.count) chars)")
+
+        do {
+            // Use Apple's native AttributedString markdown parser
+            var options = AttributedString.MarkdownParsingOptions()
+            options.interpretedSyntax = .inlineOnlyPreservingWhitespace
+
+            // Try full parsing first
+            let parsed = try AttributedString(
+                markdown: markdown,
+                options: AttributedString.MarkdownParsingOptions(
+                    interpretedSyntax: .full,
+                    failurePolicy: .returnPartiallyParsedIfPossible
+                )
+            )
+
+            // Apply styling
+            var styled = parsed
+            // Set base font
+            styled.font = .system(size: fontSize)
+
+            attributedContent = styled
+            NSLog("[MarkdownWebView] ✅ Markdown parsed successfully")
+
+        } catch {
+            NSLog("[MarkdownWebView] ⚠️ Markdown parsing failed: \(error.localizedDescription)")
+            // On error, try simpler inline-only parsing
+            do {
+                let simpleParsed = try AttributedString(
+                    markdown: markdown,
+                    options: AttributedString.MarkdownParsingOptions(
+                        interpretedSyntax: .inlineOnlyPreservingWhitespace,
+                        failurePolicy: .returnPartiallyParsedIfPossible
+                    )
+                )
+                attributedContent = simpleParsed
+            } catch {
+                // If all parsing fails, show raw text
+                parseError = error.localizedDescription
             }
         }
     }
-
-    private func loadMarkedJS() -> String {
-        // Use Coordinator.self (a class) to find the extension's bundle
-        // Note: Bundle.main points to main app, not the extension!
-        // MarkdownWebView is a struct, so we can't use Bundle(for: Self.self)
-        let bundle = Bundle(for: Coordinator.self)
-
-        guard let url = bundle.url(forResource: "marked.min", withExtension: "js") else {
-            print("[MarkdownWebView] ERROR: Could not find marked.min.js")
-            print("[MarkdownWebView] Bundle: \(bundle.bundleIdentifier ?? "unknown")")
-            print("[MarkdownWebView] Path: \(bundle.bundlePath)")
-            return ""
-        }
-
-        guard let js = try? String(contentsOf: url, encoding: .utf8) else {
-            print("[MarkdownWebView] ERROR: Could not read marked.min.js from \(url)")
-            return ""
-        }
-
-        print("[MarkdownWebView] ✅ Loaded marked.js (\(js.count) chars) from \(bundle.bundleIdentifier ?? "bundle")")
-        return js
-    }
-
-    private func generateHTML() -> String {
-        let css = MarkdownStyles.css(
-            for: ThemeManager.shared.selectedTheme,
-            fontSize: fontSize,
-            isDark: isDarkTheme
-        )
-
-        let markedJS = loadMarkedJS()
-
-        // Escape markdown for JavaScript template literal
-        let escapedMarkdown = markdown
-            .replacingOccurrences(of: "\\", with: "\\\\")
-            .replacingOccurrences(of: "`", with: "\\`")
-            .replacingOccurrences(of: "$", with: "\\$")
-
-        // If marked.js failed to load, show error message instead
-        if markedJS.isEmpty {
-            return """
-            <!DOCTYPE html>
-            <html>
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <style>
-                body {
-                    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', sans-serif;
-                    padding: 20px;
-                    background: #fff;
-                    color: #333;
-                }
-                .error {
-                    color: #ff3b30;
-                    padding: 20px;
-                    background: #fff3cd;
-                    border-radius: 8px;
-                    border: 1px solid #ffb020;
-                    margin-bottom: 20px;
-                }
-                pre {
-                    background: #f5f5f5;
-                    padding: 15px;
-                    border-radius: 6px;
-                    overflow-x: auto;
-                    white-space: pre-wrap;
-                    font-family: 'SF Mono', Menlo, monospace;
-                    font-size: 13px;
-                }
-                </style>
-            </head>
-            <body>
-                <div class="error">
-                    <h2>⚠️ Markdown Rendering Failed</h2>
-                    <p>The marked.js library failed to load from the bundle.</p>
-                    <p>Showing raw markdown instead.</p>
-                </div>
-                <pre>\(escapedMarkdown)</pre>
-            </body>
-            </html>
-            """
-        }
-
-        return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <style>
-            \(css)
-            </style>
-        </head>
-        <body>
-            <div id="content"></div>
-            <script>
-            \(markedJS)
-            </script>
-            <script>
-                // Check if marked.js loaded successfully
-                if (typeof marked === 'undefined') {
-                    document.getElementById('content').innerHTML =
-                        '<div style="color: #ff3b30; padding: 20px; background: #fff3cd; border-radius: 8px; border: 1px solid #ffb020;">' +
-                        '<h2>⚠️ Markdown Rendering Failed</h2>' +
-                        '<p>The marked.js library failed to initialize.</p>' +
-                        '<p>Showing raw markdown instead.</p>' +
-                        '</div><pre>' + `\(escapedMarkdown)` + '</pre>';
-                } else {
-                    marked.setOptions({
-                        gfm: true,
-                        breaks: true,
-                        headerIds: true,
-                        mangle: false
-                    });
-                    document.getElementById('content').innerHTML = marked.parse(`\(escapedMarkdown)`);
-                }
-            </script>
-        </body>
-        </html>
-        """
-    }
-
-    private var isDarkTheme: Bool {
-        let theme = ThemeManager.shared.selectedTheme
-        return theme.contains("Dark") || theme == "tokyoNight" || theme == "blackout" ||
-               (theme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
-    }
 }
 
-// MARK: - Marked.js Library (loaded from Resources)
+// MARK: - Alternative: Rich Markdown View with better styling
 
-/// Marked.js library is loaded from QuickLookPreview/Resources/marked.min.js
-/// Source: https://github.com/markedjs/marked (MIT License)
+/// A more feature-rich markdown view that handles common elements better
+struct RichMarkdownView: View {
+    let markdown: String
+    let fontSize: Double
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                ForEach(parseLines(), id: \.self) { line in
+                    renderLine(line)
+                }
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .background(ThemeManager.shared.backgroundColor)
+    }
+
+    private func parseLines() -> [String] {
+        markdown.components(separatedBy: "\n")
+    }
+
+    @ViewBuilder
+    private func renderLine(_ line: String) -> some View {
+        if line.hasPrefix("# ") {
+            Text(line.dropFirst(2))
+                .font(.system(size: fontSize * 2, weight: .bold))
+                .padding(.top, 8)
+        } else if line.hasPrefix("## ") {
+            Text(line.dropFirst(3))
+                .font(.system(size: fontSize * 1.5, weight: .bold))
+                .padding(.top, 6)
+        } else if line.hasPrefix("### ") {
+            Text(line.dropFirst(4))
+                .font(.system(size: fontSize * 1.25, weight: .semibold))
+                .padding(.top, 4)
+        } else if line.hasPrefix("- ") || line.hasPrefix("* ") {
+            HStack(alignment: .top, spacing: 8) {
+                Text("•")
+                Text(parseInlineMarkdown(String(line.dropFirst(2))))
+            }
+            .font(.system(size: fontSize))
+        } else if line.hasPrefix("```") {
+            // Code block marker - simplified handling
+            Text(line)
+                .font(.system(size: fontSize, design: .monospaced))
+                .foregroundColor(.secondary)
+        } else if line.hasPrefix(">") {
+            Text(parseInlineMarkdown(String(line.dropFirst(1).trimmingCharacters(in: .whitespaces))))
+                .font(.system(size: fontSize, weight: .regular).italic())
+                .padding(.leading, 16)
+                .overlay(
+                    Rectangle()
+                        .fill(Color.secondary.opacity(0.3))
+                        .frame(width: 4),
+                    alignment: .leading
+                )
+        } else if line.trimmingCharacters(in: .whitespaces).isEmpty {
+            Spacer().frame(height: 8)
+        } else {
+            Text(parseInlineMarkdown(line))
+                .font(.system(size: fontSize))
+        }
+    }
+
+    private func parseInlineMarkdown(_ text: String) -> AttributedString {
+        // Try to parse inline markdown (bold, italic, code, links)
+        do {
+            return try AttributedString(
+                markdown: text,
+                options: AttributedString.MarkdownParsingOptions(
+                    interpretedSyntax: .inlineOnlyPreservingWhitespace
+                )
+            )
+        } catch {
+            return AttributedString(text)
+        }
+    }
+}
