@@ -1,39 +1,69 @@
-# Installer Assets
+# DMG Installer Assets
 
-This folder contains assets for the DMG installer.
+This folder contains assets for creating the DMG installer for dotViewer.
 
-## Required Files
+## Background Image
 
-### dmg-background.png
-- **Size**: 660x400 pixels
-- **Purpose**: Background image for the DMG installer window
+**File**: `dmg-background.png` (660x400 pixels)
 
-### Design Guidelines
+### Design Specifications
 
-Reference: Firefox Browser and Zap DMG installers
+Create a background image with these characteristics:
+- **Size**: 660×400 pixels
+- **Style**: Light, modern, matches macOS Big Sur+ design language
+- **Color scheme**: Light gray gradient (#f5f5f7 to #e8e8ed) or subtle pattern
+- **Elements**:
+  - "dotViewer" title at top
+  - Subtle instruction text (e.g., "Drag to Applications folder to install")
+  - Optional: Faint code/syntax pattern in background (on-brand)
 
-**Layout:**
-- App icon position: ~150px from left, centered vertically
-- Applications folder link: ~500px from left, centered vertically
-- Title text: Top center
+### Design Tools
 
-**Design Elements:**
-1. Blue gradient background (matches dotViewer brand)
-2. "dotViewer" title at top in clean white/light font
-3. Curved arrow graphic pointing from app to Applications
-4. Optional: Subtle code/syntax pattern in background
-
-**Color Palette:**
-- Primary Blue: #007AFF (system blue)
-- Background gradient: #1a1a2e to #16213e
-- Text: White or light blue
-
-## Creating the Background
-
-You can create the background in:
-- Figma
 - Sketch
+- Figma
 - Photoshop
-- Pixelmator
+- Affinity Designer
+- Or any image editor
 
-Or use a simple solid color background - the script will work without a custom background.
+### Template Guide
+
+1. Create 660×400px canvas
+2. Add light gradient background
+3. Add "dotViewer" text at top (SF Pro font, ~48pt)
+4. Add instruction text near bottom (SF Pro font, ~14pt, secondary color)
+5. Optional: Add subtle curved arrow from left (app position: 150,200) to right (Applications position: 500,200)
+6. Export as PNG
+
+### Example Layout
+
+```
+┌────────────────────────────────────────────────┐
+│                                                │
+│              dotViewer                         │
+│                                                │
+│                                                │
+│                                                │
+│     [App Icon]    ─→    [Applications]        │
+│                                                │
+│                                                │
+│    Drag to Applications to install             │
+│                                                │
+└────────────────────────────────────────────────┘
+```
+
+## Using the Installer Script
+
+Once you have the background image:
+
+```bash
+# 1. Build your app in Xcode (Product → Archive → Distribute → Copy App)
+# 2. Save to build/Release/dotViewer.app
+# 3. Run the installer script
+./scripts/create-installer.sh
+```
+
+The DMG will be created in `dist/dotViewer-1.0-Installer.dmg`
+
+## Without Background Image
+
+If you don't have a background image yet, the script will create a basic DMG without custom styling. You can still use it for testing!

@@ -10,6 +10,10 @@ DerivedData/
 *.xcuserdatad/
 xcuserdata/
 
+# Distribution
+dist/
+*.dmg
+
 # Swift Package Manager
 .build/
 Packages/

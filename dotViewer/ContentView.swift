@@ -56,7 +56,7 @@ struct StatusView: View {
                     Image(systemName: "eye.fill")
                         .font(.system(size: 64))
                         .foregroundStyle(.blue.gradient)
-                        .modifier(BounceEffectModifier())
+                        .modifier(BounceEffectModifierFallback())
                     Text("dotViewer")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -702,11 +702,24 @@ struct CustomEditorButton: View {
 
 // MARK: - Bounce Effect Modifier
 
+@available(macOS 15.0, *)
 struct BounceEffectModifier: ViewModifier {
+    @State private var didAppear = false
+
+    func body(content: Content) -> some View {
+        content
+            .symbolEffect(.bounce.up.byLayer, options: .nonRepeating, value: didAppear)
+            .onAppear {
+                didAppear = true
+            }
+    }
+}
+
+// Fallback for older macOS versions
+struct BounceEffectModifierFallback: ViewModifier {
     func body(content: Content) -> some View {
         if #available(macOS 15.0, *) {
-            content
-                .symbolEffect(.bounce.up.byLayer, options: .nonRepeating)
+            content.modifier(BounceEffectModifier())
         } else {
             content
         }
