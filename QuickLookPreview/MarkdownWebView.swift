@@ -47,11 +47,15 @@ struct MarkdownWebView: NSViewRepresentable {
     }
 
     private func loadMarkedJS() -> String {
-        // Try to load from bundle resources (file is at bundle root, not in subdirectory)
-        guard let url = Bundle.main.url(forResource: "marked.min", withExtension: "js") else {
-            print("[MarkdownWebView] ERROR: Could not find marked.min.js in bundle")
-            print("[MarkdownWebView] Bundle path: \(Bundle.main.bundlePath)")
-            print("[MarkdownWebView] Bundle JS resources: \(Bundle.main.paths(forResourcesOfType: "js", inDirectory: nil))")
+        // Use Coordinator.self (a class) to find the extension's bundle
+        // Note: Bundle.main points to main app, not the extension!
+        // MarkdownWebView is a struct, so we can't use Bundle(for: Self.self)
+        let bundle = Bundle(for: Coordinator.self)
+
+        guard let url = bundle.url(forResource: "marked.min", withExtension: "js") else {
+            print("[MarkdownWebView] ERROR: Could not find marked.min.js")
+            print("[MarkdownWebView] Bundle: \(bundle.bundleIdentifier ?? "unknown")")
+            print("[MarkdownWebView] Path: \(bundle.bundlePath)")
             return ""
         }
 
@@ -60,7 +64,7 @@ struct MarkdownWebView: NSViewRepresentable {
             return ""
         }
 
-        print("[MarkdownWebView] Successfully loaded marked.js (\(js.count) characters)")
+        print("[MarkdownWebView] ✅ Loaded marked.js (\(js.count) chars) from \(bundle.bundleIdentifier ?? "bundle")")
         return js
     }
 

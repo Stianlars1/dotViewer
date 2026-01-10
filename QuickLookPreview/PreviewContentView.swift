@@ -262,7 +262,13 @@ struct PreviewHeaderView: View {
                 [url],
                 withApplicationAt: appURL,
                 configuration: NSWorkspace.OpenConfiguration()
-            ) { _, _ in }
+            ) { app, error in
+                if let error = error {
+                    print("[PreviewContentView] Error opening file: \(error.localizedDescription)")
+                } else {
+                    print("[PreviewContentView] ✅ Opened file in \(app?.localizedName ?? "app")")
+                }
+            }
         } else {
             // Open with system default
             NSWorkspace.shared.open(url)
