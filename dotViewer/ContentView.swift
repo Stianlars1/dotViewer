@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 enum NavigationItem: String, CaseIterable, Identifiable {
     case status = "Status"
@@ -278,6 +279,8 @@ struct SettingsView: View {
     @State private var showPreviewHeader = SharedSettings.shared.showPreviewHeader
     @State private var markdownRenderMode = SharedSettings.shared.markdownRenderMode
     @State private var previewUnknownFiles = SharedSettings.shared.previewUnknownFiles
+    @State private var showOpenInAppButton = SharedSettings.shared.showOpenInAppButton
+    @State private var preferredEditorName = SharedSettings.shared.preferredEditorName ?? ""
 
     private let themes = [
         ("auto", "Auto (System)"),
@@ -401,6 +404,66 @@ struct SettingsView: View {
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                 }
 
+                // Open in App Section
+                VStack(alignment: .leading, spacing: 16) {
+                    Text("Open in App")
+                        .font(.headline)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Toggle("Show \"Open in App\" Button", isOn: $showOpenInAppButton)
+                            .onChange(of: showOpenInAppButton) { _, newValue in
+                                SharedSettings.shared.showOpenInAppButton = newValue
+                            }
+
+                        Text("Adds a button to the preview header to quickly open files")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Divider()
+
+                        HStack {
+                            Text("Preferred Editor")
+                            Spacer()
+                            if preferredEditorName.isEmpty {
+                                Text("System Default")
+                                    .foregroundStyle(.secondary)
+                            } else {
+                                Text(preferredEditorName)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+
+                        HStack(spacing: 12) {
+                            EditorButton(name: "VS Code", bundleId: "com.microsoft.VSCode", icon: "curlybraces.square", selectedEditor: $preferredEditorName)
+                            EditorButton(name: "Xcode", bundleId: "com.apple.dt.Xcode", icon: "hammer", selectedEditor: $preferredEditorName)
+                            EditorButton(name: "Sublime", bundleId: "com.sublimetext.4", icon: "text.alignleft", selectedEditor: $preferredEditorName)
+                            EditorButton(name: "TextEdit", bundleId: "com.apple.TextEdit", icon: "doc.text", selectedEditor: $preferredEditorName)
+                        }
+
+                        HStack(spacing: 12) {
+                            Button("Choose App...") {
+                                chooseCustomEditor()
+                            }
+
+                            if !preferredEditorName.isEmpty {
+                                Button("Reset to Default") {
+                                    SharedSettings.shared.preferredEditorBundleId = nil
+                                    SharedSettings.shared.preferredEditorName = nil
+                                    preferredEditorName = ""
+                                }
+                                .foregroundStyle(.red)
+                            }
+                        }
+                        .padding(.top, 4)
+
+                        Text("Files will open in the selected app when you click the button in Quick Look preview")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                }
+
                 // Theme Preview
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Theme Preview")
@@ -434,6 +497,76 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func chooseCustomEditor() {
+        let panel = NSOpenPanel()
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        panel.allowedContentTypes = [.application]
+        panel.directoryURL = URL(fileURLWithPath: "/Applications")
+        panel.message = "Choose an application to open files with"
+        panel.prompt = "Select"
+
+        if panel.runModal() == .OK, let url = panel.url {
+            if let bundle = Bundle(url: url),
+               let bundleId = bundle.bundleIdentifier {
+                let appName = bundle.infoDictionary?["CFBundleName"] as? String
+                    ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String
+                    ?? url.deletingPathExtension().lastPathComponent
+
+                SharedSettings.shared.preferredEditorBundleId = bundleId
+                SharedSettings.shared.preferredEditorName = appName
+                preferredEditorName = appName
+            }
+        }
+    }
+}
+
+// MARK: - Editor Button
+
+struct EditorButton: View {
+    let name: String
+    let bundleId: String
+    let icon: String
+    @Binding var selectedEditor: String
+
+    private var isInstalled: Bool {
+        NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) != nil
+    }
+
+    private var isSelected: Bool {
+        SharedSettings.shared.preferredEditorBundleId == bundleId
+    }
+
+    var body: some View {
+        Button {
+            if isInstalled {
+                SharedSettings.shared.preferredEditorBundleId = bundleId
+                SharedSettings.shared.preferredEditorName = name
+                selectedEditor = name
+            }
+        } label: {
+            VStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 20))
+                Text(name)
+                    .font(.caption2)
+            }
+            .frame(width: 70, height: 60)
+            .background(isSelected ? Color.accentColor.opacity(0.2) : Color.clear)
+            .background(.regularMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
+            )
+        }
+        .buttonStyle(.plain)
+        .opacity(isInstalled ? 1 : 0.4)
+        .disabled(!isInstalled)
+        .help(isInstalled ? "Open files in \(name)" : "\(name) is not installed")
     }
 }
 

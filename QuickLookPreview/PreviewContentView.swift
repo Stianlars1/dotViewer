@@ -11,6 +11,7 @@ struct PreviewState {
     let fileSize: String
     let isTruncated: Bool
     let truncationMessage: String?
+    let fileURL: URL?
 }
 
 // MARK: - Main Preview View
@@ -44,6 +45,7 @@ struct PreviewContentView: View {
                     lineCount: state.lineCount,
                     fileSize: state.fileSize,
                     content: state.content,
+                    fileURL: state.fileURL,
                     isMarkdown: isMarkdown,
                     showRenderedMarkdown: $showRenderedMarkdown
                 )
@@ -132,10 +134,13 @@ struct PreviewHeaderView: View {
     let lineCount: Int
     let fileSize: String
     let content: String
+    let fileURL: URL?
     let isMarkdown: Bool
     @Binding var showRenderedMarkdown: Bool
 
     @State private var copied = false
+
+    private var settings: SharedSettings { SharedSettings.shared }
 
     var body: some View {
         HStack(spacing: 12) {
@@ -198,6 +203,29 @@ struct PreviewHeaderView: View {
                 .font(.system(size: 11))
                 .foregroundStyle(.secondary)
 
+            // Open in App button
+            if settings.showOpenInAppButton, let url = fileURL {
+                Button {
+                    openInPreferredApp(url: url)
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.up.forward.app")
+                            .font(.system(size: 11))
+                        if let editorName = settings.preferredEditorName {
+                            Text(editorName)
+                                .font(.system(size: 10, weight: .medium))
+                        }
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(Color.green.opacity(0.15))
+                    .foregroundStyle(Color.green)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.borderless)
+                .help(settings.preferredEditorName != nil ? "Open in \(settings.preferredEditorName!)" : "Open in default app")
+            }
+
             // Copy button
             Button {
                 copyToClipboard()
@@ -219,6 +247,21 @@ struct PreviewHeaderView: View {
         copied = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             copied = false
+        }
+    }
+
+    private func openInPreferredApp(url: URL) {
+        if let bundleId = settings.preferredEditorBundleId,
+           let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) {
+            // Open with preferred app
+            NSWorkspace.shared.open(
+                [url],
+                withApplicationAt: appURL,
+                configuration: NSWorkspace.OpenConfiguration()
+            ) { _, _ in }
+        } else {
+            // Open with system default
+            NSWorkspace.shared.open(url)
         }
     }
 
@@ -338,36 +381,47 @@ struct CodeContentView: View {
     }
 }
 
-// MARK: - Markdown Rendered View
+// MARK: - Markdown Rendered View (Typora-inspired)
 
 struct MarkdownRenderedView: View {
     let content: String
     let fontSize: Double
 
-    private var renderedContent: AttributedString {
-        do {
-            var options = AttributedString.MarkdownParsingOptions()
-            options.interpretedSyntax = .inlineOnlyPreservingWhitespace
-            return try AttributedString(markdown: content, options: options)
-        } catch {
-            return AttributedString(content)
-        }
-    }
+    // Typora-inspired color palette
+    private let headingColor = Color(nsColor: NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0))
+    private let bodyColor = Color(nsColor: NSColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0))
+    private let linkColor = Color(nsColor: NSColor(red: 0.25, green: 0.47, blue: 0.85, alpha: 1.0))
+    private let codeBlockBg = Color(nsColor: NSColor(red: 0.96, green: 0.97, blue: 0.98, alpha: 1.0))
+    private let inlineCodeBg = Color(nsColor: NSColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0))
+    private let blockquoteBorder = Color(nsColor: NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0))
+    private let blockquoteText = Color(nsColor: NSColor(red: 0.45, green: 0.45, blue: 0.45, alpha: 1.0))
+    private let hrColor = Color(nsColor: NSColor(red: 0.88, green: 0.88, blue: 0.88, alpha: 1.0))
 
     var body: some View {
         GeometryReader { geometry in
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    // Parse content line by line for better markdown rendering
+                VStack(alignment: .leading, spacing: 0) {
                     ForEach(parseMarkdownBlocks(content), id: \.id) { block in
-                        MarkdownBlockView(block: block, fontSize: fontSize)
+                        MarkdownBlockView(
+                            block: block,
+                            fontSize: fontSize,
+                            headingColor: headingColor,
+                            bodyColor: bodyColor,
+                            linkColor: linkColor,
+                            codeBlockBg: codeBlockBg,
+                            inlineCodeBg: inlineCodeBg,
+                            blockquoteBorder: blockquoteBorder,
+                            blockquoteText: blockquoteText,
+                            hrColor: hrColor
+                        )
                     }
                 }
-                .padding(20)
+                .padding(.horizontal, 48)
+                .padding(.vertical, 32)
                 .frame(minWidth: geometry.size.width, alignment: .topLeading)
             }
         }
-        .background(Color(nsColor: .textBackgroundColor))
+        .background(Color.white)
     }
 
     private func parseMarkdownBlocks(_ text: String) -> [MarkdownBlock] {
@@ -387,21 +441,65 @@ struct MarkdownRenderedView: View {
                 blocks.append(MarkdownBlock(type: .h3, content: String(trimmed.dropFirst(4))))
             } else if trimmed.hasPrefix("#### ") {
                 blocks.append(MarkdownBlock(type: .h4, content: String(trimmed.dropFirst(5))))
+            } else if trimmed.hasPrefix("##### ") {
+                blocks.append(MarkdownBlock(type: .h5, content: String(trimmed.dropFirst(6))))
+            } else if trimmed.hasPrefix("###### ") {
+                blocks.append(MarkdownBlock(type: .h6, content: String(trimmed.dropFirst(7))))
             } else if trimmed.hasPrefix("```") {
-                // Code block - collect until closing ```
+                // Code block with optional language
+                let langPart = String(trimmed.dropFirst(3))
+                let language = langPart.isEmpty ? nil : langPart
                 var codeLines: [String] = []
                 currentIndex += 1
                 while currentIndex < lines.count && !lines[currentIndex].trimmingCharacters(in: .whitespaces).hasPrefix("```") {
                     codeLines.append(lines[currentIndex])
                     currentIndex += 1
                 }
-                blocks.append(MarkdownBlock(type: .codeBlock, content: codeLines.joined(separator: "\n")))
+                blocks.append(MarkdownBlock(type: .codeBlock, content: codeLines.joined(separator: "\n"), language: language))
             } else if trimmed.hasPrefix("- ") || trimmed.hasPrefix("* ") {
-                blocks.append(MarkdownBlock(type: .listItem, content: String(trimmed.dropFirst(2))))
+                // Collect consecutive list items
+                var listItems: [String] = [String(trimmed.dropFirst(2))]
+                while currentIndex + 1 < lines.count {
+                    let nextLine = lines[currentIndex + 1].trimmingCharacters(in: .whitespaces)
+                    if nextLine.hasPrefix("- ") || nextLine.hasPrefix("* ") {
+                        listItems.append(String(nextLine.dropFirst(2)))
+                        currentIndex += 1
+                    } else {
+                        break
+                    }
+                }
+                blocks.append(MarkdownBlock(type: .unorderedList, content: listItems.joined(separator: "\n")))
+            } else if let match = trimmed.firstMatch(of: /^(\d+)\.\s+(.*)/) {
+                // Numbered list
+                var listItems: [String] = [String(match.2)]
+                while currentIndex + 1 < lines.count {
+                    let nextLine = lines[currentIndex + 1].trimmingCharacters(in: .whitespaces)
+                    if let nextMatch = nextLine.firstMatch(of: /^(\d+)\.\s+(.*)/) {
+                        listItems.append(String(nextMatch.2))
+                        currentIndex += 1
+                    } else {
+                        break
+                    }
+                }
+                blocks.append(MarkdownBlock(type: .orderedList, content: listItems.joined(separator: "\n")))
             } else if trimmed.hasPrefix("> ") {
-                blocks.append(MarkdownBlock(type: .blockquote, content: String(trimmed.dropFirst(2))))
+                // Collect consecutive blockquote lines
+                var quoteLines: [String] = [String(trimmed.dropFirst(2))]
+                while currentIndex + 1 < lines.count {
+                    let nextLine = lines[currentIndex + 1].trimmingCharacters(in: .whitespaces)
+                    if nextLine.hasPrefix("> ") {
+                        quoteLines.append(String(nextLine.dropFirst(2)))
+                        currentIndex += 1
+                    } else {
+                        break
+                    }
+                }
+                blocks.append(MarkdownBlock(type: .blockquote, content: quoteLines.joined(separator: "\n")))
+            } else if trimmed == "---" || trimmed == "***" || trimmed == "___" {
+                blocks.append(MarkdownBlock(type: .horizontalRule, content: ""))
             } else if trimmed.isEmpty {
-                // Skip empty lines
+                // Empty line - add spacer
+                blocks.append(MarkdownBlock(type: .spacer, content: ""))
             } else {
                 blocks.append(MarkdownBlock(type: .paragraph, content: line))
             }
@@ -417,71 +515,204 @@ struct MarkdownBlock: Identifiable {
     let id = UUID()
     let type: MarkdownBlockType
     let content: String
+    var language: String? = nil
 }
 
 enum MarkdownBlockType {
-    case h1, h2, h3, h4
+    case h1, h2, h3, h4, h5, h6
     case paragraph
     case codeBlock
-    case listItem
+    case unorderedList
+    case orderedList
     case blockquote
+    case horizontalRule
+    case spacer
 }
 
 struct MarkdownBlockView: View {
     let block: MarkdownBlock
     let fontSize: Double
+    let headingColor: Color
+    let bodyColor: Color
+    let linkColor: Color
+    let codeBlockBg: Color
+    let inlineCodeBg: Color
+    let blockquoteBorder: Color
+    let blockquoteText: Color
+    let hrColor: Color
+
+    // Typora uses a nice serif font for body text
+    private var bodyFont: Font {
+        .system(size: fontSize, design: .serif)
+    }
 
     var body: some View {
-        switch block.type {
-        case .h1:
-            Text(parseInlineMarkdown(block.content))
-                .font(.system(size: fontSize * 2, weight: .bold))
-                .padding(.bottom, 8)
-        case .h2:
-            Text(parseInlineMarkdown(block.content))
-                .font(.system(size: fontSize * 1.6, weight: .bold))
-                .padding(.bottom, 6)
-        case .h3:
-            Text(parseInlineMarkdown(block.content))
-                .font(.system(size: fontSize * 1.3, weight: .semibold))
-                .padding(.bottom, 4)
-        case .h4:
-            Text(parseInlineMarkdown(block.content))
-                .font(.system(size: fontSize * 1.1, weight: .semibold))
-                .padding(.bottom, 2)
-        case .paragraph:
-            Text(parseInlineMarkdown(block.content))
-                .font(.system(size: fontSize))
-        case .codeBlock:
-            Text(block.content)
-                .font(.system(size: fontSize * 0.9, design: .monospaced))
-                .padding(12)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(Color.black.opacity(0.05))
+        Group {
+            switch block.type {
+            case .h1:
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(parseInlineMarkdown(block.content))
+                        .font(.system(size: fontSize * 2.2, weight: .bold, design: .default))
+                        .foregroundStyle(headingColor)
+                        .padding(.top, 24)
+                        .padding(.bottom, 8)
+                    Rectangle()
+                        .fill(hrColor)
+                        .frame(height: 1)
+                }
+                .padding(.bottom, 16)
+
+            case .h2:
+                VStack(alignment: .leading, spacing: 0) {
+                    Text(parseInlineMarkdown(block.content))
+                        .font(.system(size: fontSize * 1.8, weight: .bold, design: .default))
+                        .foregroundStyle(headingColor)
+                        .padding(.top, 20)
+                        .padding(.bottom, 6)
+                    Rectangle()
+                        .fill(hrColor)
+                        .frame(height: 1)
+                }
+                .padding(.bottom, 12)
+
+            case .h3:
+                Text(parseInlineMarkdown(block.content))
+                    .font(.system(size: fontSize * 1.5, weight: .semibold, design: .default))
+                    .foregroundStyle(headingColor)
+                    .padding(.top, 16)
+                    .padding(.bottom, 8)
+
+            case .h4:
+                Text(parseInlineMarkdown(block.content))
+                    .font(.system(size: fontSize * 1.25, weight: .semibold, design: .default))
+                    .foregroundStyle(headingColor)
+                    .padding(.top, 12)
+                    .padding(.bottom, 6)
+
+            case .h5:
+                Text(parseInlineMarkdown(block.content))
+                    .font(.system(size: fontSize * 1.1, weight: .semibold, design: .default))
+                    .foregroundStyle(headingColor)
+                    .padding(.top, 10)
+                    .padding(.bottom, 4)
+
+            case .h6:
+                Text(parseInlineMarkdown(block.content))
+                    .font(.system(size: fontSize, weight: .semibold, design: .default))
+                    .foregroundStyle(blockquoteText)
+                    .padding(.top, 8)
+                    .padding(.bottom, 4)
+
+            case .paragraph:
+                Text(parseInlineMarkdown(block.content))
+                    .font(bodyFont)
+                    .foregroundStyle(bodyColor)
+                    .lineSpacing(fontSize * 0.5)
+                    .padding(.vertical, 6)
+
+            case .codeBlock:
+                VStack(alignment: .leading, spacing: 0) {
+                    if let lang = block.language, !lang.isEmpty {
+                        Text(lang.uppercased())
+                            .font(.system(size: fontSize * 0.7, weight: .medium, design: .monospaced))
+                            .foregroundStyle(.secondary)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 10)
+                            .padding(.bottom, 4)
+                    }
+                    Text(block.content)
+                        .font(.system(size: fontSize * 0.9, design: .monospaced))
+                        .foregroundStyle(bodyColor)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, block.language != nil ? 8 : 14)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .background(codeBlockBg)
                 .clipShape(RoundedRectangle(cornerRadius: 6))
-        case .listItem:
-            HStack(alignment: .top, spacing: 8) {
-                Text("•")
-                    .font(.system(size: fontSize))
-                Text(parseInlineMarkdown(block.content))
-                    .font(.system(size: fontSize))
-            }
-        case .blockquote:
-            HStack(spacing: 12) {
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(hrColor, lineWidth: 1)
+                )
+                .padding(.vertical, 8)
+
+            case .unorderedList:
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(block.content.components(separatedBy: "\n"), id: \.self) { item in
+                        HStack(alignment: .top, spacing: 12) {
+                            Text("•")
+                                .font(.system(size: fontSize * 1.2, weight: .bold))
+                                .foregroundStyle(headingColor)
+                                .frame(width: 16)
+                            Text(parseInlineMarkdown(item))
+                                .font(bodyFont)
+                                .foregroundStyle(bodyColor)
+                                .lineSpacing(fontSize * 0.4)
+                        }
+                    }
+                }
+                .padding(.leading, 8)
+                .padding(.vertical, 6)
+
+            case .orderedList:
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(Array(block.content.components(separatedBy: "\n").enumerated()), id: \.offset) { index, item in
+                        HStack(alignment: .top, spacing: 8) {
+                            Text("\(index + 1).")
+                                .font(.system(size: fontSize, weight: .medium, design: .default))
+                                .foregroundStyle(headingColor)
+                                .frame(width: 24, alignment: .trailing)
+                            Text(parseInlineMarkdown(item))
+                                .font(bodyFont)
+                                .foregroundStyle(bodyColor)
+                                .lineSpacing(fontSize * 0.4)
+                        }
+                    }
+                }
+                .padding(.leading, 8)
+                .padding(.vertical, 6)
+
+            case .blockquote:
+                HStack(alignment: .top, spacing: 16) {
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(blockquoteBorder)
+                        .frame(width: 4)
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(block.content.components(separatedBy: "\n"), id: \.self) { line in
+                            Text(parseInlineMarkdown(line))
+                                .font(.system(size: fontSize, design: .serif))
+                                .italic()
+                                .foregroundStyle(blockquoteText)
+                                .lineSpacing(fontSize * 0.4)
+                        }
+                    }
+                }
+                .padding(.vertical, 12)
+                .padding(.leading, 8)
+
+            case .horizontalRule:
                 Rectangle()
-                    .fill(Color.gray.opacity(0.4))
-                    .frame(width: 3)
-                Text(parseInlineMarkdown(block.content))
-                    .font(.system(size: fontSize))
-                    .foregroundStyle(.secondary)
+                    .fill(hrColor)
+                    .frame(height: 2)
+                    .padding(.vertical, 24)
+
+            case .spacer:
+                Spacer()
+                    .frame(height: fontSize * 0.8)
             }
-            .padding(.vertical, 4)
         }
     }
 
     private func parseInlineMarkdown(_ text: String) -> AttributedString {
         do {
-            return try AttributedString(markdown: text)
+            var attributed = try AttributedString(markdown: text)
+            // Style links with our link color
+            for run in attributed.runs {
+                if run.link != nil {
+                    attributed[run.range].foregroundColor = linkColor
+                    attributed[run.range].underlineStyle = .single
+                }
+            }
+            return attributed
         } catch {
             return AttributedString(text)
         }

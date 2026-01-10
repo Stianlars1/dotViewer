@@ -122,6 +122,35 @@ final class SharedSettings: @unchecked Sendable {
         }
     }
 
+    // MARK: - Open in App Settings
+
+    /// Bundle identifier of the preferred app for opening files (e.g., "com.microsoft.VSCode")
+    var preferredEditorBundleId: String? {
+        get { userDefaults.string(forKey: "preferredEditorBundleId") }
+        set {
+            userDefaults.set(newValue, forKey: "preferredEditorBundleId")
+            userDefaults.synchronize()
+        }
+    }
+
+    /// Display name of the preferred editor (for UI)
+    var preferredEditorName: String? {
+        get { userDefaults.string(forKey: "preferredEditorName") }
+        set {
+            userDefaults.set(newValue, forKey: "preferredEditorName")
+            userDefaults.synchronize()
+        }
+    }
+
+    /// Whether to show the "Open in App" button in preview header
+    var showOpenInAppButton: Bool {
+        get { userDefaults.object(forKey: "showOpenInAppButton") as? Bool ?? true }
+        set {
+            userDefaults.set(newValue, forKey: "showOpenInAppButton")
+            userDefaults.synchronize()
+        }
+    }
+
     // MARK: - Helper to force sync
 
     func synchronize() {

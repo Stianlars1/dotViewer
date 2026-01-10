@@ -98,7 +98,8 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 lineCount: lineTruncated ? maxPreviewLines : totalLineCount,
                 fileSize: formatFileSize(fileSize),
                 isTruncated: isTruncated || lineTruncated,
-                truncationMessage: truncationMessage
+                truncationMessage: truncationMessage,
+                fileURL: url
             )
 
             // Present SwiftUI view on main thread

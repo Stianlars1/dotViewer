@@ -1,6 +1,6 @@
 # dotViewer - Claude Code Context File
 
-> **Last Updated:** January 10, 2026 (Session 2)
+> **Last Updated:** January 10, 2026 (Session 3)
 > **Status:** All features implemented, ready for testing
 > **Next Action:** Build, test, and deploy
 
@@ -77,12 +77,20 @@ dotViewer/
 - ✅ Catch-all preview for unknown file types (`public.data`)
 - ✅ Markdown preview toggle (raw/rendered) with header button
 - ✅ Settings UI for all new features
+- ✅ Typora-inspired markdown rendering (serif fonts, styled headings, code blocks)
+- ✅ "Open in App" button with configurable preferred editor
 
 ### Session 2 Features Added
 - **Header toggle**: Show/hide file info header in settings
 - **Markdown preview**: Toggle between raw code and rendered preview
 - **zsh-theme support**: Full UTI and highlighting support
 - **Catch-all preview**: Preview any text file (already had `public.data`)
+
+### Session 3 Features Added
+- **Typora-inspired markdown preview**: Beautiful serif typography, styled headings with underlines, proper code blocks with language labels, styled blockquotes, ordered/unordered lists, horizontal rules
+- **Open in App button**: Header button to open files in preferred editor
+- **Editor picker in settings**: Quick buttons for VS Code, Xcode, Sublime, TextEdit + custom app picker
+- **Settings persistence**: Preferred editor stored via App Groups
 
 ---
 
