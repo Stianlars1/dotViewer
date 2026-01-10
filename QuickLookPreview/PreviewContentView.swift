@@ -387,15 +387,22 @@ struct MarkdownRenderedView: View {
     let content: String
     let fontSize: Double
 
-    // Typora-inspired color palette
-    private let headingColor = Color(nsColor: NSColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0))
-    private let bodyColor = Color(nsColor: NSColor(red: 0.25, green: 0.25, blue: 0.25, alpha: 1.0))
-    private let linkColor = Color(nsColor: NSColor(red: 0.25, green: 0.47, blue: 0.85, alpha: 1.0))
-    private let codeBlockBg = Color(nsColor: NSColor(red: 0.96, green: 0.97, blue: 0.98, alpha: 1.0))
-    private let inlineCodeBg = Color(nsColor: NSColor(red: 0.93, green: 0.94, blue: 0.95, alpha: 1.0))
-    private let blockquoteBorder = Color(nsColor: NSColor(red: 0.85, green: 0.85, blue: 0.85, alpha: 1.0))
-    private let blockquoteText = Color(nsColor: NSColor(red: 0.45, green: 0.45, blue: 0.45, alpha: 1.0))
-    private let hrColor = Color(nsColor: NSColor(red: 0.88, green: 0.88, blue: 0.88, alpha: 1.0))
+    // Theme-aware color palette
+    private var isDarkTheme: Bool {
+        let theme = ThemeManager.shared.selectedTheme
+        return theme.contains("Dark") || theme == "tokyoNight" ||
+               (theme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
+    }
+
+    private var backgroundColor: Color { ThemeManager.shared.backgroundColor }
+    private var headingColor: Color { ThemeManager.shared.textColor }
+    private var bodyColor: Color { ThemeManager.shared.textColor.opacity(0.9) }
+    private var linkColor: Color { Color(nsColor: NSColor(red: 0.25, green: 0.47, blue: 0.85, alpha: 1.0)) }
+    private var codeBlockBg: Color { isDarkTheme ? Color.white.opacity(0.08) : Color.black.opacity(0.04) }
+    private var inlineCodeBg: Color { isDarkTheme ? Color.white.opacity(0.12) : Color.black.opacity(0.06) }
+    private var blockquoteBorder: Color { ThemeManager.shared.textColor.opacity(0.3) }
+    private var blockquoteText: Color { ThemeManager.shared.textColor.opacity(0.7) }
+    private var hrColor: Color { isDarkTheme ? Color.white.opacity(0.15) : Color.black.opacity(0.12) }
 
     var body: some View {
         GeometryReader { geometry in
@@ -421,31 +428,49 @@ struct MarkdownRenderedView: View {
                 .frame(minWidth: geometry.size.width, alignment: .topLeading)
             }
         }
-        .background(Color.white)
+        .background(backgroundColor)
     }
 
     private func parseMarkdownBlocks(_ text: String) -> [MarkdownBlock] {
         var blocks: [MarkdownBlock] = []
         let lines = text.components(separatedBy: "\n")
         var currentIndex = 0
+        var paragraphBuffer: [String] = []
+
+        // Helper to flush buffered paragraph lines
+        func flushParagraph() {
+            if !paragraphBuffer.isEmpty {
+                let joined = paragraphBuffer.joined(separator: " ")
+                blocks.append(MarkdownBlock(type: .paragraph, content: joined))
+                paragraphBuffer.removeAll()
+            }
+        }
 
         while currentIndex < lines.count {
             let line = lines[currentIndex]
             let trimmed = line.trimmingCharacters(in: .whitespaces)
 
+            // Check for block-level elements (these interrupt paragraphs)
             if trimmed.hasPrefix("# ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h1, content: String(trimmed.dropFirst(2))))
             } else if trimmed.hasPrefix("## ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h2, content: String(trimmed.dropFirst(3))))
             } else if trimmed.hasPrefix("### ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h3, content: String(trimmed.dropFirst(4))))
             } else if trimmed.hasPrefix("#### ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h4, content: String(trimmed.dropFirst(5))))
             } else if trimmed.hasPrefix("##### ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h5, content: String(trimmed.dropFirst(6))))
             } else if trimmed.hasPrefix("###### ") {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .h6, content: String(trimmed.dropFirst(7))))
             } else if trimmed.hasPrefix("```") {
+                flushParagraph()
                 // Code block with optional language
                 let langPart = String(trimmed.dropFirst(3))
                 let language = langPart.isEmpty ? nil : langPart
@@ -456,7 +481,14 @@ struct MarkdownRenderedView: View {
                     currentIndex += 1
                 }
                 blocks.append(MarkdownBlock(type: .codeBlock, content: codeLines.joined(separator: "\n"), language: language))
+            } else if let imageMatch = trimmed.firstMatch(of: /^!\[([^\]]*)\]\(([^)]+)\)$/) {
+                // Image: ![alt](url)
+                flushParagraph()
+                let alt = String(imageMatch.1)
+                let url = String(imageMatch.2)
+                blocks.append(MarkdownBlock(type: .image, content: alt, imageURL: url))
             } else if trimmed.hasPrefix("- ") || trimmed.hasPrefix("* ") {
+                flushParagraph()
                 // Collect consecutive list items
                 var listItems: [String] = [String(trimmed.dropFirst(2))]
                 while currentIndex + 1 < lines.count {
@@ -470,6 +502,7 @@ struct MarkdownRenderedView: View {
                 }
                 blocks.append(MarkdownBlock(type: .unorderedList, content: listItems.joined(separator: "\n")))
             } else if let match = trimmed.firstMatch(of: /^(\d+)\.\s+(.*)/) {
+                flushParagraph()
                 // Numbered list
                 var listItems: [String] = [String(match.2)]
                 while currentIndex + 1 < lines.count {
@@ -483,6 +516,7 @@ struct MarkdownRenderedView: View {
                 }
                 blocks.append(MarkdownBlock(type: .orderedList, content: listItems.joined(separator: "\n")))
             } else if trimmed.hasPrefix("> ") {
+                flushParagraph()
                 // Collect consecutive blockquote lines
                 var quoteLines: [String] = [String(trimmed.dropFirst(2))]
                 while currentIndex + 1 < lines.count {
@@ -496,16 +530,22 @@ struct MarkdownRenderedView: View {
                 }
                 blocks.append(MarkdownBlock(type: .blockquote, content: quoteLines.joined(separator: "\n")))
             } else if trimmed == "---" || trimmed == "***" || trimmed == "___" {
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .horizontalRule, content: ""))
             } else if trimmed.isEmpty {
-                // Empty line - add spacer
+                // Empty line - flush paragraph and add spacer
+                flushParagraph()
                 blocks.append(MarkdownBlock(type: .spacer, content: ""))
             } else {
-                blocks.append(MarkdownBlock(type: .paragraph, content: line))
+                // Regular text line - add to paragraph buffer
+                paragraphBuffer.append(trimmed)
             }
 
             currentIndex += 1
         }
+
+        // Flush any remaining paragraph content
+        flushParagraph()
 
         return blocks
     }
@@ -516,6 +556,7 @@ struct MarkdownBlock: Identifiable {
     let type: MarkdownBlockType
     let content: String
     var language: String? = nil
+    var imageURL: String? = nil
 }
 
 enum MarkdownBlockType {
@@ -527,6 +568,7 @@ enum MarkdownBlockType {
     case blockquote
     case horizontalRule
     case spacer
+    case image
 }
 
 struct MarkdownBlockView: View {
@@ -698,6 +740,38 @@ struct MarkdownBlockView: View {
             case .spacer:
                 Spacer()
                     .frame(height: fontSize * 0.8)
+
+            case .image:
+                // Render image placeholder with alt text and URL
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "photo")
+                            .font(.system(size: fontSize * 1.5))
+                            .foregroundStyle(blockquoteText)
+                        VStack(alignment: .leading, spacing: 2) {
+                            if !block.content.isEmpty {
+                                Text(block.content)
+                                    .font(.system(size: fontSize * 0.9, weight: .medium))
+                                    .foregroundStyle(headingColor)
+                            }
+                            if let url = block.imageURL {
+                                Text(url)
+                                    .font(.system(size: fontSize * 0.75, design: .monospaced))
+                                    .foregroundStyle(linkColor)
+                                    .lineLimit(1)
+                            }
+                        }
+                    }
+                    .padding(12)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(codeBlockBg)
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(hrColor, lineWidth: 1)
+                    )
+                }
+                .padding(.vertical, 8)
             }
         }
     }

@@ -57,6 +57,8 @@ class ThemeManager: ObservableObject {
             return .dark(.solarized)
         case "tokyoNight":
             return .dark(.tokyoNight)
+        case "blackout":
+            return .dark(.atomOne) // Blackout uses Atom One Dark syntax colors
         default:
             return .light(.atomOne)
         }
@@ -85,6 +87,8 @@ class ThemeManager: ObservableObject {
             return Color(hex: "#002b36")
         case "tokyoNight":
             return Color(hex: "#1a1b26")
+        case "blackout":
+            return Color(hex: "#1e1e1e") // Typora Blackout background
         default:
             return Color(nsColor: .textBackgroundColor)
         }
@@ -113,6 +117,8 @@ class ThemeManager: ObservableObject {
             return Color(hex: "#839496")
         case "tokyoNight":
             return Color(hex: "#a9b1d6")
+        case "blackout":
+            return Color(hex: "#c6c5b8") // Typora Blackout warm text
         default:
             return Color(nsColor: .textColor)
         }
@@ -139,6 +145,7 @@ class ThemeManager: ObservableObject {
         case "solarizedLight": return "Solarized Light"
         case "solarizedDark": return "Solarized Dark"
         case "tokyoNight": return "Tokyo Night"
+        case "blackout": return "Blackout"
         default: return selectedTheme
         }
     }

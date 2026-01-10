@@ -293,7 +293,32 @@ struct SettingsView: View {
         ("solarizedLight", "Solarized Light"),
         ("solarizedDark", "Solarized Dark"),
         ("tokyoNight", "Tokyo Night"),
+        ("blackout", "Blackout"),
     ]
+
+    // List of common editors - only installed ones will be shown
+    private var installedEditors: [(name: String, bundleId: String, icon: String)] {
+        let editors: [(name: String, bundleId: String, icon: String)] = [
+            ("VS Code", "com.microsoft.VSCode", "curlybraces.square"),
+            ("Xcode", "com.apple.dt.Xcode", "hammer"),
+            ("Sublime", "com.sublimetext.4", "text.alignleft"),
+            ("TextEdit", "com.apple.TextEdit", "doc.text"),
+            ("Nova", "com.panic.Nova", "sparkle"),
+            ("BBEdit", "com.barebones.bbedit", "text.badge.star"),
+            ("Cursor", "com.todesktop.230313mzl4w4u92", "cursorarrow.click.badge.clock"),
+            ("Zed", "dev.zed.Zed", "text.cursor"),
+        ]
+        return editors.filter { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleId) != nil }
+    }
+
+    // Check if current selection is a custom app (not in preset list)
+    private var isCustomAppSelected: Bool {
+        guard let bundleId = SharedSettings.shared.preferredEditorBundleId else { return false }
+        let presetBundleIds = ["com.microsoft.VSCode", "com.apple.dt.Xcode", "com.sublimetext.4",
+                              "com.apple.TextEdit", "com.panic.Nova", "com.barebones.bbedit",
+                              "com.todesktop.230313mzl4w4u92", "dev.zed.Zed"]
+        return !presetBundleIds.contains(bundleId)
+    }
 
     var body: some View {
         ScrollView {
@@ -421,40 +446,40 @@ struct SettingsView: View {
 
                         Divider()
 
-                        HStack {
-                            Text("Preferred Editor")
-                            Spacer()
-                            if preferredEditorName.isEmpty {
-                                Text("System Default")
-                                    .foregroundStyle(.secondary)
-                            } else {
-                                Text(preferredEditorName)
-                                    .foregroundStyle(.secondary)
-                            }
-                        }
+                        Text("Select Preferred Editor")
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
 
-                        HStack(spacing: 12) {
-                            EditorButton(name: "VS Code", bundleId: "com.microsoft.VSCode", icon: "curlybraces.square", selectedEditor: $preferredEditorName)
-                            EditorButton(name: "Xcode", bundleId: "com.apple.dt.Xcode", icon: "hammer", selectedEditor: $preferredEditorName)
-                            EditorButton(name: "Sublime", bundleId: "com.sublimetext.4", icon: "text.alignleft", selectedEditor: $preferredEditorName)
-                            EditorButton(name: "TextEdit", bundleId: "com.apple.TextEdit", icon: "doc.text", selectedEditor: $preferredEditorName)
-                        }
-
-                        HStack(spacing: 12) {
-                            Button("Choose App...") {
-                                chooseCustomEditor()
+                        // Grid of installed editors + custom button
+                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 70, maximum: 80), spacing: 12)], spacing: 12) {
+                            // Only show installed preset editors
+                            ForEach(installedEditors, id: \.bundleId) { editor in
+                                EditorButton(
+                                    name: editor.name,
+                                    bundleId: editor.bundleId,
+                                    icon: editor.icon,
+                                    selectedEditor: $preferredEditorName
+                                )
                             }
 
-                            if !preferredEditorName.isEmpty {
-                                Button("Reset to Default") {
-                                    SharedSettings.shared.preferredEditorBundleId = nil
-                                    SharedSettings.shared.preferredEditorName = nil
-                                    preferredEditorName = ""
-                                }
-                                .foregroundStyle(.red)
-                            }
+                            // Custom app button (always shown)
+                            CustomEditorButton(
+                                selectedEditor: $preferredEditorName,
+                                onChooseApp: chooseCustomEditor
+                            )
                         }
-                        .padding(.top, 4)
+
+                        // Reset button
+                        if !preferredEditorName.isEmpty {
+                            Button("Reset to System Default") {
+                                SharedSettings.shared.preferredEditorBundleId = nil
+                                SharedSettings.shared.preferredEditorName = nil
+                                preferredEditorName = ""
+                            }
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                            .padding(.top, 4)
+                        }
 
                         Text("Files will open in the selected app when you click the button in Quick Look preview")
                             .font(.caption)
@@ -532,27 +557,22 @@ struct EditorButton: View {
     let icon: String
     @Binding var selectedEditor: String
 
-    private var isInstalled: Bool {
-        NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) != nil
-    }
-
     private var isSelected: Bool {
         SharedSettings.shared.preferredEditorBundleId == bundleId
     }
 
     var body: some View {
         Button {
-            if isInstalled {
-                SharedSettings.shared.preferredEditorBundleId = bundleId
-                SharedSettings.shared.preferredEditorName = name
-                selectedEditor = name
-            }
+            SharedSettings.shared.preferredEditorBundleId = bundleId
+            SharedSettings.shared.preferredEditorName = name
+            selectedEditor = name
         } label: {
             VStack(spacing: 6) {
                 Image(systemName: icon)
                     .font(.system(size: 20))
                 Text(name)
                     .font(.caption2)
+                    .lineLimit(1)
             }
             .frame(width: 70, height: 60)
             .background(isSelected ? Color.accentColor.opacity(0.2) : Color.clear)
@@ -564,9 +584,68 @@ struct EditorButton: View {
             )
         }
         .buttonStyle(.plain)
-        .opacity(isInstalled ? 1 : 0.4)
-        .disabled(!isInstalled)
-        .help(isInstalled ? "Open files in \(name)" : "\(name) is not installed")
+        .help("Open files in \(name)")
+    }
+}
+
+// MARK: - Custom Editor Button
+
+struct CustomEditorButton: View {
+    @Binding var selectedEditor: String
+    let onChooseApp: () -> Void
+
+    private var settings: SharedSettings { SharedSettings.shared }
+
+    private var isCustomSelected: Bool {
+        guard let bundleId = settings.preferredEditorBundleId else { return false }
+        let presetBundleIds = ["com.microsoft.VSCode", "com.apple.dt.Xcode", "com.sublimetext.4",
+                              "com.apple.TextEdit", "com.panic.Nova", "com.barebones.bbedit",
+                              "com.todesktop.230313mzl4w4u92", "dev.zed.Zed"]
+        return !presetBundleIds.contains(bundleId)
+    }
+
+    private var customAppName: String? {
+        isCustomSelected ? settings.preferredEditorName : nil
+    }
+
+    private var customAppIcon: NSImage? {
+        guard isCustomSelected,
+              let bundleId = settings.preferredEditorBundleId,
+              let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) else {
+            return nil
+        }
+        return NSWorkspace.shared.icon(forFile: appURL.path)
+    }
+
+    var body: some View {
+        Button {
+            onChooseApp()
+        } label: {
+            VStack(spacing: 6) {
+                if let icon = customAppIcon {
+                    Image(nsImage: icon)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 24, height: 24)
+                } else {
+                    Image(systemName: "plus.app")
+                        .font(.system(size: 20))
+                }
+                Text(customAppName ?? "Custom")
+                    .font(.caption2)
+                    .lineLimit(1)
+            }
+            .frame(width: 70, height: 60)
+            .background(isCustomSelected ? Color.accentColor.opacity(0.2) : Color.clear)
+            .background(.regularMaterial)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isCustomSelected ? Color.accentColor : Color.clear, lineWidth: 2)
+            )
+        }
+        .buttonStyle(.plain)
+        .help(isCustomSelected ? "Custom app: \(customAppName ?? "Unknown")" : "Choose a custom app")
     }
 }
 
