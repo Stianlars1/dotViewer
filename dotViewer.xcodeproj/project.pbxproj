@@ -28,10 +28,10 @@
 		A1000030 /* LanguageDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* LanguageDetector.swift */; };
 		A1000031 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* SyntaxHighlighter.swift */; };
 		A1000032 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ThemeManager.swift */; };
-		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
-		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
 		A1000033 /* MarkdownWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* MarkdownWebView.swift */; };
 		A1000034 /* MarkdownStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000024 /* MarkdownStyles.swift */; };
+		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
+		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
