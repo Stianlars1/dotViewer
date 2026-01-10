@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>dotViewer Quick Look</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict>
+			<key>QLSupportedContentTypes</key>
+			<array>
+				<!-- System-declared source code UTIs -->
+				<string>public.swift-source</string>
+				<string>public.c-source</string>
+				<string>public.c-header</string>
+				<string>public.c-plus-plus-source</string>
+				<string>public.c-plus-plus-header</string>
+				<string>public.objective-c-source</string>
+				<string>public.objective-c-plus-plus-source</string>
+				<string>com.sun.java-source</string>
+				<string>public.python-script</string>
+				<string>public.ruby-script</string>
+				<string>public.perl-script</string>
+				<string>public.php-script</string>
+				<string>public.shell-script</string>
+				<string>public.bash-script</string>
+				<string>public.csh-script</string>
+
+				<!-- JavaScript -->
+				<string>com.netscape.javascript-source</string>
+				<string>public.javascript</string>
+
+				<!-- Data formats -->
+				<string>public.json</string>
+				<string>public.yaml</string>
+				<string>public.xml</string>
+				<string>public.html</string>
+				<string>public.css</string>
+
+				<!-- Markdown -->
+				<string>net.daringfireball.markdown</string>
+
+				<!-- Custom exported UTIs (from main app) -->
+				<string>com.stianlars1.dotviewer.typescript</string>
+				<string>com.stianlars1.dotviewer.tsx</string>
+				<string>com.stianlars1.dotviewer.jsx</string>
+				<string>com.stianlars1.dotviewer.rust</string>
+				<string>com.stianlars1.dotviewer.go</string>
+				<string>com.stianlars1.dotviewer.toml</string>
+				<string>com.stianlars1.dotviewer.mdx</string>
+				<string>com.stianlars1.dotviewer.scss</string>
+				<string>com.stianlars1.dotviewer.vue</string>
+				<string>com.stianlars1.dotviewer.svelte</string>
+				<string>com.stianlars1.dotviewer.kotlin</string>
+				<string>com.stianlars1.dotviewer.dockerfile</string>
+				<string>com.stianlars1.dotviewer.graphql</string>
+				<string>com.stianlars1.dotviewer.prisma</string>
+				<string>com.stianlars1.dotviewer.sql</string>
+				<string>com.stianlars1.dotviewer.env</string>
+				<string>com.stianlars1.dotviewer.zsh</string>
+				<string>com.stianlars1.dotviewer.zsh-theme</string>
+
+				<!-- Fallback for dotfiles and unknown text files -->
+				<string>public.plain-text</string>
+				<string>public.text</string>
+				<string>public.source-code</string>
+				<string>public.data</string>
+				<string>public.content</string>
+			</array>
+			<key>QLSupportsSearchableItems</key>
+			<false/>
+		</dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.quicklook.preview</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>$(PRODUCT_MODULE_NAME).PreviewViewController</string>
+	</dict>
+</dict>
+</plist>

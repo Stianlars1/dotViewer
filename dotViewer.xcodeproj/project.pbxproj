@@ -1,0 +1,601 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F12F1228C700412E97 /* SharedSettings.swift */; };
+		80F9F4F32F1228C700412E97 /* FileTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */; };
+		80F9F4F42F1228C700412E97 /* FileTypeRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */; };
+		80F9F4F52F1228C700412E97 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F12F1228C700412E97 /* SharedSettings.swift */; };
+		80F9F4F62F1228C700412E97 /* FileTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */; };
+		80F9F4F72F1228C700412E97 /* FileTypeRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */; };
+		80F9F4FA2F1228E100412E97 /* AddCustomExtensionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F82F1228E100412E97 /* AddCustomExtensionSheet.swift */; };
+		80F9F4FB2F1228E100412E97 /* FileTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F92F1228E100412E97 /* FileTypesView.swift */; };
+		80F9F4FD2F1228F500412E97 /* PreviewContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */; };
+		A1000001 /* dotViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* dotViewerApp.swift */; };
+		A1000002 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* ContentView.swift */; };
+		A1000003 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A2000003 /* Assets.xcassets */; };
+		A1000010 /* LanguageDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* LanguageDetector.swift */; };
+		A1000011 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* SyntaxHighlighter.swift */; };
+		A1000012 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ThemeManager.swift */; };
+		A1000013 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000013 /* PreviewView.swift */; };
+		A1000020 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000020 /* PreviewViewController.swift */; };
+		A1000021 /* QuickLookPreview.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A3000002 /* QuickLookPreview.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		A1000030 /* LanguageDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000010 /* LanguageDetector.swift */; };
+		A1000031 /* SyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000011 /* SyntaxHighlighter.swift */; };
+		A1000032 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ThemeManager.swift */; };
+		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
+		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A4000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A7000001;
+			remoteInfo = QuickLookPreview;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A4000010 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				A1000021 /* QuickLookPreview.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeModel.swift; sourceTree = "<group>"; };
+		80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistry.swift; sourceTree = "<group>"; };
+		80F9F4F12F1228C700412E97 /* SharedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSettings.swift; sourceTree = "<group>"; };
+		80F9F4F82F1228E100412E97 /* AddCustomExtensionSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCustomExtensionSheet.swift; sourceTree = "<group>"; };
+		80F9F4F92F1228E100412E97 /* FileTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypesView.swift; sourceTree = "<group>"; };
+		80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContentView.swift; sourceTree = "<group>"; };
+		A2000001 /* dotViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dotViewerApp.swift; sourceTree = "<group>"; };
+		A2000002 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A2000003 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A2000004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000005 /* dotViewer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = dotViewer.entitlements; sourceTree = "<group>"; };
+		A2000010 /* LanguageDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageDetector.swift; sourceTree = "<group>"; };
+		A2000011 /* SyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntaxHighlighter.swift; sourceTree = "<group>"; };
+		A2000012 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
+		A2000013 /* PreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
+		A2000020 /* PreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		A2000021 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A2000022 /* QuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookPreview.entitlements; sourceTree = "<group>"; };
+		A3000002 /* QuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4000020 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000040 /* HighlightSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4000021 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000041 /* HighlightSwift in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A6000000 = {
+			isa = PBXGroup;
+			children = (
+				A6000001 /* dotViewer */,
+				A6000002 /* Shared */,
+				A6000003 /* QuickLookPreview */,
+				A6000004 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A6000001 /* dotViewer */ = {
+			isa = PBXGroup;
+			children = (
+				80F9F4F82F1228E100412E97 /* AddCustomExtensionSheet.swift */,
+				80F9F4F92F1228E100412E97 /* FileTypesView.swift */,
+				A2000001 /* dotViewerApp.swift */,
+				A2000002 /* ContentView.swift */,
+				A2000003 /* Assets.xcassets */,
+				A2000004 /* Info.plist */,
+				A2000005 /* dotViewer.entitlements */,
+			);
+			path = dotViewer;
+			sourceTree = "<group>";
+		};
+		A6000002 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */,
+				80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */,
+				80F9F4F12F1228C700412E97 /* SharedSettings.swift */,
+				A2000010 /* LanguageDetector.swift */,
+				A2000011 /* SyntaxHighlighter.swift */,
+				A2000012 /* ThemeManager.swift */,
+				A2000013 /* PreviewView.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		A6000003 /* QuickLookPreview */ = {
+			isa = PBXGroup;
+			children = (
+				80F9F4FC2F1228F500412E97 /* PreviewContentView.swift */,
+				A2000020 /* PreviewViewController.swift */,
+				A2000021 /* Info.plist */,
+				A2000022 /* QuickLookPreview.entitlements */,
+			);
+			path = QuickLookPreview;
+			sourceTree = "<group>";
+		};
+		A6000004 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3000003 /* dotViewer.app */,
+				A3000002 /* QuickLookPreview.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A7000000 /* dotViewer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000000 /* Build configuration list for PBXNativeTarget "dotViewer" */;
+			buildPhases = (
+				A4000030 /* Sources */,
+				A4000020 /* Frameworks */,
+				A4000031 /* Resources */,
+				A4000010 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A7000002 /* PBXTargetDependency */,
+			);
+			name = dotViewer;
+			packageProductDependencies = (
+				A5000001 /* HighlightSwift */,
+			);
+			productName = dotViewer;
+			productReference = A3000003 /* dotViewer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A7000001 /* QuickLookPreview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000001 /* Build configuration list for PBXNativeTarget "QuickLookPreview" */;
+			buildPhases = (
+				A4000032 /* Sources */,
+				A4000021 /* Frameworks */,
+				A4000033 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = QuickLookPreview;
+			packageProductDependencies = (
+				A5000002 /* HighlightSwift */,
+			);
+			productName = QuickLookPreview;
+			productReference = A3000002 /* QuickLookPreview.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A3000000 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					A7000000 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					A7000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = A8000002 /* Build configuration list for PBXProject "dotViewer" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A6000000;
+			packageReferences = (
+				A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
+			);
+			productRefGroup = A6000004 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7000000 /* dotViewer */,
+				A7000001 /* QuickLookPreview */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A4000031 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000003 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4000033 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A4000030 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				80F9F4F52F1228C700412E97 /* SharedSettings.swift in Sources */,
+				80F9F4F62F1228C700412E97 /* FileTypeModel.swift in Sources */,
+				80F9F4F72F1228C700412E97 /* FileTypeRegistry.swift in Sources */,
+				A1000001 /* dotViewerApp.swift in Sources */,
+				A1000002 /* ContentView.swift in Sources */,
+				A1000010 /* LanguageDetector.swift in Sources */,
+				A1000011 /* SyntaxHighlighter.swift in Sources */,
+				A1000012 /* ThemeManager.swift in Sources */,
+				80F9F4FA2F1228E100412E97 /* AddCustomExtensionSheet.swift in Sources */,
+				80F9F4FB2F1228E100412E97 /* FileTypesView.swift in Sources */,
+				A1000013 /* PreviewView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A4000032 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000020 /* PreviewViewController.swift in Sources */,
+				A1000030 /* LanguageDetector.swift in Sources */,
+				A1000031 /* SyntaxHighlighter.swift in Sources */,
+				A1000032 /* ThemeManager.swift in Sources */,
+				80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */,
+				80F9F4F32F1228C700412E97 /* FileTypeModel.swift in Sources */,
+				80F9F4F42F1228C700412E97 /* FileTypeRegistry.swift in Sources */,
+				80F9F4FD2F1228F500412E97 /* PreviewContentView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A7000002 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A7000001 /* QuickLookPreview */;
+			targetProxy = A4000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A9000000 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A9000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		A9000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = dotViewer/dotViewer.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = dotViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A9000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = dotViewer/dotViewer.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "";
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = dotViewer/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A9000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickLookPreview/QuickLookPreview.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = QuickLookPreview/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = QuickLookPreview;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.QuickLookPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A9000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = QuickLookPreview/QuickLookPreview.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = QuickLookPreview/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = QuickLookPreview;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.QuickLookPreview;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A8000000 /* Build configuration list for PBXNativeTarget "dotViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9000010 /* Debug */,
+				A9000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000001 /* Build configuration list for PBXNativeTarget "QuickLookPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9000020 /* Debug */,
+				A9000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000002 /* Build configuration list for PBXProject "dotViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A9000000 /* Debug */,
+				A9000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/appstefan/HighlightSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A5000001 /* HighlightSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
+			productName = HighlightSwift;
+		};
+		A5000002 /* HighlightSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
+			productName = HighlightSwift;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = A3000000 /* Project object */;
+}
