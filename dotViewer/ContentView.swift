@@ -193,7 +193,7 @@ struct StatusView: View {
         DispatchQueue.global(qos: .userInitiated).async {
             var isEnabled = false
 
-            // Method 1: Check via pluginkit command
+            // Method 1: Check via pluginkit command with timeout
             let task = Process()
             task.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
             task.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
@@ -202,11 +202,21 @@ struct StatusView: View {
             task.standardOutput = pipe
             task.standardError = FileHandle.nullDevice
 
+            // Use semaphore with timeout to prevent indefinite hangs
+            let semaphore = DispatchSemaphore(value: 0)
+            task.terminationHandler = { _ in semaphore.signal() }
+
             do {
                 try task.run()
-                task.waitUntilExit()
 
-                if task.terminationStatus == 0 {
+                // Wait max 5 seconds for pluginkit to complete
+                let result = semaphore.wait(timeout: .now() + 5)
+
+                if result == .timedOut {
+                    // Timeout - terminate the process and skip to fallback
+                    task.terminate()
+                    print("[dotViewer] pluginkit timed out")
+                } else if task.terminationStatus == 0 {
                     let data = pipe.fileHandleForReading.readDataToEndOfFile()
                     let output = String(data: data, encoding: .utf8) ?? ""
 
