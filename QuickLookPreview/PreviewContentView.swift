@@ -339,23 +339,27 @@ struct LineNumbersColumn: View {
 
     private let maxDisplayLines = 5000
 
+    /// Pre-computed line numbers string - single Text view instead of 5000 views
+    private var lineNumbersText: String {
+        (1...min(lineCount, maxDisplayLines))
+            .map { String($0) }
+            .joined(separator: "\n")
+    }
+
     var body: some View {
-        VStack(alignment: .trailing, spacing: 0) {
-            ForEach(1...min(lineCount, maxDisplayLines), id: \.self) { line in
-                Text("\(line)")
-                    .font(.system(size: fontSize, design: .monospaced))
-                    .foregroundStyle(.tertiary)
-                    .frame(height: fontSize * 1.4)
+        Text(lineNumbersText)
+            .font(.system(size: fontSize, design: .monospaced))
+            .foregroundStyle(.tertiary)
+            .multilineTextAlignment(.trailing)
+            .lineSpacing(fontSize * 0.4)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
+            .background(Color.black.opacity(0.05))
+            .overlay(alignment: .trailing) {
+                Rectangle()
+                    .frame(width: 1)
+                    .foregroundStyle(Color.gray.opacity(0.2))
             }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 12)
-        .background(Color.black.opacity(0.05))
-        .overlay(alignment: .trailing) {
-            Rectangle()
-                .frame(width: 1)
-                .foregroundStyle(Color.gray.opacity(0.2))
-        }
     }
 }
 
@@ -395,6 +399,9 @@ struct MarkdownRenderedViewLegacy: View {
     let content: String
     let fontSize: Double
 
+    // Cached parsed blocks to prevent UUID regeneration on every render
+    @State private var cachedBlocks: [MarkdownBlock] = []
+
     // Theme-aware color palette
     private var isDarkTheme: Bool {
         let theme = ThemeManager.shared.selectedTheme
@@ -416,7 +423,7 @@ struct MarkdownRenderedViewLegacy: View {
         GeometryReader { geometry in
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
-                    ForEach(parseMarkdownBlocks(content), id: \.id) { block in
+                    ForEach(cachedBlocks, id: \.id) { block in
                         MarkdownBlockView(
                             block: block,
                             fontSize: fontSize,
@@ -437,6 +444,10 @@ struct MarkdownRenderedViewLegacy: View {
             }
         }
         .background(backgroundColor)
+        .task(id: content) {
+            // Parse markdown blocks only when content changes
+            cachedBlocks = parseMarkdownBlocks(content)
+        }
     }
 
     private func parseMarkdownBlocks(_ text: String) -> [MarkdownBlock] {
