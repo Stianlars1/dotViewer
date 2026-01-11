@@ -52,6 +52,8 @@ struct SyntaxHighlighter: Sendable {
             return .dark(.solarized)
         case "tokyoNight":
             return .dark(.tokyoNight)
+        case "blackout":
+            return .dark(.atomOne) // Blackout uses Atom One Dark syntax colors
         case "auto":
             return systemIsDark ? .dark(.atomOne) : .light(.atomOne)
         default:
