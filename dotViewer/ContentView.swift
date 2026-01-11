@@ -166,7 +166,7 @@ struct StatusView: View {
 
                 // Footer
                 HStack {
-                    Text("v1.0")
+                    Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0")")
                         .font(.caption)
                         .foregroundStyle(.secondary)
 
@@ -332,27 +332,14 @@ struct SettingsView: View {
     ]
 
     // List of common editors - only installed ones will be shown
-    private var installedEditors: [(name: String, bundleId: String, icon: String)] {
-        let editors: [(name: String, bundleId: String, icon: String)] = [
-            ("VS Code", "com.microsoft.VSCode", "curlybraces.square"),
-            ("Xcode", "com.apple.dt.Xcode", "hammer"),
-            ("Sublime", "com.sublimetext.4", "text.alignleft"),
-            ("TextEdit", "com.apple.TextEdit", "doc.text"),
-            ("Nova", "com.panic.Nova", "sparkle"),
-            ("BBEdit", "com.barebones.bbedit", "text.badge.star"),
-            ("Cursor", "com.todesktop.230313mzl4w4u92", "cursorarrow.click.badge.clock"),
-            ("Zed", "dev.zed.Zed", "text.cursor"),
-        ]
-        return editors.filter { NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0.bundleId) != nil }
+    private var installedEditors: [SupportedEditors.EditorInfo] {
+        SupportedEditors.installed
     }
 
     // Check if current selection is a custom app (not in preset list)
     private var isCustomAppSelected: Bool {
         guard let bundleId = SharedSettings.shared.preferredEditorBundleId else { return false }
-        let presetBundleIds = ["com.microsoft.VSCode", "com.apple.dt.Xcode", "com.sublimetext.4",
-                              "com.apple.TextEdit", "com.panic.Nova", "com.barebones.bbedit",
-                              "com.todesktop.230313mzl4w4u92", "dev.zed.Zed"]
-        return !presetBundleIds.contains(bundleId)
+        return !SupportedEditors.isPresetEditor(bundleId)
     }
 
     var body: some View {
@@ -681,25 +668,17 @@ struct CustomEditorButton: View {
 
     private var settings: SharedSettings { SharedSettings.shared }
 
+    // Cached icon to avoid disk I/O on every render
+    @State private var cachedIcon: NSImage?
+    @State private var lastBundleId: String?
+
     private var isCustomSelected: Bool {
         guard let bundleId = settings.preferredEditorBundleId else { return false }
-        let presetBundleIds = ["com.microsoft.VSCode", "com.apple.dt.Xcode", "com.sublimetext.4",
-                              "com.apple.TextEdit", "com.panic.Nova", "com.barebones.bbedit",
-                              "com.todesktop.230313mzl4w4u92", "dev.zed.Zed"]
-        return !presetBundleIds.contains(bundleId)
+        return !SupportedEditors.isPresetEditor(bundleId)
     }
 
     private var customAppName: String? {
         isCustomSelected ? settings.preferredEditorName : nil
-    }
-
-    private var customAppIcon: NSImage? {
-        guard isCustomSelected,
-              let bundleId = settings.preferredEditorBundleId,
-              let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) else {
-            return nil
-        }
-        return NSWorkspace.shared.icon(forFile: appURL.path)
     }
 
     var body: some View {
@@ -707,7 +686,7 @@ struct CustomEditorButton: View {
             onChooseApp()
         } label: {
             VStack(spacing: 6) {
-                if let icon = customAppIcon {
+                if let icon = cachedIcon, isCustomSelected {
                     Image(nsImage: icon)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
@@ -731,6 +710,22 @@ struct CustomEditorButton: View {
         }
         .buttonStyle(.plain)
         .help(isCustomSelected ? "Custom app: \(customAppName ?? "Unknown")" : "Choose a custom app")
+        .onAppear { updateCachedIcon() }
+        .onChange(of: settings.preferredEditorBundleId) { _, _ in updateCachedIcon() }
+    }
+
+    private func updateCachedIcon() {
+        let bundleId = settings.preferredEditorBundleId
+        guard bundleId != lastBundleId else { return }
+        lastBundleId = bundleId
+
+        guard isCustomSelected,
+              let bundleId = bundleId,
+              let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) else {
+            cachedIcon = nil
+            return
+        }
+        cachedIcon = NSWorkspace.shared.icon(forFile: appURL.path)
     }
 }
 
