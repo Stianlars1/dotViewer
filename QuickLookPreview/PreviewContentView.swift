@@ -929,12 +929,54 @@ struct MarkdownBlockView: View {
 
     // MARK: - Simple Syntax Highlighting for Code Blocks
 
+    // Pre-compiled regex patterns (static to avoid recompilation)
+    private static let lineCommentRegex = try! NSRegularExpression(pattern: "//[^\n]*")
+    private static let blockCommentRegex = try! NSRegularExpression(pattern: "/\\*[\\s\\S]*?\\*/")
+    private static let hashCommentRegex = try! NSRegularExpression(pattern: "#[^\n]*")
+    private static let doubleStringRegex = try! NSRegularExpression(pattern: "\"(?:[^\"\\\\]|\\\\.)*\"")
+    private static let singleStringRegex = try! NSRegularExpression(pattern: "'(?:[^'\\\\]|\\\\.)*'")
+    private static let backtickStringRegex = try! NSRegularExpression(pattern: "`(?:[^`\\\\]|\\\\.)*`")
+    private static let numberRegex = try! NSRegularExpression(pattern: "\\b\\d+\\.?\\d*\\b")
+
+    /// Index mapping for O(1) highlight lookups
+    private struct IndexMapping {
+        let utf16ToChar: [Int]           // UTF-16 offset -> character index
+        let attrIndices: [AttributedString.Index]  // character index -> AttributedString.Index
+    }
+
+    private func buildIndexMapping(code: String, attributed: AttributedString) -> IndexMapping {
+        // Build UTF-16 offset to character index mapping - O(n) once
+        var utf16ToChar: [Int] = []
+        utf16ToChar.reserveCapacity(code.utf16.count + 1)
+        var charIdx = 0
+        for char in code {
+            for _ in 0..<char.utf16.count {
+                utf16ToChar.append(charIdx)
+            }
+            charIdx += 1
+        }
+        utf16ToChar.append(charIdx)
+
+        // Build character index to AttributedString.Index mapping - O(n) once
+        var attrIndices: [AttributedString.Index] = []
+        attrIndices.reserveCapacity(charIdx + 1)
+        var idx = attributed.startIndex
+        attrIndices.append(idx)
+        while idx < attributed.endIndex {
+            idx = attributed.index(afterCharacter: idx)
+            attrIndices.append(idx)
+        }
+
+        return IndexMapping(utf16ToChar: utf16ToChar, attrIndices: attrIndices)
+    }
+
     private func highlightCode(_ code: String, language: String?) -> AttributedString {
         var result = AttributedString(code)
 
         // Define colors based on theme
         let isDark = ThemeManager.shared.selectedTheme.contains("Dark") ||
                      ThemeManager.shared.selectedTheme == "tokyoNight" ||
+                     ThemeManager.shared.selectedTheme == "blackout" ||
                      (ThemeManager.shared.selectedTheme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
 
         let keywordColor = isDark ? Color(red: 0.8, green: 0.5, blue: 0.9) : Color(red: 0.6, green: 0.2, blue: 0.7)
@@ -946,6 +988,10 @@ struct MarkdownBlockView: View {
 
         // Set default color
         result.foregroundColor = defaultColor
+
+        // Build index mapping once for O(1) lookups
+        let mapping = buildIndexMapping(code: code, attributed: result)
+        let codeNS = code as NSString
 
         // Define keywords per language
         let keywords: Set<String>
@@ -973,59 +1019,57 @@ struct MarkdownBlockView: View {
             types = ["String", "Int", "Integer", "Float", "Double", "Bool", "Boolean", "Array", "List", "Map", "Dict", "Set", "Object", "Error", "Exception"]
         }
 
-        // Highlight patterns
-        let codeNS = code as NSString
+        // 1. Highlight comments (using pre-compiled regex)
+        applyHighlight(regex: Self.lineCommentRegex, to: &result, code: codeNS, mapping: mapping, color: commentColor)
+        applyHighlight(regex: Self.blockCommentRegex, to: &result, code: codeNS, mapping: mapping, color: commentColor)
+        applyHighlight(regex: Self.hashCommentRegex, to: &result, code: codeNS, mapping: mapping, color: commentColor)
 
-        // 1. Highlight comments (// and /* */ and #)
-        highlightPattern(in: &result, code: codeNS, pattern: "//[^\n]*", color: commentColor)
-        highlightPattern(in: &result, code: codeNS, pattern: "/\\*[\\s\\S]*?\\*/", color: commentColor)
-        highlightPattern(in: &result, code: codeNS, pattern: "#[^\n]*", color: commentColor)
-
-        // 2. Highlight strings (double and single quotes)
-        highlightPattern(in: &result, code: codeNS, pattern: "\"(?:[^\"\\\\]|\\\\.)*\"", color: stringColor)
-        highlightPattern(in: &result, code: codeNS, pattern: "'(?:[^'\\\\]|\\\\.)*'", color: stringColor)
-        highlightPattern(in: &result, code: codeNS, pattern: "`(?:[^`\\\\]|\\\\.)*`", color: stringColor)
+        // 2. Highlight strings
+        applyHighlight(regex: Self.doubleStringRegex, to: &result, code: codeNS, mapping: mapping, color: stringColor)
+        applyHighlight(regex: Self.singleStringRegex, to: &result, code: codeNS, mapping: mapping, color: stringColor)
+        applyHighlight(regex: Self.backtickStringRegex, to: &result, code: codeNS, mapping: mapping, color: stringColor)
 
         // 3. Highlight numbers
-        highlightPattern(in: &result, code: codeNS, pattern: "\\b\\d+\\.?\\d*\\b", color: numberColor)
+        applyHighlight(regex: Self.numberRegex, to: &result, code: codeNS, mapping: mapping, color: numberColor)
 
         // 4. Highlight keywords
         for keyword in keywords {
-            highlightWord(in: &result, code: codeNS, word: keyword, color: keywordColor)
+            highlightWord(in: &result, code: codeNS, word: keyword, mapping: mapping, color: keywordColor)
         }
 
         // 5. Highlight types
         for typeName in types {
-            highlightWord(in: &result, code: codeNS, word: typeName, color: typeColor)
+            highlightWord(in: &result, code: codeNS, word: typeName, mapping: mapping, color: typeColor)
         }
 
         return result
     }
 
-    private func highlightPattern(in attributed: inout AttributedString, code: NSString, pattern: String, color: Color) {
-        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return }
-        let codeString = code as String
-        let matches = regex.matches(in: codeString, options: [], range: NSRange(location: 0, length: code.length))
+    /// Apply highlighting using pre-built index mapping - O(m) where m is match count
+    private func applyHighlight(regex: NSRegularExpression, to attributed: inout AttributedString, code: NSString, mapping: IndexMapping, color: Color) {
+        let matches = regex.matches(in: code as String, options: [], range: NSRange(location: 0, length: code.length))
 
         for match in matches {
-            // Convert NSRange to Range<String.Index> using the original string
-            if let stringRange = Range(match.range, in: codeString) {
-                // Convert String.Index range to AttributedString range
-                let startOffset = codeString.distance(from: codeString.startIndex, to: stringRange.lowerBound)
-                let endOffset = codeString.distance(from: codeString.startIndex, to: stringRange.upperBound)
+            let loc = match.range.location
+            let end = loc + match.range.length
 
-                let attribStart = attributed.index(attributed.startIndex, offsetByCharacters: startOffset)
-                let attribEnd = attributed.index(attributed.startIndex, offsetByCharacters: endOffset)
+            // Bounds check
+            guard loc < mapping.utf16ToChar.count && end <= mapping.utf16ToChar.count else { continue }
 
-                attributed[attribStart..<attribEnd].foregroundColor = color
-            }
+            let startChar = mapping.utf16ToChar[loc]
+            let endChar = mapping.utf16ToChar[end]
+
+            guard startChar < mapping.attrIndices.count && endChar < mapping.attrIndices.count else { continue }
+
+            // O(1) index lookup instead of O(n) distance calculation
+            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].foregroundColor = color
         }
     }
 
-    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, color: Color) {
+    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, mapping: IndexMapping, color: Color) {
         let escapedWord = NSRegularExpression.escapedPattern(for: word)
-        let pattern = "\\b\(escapedWord)\\b"
-        highlightPattern(in: &attributed, code: code, pattern: pattern, color: color)
+        guard let regex = try? NSRegularExpression(pattern: "\\b\(escapedWord)\\b") else { return }
+        applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
     }
 }
 
