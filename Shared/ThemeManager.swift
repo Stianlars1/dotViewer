@@ -118,7 +118,7 @@ class ThemeManager: ObservableObject {
         case "tokyoNight":
             return Color(hex: "#a9b1d6")
         case "blackout":
-            return Color(hex: "#c6c5b8") // Typora Blackout warm text
+            return Color(hex: "#e0e0e0") // Bright neutral gray for better contrast
         default:
             return Color(nsColor: .textColor)
         }

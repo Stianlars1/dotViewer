@@ -20,6 +20,9 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     override func loadView() {
         self.view = NSView()
         self.view.wantsLayer = true
+        // Don't set a fixed frame - let Quick Look determine the appropriate size
+        // This allows proper rendering in both full preview (spacebar) and
+        // Finder preview pane (compact mode)
     }
 
     // MARK: - QLPreviewingController

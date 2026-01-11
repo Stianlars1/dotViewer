@@ -36,52 +36,56 @@ struct PreviewContentView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            // Header (optional)
-            if settings.showPreviewHeader {
-                PreviewHeaderView(
-                    filename: state.filename,
-                    language: state.language,
-                    lineCount: state.lineCount,
-                    fileSize: state.fileSize,
-                    content: state.content,
-                    fileURL: state.fileURL,
-                    isMarkdown: isMarkdown,
-                    showRenderedMarkdown: $showRenderedMarkdown
-                )
-            }
+        GeometryReader { outerGeometry in
+            // Detect compact mode (Finder preview pane is typically small)
+            let isCompactMode = outerGeometry.size.width < 350 || outerGeometry.size.height < 250
 
-            // Truncation warning
-            if state.isTruncated, settings.showTruncationWarning, let message = state.truncationMessage {
-                TruncationBanner(message: message)
-            }
-
-            // Content area
-            ZStack(alignment: .topLeading) {
-                // Background always visible
-                backgroundColor
-
-                // Loading indicator while highlighting
-                if !isReady {
-                    ProgressView()
-                        .controlSize(.large)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+            VStack(spacing: 0) {
+                // Header - hide in compact mode (Finder preview pane)
+                if settings.showPreviewHeader && !isCompactMode {
+                    PreviewHeaderView(
+                        filename: state.filename,
+                        language: state.language,
+                        lineCount: state.lineCount,
+                        fileSize: state.fileSize,
+                        content: state.content,
+                        fileURL: state.fileURL,
+                        isMarkdown: isMarkdown,
+                        showRenderedMarkdown: $showRenderedMarkdown
+                    )
                 }
 
-                // Content (fades in when ready)
-                if isMarkdown && showRenderedMarkdown {
-                    // Rendered markdown view (Typora-inspired native SwiftUI)
-                    MarkdownRenderedViewLegacy(
-                        content: state.content,
-                        fontSize: settings.fontSize
-                    )
-                    .opacity(isReady ? 1 : 0)
-                } else {
-                    // Code view
-                    GeometryReader { geometry in
+                // Truncation warning - also hide in compact mode
+                if state.isTruncated, settings.showTruncationWarning, let message = state.truncationMessage, !isCompactMode {
+                    TruncationBanner(message: message)
+                }
+
+                // Content area
+                ZStack(alignment: .topLeading) {
+                    // Background always visible
+                    backgroundColor
+
+                    // Loading indicator while highlighting
+                    if !isReady {
+                        ProgressView()
+                            .controlSize(.large)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    }
+
+                    // Content (fades in when ready)
+                    if isMarkdown && showRenderedMarkdown {
+                        // Rendered markdown view (Typora-inspired native SwiftUI)
+                        MarkdownRenderedViewLegacy(
+                            content: state.content,
+                            fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
+                        )
+                        .opacity(isReady ? 1 : 0)
+                    } else {
+                        // Code view
                         ScrollView([.horizontal, .vertical]) {
                             HStack(alignment: .top, spacing: 0) {
-                                if settings.showLineNumbers {
+                                // Hide line numbers in compact mode
+                                if settings.showLineNumbers && !isCompactMode {
                                     LineNumbersColumn(
                                         lineCount: state.lineCount,
                                         fontSize: settings.fontSize
@@ -91,13 +95,13 @@ struct PreviewContentView: View {
                                 CodeContentView(
                                     plainContent: state.content,
                                     highlightedContent: highlightedContent,
-                                    fontSize: settings.fontSize
+                                    fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
                                 )
                             }
-                            .frame(minWidth: geometry.size.width, minHeight: geometry.size.height, alignment: .topLeading)
+                            .frame(minWidth: outerGeometry.size.width, minHeight: outerGeometry.size.height, alignment: .topLeading)
                         }
+                        .opacity(isReady ? 1 : 0)
                     }
-                    .opacity(isReady ? 1 : 0)
                 }
             }
         }
@@ -147,16 +151,10 @@ struct PreviewHeaderView: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // File icon and name
-            HStack(spacing: 8) {
-                Image(systemName: iconForLanguage(language))
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(.secondary)
-
-                Text(filename)
-                    .font(.system(size: 13, weight: .semibold))
-                    .lineLimit(1)
-            }
+            // File icon only (filename already shown in Apple's native header)
+            Image(systemName: iconForLanguage(language))
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(.secondary)
 
             Spacer()
 
@@ -400,7 +398,7 @@ struct MarkdownRenderedViewLegacy: View {
     // Theme-aware color palette
     private var isDarkTheme: Bool {
         let theme = ThemeManager.shared.selectedTheme
-        return theme.contains("Dark") || theme == "tokyoNight" ||
+        return theme.contains("Dark") || theme == "tokyoNight" || theme == "blackout" ||
                (theme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
     }
 
@@ -535,14 +533,14 @@ struct MarkdownRenderedViewLegacy: View {
             } else if trimmed.hasPrefix("- [") || trimmed.hasPrefix("* [") {
                 // Task list item
                 flushParagraph()
-                var taskItems: [(checked: Bool, text: String)] = []
+                var taskItems: [TaskItem] = []
 
                 while currentIndex < lines.count {
                     let taskLine = lines[currentIndex].trimmingCharacters(in: .whitespaces)
                     if let match = taskLine.firstMatch(of: /^[-*]\s*\[([ xX])\]\s*(.*)$/) {
                         let isChecked = String(match.1).lowercased() == "x"
                         let text = String(match.2)
-                        taskItems.append((checked: isChecked, text: text))
+                        taskItems.append(TaskItem(checked: isChecked, text: text))
                         currentIndex += 1
                     } else if taskLine.hasPrefix("- [") || taskLine.hasPrefix("* [") {
                         // Malformed task item - skip
@@ -622,6 +620,12 @@ struct MarkdownRenderedViewLegacy: View {
     }
 }
 
+struct TaskItem: Identifiable {
+    let id = UUID()
+    let checked: Bool
+    let text: String
+}
+
 struct MarkdownBlock: Identifiable {
     let id = UUID()
     let type: MarkdownBlockType
@@ -629,7 +633,7 @@ struct MarkdownBlock: Identifiable {
     var language: String? = nil
     var imageURL: String? = nil
     var tableRows: [[String]]? = nil  // For tables: array of rows, each row is array of cells
-    var taskItems: [(checked: Bool, text: String)]? = nil  // For task lists
+    var taskItems: [TaskItem]? = nil  // For task lists
 }
 
 enum MarkdownBlockType {
@@ -737,9 +741,8 @@ struct MarkdownBlockView: View {
                             .padding(.top, 10)
                             .padding(.bottom, 4)
                     }
-                    Text(block.content)
+                    Text(highlightCode(block.content, language: block.language))
                         .font(.system(size: fontSize * 0.9, design: .monospaced))
-                        .foregroundStyle(bodyColor)
                         .padding(.horizontal, 16)
                         .padding(.vertical, block.language != nil ? 8 : 14)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -887,7 +890,7 @@ struct MarkdownBlockView: View {
                 // Render task list with checkboxes
                 if let items = block.taskItems {
                     VStack(alignment: .leading, spacing: 6) {
-                        ForEach(Array(items.enumerated()), id: \.offset) { _, item in
+                        ForEach(items) { item in
                             HStack(alignment: .top, spacing: 10) {
                                 Image(systemName: item.checked ? "checkmark.square.fill" : "square")
                                     .font(.system(size: fontSize * 1.1))
@@ -922,6 +925,107 @@ struct MarkdownBlockView: View {
         } catch {
             return AttributedString(text)
         }
+    }
+
+    // MARK: - Simple Syntax Highlighting for Code Blocks
+
+    private func highlightCode(_ code: String, language: String?) -> AttributedString {
+        var result = AttributedString(code)
+
+        // Define colors based on theme
+        let isDark = ThemeManager.shared.selectedTheme.contains("Dark") ||
+                     ThemeManager.shared.selectedTheme == "tokyoNight" ||
+                     (ThemeManager.shared.selectedTheme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
+
+        let keywordColor = isDark ? Color(red: 0.8, green: 0.5, blue: 0.9) : Color(red: 0.6, green: 0.2, blue: 0.7)
+        let stringColor = isDark ? Color(red: 0.6, green: 0.8, blue: 0.5) : Color(red: 0.2, green: 0.5, blue: 0.2)
+        let commentColor = isDark ? Color(red: 0.5, green: 0.5, blue: 0.5) : Color(red: 0.4, green: 0.4, blue: 0.4)
+        let numberColor = isDark ? Color(red: 0.85, green: 0.7, blue: 0.4) : Color(red: 0.7, green: 0.4, blue: 0.1)
+        let typeColor = isDark ? Color(red: 0.4, green: 0.8, blue: 0.9) : Color(red: 0.1, green: 0.5, blue: 0.6)
+        let defaultColor = bodyColor
+
+        // Set default color
+        result.foregroundColor = defaultColor
+
+        // Define keywords per language
+        let keywords: Set<String>
+        let types: Set<String>
+
+        switch language?.lowercased() {
+        case "swift":
+            keywords = ["func", "let", "var", "if", "else", "guard", "return", "import", "class", "struct", "enum", "protocol", "extension", "private", "public", "internal", "fileprivate", "static", "final", "override", "init", "deinit", "self", "super", "nil", "true", "false", "for", "while", "repeat", "switch", "case", "default", "break", "continue", "fallthrough", "where", "in", "do", "try", "catch", "throw", "throws", "rethrows", "defer", "as", "is", "async", "await", "@State", "@Binding", "@Published", "@ObservedObject", "@StateObject", "@Environment", "@MainActor", "some", "any"]
+            types = ["String", "Int", "Double", "Float", "Bool", "Array", "Dictionary", "Set", "Optional", "Result", "Error", "View", "Color", "Text", "Button", "VStack", "HStack", "ZStack", "ForEach", "List", "NavigationView", "NavigationStack", "URL", "Data", "Date", "UUID"]
+        case "javascript", "js", "typescript", "ts", "jsx", "tsx":
+            keywords = ["function", "const", "let", "var", "if", "else", "return", "import", "export", "from", "default", "class", "extends", "new", "this", "super", "null", "undefined", "true", "false", "for", "while", "do", "switch", "case", "break", "continue", "try", "catch", "throw", "finally", "async", "await", "yield", "of", "in", "typeof", "instanceof", "void", "delete", "=>", "interface", "type", "enum", "implements", "private", "public", "protected", "readonly", "static", "abstract", "as"]
+            types = ["string", "number", "boolean", "object", "any", "void", "never", "unknown", "Promise", "Array", "Map", "Set", "Date", "Error", "Function", "Object", "String", "Number", "Boolean", "RegExp", "Symbol", "console", "window", "document", "React", "useState", "useEffect", "useRef", "useCallback", "useMemo"]
+        case "python", "py":
+            keywords = ["def", "class", "if", "elif", "else", "return", "import", "from", "as", "try", "except", "finally", "raise", "with", "for", "while", "break", "continue", "pass", "lambda", "yield", "global", "nonlocal", "assert", "del", "in", "is", "not", "and", "or", "True", "False", "None", "self", "async", "await"]
+            types = ["str", "int", "float", "bool", "list", "dict", "tuple", "set", "bytes", "type", "object", "print", "len", "range", "enumerate", "zip", "map", "filter", "sorted", "reversed", "open", "file", "Exception"]
+        case "rust", "rs":
+            keywords = ["fn", "let", "mut", "const", "if", "else", "match", "return", "use", "mod", "pub", "crate", "self", "super", "struct", "enum", "impl", "trait", "for", "while", "loop", "break", "continue", "move", "ref", "static", "unsafe", "async", "await", "dyn", "where", "as", "in", "true", "false"]
+            types = ["i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64", "bool", "char", "str", "String", "Vec", "Option", "Result", "Box", "Rc", "Arc", "Cell", "RefCell", "HashMap", "HashSet", "Self"]
+        case "go", "golang":
+            keywords = ["func", "var", "const", "if", "else", "return", "import", "package", "type", "struct", "interface", "for", "range", "switch", "case", "default", "break", "continue", "go", "select", "chan", "defer", "map", "make", "new", "nil", "true", "false", "append", "len", "cap", "close", "delete", "copy", "panic", "recover"]
+            types = ["string", "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "float32", "float64", "bool", "byte", "rune", "error", "any"]
+        default:
+            // Generic keywords for unknown languages
+            keywords = ["function", "func", "def", "class", "if", "else", "elif", "return", "import", "export", "from", "const", "let", "var", "for", "while", "do", "switch", "case", "break", "continue", "try", "catch", "throw", "finally", "true", "false", "null", "nil", "None", "undefined", "self", "this", "new", "public", "private", "protected", "static", "void", "async", "await"]
+            types = ["String", "Int", "Integer", "Float", "Double", "Bool", "Boolean", "Array", "List", "Map", "Dict", "Set", "Object", "Error", "Exception"]
+        }
+
+        // Highlight patterns
+        let codeNS = code as NSString
+
+        // 1. Highlight comments (// and /* */ and #)
+        highlightPattern(in: &result, code: codeNS, pattern: "//[^\n]*", color: commentColor)
+        highlightPattern(in: &result, code: codeNS, pattern: "/\\*[\\s\\S]*?\\*/", color: commentColor)
+        highlightPattern(in: &result, code: codeNS, pattern: "#[^\n]*", color: commentColor)
+
+        // 2. Highlight strings (double and single quotes)
+        highlightPattern(in: &result, code: codeNS, pattern: "\"(?:[^\"\\\\]|\\\\.)*\"", color: stringColor)
+        highlightPattern(in: &result, code: codeNS, pattern: "'(?:[^'\\\\]|\\\\.)*'", color: stringColor)
+        highlightPattern(in: &result, code: codeNS, pattern: "`(?:[^`\\\\]|\\\\.)*`", color: stringColor)
+
+        // 3. Highlight numbers
+        highlightPattern(in: &result, code: codeNS, pattern: "\\b\\d+\\.?\\d*\\b", color: numberColor)
+
+        // 4. Highlight keywords
+        for keyword in keywords {
+            highlightWord(in: &result, code: codeNS, word: keyword, color: keywordColor)
+        }
+
+        // 5. Highlight types
+        for typeName in types {
+            highlightWord(in: &result, code: codeNS, word: typeName, color: typeColor)
+        }
+
+        return result
+    }
+
+    private func highlightPattern(in attributed: inout AttributedString, code: NSString, pattern: String, color: Color) {
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return }
+        let codeString = code as String
+        let matches = regex.matches(in: codeString, options: [], range: NSRange(location: 0, length: code.length))
+
+        for match in matches {
+            // Convert NSRange to Range<String.Index> using the original string
+            if let stringRange = Range(match.range, in: codeString) {
+                // Convert String.Index range to AttributedString range
+                let startOffset = codeString.distance(from: codeString.startIndex, to: stringRange.lowerBound)
+                let endOffset = codeString.distance(from: codeString.startIndex, to: stringRange.upperBound)
+
+                let attribStart = attributed.index(attributed.startIndex, offsetByCharacters: startOffset)
+                let attribEnd = attributed.index(attributed.startIndex, offsetByCharacters: endOffset)
+
+                attributed[attribStart..<attribEnd].foregroundColor = color
+            }
+        }
+    }
+
+    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, color: Color) {
+        let escapedWord = NSRegularExpression.escapedPattern(for: word)
+        let pattern = "\\b\(escapedWord)\\b"
+        highlightPattern(in: &attributed, code: code, pattern: pattern, color: color)
     }
 }
 

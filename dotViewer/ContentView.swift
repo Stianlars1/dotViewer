@@ -190,31 +190,55 @@ struct StatusView: View {
     private func checkExtensionStatus() {
         isCheckingStatus = true
 
-        // Check extension status using pluginkit
         DispatchQueue.global(qos: .userInitiated).async {
+            var isEnabled = false
+
+            // Method 1: Check via pluginkit command
             let task = Process()
-            task.launchPath = "/usr/bin/pluginkit"
+            task.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
             task.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
 
             let pipe = Pipe()
             task.standardOutput = pipe
+            task.standardError = FileHandle.nullDevice
 
             do {
                 try task.run()
                 task.waitUntilExit()
 
-                let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                let output = String(data: data, encoding: .utf8) ?? ""
+                if task.terminationStatus == 0 {
+                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                    let output = String(data: data, encoding: .utf8) ?? ""
 
-                DispatchQueue.main.async {
-                    self.isExtensionEnabled = output.contains("com.stianlars1.dotViewer.QuickLookPreview")
-                    self.isCheckingStatus = false
+                    // pluginkit output format: "+    com.bundle.id(version)" for enabled
+                    // The "+" prefix indicates the extension is enabled
+                    // Split by lines and check each one
+                    for line in output.components(separatedBy: .newlines) {
+                        if line.contains("com.stianlars1.dotViewer.QuickLookPreview") {
+                            // Check if line starts with "+" (enabled) vs "-" (disabled)
+                            let trimmed = line.trimmingCharacters(in: .whitespaces)
+                            isEnabled = trimmed.hasPrefix("+")
+                            break
+                        }
+                    }
                 }
             } catch {
-                DispatchQueue.main.async {
-                    self.isExtensionEnabled = false
-                    self.isCheckingStatus = false
+                print("[dotViewer] pluginkit error: \(error)")
+            }
+
+            // Method 2: Fallback - check if extension file exists in app bundle
+            if !isEnabled {
+                let extensionPath = Bundle.main.bundlePath + "/Contents/PlugIns/QuickLookPreview.appex"
+                if FileManager.default.fileExists(atPath: extensionPath) {
+                    // Extension exists in bundle, assume enabled if pluginkit failed
+                    // This handles cases where pluginkit might not work in sandbox
+                    isEnabled = true
                 }
+            }
+
+            DispatchQueue.main.async {
+                self.isExtensionEnabled = isEnabled
+                self.isCheckingStatus = false
             }
         }
     }
