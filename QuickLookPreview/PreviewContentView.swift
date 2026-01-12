@@ -12,6 +12,8 @@ struct PreviewState {
     let isTruncated: Bool
     let truncationMessage: String?
     let fileURL: URL?
+    let modificationDate: Date?
+    let preHighlightedContent: AttributedString?
 }
 
 // MARK: - Main Preview View
@@ -115,6 +117,15 @@ struct PreviewContentView: View {
     }
 
     private func highlightCode() async {
+        // Use pre-highlighted content if available (from cache or pre-warming)
+        if let preHighlighted = state.preHighlightedContent {
+            highlightedContent = preHighlighted
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
         // Skip syntax highlighting for very large files (>2000 lines) - show plain text immediately
         // This prevents the UI from hanging on massive files like package-lock.json
         let maxLinesForHighlighting = 2000
@@ -129,7 +140,12 @@ struct PreviewContentView: View {
 
         // Use custom highlighting for markdown (HighlightSwift has bugs that cause red text)
         if state.language == "markdown" {
-            highlightedContent = highlightMarkdownRaw(state.content)
+            let result = highlightMarkdownRaw(state.content)
+            highlightedContent = result
+            // Cache the result
+            if let modDate = state.modificationDate, let path = state.fileURL?.path {
+                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: result)
+            }
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
@@ -157,6 +173,10 @@ struct PreviewContentView: View {
             let result = try await highlightTask.value
             timeoutTask.cancel()
             highlightedContent = result
+            // Cache the result
+            if let modDate = state.modificationDate, let path = state.fileURL?.path {
+                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: result)
+            }
         } catch {
             // Timeout or error - keep plain text (highlightedContent stays nil)
             timeoutTask.cancel()

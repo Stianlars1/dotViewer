@@ -42,9 +42,10 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         }
 
         do {
-            // Get file attributes for size
+            // Get file attributes for size and modification date
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
             let fileSize = attributes[.size] as? Int ?? 0
+            let modDate = attributes[.modificationDate] as? Date
             let maxSize = settings.maxFileSize
 
             let data: Data
@@ -97,16 +98,25 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 originalLines: totalLineCount
             )
 
+            // Check cache for pre-highlighted content
+            var cachedHighlight: AttributedString? = nil
+            let effectiveLineCount = lineTruncated ? maxPreviewLines : totalLineCount
+            if let modDate = modDate {
+                cachedHighlight = HighlightCache.shared.get(path: url.path, modDate: modDate)
+            }
+
             // Create preview state
             let previewState = PreviewState(
                 content: content,
                 filename: filename,
                 language: language,
-                lineCount: lineTruncated ? maxPreviewLines : totalLineCount,
+                lineCount: effectiveLineCount,
                 fileSize: formatFileSize(fileSize),
                 isTruncated: isTruncated || lineTruncated,
                 truncationMessage: truncationMessage,
-                fileURL: url
+                fileURL: url,
+                modificationDate: modDate,
+                preHighlightedContent: cachedHighlight
             )
 
             // Present SwiftUI view on main thread

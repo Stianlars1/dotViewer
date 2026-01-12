@@ -33,6 +33,8 @@
 		A1000034 /* MarkdownStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000024 /* MarkdownStyles.swift */; };
 		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
 		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
+		A1000050 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
+		A1000051 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +83,7 @@
 		A2000022 /* QuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookPreview.entitlements; sourceTree = "<group>"; };
 		A2000023 /* MarkdownWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownWebView.swift; sourceTree = "<group>"; };
 		A2000024 /* MarkdownStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownStyles.swift; sourceTree = "<group>"; };
+		A2000030 /* HighlightCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightCache.swift; sourceTree = "<group>"; };
 		A3000002 /* QuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -139,6 +142,7 @@
 				A2000011 /* SyntaxHighlighter.swift */,
 				A2000012 /* ThemeManager.swift */,
 				A2000013 /* PreviewView.swift */,
+				A2000030 /* HighlightCache.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -286,6 +290,7 @@
 				80F9F4FA2F1228E100412E97 /* AddCustomExtensionSheet.swift in Sources */,
 				80F9F4FB2F1228E100412E97 /* FileTypesView.swift in Sources */,
 				A1000013 /* PreviewView.swift in Sources */,
+				A1000050 /* HighlightCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,6 +308,7 @@
 				80F9F4F32F1228C700412E97 /* FileTypeModel.swift in Sources */,
 				80F9F4F42F1228C700412E97 /* FileTypeRegistry.swift in Sources */,
 				80F9F4FD2F1228F500412E97 /* PreviewContentView.swift in Sources */,
+				A1000051 /* HighlightCache.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
