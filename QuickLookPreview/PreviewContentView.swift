@@ -168,22 +168,13 @@ struct PreviewContentView: View {
         }
     }
 
-    /// Custom markdown syntax highlighting that doesn't have the red text bug
+    /// Custom markdown syntax highlighting that matches the user's selected theme
     private func highlightMarkdownRaw(_ content: String) -> AttributedString {
         var attributed = AttributedString(content)
         let text = content
 
-        let isDark = ThemeManager.shared.selectedTheme.contains("Dark") ||
-                     ThemeManager.shared.selectedTheme == "tokyoNight" ||
-                     ThemeManager.shared.selectedTheme == "blackout" ||
-                     (ThemeManager.shared.selectedTheme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
-
-        // Colors for markdown elements
-        let headingColor = isDark ? Color(red: 0.6, green: 0.8, blue: 1.0) : Color(red: 0.0, green: 0.4, blue: 0.8)
-        let codeColor = isDark ? Color(red: 0.8, green: 0.9, blue: 0.6) : Color(red: 0.2, green: 0.5, blue: 0.2)
-        let linkColor = isDark ? Color(red: 0.5, green: 0.7, blue: 1.0) : Color(red: 0.1, green: 0.3, blue: 0.8)
-        let boldColor = isDark ? Color.white : Color.black
-        let quoteColor = isDark ? Color(white: 0.6) : Color(white: 0.4)
+        // Get theme-specific colors
+        let colors = markdownColorsForTheme(ThemeManager.shared.selectedTheme)
 
         // Helper to apply color to regex matches
         func applyPattern(_ pattern: String, color: Color, bold: Bool = false) {
@@ -202,16 +193,103 @@ struct PreviewContentView: View {
         }
 
         // Apply patterns (order matters - more specific first)
-        applyPattern("^#{1,6}\\s.*$", color: headingColor, bold: true)  // Headers
-        applyPattern("^>.*$", color: quoteColor)                         // Blockquotes
-        applyPattern("`[^`]+`", color: codeColor)                        // Inline code
-        applyPattern("```[\\s\\S]*?```", color: codeColor)               // Code blocks
-        applyPattern("\\[([^\\]]+)\\]\\([^)]+\\)", color: linkColor)     // Links
-        applyPattern("\\*\\*[^*]+\\*\\*", color: boldColor, bold: true)  // Bold
-        applyPattern("^\\s*[-*+]\\s", color: headingColor)               // List markers
-        applyPattern("^\\s*\\d+\\.\\s", color: headingColor)             // Numbered lists
+        applyPattern("^#{1,6}\\s.*$", color: colors.heading, bold: true)  // Headers
+        applyPattern("^>.*$", color: colors.quote)                         // Blockquotes
+        applyPattern("`[^`]+`", color: colors.code)                        // Inline code
+        applyPattern("```[\\s\\S]*?```", color: colors.code)               // Code blocks
+        applyPattern("\\[([^\\]]+)\\]\\([^)]+\\)", color: colors.link)     // Links
+        applyPattern("\\*\\*[^*]+\\*\\*", color: colors.bold, bold: true)  // Bold
+        applyPattern("^\\s*[-*+]\\s", color: colors.heading)               // List markers
+        applyPattern("^\\s*\\d+\\.\\s", color: colors.heading)             // Numbered lists
 
         return attributed
+    }
+
+    /// Returns theme-matched colors for markdown syntax highlighting
+    private func markdownColorsForTheme(_ theme: String) -> (heading: Color, code: Color, link: Color, bold: Color, quote: Color) {
+        switch theme {
+        case "atomOneLight":
+            return (
+                heading: Color(hex: "#a626a4"),  // Purple - keywords
+                code: Color(hex: "#50a14f"),     // Green - strings
+                link: Color(hex: "#4078f2"),     // Blue - functions
+                bold: Color(hex: "#383a42"),     // Dark gray - text
+                quote: Color(hex: "#a0a1a7")     // Gray - comments
+            )
+        case "atomOneDark", "blackout":
+            return (
+                heading: Color(hex: "#c678dd"),  // Purple - keywords
+                code: Color(hex: "#98c379"),     // Green - strings
+                link: Color(hex: "#61afef"),     // Blue - functions
+                bold: Color(hex: "#abb2bf"),     // Light gray - text
+                quote: Color(hex: "#5c6370")     // Gray - comments
+            )
+        case "github":
+            return (
+                heading: Color(hex: "#d73a49"),  // Red - keywords
+                code: Color(hex: "#032f62"),     // Dark blue - strings
+                link: Color(hex: "#0366d6"),     // Blue - links
+                bold: Color(hex: "#24292e"),     // Dark - text
+                quote: Color(hex: "#6a737d")     // Gray - comments
+            )
+        case "githubDark":
+            return (
+                heading: Color(hex: "#ff7b72"),  // Salmon - keywords
+                code: Color(hex: "#a5d6ff"),     // Light blue - strings
+                link: Color(hex: "#58a6ff"),     // Blue - links
+                bold: Color(hex: "#c9d1d9"),     // Light - text
+                quote: Color(hex: "#8b949e")     // Gray - comments
+            )
+        case "xcode":
+            return (
+                heading: Color(hex: "#9b2393"),  // Purple - keywords
+                code: Color(hex: "#c41a16"),     // Red - strings
+                link: Color(hex: "#0f68a0"),     // Blue - links
+                bold: Color(hex: "#000000"),     // Black - text
+                quote: Color(hex: "#5d6c79")     // Gray - comments
+            )
+        case "xcodeDark":
+            return (
+                heading: Color(hex: "#fc5fa3"),  // Pink - keywords
+                code: Color(hex: "#fc6a5d"),     // Coral - strings
+                link: Color(hex: "#6699ff"),     // Blue - links
+                bold: Color(hex: "#ffffff"),     // White - text
+                quote: Color(hex: "#7f8c98")     // Gray - comments
+            )
+        case "solarizedLight":
+            return (
+                heading: Color(hex: "#859900"),  // Green - keywords
+                code: Color(hex: "#2aa198"),     // Cyan - strings
+                link: Color(hex: "#268bd2"),     // Blue - links
+                bold: Color(hex: "#657b83"),     // Base00 - text
+                quote: Color(hex: "#93a1a1")     // Base1 - comments
+            )
+        case "solarizedDark":
+            return (
+                heading: Color(hex: "#859900"),  // Green - keywords
+                code: Color(hex: "#2aa198"),     // Cyan - strings
+                link: Color(hex: "#268bd2"),     // Blue - links
+                bold: Color(hex: "#839496"),     // Base0 - text
+                quote: Color(hex: "#586e75")     // Base01 - comments
+            )
+        case "tokyoNight":
+            return (
+                heading: Color(hex: "#bb9af7"),  // Purple - keywords
+                code: Color(hex: "#9ece6a"),     // Green - strings
+                link: Color(hex: "#7aa2f7"),     // Blue - links
+                bold: Color(hex: "#a9b1d6"),     // Light - text
+                quote: Color(hex: "#565f89")     // Gray - comments
+            )
+        case "auto":
+            // Follow system appearance
+            if ThemeManager.shared.systemAppearanceIsDark {
+                return markdownColorsForTheme("atomOneDark")
+            } else {
+                return markdownColorsForTheme("atomOneLight")
+            }
+        default:
+            return markdownColorsForTheme("atomOneLight")
+        }
     }
 }
 
