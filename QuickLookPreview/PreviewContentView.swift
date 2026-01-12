@@ -119,15 +119,6 @@ struct PreviewContentView: View {
         // This prevents the UI from hanging on massive files like package-lock.json
         let maxLinesForHighlighting = 2000
 
-        // Skip syntax highlighting for markdown files - the HighlightSwift library has bugs
-        // with markdown syntax that cause text to turn red. Raw markdown doesn't need highlighting.
-        if state.language == "markdown" {
-            withAnimation(.easeIn(duration: 0.15)) {
-                isReady = true
-            }
-            return
-        }
-
         if state.lineCount > maxLinesForHighlighting {
             // Large file - skip highlighting entirely, show plain text immediately
             withAnimation(.easeIn(duration: 0.15)) {
@@ -136,7 +127,16 @@ struct PreviewContentView: View {
             return
         }
 
-        // For smaller files, attempt syntax highlighting with timeout
+        // Use custom highlighting for markdown (HighlightSwift has bugs that cause red text)
+        if state.language == "markdown" {
+            highlightedContent = highlightMarkdownRaw(state.content)
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
+        // For other files, use HighlightSwift with timeout
         let highlighter = SyntaxHighlighter()
 
         // Create a task with timeout
@@ -166,6 +166,52 @@ struct PreviewContentView: View {
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }
+    }
+
+    /// Custom markdown syntax highlighting that doesn't have the red text bug
+    private func highlightMarkdownRaw(_ content: String) -> AttributedString {
+        var attributed = AttributedString(content)
+        let text = content
+
+        let isDark = ThemeManager.shared.selectedTheme.contains("Dark") ||
+                     ThemeManager.shared.selectedTheme == "tokyoNight" ||
+                     ThemeManager.shared.selectedTheme == "blackout" ||
+                     (ThemeManager.shared.selectedTheme == "auto" && ThemeManager.shared.systemAppearanceIsDark)
+
+        // Colors for markdown elements
+        let headingColor = isDark ? Color(red: 0.6, green: 0.8, blue: 1.0) : Color(red: 0.0, green: 0.4, blue: 0.8)
+        let codeColor = isDark ? Color(red: 0.8, green: 0.9, blue: 0.6) : Color(red: 0.2, green: 0.5, blue: 0.2)
+        let linkColor = isDark ? Color(red: 0.5, green: 0.7, blue: 1.0) : Color(red: 0.1, green: 0.3, blue: 0.8)
+        let boldColor = isDark ? Color.white : Color.black
+        let quoteColor = isDark ? Color(white: 0.6) : Color(white: 0.4)
+
+        // Helper to apply color to regex matches
+        func applyPattern(_ pattern: String, color: Color, bold: Bool = false) {
+            guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return }
+            let nsRange = NSRange(text.startIndex..., in: text)
+            let matches = regex.matches(in: text, options: [], range: nsRange)
+
+            for match in matches {
+                guard let range = Range(match.range, in: text),
+                      let attrRange = Range(range, in: attributed) else { continue }
+                attributed[attrRange].foregroundColor = color
+                if bold {
+                    attributed[attrRange].inlinePresentationIntent = .stronglyEmphasized
+                }
+            }
+        }
+
+        // Apply patterns (order matters - more specific first)
+        applyPattern("^#{1,6}\\s.*$", color: headingColor, bold: true)  // Headers
+        applyPattern("^>.*$", color: quoteColor)                         // Blockquotes
+        applyPattern("`[^`]+`", color: codeColor)                        // Inline code
+        applyPattern("```[\\s\\S]*?```", color: codeColor)               // Code blocks
+        applyPattern("\\[([^\\]]+)\\]\\([^)]+\\)", color: linkColor)     // Links
+        applyPattern("\\*\\*[^*]+\\*\\*", color: boldColor, bold: true)  // Bold
+        applyPattern("^\\s*[-*+]\\s", color: headingColor)               // List markers
+        applyPattern("^\\s*\\d+\\.\\s", color: headingColor)             // Numbered lists
+
+        return attributed
     }
 }
 
