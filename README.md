@@ -78,6 +78,22 @@ Launch the dotViewer app to configure:
 - macOS 13.0 (Ventura) or later
 - Quick Look extension must be enabled in System Settings
 
+## Known Limitations
+
+### TypeScript `.ts` Files
+macOS reserves the `.ts` extension for MPEG-2 Transport Stream video files at the system level. This is a macOS limitation that affects all Quick Look extensions, not just dotViewer.
+
+**Workarounds:**
+- Use `.mts` or `.cts` extensions (TypeScript supports these)
+- Right-click the file and use "Open With" to select a text editor
+- `.tsx` files work correctly (no conflict)
+
+### Open in Editor Button
+The "Open in Editor" button may have limited functionality due to Quick Look extension sandbox restrictions. If your preferred editor doesn't open, the file will open in your system's default text editor instead.
+
+### Large Files
+Files over 2,000 lines display without syntax highlighting for performance. The content is still fully readable and scrollable.
+
 ## Privacy
 
 dotViewer processes all files locally on your Mac. No data is collected, transmitted, or stored externally. See [PRIVACY.md](PRIVACY.md) for details.
