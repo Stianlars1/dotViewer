@@ -115,15 +115,51 @@ struct PreviewContentView: View {
     }
 
     private func highlightCode() async {
+        // Skip syntax highlighting for very large files (>2000 lines) - show plain text immediately
+        // This prevents the UI from hanging on massive files like package-lock.json
+        let maxLinesForHighlighting = 2000
+
+        // Skip syntax highlighting for markdown files - the HighlightSwift library has bugs
+        // with markdown syntax that cause text to turn red. Raw markdown doesn't need highlighting.
+        if state.language == "markdown" {
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
+        if state.lineCount > maxLinesForHighlighting {
+            // Large file - skip highlighting entirely, show plain text immediately
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
+        // For smaller files, attempt syntax highlighting with timeout
         let highlighter = SyntaxHighlighter()
-        do {
-            let result = try await highlighter.highlight(
+
+        // Create a task with timeout
+        let highlightTask = Task {
+            try await highlighter.highlight(
                 code: state.content,
                 language: state.language
             )
+        }
+
+        // Race against a 2-second timeout
+        let timeoutTask = Task {
+            try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
+            highlightTask.cancel()
+        }
+
+        do {
+            let result = try await highlightTask.value
+            timeoutTask.cancel()
             highlightedContent = result
         } catch {
-            // Keep plain text - highlightedContent stays nil
+            // Timeout or error - keep plain text (highlightedContent stays nil)
+            timeoutTask.cancel()
         }
 
         // Fade in the content smoothly
@@ -252,22 +288,24 @@ struct PreviewHeaderView: View {
     }
 
     private func openInPreferredApp(url: URL) {
+        // Quick Look extensions are sandboxed, so we use NSWorkspace methods carefully
         if let bundleId = settings.preferredEditorBundleId,
            let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) {
-            // Open with preferred app
-            NSWorkspace.shared.open(
-                [url],
-                withApplicationAt: appURL,
-                configuration: NSWorkspace.OpenConfiguration()
-            ) { app, error in
+            // Try to open with preferred app using configuration
+            let config = NSWorkspace.OpenConfiguration()
+            config.activates = true
+
+            NSWorkspace.shared.open([url], withApplicationAt: appURL, configuration: config) { app, error in
                 if let error = error {
-                    print("[PreviewContentView] Error opening file: \(error.localizedDescription)")
-                } else {
-                    print("[PreviewContentView] ✅ Opened file in \(app?.localizedName ?? "app")")
+                    // Fallback: try opening with system default
+                    print("[PreviewContentView] Preferred app failed: \(error.localizedDescription), trying default")
+                    DispatchQueue.main.async {
+                        NSWorkspace.shared.open(url)
+                    }
                 }
             }
         } else {
-            // Open with system default
+            // Open with system default app
             NSWorkspace.shared.open(url)
         }
     }

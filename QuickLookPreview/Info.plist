@@ -28,6 +28,10 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
+				<!-- MPEG-2 Transport Stream - macOS associates .ts with this, but TypeScript also uses .ts -->
+				<!-- We handle this in code by checking if file is text (TypeScript) vs binary (video) -->
+				<string>public.mpeg-2-transport-stream</string>
+
 				<!-- System-declared source code UTIs -->
 				<string>public.swift-source</string>
 				<string>public.c-source</string>
