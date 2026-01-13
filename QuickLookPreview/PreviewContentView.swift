@@ -171,37 +171,59 @@ struct PreviewContentView: View {
             return
         }
 
-        // For other files, use HighlightSwift with timeout
+        // For other files, use HighlightSwift with reliable timeout using TaskGroup
         let highlighter = SyntaxHighlighter()
+        let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
 
-        // Create a task with timeout
-        let highlightTask = Task {
-            try await highlighter.highlight(
-                code: state.content,
-                language: state.language
-            )
+        // Use TaskGroup for reliable timeout with proper cancellation propagation
+        let result: AttributedString? = await withTaskGroup(of: AttributedString?.self) { group in
+            // Add the highlighting task
+            group.addTask {
+                do {
+                    return try await highlighter.highlight(
+                        code: self.state.content,
+                        language: self.state.language
+                    )
+                } catch {
+                    return nil
+                }
+            }
+
+            // Add the timeout task
+            group.addTask {
+                do {
+                    try await Task.sleep(nanoseconds: timeoutNanoseconds)
+                } catch {
+                    // Task was cancelled, return nil
+                }
+                return nil // Timeout returns nil
+            }
+
+            // Return the first non-nil result, or nil if timeout wins
+            var highlighted: AttributedString? = nil
+            for await taskResult in group {
+                if let result = taskResult {
+                    highlighted = result
+                    group.cancelAll() // Cancel remaining tasks
+                    break
+                }
+            }
+
+            // If we got nil from timeout, cancel the highlight task
+            group.cancelAll()
+            return highlighted
         }
 
-        // Race against a 2-second timeout
-        let timeoutTask = Task {
-            try await Task.sleep(nanoseconds: 2_000_000_000) // 2 seconds
-            highlightTask.cancel()
-        }
-
-        do {
-            let result = try await highlightTask.value
-            timeoutTask.cancel()
-            highlightedContent = result
+        // Use result if available
+        if let highlighted = result {
+            highlightedContent = highlighted
             // Cache the result
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
-                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: result)
+                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: highlighted)
             }
-        } catch {
-            // Timeout or error - keep plain text (highlightedContent stays nil)
-            timeoutTask.cancel()
         }
 
-        // Fade in the content smoothly
+        // Fade in the content smoothly (whether highlighting succeeded or timed out)
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }
