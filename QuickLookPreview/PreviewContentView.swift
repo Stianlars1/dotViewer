@@ -171,6 +171,15 @@ struct PreviewContentView: View {
             return
         }
 
+        // Content-based fast path: skip highlighting for files that don't look like code
+        // This catches data files, logs, and other non-code content that has a detected language
+        if shouldSkipHighlightingBasedOnContent(state.content) {
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
         // For other files, use HighlightSwift with reliable timeout using TaskGroup
         let highlighter = SyntaxHighlighter()
         let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
@@ -227,6 +236,54 @@ struct PreviewContentView: View {
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }
+    }
+
+    /// Heuristic to detect files that won't benefit from syntax highlighting
+    /// Returns true if the file content looks like data rather than code
+    private func shouldSkipHighlightingBasedOnContent(_ content: String) -> Bool {
+        // Sample first 2000 characters for analysis (enough to detect patterns)
+        let sampleSize = min(2000, content.count)
+        guard sampleSize > 100 else { return false } // Very small files are fine to highlight
+
+        let sample = String(content.prefix(sampleSize))
+
+        // Count alphanumeric characters vs total
+        var alphanumericCount = 0
+        var totalCount = 0
+
+        for char in sample {
+            if !char.isNewline {
+                totalCount += 1
+                if char.isLetter || char.isNumber {
+                    alphanumericCount += 1
+                }
+            }
+        }
+
+        guard totalCount > 0 else { return false }
+
+        let alphanumericRatio = Double(alphanumericCount) / Double(totalCount)
+
+        // If less than 25% alphanumeric, likely a data file (binary-ish, special chars heavy)
+        // Examples: Base64 encoded data, hex dumps, binary logs
+        if alphanumericRatio < 0.25 {
+            return true
+        }
+
+        // Check for repetitive patterns that suggest data, not code
+        // Count unique lines - very repetitive content suggests generated/data files
+        let lines = sample.components(separatedBy: .newlines).filter { !$0.isEmpty }
+        if lines.count > 20 {
+            let uniqueLines = Set(lines)
+            let uniqueRatio = Double(uniqueLines.count) / Double(lines.count)
+
+            // If less than 10% unique lines, it's highly repetitive (likely data)
+            if uniqueRatio < 0.10 {
+                return true
+            }
+        }
+
+        return false
     }
 
     /// Custom markdown syntax highlighting that matches the user's selected theme
