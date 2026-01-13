@@ -138,6 +138,25 @@ struct PreviewContentView: View {
             return
         }
 
+        // Skip syntax highlighting for unknown file types - auto-detection is very slow
+        // Files like .viminfo have no known language, and HighlightSwift's automatic mode
+        // runs multiple parsers which can take 10+ seconds
+        if state.language == nil {
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
+        // Skip highlighting for files explicitly marked as plaintext (history files, logs, etc.)
+        // These files have no meaningful syntax and would just waste CPU cycles
+        if state.language == "plaintext" {
+            withAnimation(.easeIn(duration: 0.15)) {
+                isReady = true
+            }
+            return
+        }
+
         // Use custom highlighting for markdown (HighlightSwift has bugs that cause red text)
         if state.language == "markdown" {
             let result = highlightMarkdownRaw(state.content)
@@ -326,8 +345,6 @@ struct PreviewHeaderView: View {
     @Binding var showRenderedMarkdown: Bool
 
     @State private var copied = false
-    @State private var openingFile = false
-    @State private var openFailed = false
 
     private var settings: SharedSettings { SharedSettings.shared }
 
@@ -386,30 +403,6 @@ struct PreviewHeaderView: View {
                 .font(.system(size: 11))
                 .foregroundStyle(.secondary)
 
-            // Open in App button
-            if settings.showOpenInAppButton, let url = fileURL {
-                Button {
-                    openInPreferredApp(url: url)
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: openFailed ? "xmark" : (openingFile ? "arrow.up.forward.app" : "arrow.up.forward.app"))
-                            .font(.system(size: 11))
-                        if let editorName = settings.preferredEditorName {
-                            Text(openFailed ? "Failed" : editorName)
-                                .font(.system(size: 10, weight: .medium))
-                        }
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(openFailed ? Color.red.opacity(0.15) : Color.green.opacity(0.15))
-                    .foregroundStyle(openFailed ? Color.red : Color.green)
-                    .clipShape(Capsule())
-                }
-                .buttonStyle(.borderless)
-                .disabled(openingFile)
-                .help(settings.preferredEditorName != nil ? "Open in \(settings.preferredEditorName!)" : "Open in default app")
-            }
-
             // Copy button
             Button {
                 copyToClipboard()
@@ -431,48 +424,6 @@ struct PreviewHeaderView: View {
         copied = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             copied = false
-        }
-    }
-
-    private func openInPreferredApp(url: URL) {
-        // Reset state
-        openFailed = false
-        openingFile = true
-
-        // Quick Look extensions are sandboxed, so we use NSWorkspace methods carefully
-        if let bundleId = settings.preferredEditorBundleId,
-           let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) {
-            // Try to open with preferred app using configuration
-            let config = NSWorkspace.OpenConfiguration()
-            config.activates = true
-
-            NSWorkspace.shared.open([url], withApplicationAt: appURL, configuration: config) { app, error in
-                DispatchQueue.main.async {
-                    openingFile = false
-                    if let error = error {
-                        // Fallback: try opening with system default
-                        print("[PreviewContentView] Preferred app failed: \(error.localizedDescription), trying default")
-                        let success = NSWorkspace.shared.open(url)
-                        if !success {
-                            openFailed = true
-                            // Reset after 3 seconds
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                                openFailed = false
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            // Open with system default app
-            let success = NSWorkspace.shared.open(url)
-            openingFile = false
-            if !success {
-                openFailed = true
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    openFailed = false
-                }
-            }
         }
     }
 

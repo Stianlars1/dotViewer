@@ -2,6 +2,31 @@ import Foundation
 
 struct LanguageDetector {
 
+    /// Files that should explicitly skip syntax highlighting (history files, binary-ish text, etc.)
+    /// These files are large, have no meaningful syntax, and would slow down HighlightSwift
+    static let skipHighlightingFiles: Set<String> = [
+        // Vim/editor history
+        ".viminfo",
+        ".viminf~",
+        ".netrwhist",
+        // Shell history
+        ".bash_history",
+        ".zsh_history",
+        ".sh_history",
+        ".history",
+        ".lesshst",
+        ".psql_history",
+        ".mysql_history",
+        ".sqlite_history",
+        ".irb_history",
+        ".pry_history",
+        ".node_repl_history",
+        ".python_history",
+        // Other history/cache files
+        ".wget-hsts",
+        ".recently-used",
+    ]
+
     /// Maps file extensions to highlight.js language identifiers
     static let extensionMap: [String: String] = [
         // JavaScript/TypeScript
@@ -200,6 +225,12 @@ struct LanguageDetector {
     static func detect(for url: URL) -> String? {
         let filename = url.lastPathComponent
         let ext = url.pathExtension.lowercased()
+
+        // Skip highlighting entirely for known problematic files (history files, etc.)
+        // Return "plaintext" to signal explicit skip in PreviewContentView
+        if skipHighlightingFiles.contains(filename) {
+            return "plaintext"
+        }
 
         // First, check if it's a known dotfile by exact filename
         if let language = dotfileMap[filename] {
