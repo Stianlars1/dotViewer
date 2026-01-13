@@ -116,6 +116,34 @@ struct StatusView: View {
                         }
                         .buttonStyle(.borderedProminent)
                         .controlSize(.large)
+
+                        // Troubleshooting tips
+                        VStack(alignment: .leading, spacing: 10) {
+                            Label("Troubleshooting", systemImage: "questionmark.circle")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+
+                            VStack(alignment: .leading, spacing: 6) {
+                                TroubleshootingRow(
+                                    step: "1",
+                                    text: "Open System Settings → Privacy & Security → Extensions"
+                                )
+                                TroubleshootingRow(
+                                    step: "2",
+                                    text: "Click \"Quick Look\" in the left sidebar"
+                                )
+                                TroubleshootingRow(
+                                    step: "3",
+                                    text: "Enable \"dotViewer Quick Look\" checkbox"
+                                )
+                                TroubleshootingRow(
+                                    step: "4",
+                                    text: "Try relaunching Finder (⌥ + right-click Finder → Relaunch)"
+                                )
+                            }
+                        }
+                        .padding()
+                        .background(Color.yellow.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
                     }
                 }
                 .frame(maxWidth: 400)
@@ -325,6 +353,25 @@ struct HowToRow: View {
 
             Text(text)
                 .font(.subheadline)
+        }
+    }
+}
+
+struct TroubleshootingRow: View {
+    let step: String
+    let text: String
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 8) {
+            Text(step)
+                .font(.caption)
+                .fontWeight(.bold)
+                .foregroundStyle(.orange)
+                .frame(width: 16)
+
+            Text(text)
+                .font(.caption)
+                .foregroundStyle(.secondary)
         }
     }
 }
