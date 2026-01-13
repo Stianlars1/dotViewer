@@ -69,9 +69,26 @@ struct PreviewContentView: View {
 
                     // Loading indicator while highlighting
                     if !isReady {
-                        ProgressView()
-                            .controlSize(.large)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .controlSize(.large)
+
+                            // Show what we're doing for larger files
+                            if state.lineCount > 500 {
+                                VStack(spacing: 4) {
+                                    Text("Highlighting \(state.lineCount) lines...")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+
+                                    if let lang = state.language, lang != "plaintext" {
+                                        Text(LanguageDetector.displayName(for: lang))
+                                            .font(.caption2)
+                                            .foregroundStyle(.tertiary)
+                                    }
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
 
                     // Content (fades in when ready)
