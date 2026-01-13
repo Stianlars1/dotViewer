@@ -103,4 +103,4 @@ When viewing this file in dotViewer:
 - HTML elements should render correctly
 - Lists should be properly indented
 - Links should be clickable
-- Bold, italic, and strikethrough should work
+- Bold, italic, and strikethrough should work 

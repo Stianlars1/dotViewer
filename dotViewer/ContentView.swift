@@ -45,12 +45,7 @@ struct ContentView: View {
 // MARK: - Status View
 
 struct StatusView: View {
-    @State private var isExtensionEnabled = false
-    @State private var isCheckingStatus = true
-    @Environment(\.scenePhase) private var scenePhase
-
-    // Timer for periodic polling (backup mechanism)
-    private let pollTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
+    @StateObject private var checker = ExtensionStatusChecker.shared
 
     var body: some View {
         ScrollView {
@@ -75,19 +70,19 @@ struct StatusView: View {
                 // Extension Status Card
                 VStack(spacing: 16) {
                     HStack(spacing: 12) {
-                        if isCheckingStatus {
+                        if checker.isChecking {
                             ProgressView()
                                 .controlSize(.small)
                         } else {
-                            Image(systemName: isExtensionEnabled ? "checkmark.circle.fill" : "xmark.circle.fill")
+                            Image(systemName: checker.isEnabled ? "checkmark.circle.fill" : "xmark.circle.fill")
                                 .font(.title2)
-                                .foregroundStyle(isExtensionEnabled ? .green : .red)
+                                .foregroundStyle(checker.isEnabled ? .green : .red)
                         }
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(isCheckingStatus ? "Checking Status..." : (isExtensionEnabled ? "Extension Enabled" : "Extension Not Enabled"))
+                            Text(checker.isChecking ? "Checking Status..." : (checker.isEnabled ? "Extension Enabled" : "Extension Not Enabled"))
                                 .font(.headline)
-                            Text(isExtensionEnabled
+                            Text(checker.isEnabled
                                 ? "dotViewer is ready to preview your files"
                                 : "Enable the extension in System Settings")
                                 .font(.caption)
@@ -97,7 +92,7 @@ struct StatusView: View {
                         Spacer()
 
                         Button {
-                            checkExtensionStatus()
+                            checker.check()
                         } label: {
                             Image(systemName: "arrow.clockwise")
                         }
@@ -107,7 +102,7 @@ struct StatusView: View {
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
 
-                    if !isExtensionEnabled && !isCheckingStatus {
+                    if !checker.isEnabled && !checker.isChecking {
                         Button {
                             openExtensionSettings()
                         } label: {
@@ -149,7 +144,7 @@ struct StatusView: View {
                 .frame(maxWidth: 400)
 
                 // Quick Stats
-                if isExtensionEnabled {
+                if checker.isEnabled {
                     VStack(spacing: 16) {
                         Text("Quick Stats")
                             .font(.headline)
@@ -215,93 +210,11 @@ struct StatusView: View {
         }
         .navigationTitle("Status")
         .onAppear {
-            checkExtensionStatus()
+            checker.check()
         }
-        // Auto-refresh when app becomes active (SwiftUI scenePhase)
-        .onChange(of: scenePhase) { oldPhase, newPhase in
-            if newPhase == .active {
-                checkExtensionStatus()
-            }
-        }
-        // Backup: NSApplication notification (more reliable on macOS)
+        // Refresh when app becomes active
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            checkExtensionStatus()
-        }
-        // Periodic polling every 10 seconds as additional fallback
-        .onReceive(pollTimer) { _ in
-            // Only poll if not already checking to avoid redundant calls
-            if !isCheckingStatus {
-                checkExtensionStatus()
-            }
-        }
-    }
-
-    private func checkExtensionStatus() {
-        isCheckingStatus = true
-
-        DispatchQueue.global(qos: .userInitiated).async {
-            var isEnabled = false
-            var foundInPluginkit = false  // Track if we found our extension in pluginkit output
-
-            // Method 1: Check via pluginkit command with timeout
-            let task = Process()
-            task.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
-            task.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
-
-            let pipe = Pipe()
-            task.standardOutput = pipe
-            task.standardError = FileHandle.nullDevice
-
-            // Use semaphore with timeout to prevent indefinite hangs
-            let semaphore = DispatchSemaphore(value: 0)
-            task.terminationHandler = { _ in semaphore.signal() }
-
-            do {
-                try task.run()
-
-                // Wait max 5 seconds for pluginkit to complete
-                let result = semaphore.wait(timeout: .now() + 5)
-
-                if result == .timedOut {
-                    // Timeout - terminate the process
-                    task.terminate()
-                    print("[dotViewer] pluginkit timed out")
-                } else {
-                    // Always try to read output regardless of exit status
-                    let data = pipe.fileHandleForReading.readDataToEndOfFile()
-                    let output = String(data: data, encoding: .utf8) ?? ""
-
-                    // Debug: log raw pluginkit output
-                    print("[dotViewer] pluginkit output:\n\(output)")
-
-                    // pluginkit output format: "+    com.bundle.id(version)" for enabled
-                    // The "+" prefix indicates the extension is enabled
-                    // The "-" prefix indicates the extension is disabled
-                    for line in output.components(separatedBy: .newlines) {
-                        if line.contains("com.stianlars1.dotViewer.QuickLookPreview") {
-                            foundInPluginkit = true
-                            let trimmed = line.trimmingCharacters(in: .whitespaces)
-                            isEnabled = trimmed.hasPrefix("+")
-                            print("[dotViewer] Found extension in pluginkit: enabled=\(isEnabled), line='\(trimmed)'")
-                            break
-                        }
-                    }
-                }
-            } catch {
-                print("[dotViewer] pluginkit error: \(error)")
-            }
-
-            // If pluginkit didn't find the extension, default to disabled (safer)
-            // The extension bundle existing doesn't mean it's enabled by the user
-            if !foundInPluginkit {
-                print("[dotViewer] Extension not found in pluginkit output - assuming disabled")
-                isEnabled = false
-            }
-
-            DispatchQueue.main.async {
-                self.isExtensionEnabled = isEnabled
-                self.isCheckingStatus = false
-            }
+            checker.check()
         }
     }
 
