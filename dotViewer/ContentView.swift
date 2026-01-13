@@ -47,6 +47,10 @@ struct ContentView: View {
 struct StatusView: View {
     @State private var isExtensionEnabled = false
     @State private var isCheckingStatus = true
+    @Environment(\.scenePhase) private var scenePhase
+
+    // Timer for periodic polling (backup mechanism)
+    private let pollTimer = Timer.publish(every: 10, on: .main, in: .common).autoconnect()
 
     var body: some View {
         ScrollView {
@@ -185,6 +189,23 @@ struct StatusView: View {
         .onAppear {
             checkExtensionStatus()
         }
+        // Auto-refresh when app becomes active (SwiftUI scenePhase)
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            if newPhase == .active {
+                checkExtensionStatus()
+            }
+        }
+        // Backup: NSApplication notification (more reliable on macOS)
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            checkExtensionStatus()
+        }
+        // Periodic polling every 10 seconds as additional fallback
+        .onReceive(pollTimer) { _ in
+            // Only poll if not already checking to avoid redundant calls
+            if !isCheckingStatus {
+                checkExtensionStatus()
+            }
+        }
     }
 
     private func checkExtensionStatus() {
@@ -192,6 +213,7 @@ struct StatusView: View {
 
         DispatchQueue.global(qos: .userInitiated).async {
             var isEnabled = false
+            var foundInPluginkit = false  // Track if we found our extension in pluginkit output
 
             // Method 1: Check via pluginkit command with timeout
             let task = Process()
@@ -216,16 +238,17 @@ struct StatusView: View {
                     // Timeout - terminate the process and skip to fallback
                     task.terminate()
                     print("[dotViewer] pluginkit timed out")
-                } else if task.terminationStatus == 0 {
+                } else {
+                    // Always try to read output regardless of exit status
                     let data = pipe.fileHandleForReading.readDataToEndOfFile()
                     let output = String(data: data, encoding: .utf8) ?? ""
 
                     // pluginkit output format: "+    com.bundle.id(version)" for enabled
                     // The "+" prefix indicates the extension is enabled
-                    // Split by lines and check each one
+                    // The "-" prefix indicates the extension is disabled
                     for line in output.components(separatedBy: .newlines) {
                         if line.contains("com.stianlars1.dotViewer.QuickLookPreview") {
-                            // Check if line starts with "+" (enabled) vs "-" (disabled)
+                            foundInPluginkit = true
                             let trimmed = line.trimmingCharacters(in: .whitespaces)
                             isEnabled = trimmed.hasPrefix("+")
                             break
@@ -236,12 +259,13 @@ struct StatusView: View {
                 print("[dotViewer] pluginkit error: \(error)")
             }
 
-            // Method 2: Fallback - check if extension file exists in app bundle
-            if !isEnabled {
+            // Method 2: Fallback - ONLY use if pluginkit didn't find our extension at all
+            // This handles cases where the app is installed but not yet registered with pluginkit
+            // If pluginkit explicitly reported disabled ("-"), we trust that result
+            if !foundInPluginkit {
                 let extensionPath = Bundle.main.bundlePath + "/Contents/PlugIns/QuickLookPreview.appex"
                 if FileManager.default.fileExists(atPath: extensionPath) {
-                    // Extension exists in bundle, assume enabled if pluginkit failed
-                    // This handles cases where pluginkit might not work in sandbox
+                    // Extension bundle exists - assume it's enabled until pluginkit catches up
                     isEnabled = true
                 }
             }
@@ -314,8 +338,6 @@ struct SettingsView: View {
     @State private var showPreviewHeader = SharedSettings.shared.showPreviewHeader
     @State private var markdownRenderMode = SharedSettings.shared.markdownRenderMode
     @State private var previewUnknownFiles = SharedSettings.shared.previewUnknownFiles
-    @State private var showOpenInAppButton = SharedSettings.shared.showOpenInAppButton
-    @State private var preferredEditorName = SharedSettings.shared.preferredEditorName ?? ""
 
     private let themes = [
         ("auto", "Auto (System)"),
@@ -330,17 +352,6 @@ struct SettingsView: View {
         ("tokyoNight", "Tokyo Night"),
         ("blackout", "Blackout"),
     ]
-
-    // List of common editors - only installed ones will be shown
-    private var installedEditors: [SupportedEditors.EditorInfo] {
-        SupportedEditors.installed
-    }
-
-    // Check if current selection is a custom app (not in preset list)
-    private var isCustomAppSelected: Bool {
-        guard let bundleId = SharedSettings.shared.preferredEditorBundleId else { return false }
-        return !SupportedEditors.isPresetEditor(bundleId)
-    }
 
     var body: some View {
         ScrollView {
@@ -451,66 +462,6 @@ struct SettingsView: View {
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                 }
 
-                // Open in App Section
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Open in App")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Toggle("Show \"Open in App\" Button", isOn: $showOpenInAppButton)
-                            .onChange(of: showOpenInAppButton) { _, newValue in
-                                SharedSettings.shared.showOpenInAppButton = newValue
-                            }
-
-                        Text("Adds a button to the preview header to quickly open files")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Text("Select Preferred Editor")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-
-                        // Grid of installed editors + custom button
-                        LazyVGrid(columns: [GridItem(.adaptive(minimum: 70, maximum: 80), spacing: 12)], spacing: 12) {
-                            // Only show installed preset editors
-                            ForEach(installedEditors, id: \.bundleId) { editor in
-                                EditorButton(
-                                    name: editor.name,
-                                    bundleId: editor.bundleId,
-                                    icon: editor.icon,
-                                    selectedEditor: $preferredEditorName
-                                )
-                            }
-
-                            // Custom app button (always shown)
-                            CustomEditorButton(
-                                selectedEditor: $preferredEditorName,
-                                onChooseApp: chooseCustomEditor
-                            )
-                        }
-
-                        // Reset button
-                        if !preferredEditorName.isEmpty {
-                            Button("Reset to System Default") {
-                                SharedSettings.shared.preferredEditorBundleId = nil
-                                SharedSettings.shared.preferredEditorName = nil
-                                preferredEditorName = ""
-                            }
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                            .padding(.top, 4)
-                        }
-
-                        Text("Files will open in the selected app when you click the button in Quick Look preview")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
                 // Theme Preview
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Theme Preview")
@@ -573,30 +524,6 @@ struct SettingsView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    private func chooseCustomEditor() {
-        let panel = NSOpenPanel()
-        panel.allowsMultipleSelection = false
-        panel.canChooseDirectories = false
-        panel.canChooseFiles = true
-        panel.allowedContentTypes = [.application]
-        panel.directoryURL = URL(fileURLWithPath: "/Applications")
-        panel.message = "Choose an application to open files with"
-        panel.prompt = "Select"
-
-        if panel.runModal() == .OK, let url = panel.url {
-            if let bundle = Bundle(url: url),
-               let bundleId = bundle.bundleIdentifier {
-                let appName = bundle.infoDictionary?["CFBundleName"] as? String
-                    ?? bundle.infoDictionary?["CFBundleDisplayName"] as? String
-                    ?? url.deletingPathExtension().lastPathComponent
-
-                SharedSettings.shared.preferredEditorBundleId = bundleId
-                SharedSettings.shared.preferredEditorName = appName
-                preferredEditorName = appName
-            }
-        }
-    }
-
     private func uninstallApp() {
         let alert = NSAlert()
         alert.messageText = "Uninstall dotViewer?"
@@ -618,114 +545,6 @@ struct SettingsView: View {
                 errorAlert.runModal()
             }
         }
-    }
-}
-
-// MARK: - Editor Button
-
-struct EditorButton: View {
-    let name: String
-    let bundleId: String
-    let icon: String
-    @Binding var selectedEditor: String
-
-    private var isSelected: Bool {
-        SharedSettings.shared.preferredEditorBundleId == bundleId
-    }
-
-    var body: some View {
-        Button {
-            SharedSettings.shared.preferredEditorBundleId = bundleId
-            SharedSettings.shared.preferredEditorName = name
-            selectedEditor = name
-        } label: {
-            VStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 20))
-                Text(name)
-                    .font(.caption2)
-                    .lineLimit(1)
-            }
-            .frame(width: 70, height: 60)
-            .background(isSelected ? Color.accentColor.opacity(0.2) : Color.clear)
-            .background(.regularMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
-            )
-        }
-        .buttonStyle(.plain)
-        .help("Open files in \(name)")
-    }
-}
-
-// MARK: - Custom Editor Button
-
-struct CustomEditorButton: View {
-    @Binding var selectedEditor: String
-    let onChooseApp: () -> Void
-
-    private var settings: SharedSettings { SharedSettings.shared }
-
-    // Cached icon to avoid disk I/O on every render
-    @State private var cachedIcon: NSImage?
-    @State private var lastBundleId: String?
-
-    private var isCustomSelected: Bool {
-        guard let bundleId = settings.preferredEditorBundleId else { return false }
-        return !SupportedEditors.isPresetEditor(bundleId)
-    }
-
-    private var customAppName: String? {
-        isCustomSelected ? settings.preferredEditorName : nil
-    }
-
-    var body: some View {
-        Button {
-            onChooseApp()
-        } label: {
-            VStack(spacing: 6) {
-                if let icon = cachedIcon, isCustomSelected {
-                    Image(nsImage: icon)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 24, height: 24)
-                } else {
-                    Image(systemName: "plus.app")
-                        .font(.system(size: 20))
-                }
-                Text(customAppName ?? "Custom")
-                    .font(.caption2)
-                    .lineLimit(1)
-            }
-            .frame(width: 70, height: 60)
-            .background(isCustomSelected ? Color.accentColor.opacity(0.2) : Color.clear)
-            .background(.regularMaterial)
-            .clipShape(RoundedRectangle(cornerRadius: 8))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isCustomSelected ? Color.accentColor : Color.clear, lineWidth: 2)
-            )
-        }
-        .buttonStyle(.plain)
-        .help(isCustomSelected ? "Custom app: \(customAppName ?? "Unknown")" : "Choose a custom app")
-        .onAppear { updateCachedIcon() }
-        .onChange(of: settings.preferredEditorBundleId) { _, _ in updateCachedIcon() }
-    }
-
-    private func updateCachedIcon() {
-        let bundleId = settings.preferredEditorBundleId
-        guard bundleId != lastBundleId else { return }
-        lastBundleId = bundleId
-
-        guard isCustomSelected,
-              let bundleId = bundleId,
-              let appURL = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId) else {
-            cachedIcon = nil
-            return
-        }
-        cachedIcon = NSWorkspace.shared.icon(forFile: appURL.path)
     }
 }
 
