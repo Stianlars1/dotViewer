@@ -263,13 +263,16 @@ struct StatusView: View {
                 let result = semaphore.wait(timeout: .now() + 5)
 
                 if result == .timedOut {
-                    // Timeout - terminate the process and skip to fallback
+                    // Timeout - terminate the process
                     task.terminate()
                     print("[dotViewer] pluginkit timed out")
                 } else {
                     // Always try to read output regardless of exit status
                     let data = pipe.fileHandleForReading.readDataToEndOfFile()
                     let output = String(data: data, encoding: .utf8) ?? ""
+
+                    // Debug: log raw pluginkit output
+                    print("[dotViewer] pluginkit output:\n\(output)")
 
                     // pluginkit output format: "+    com.bundle.id(version)" for enabled
                     // The "+" prefix indicates the extension is enabled
@@ -279,6 +282,7 @@ struct StatusView: View {
                             foundInPluginkit = true
                             let trimmed = line.trimmingCharacters(in: .whitespaces)
                             isEnabled = trimmed.hasPrefix("+")
+                            print("[dotViewer] Found extension in pluginkit: enabled=\(isEnabled), line='\(trimmed)'")
                             break
                         }
                     }
@@ -287,15 +291,11 @@ struct StatusView: View {
                 print("[dotViewer] pluginkit error: \(error)")
             }
 
-            // Method 2: Fallback - ONLY use if pluginkit didn't find our extension at all
-            // This handles cases where the app is installed but not yet registered with pluginkit
-            // If pluginkit explicitly reported disabled ("-"), we trust that result
+            // If pluginkit didn't find the extension, default to disabled (safer)
+            // The extension bundle existing doesn't mean it's enabled by the user
             if !foundInPluginkit {
-                let extensionPath = Bundle.main.bundlePath + "/Contents/PlugIns/QuickLookPreview.appex"
-                if FileManager.default.fileExists(atPath: extensionPath) {
-                    // Extension bundle exists - assume it's enabled until pluginkit catches up
-                    isEnabled = true
-                }
+                print("[dotViewer] Extension not found in pluginkit output - assuming disabled")
+                isEnabled = false
             }
 
             DispatchQueue.main.async {
