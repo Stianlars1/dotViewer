@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8048BFA62F15A23E0041486E /* dotViewerHelper.app in Embed Login Items */ = {isa = PBXBuildFile; fileRef = 8048BF962F15A0D40041486E /* dotViewerHelper.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F12F1228C700412E97 /* SharedSettings.swift */; };
 		80F9F4F32F1228C700412E97 /* FileTypeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */; };
 		80F9F4F42F1228C700412E97 /* FileTypeRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */; };
@@ -38,6 +39,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		8048BFA72F15A25B0041486E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3000000 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8048BF952F15A0D40041486E;
+			remoteInfo = dotViewerHelper;
+		};
 		A4000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A3000000 /* Project object */;
@@ -48,6 +56,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		8048BFA52F15A2030041486E /* Embed Login Items */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/Library/LoginItems;
+			dstSubfolderSpec = 1;
+			files = (
+				8048BFA62F15A23E0041486E /* dotViewerHelper.app in Embed Login Items */,
+			);
+			name = "Embed Login Items";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A4000010 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -62,6 +81,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		8048BF962F15A0D40041486E /* dotViewerHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewerHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeModel.swift; sourceTree = "<group>"; };
 		80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistry.swift; sourceTree = "<group>"; };
 		80F9F4F12F1228C700412E97 /* SharedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSettings.swift; sourceTree = "<group>"; };
@@ -88,7 +108,18 @@
 		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		8048BF972F15A0D40041486E /* dotViewerHelper */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = dotViewerHelper; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		8048BF932F15A0D40041486E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A4000020 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -114,6 +145,7 @@
 				A6000001 /* dotViewer */,
 				A6000002 /* Shared */,
 				A6000003 /* QuickLookPreview */,
+				8048BF972F15A0D40041486E /* dotViewerHelper */,
 				A6000004 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -166,6 +198,7 @@
 			children = (
 				A3000003 /* dotViewer.app */,
 				A3000002 /* QuickLookPreview.appex */,
+				8048BF962F15A0D40041486E /* dotViewerHelper.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,6 +206,28 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		8048BF952F15A0D40041486E /* dotViewerHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8048BFA02F15A0D50041486E /* Build configuration list for PBXNativeTarget "dotViewerHelper" */;
+			buildPhases = (
+				8048BF922F15A0D40041486E /* Sources */,
+				8048BF932F15A0D40041486E /* Frameworks */,
+				8048BF942F15A0D40041486E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				8048BF972F15A0D40041486E /* dotViewerHelper */,
+			);
+			name = dotViewerHelper;
+			packageProductDependencies = (
+			);
+			productName = dotViewerHelper;
+			productReference = 8048BF962F15A0D40041486E /* dotViewerHelper.app */;
+			productType = "com.apple.product-type.application";
+		};
 		A7000000 /* dotViewer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A8000000 /* Build configuration list for PBXNativeTarget "dotViewer" */;
@@ -181,10 +236,12 @@
 				A4000020 /* Frameworks */,
 				A4000031 /* Resources */,
 				A4000010 /* Embed Foundation Extensions */,
+				8048BFA52F15A2030041486E /* Embed Login Items */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				8048BFA82F15A25B0041486E /* PBXTargetDependency */,
 				A7000002 /* PBXTargetDependency */,
 			);
 			name = dotViewer;
@@ -222,9 +279,12 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					8048BF952F15A0D40041486E = {
+						CreatedOnToolsVersion = 26.2;
+					};
 					A7000000 = {
 						CreatedOnToolsVersion = 15.0;
 					};
@@ -251,11 +311,19 @@
 			targets = (
 				A7000000 /* dotViewer */,
 				A7000001 /* QuickLookPreview */,
+				8048BF952F15A0D40041486E /* dotViewerHelper */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		8048BF942F15A0D40041486E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A4000031 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -275,6 +343,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		8048BF922F15A0D40041486E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A4000030 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -315,6 +390,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8048BFA82F15A25B0041486E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8048BF952F15A0D40041486E /* dotViewerHelper */;
+			targetProxy = 8048BFA72F15A25B0041486E /* PBXContainerItemProxy */;
+		};
 		A7000002 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A7000001 /* QuickLookPreview */;
@@ -323,6 +403,76 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		8048BF9E2F15A0D50041486E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		8048BF9F2F15A0D50041486E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSBackgroundOnly = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.helper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		A9000000 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -572,6 +722,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		8048BFA02F15A0D50041486E /* Build configuration list for PBXNativeTarget "dotViewerHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8048BF9E2F15A0D50041486E /* Debug */,
+				8048BF9F2F15A0D50041486E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A8000000 /* Build configuration list for PBXNativeTarget "dotViewer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
