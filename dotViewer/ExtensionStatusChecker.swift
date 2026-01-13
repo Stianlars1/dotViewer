@@ -13,6 +13,7 @@ final class ExtensionStatusChecker: ObservableObject {
     @Published private(set) var isChecking = true
 
     private var checkTask: Task<Void, Never>?
+    private var lastCheckTime: Date?
 
     private init() {
         logger.debug("ExtensionStatusChecker initialized")
@@ -20,7 +21,13 @@ final class ExtensionStatusChecker: ObservableObject {
 
     /// Triggers a status check, cancelling any in-flight check to prevent races.
     func check() {
-        // Cancel previous check if still running (deduplication)
+        // Debounce: skip if checked within last 0.5 seconds to prevent rapid successive calls
+        if let lastCheck = lastCheckTime, Date().timeIntervalSince(lastCheck) < 0.5 {
+            return
+        }
+        lastCheckTime = Date()
+
+        // Cancel previous check if still running
         checkTask?.cancel()
         isChecking = true
 
@@ -81,11 +88,11 @@ final class ExtensionStatusChecker: ObservableObject {
 
                 logger.debug("pluginkit output length: \(data.count) bytes")
 
-                // Parse: "+    bundleID(version)" = enabled, "-" = disabled
+                // Parse: "+    bundleID(version)" = enabled, "-" = disabled, space = neutral
                 for line in output.components(separatedBy: .newlines) {
                     if line.contains("com.stianlars1.dotViewer.QuickLookPreview") {
-                        let trimmed = line.trimmingCharacters(in: .whitespaces)
-                        let enabled = trimmed.hasPrefix("+")
+                        // First char determines status: + = enabled, - = disabled
+                        let enabled = line.first == "+"
                         logger.info("Found extension: enabled=\(enabled)")
                         resumeOnce(enabled)
                         return
