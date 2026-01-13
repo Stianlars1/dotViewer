@@ -327,11 +327,11 @@ struct PreviewContentView: View {
             }
         }
 
-        // Apply patterns (order matters - more specific first)
+        // Apply patterns (order matters - more specific patterns first)
         applyPattern("^#{1,6}\\s.*$", color: colors.heading, bold: true)  // Headers
         applyPattern("^>.*$", color: colors.quote)                         // Blockquotes
-        applyPattern("`[^`]+`", color: colors.code)                        // Inline code
-        applyPattern("```[\\s\\S]*?```", color: colors.code)               // Code blocks
+        applyPattern("```[\\s\\S]*?```", color: colors.code)               // Code blocks (BEFORE inline code!)
+        applyPattern("(?<!`)`(?!`)[^`]+`(?!`)", color: colors.code)        // Inline code (exclude triple backticks)
         applyPattern("\\[([^\\]]+)\\]\\([^)]+\\)", color: colors.link)     // Links
         applyPattern("\\*\\*[^*]+\\*\\*", color: colors.bold, bold: true)  // Bold
         applyPattern("^\\s*[-*+]\\s", color: colors.heading)               // List markers
