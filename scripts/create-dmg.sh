@@ -77,8 +77,8 @@ if [ ! -f "$BACKGROUND" ]; then
       --window-pos 200 120 \
       --window-size 660 400 \
       --icon-size 128 \
-      --icon "$APP_NAME.app" 150 200 \
-      --app-drop-link 500 200 \
+      --icon "$APP_NAME.app" 156 200 \
+      --app-drop-link 376 200 \
       --hide-extension "$APP_NAME.app" \
       --no-internet-enable \
       "$BUILD_DIR/$DMG_NAME.dmg" \
@@ -96,8 +96,8 @@ else
       --window-pos 200 120 \
       --window-size 660 400 \
       --icon-size 128 \
-      --icon "$APP_NAME.app" 150 200 \
-      --app-drop-link 500 200 \
+      --icon "$APP_NAME.app" 156 200 \
+      --app-drop-link 376 200 \
       --background "$BACKGROUND" \
       --hide-extension "$APP_NAME.app" \
       --no-internet-enable \

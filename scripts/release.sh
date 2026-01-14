@@ -162,9 +162,9 @@ if command -v create-dmg &> /dev/null; then
             --window-pos 200 120 \
             --window-size 660 400 \
             --icon-size 128 \
-            --icon "$APP_NAME.app" 150 200 \
+            --icon "$APP_NAME.app" 156 200 \
             --hide-extension "$APP_NAME.app" \
-            --app-drop-link 500 200 \
+            --app-drop-link 376 200 \
             --background "$BACKGROUND" \
             --no-internet-enable \
             "$DMG_PATH" \
@@ -176,9 +176,9 @@ if command -v create-dmg &> /dev/null; then
             --window-pos 200 120 \
             --window-size 660 400 \
             --icon-size 128 \
-            --icon "$APP_NAME.app" 150 200 \
+            --icon "$APP_NAME.app" 156 200 \
             --hide-extension "$APP_NAME.app" \
-            --app-drop-link 500 200 \
+            --app-drop-link 376 200 \
             --no-internet-enable \
             "$DMG_PATH" \
             "$APP_PATH"

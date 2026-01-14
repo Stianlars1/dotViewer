@@ -75,12 +75,21 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 throw PreviewError.unreadableFile
             }
 
-            // Count lines and truncate if needed
-            let lines = content.components(separatedBy: .newlines)
-            let totalLineCount = lines.count
+            // Count lines efficiently using UTF-8 byte scanning
+            // This is O(n) but much faster than .components(separatedBy:) which allocates memory
+            let newlineByte = UInt8(ascii: "\n")
+            var totalLineCount = 1
+            for byte in content.utf8 {
+                if byte == newlineByte {
+                    totalLineCount += 1
+                }
+            }
+
             let lineTruncated = totalLineCount > maxPreviewLines
 
+            // Only use the slower truncation method for very large files (rare case)
             if lineTruncated {
+                let lines = content.components(separatedBy: .newlines)
                 content = lines.prefix(maxPreviewLines).joined(separator: "\n")
             }
 
