@@ -1,12 +1,18 @@
 import Foundation
+import os.log
+
+private let logger = Logger(subsystem: "com.stianlars1.dotViewer", category: "SharedSettings")
 
 /// Manages settings shared between main app and Quick Look extension via App Groups
 /// Thread-safe for concurrent access from main app and Quick Look extension
 final class SharedSettings: @unchecked Sendable {
     static let shared = SharedSettings()
 
-    private let suiteName = "group.com.stianlars1.dotviewer"
+    private let suiteName = "group.stianlars1.dotViewer.shared"
     private let lock = NSLock()
+
+    /// Indicates whether App Group access succeeded (for diagnostics)
+    let isUsingAppGroup: Bool
 
     /// UserDefaults instance for App Group shared container (initialized eagerly for thread safety)
     let userDefaults: UserDefaults
@@ -14,11 +20,13 @@ final class SharedSettings: @unchecked Sendable {
     private init() {
         if let defaults = UserDefaults(suiteName: suiteName) {
             self.userDefaults = defaults
+            self.isUsingAppGroup = true
+            logger.info("App Group container accessed successfully")
         } else {
-            // Note: print() not visible in production Console, but App Group failure is rare
-            // and usually indicates provisioning profile misconfiguration
-            print("Warning: Could not access App Group, falling back to standard")
+            // App Group failure is rare and usually indicates provisioning profile misconfiguration
+            logger.error("Could not access App Group container - settings will not sync between app and extension")
             self.userDefaults = .standard
+            self.isUsingAppGroup = false
         }
     }
 

@@ -31,6 +31,16 @@ struct PreviewContentView: View {
         state.language == "markdown"
     }
 
+    /// Detects potentially sensitive environment files
+    private var isEnvFile: Bool {
+        let lowercased = state.filename.lowercased()
+        return lowercased.hasPrefix(".env") ||
+               lowercased == "credentials" ||
+               lowercased == "secrets" ||
+               lowercased.hasSuffix(".credentials") ||
+               lowercased.hasSuffix(".secrets")
+    }
+
     init(state: PreviewState) {
         self.state = state
         // Initialize markdown mode from settings
@@ -55,6 +65,11 @@ struct PreviewContentView: View {
                         isMarkdown: isMarkdown,
                         showRenderedMarkdown: $showRenderedMarkdown
                     )
+                }
+
+                // Security warning for env files - always show
+                if isEnvFile && !isCompactMode {
+                    EnvFileSecurityBanner()
                 }
 
                 // Truncation warning - also hide in compact mode
@@ -579,6 +594,25 @@ struct TruncationBanner: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(Color.yellow.opacity(0.1))
+    }
+}
+
+// MARK: - Environment File Security Banner
+
+struct EnvFileSecurityBanner: View {
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "lock.shield.fill")
+                .foregroundStyle(.orange)
+
+            Text("This file may contain sensitive data (API keys, passwords)")
+                .font(.system(size: 11))
+
+            Spacer()
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Color.orange.opacity(0.1))
     }
 }
 

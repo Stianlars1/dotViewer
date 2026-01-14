@@ -28,11 +28,7 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
-				<!-- MPEG-2 Transport Stream - macOS associates .ts with this, but TypeScript also uses .ts -->
-				<!-- We handle this in code by checking if file is text (TypeScript) vs binary (video) -->
 				<string>public.mpeg-2-transport-stream</string>
-
-				<!-- System-declared source code UTIs -->
 				<string>public.swift-source</string>
 				<string>public.c-source</string>
 				<string>public.c-header</string>
@@ -48,22 +44,14 @@
 				<string>public.shell-script</string>
 				<string>public.bash-script</string>
 				<string>public.csh-script</string>
-
-				<!-- JavaScript -->
 				<string>com.netscape.javascript-source</string>
 				<string>public.javascript</string>
-
-				<!-- Data formats -->
 				<string>public.json</string>
 				<string>public.yaml</string>
 				<string>public.xml</string>
 				<string>public.html</string>
 				<string>public.css</string>
-
-				<!-- Markdown -->
 				<string>net.daringfireball.markdown</string>
-
-				<!-- Custom exported UTIs (from main app) -->
 				<string>com.stianlars1.dotviewer.typescript</string>
 				<string>com.stianlars1.dotviewer.tsx</string>
 				<string>com.stianlars1.dotviewer.jsx</string>
@@ -82,8 +70,6 @@
 				<string>com.stianlars1.dotviewer.env</string>
 				<string>com.stianlars1.dotviewer.zsh</string>
 				<string>com.stianlars1.dotviewer.zsh-theme</string>
-
-				<!-- Fallback for dotfiles and unknown text files -->
 				<string>public.plain-text</string>
 				<string>public.text</string>
 				<string>public.source-code</string>
