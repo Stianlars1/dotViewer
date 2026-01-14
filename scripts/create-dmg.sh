@@ -6,13 +6,13 @@ set -e
 #
 # Prerequisites:
 # - brew install create-dmg
-# - Background image at: installer-assets/dmg-background.png (660x400)
+# - Background image at: installer-assets/dmg-background.tiff (multi-res TIFF with 1x and @2x)
 
 APP_NAME="dotViewer"
 DMG_NAME="dotViewer-Installer"
 VOLUME_NAME="dotViewer"
 BUILD_DIR="build"
-BACKGROUND="installer-assets/dmg-background.png"
+BACKGROUND="installer-assets/dmg-background.tiff"
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -75,10 +75,10 @@ if [ ! -f "$BACKGROUND" ]; then
     create-dmg \
       --volname "$VOLUME_NAME" \
       --window-pos 200 120 \
-      --window-size 660 400 \
+      --window-size 660 476 \
       --icon-size 128 \
-      --icon "$APP_NAME.app" 156 200 \
-      --app-drop-link 376 200 \
+      --icon "$APP_NAME.app" 130 190 \
+      --app-drop-link 530 190 \
       --hide-extension "$APP_NAME.app" \
       --no-internet-enable \
       "$BUILD_DIR/$DMG_NAME.dmg" \
@@ -94,10 +94,10 @@ else
     create-dmg \
       --volname "$VOLUME_NAME" \
       --window-pos 200 120 \
-      --window-size 660 400 \
+      --window-size 660 476 \
       --icon-size 128 \
-      --icon "$APP_NAME.app" 156 200 \
-      --app-drop-link 376 200 \
+      --icon "$APP_NAME.app" 130 190 \
+      --app-drop-link 530 190 \
       --background "$BACKGROUND" \
       --hide-extension "$APP_NAME.app" \
       --no-internet-enable \

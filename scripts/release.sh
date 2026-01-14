@@ -149,7 +149,7 @@ echo "Creating DMG installer..."
 
 DMG_NAME="$APP_NAME-$VERSION-Installer.dmg"
 DMG_PATH="$BUILD_DIR/$DMG_NAME"
-BACKGROUND="installer-assets/dmg-background.png"
+BACKGROUND="installer-assets/dmg-background.tiff"
 
 # Check if create-dmg is available
 if command -v create-dmg &> /dev/null; then
@@ -160,11 +160,11 @@ if command -v create-dmg &> /dev/null; then
         create-dmg \
             --volname "Install $APP_NAME" \
             --window-pos 200 120 \
-            --window-size 660 400 \
+            --window-size 660 476 \
             --icon-size 128 \
-            --icon "$APP_NAME.app" 156 200 \
+            --icon "$APP_NAME.app" 130 190 \
             --hide-extension "$APP_NAME.app" \
-            --app-drop-link 376 200 \
+            --app-drop-link 530 190 \
             --background "$BACKGROUND" \
             --no-internet-enable \
             "$DMG_PATH" \
@@ -174,11 +174,11 @@ if command -v create-dmg &> /dev/null; then
         create-dmg \
             --volname "Install $APP_NAME" \
             --window-pos 200 120 \
-            --window-size 660 400 \
+            --window-size 660 476 \
             --icon-size 128 \
-            --icon "$APP_NAME.app" 156 200 \
+            --icon "$APP_NAME.app" 130 190 \
             --hide-extension "$APP_NAME.app" \
-            --app-drop-link 376 200 \
+            --app-drop-link 530 190 \
             --no-internet-enable \
             "$DMG_PATH" \
             "$APP_PATH"
