@@ -41,6 +41,13 @@ class PreviewViewController: NSViewController, QLPreviewingController {
             return
         }
 
+        // For extensionless files, check if user wants to preview unknown files
+        // If setting is OFF, let macOS system Quick Look handle it (shows white icon)
+        if ext.isEmpty && !settings.previewUnknownFiles {
+            handler(PreviewError.fileTypeDisabled)
+            return
+        }
+
         do {
             // Get file attributes for size and modification date
             let attributes = try FileManager.default.attributesOfItem(atPath: url.path)
@@ -97,6 +104,10 @@ class PreviewViewController: NSViewController, QLPreviewingController {
             var language = LanguageDetector.detect(for: url)
             if language == nil {
                 language = LanguageDetector.detectFromShebang(content)
+            }
+            // Content-based fallback for unknown files
+            if language == nil {
+                language = LanguageDetector.detectFromContent(content)
             }
 
             // Build truncation message

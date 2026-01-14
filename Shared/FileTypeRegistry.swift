@@ -214,7 +214,7 @@ final class FileTypeRegistry: @unchecked Sendable {
             // MARK: - Dotfiles
             SupportedFileType(id: "gitignore", displayName: "Git Ignore",
                               extensions: ["gitignore"],
-                              category: .dotfiles, highlightLanguage: "plaintext", isSystemUTI: false),
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
             SupportedFileType(id: "gitconfig", displayName: "Git Config",
                               extensions: ["gitconfig", "gitattributes"],
                               category: .dotfiles, highlightLanguage: "ini", isSystemUTI: false),

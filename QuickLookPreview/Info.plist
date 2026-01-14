@@ -75,6 +75,7 @@
 				<string>public.source-code</string>
 				<string>public.data</string>
 				<string>public.content</string>
+				<string>com.apple.property-list</string>
 			</array>
 			<key>QLSupportsSearchableItems</key>
 			<false/>

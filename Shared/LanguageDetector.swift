@@ -120,8 +120,8 @@ struct LanguageDetector {
         // Config files
         "env": "properties",
         "properties": "properties",
-        "gitignore": "plaintext",
-        "gitattributes": "plaintext",
+        "gitignore": "bash",
+        "gitattributes": "bash",
         "editorconfig": "ini",
         "prettierrc": "json",
         "eslintrc": "json",
@@ -138,8 +138,8 @@ struct LanguageDetector {
     static let dotfileMap: [String: String] = [
         // Git
         ".gitconfig": "ini",
-        ".gitignore": "plaintext",
-        ".gitattributes": "plaintext",
+        ".gitignore": "bash",
+        ".gitattributes": "bash",
         ".gitmodules": "ini",
 
         // Shell profiles
@@ -166,22 +166,24 @@ struct LanguageDetector {
         // Editor configs
         ".editorconfig": "ini",
         ".prettierrc": "json",
-        ".prettierignore": "plaintext",
+        ".prettierignore": "bash",
         ".eslintrc": "json",
-        ".eslintignore": "plaintext",
+        ".eslintignore": "bash",
         ".stylelintrc": "json",
+        ".stylelintignore": "bash",
 
         // Docker
-        ".dockerignore": "plaintext",
+        ".dockerignore": "bash",
         "Dockerfile": "dockerfile",
         "docker-compose.yml": "yaml",
         "docker-compose.yaml": "yaml",
 
         // Node/npm
         ".npmrc": "ini",
-        ".nvmrc": "plaintext",
-        ".node-version": "plaintext",
+        ".nvmrc": "ini",
+        ".node-version": "ini",
         ".yarnrc": "yaml",
+        ".npmignore": "bash",
         ".yarnrc.yml": "yaml",
         "package.json": "json",
         "package-lock.json": "json",
@@ -189,15 +191,15 @@ struct LanguageDetector {
         "jsconfig.json": "json",
 
         // Ruby
-        ".ruby-version": "plaintext",
-        ".ruby-gemset": "plaintext",
+        ".ruby-version": "ini",
+        ".ruby-gemset": "ini",
         ".gemrc": "yaml",
         "Gemfile": "ruby",
         "Rakefile": "ruby",
 
         // Python
-        ".python-version": "plaintext",
-        "requirements.txt": "plaintext",
+        ".python-version": "ini",
+        "requirements.txt": "properties",
         "Pipfile": "toml",
         "pyproject.toml": "toml",
 
@@ -213,12 +215,18 @@ struct LanguageDetector {
 
         // Other
         ".htaccess": "apache",
-        ".mailmap": "plaintext",
+        ".mailmap": "ini",
         "Makefile": "makefile",
         "CMakeLists.txt": "cmake",
         "Brewfile": "ruby",
         "Procfile": "yaml",
         "Vagrantfile": "ruby",
+
+        // Additional ignore files
+        ".bzrignore": "bash",
+        ".cvsignore": "bash",
+        ".hgignore": "bash",
+        ".vscodeignore": "bash",
     ]
 
     /// Detect the language for a given file URL
@@ -252,7 +260,7 @@ struct LanguageDetector {
                 return "ini"
             }
             if filename.contains("ignore") {
-                return "plaintext"
+                return "bash"
             }
 
             // Default for dotfiles - try to detect from content
@@ -291,6 +299,93 @@ struct LanguageDetector {
         if firstLine.contains("php") { return "php" }
 
         return nil
+    }
+
+    /// Content-based language detection as fallback for unknown files
+    /// Analyzes the first 500 characters to detect common file formats
+    static func detectFromContent(_ content: String) -> String? {
+        let sample = String(content.prefix(500))
+        let trimmed = sample.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // JSON detection (starts with { or [)
+        if trimmed.hasPrefix("{") || trimmed.hasPrefix("[") {
+            // Additional check: must contain quotes and colons for objects
+            if trimmed.hasPrefix("{") && trimmed.contains(":") && trimmed.contains("\"") {
+                return "json"
+            }
+            if trimmed.hasPrefix("[") {
+                return "json"
+            }
+        }
+
+        // XML/HTML detection
+        if trimmed.contains("<?xml") || trimmed.contains("<!DOCTYPE") {
+            return "xml"
+        }
+        if trimmed.hasPrefix("<") && trimmed.contains("</") {
+            return "xml"
+        }
+
+        // INI detection ([section] headers)
+        // Check for lines starting with [ and ending with ]
+        let lines = sample.components(separatedBy: .newlines)
+        let hasIniSection = lines.contains { line in
+            let t = line.trimmingCharacters(in: .whitespaces)
+            return t.hasPrefix("[") && t.hasSuffix("]") && t.count > 2
+        }
+        let hasKeyValue = lines.contains { line in
+            let t = line.trimmingCharacters(in: .whitespaces)
+            return t.contains("=") && !t.hasPrefix("#") && !t.hasPrefix(";")
+        }
+        if hasIniSection && hasKeyValue {
+            return "ini"
+        }
+
+        // YAML detection (key: value at start of lines, no braces)
+        // Must have key: pattern but not be JSON-like
+        let hasYamlPattern = lines.contains { line in
+            let t = line.trimmingCharacters(in: .whitespaces)
+            guard !t.isEmpty && !t.hasPrefix("#") else { return false }
+            // Look for "key:" or "key: value" pattern
+            let parts = t.split(separator: ":", maxSplits: 1)
+            if parts.count >= 1 {
+                let key = String(parts[0])
+                // Key should be alphanumeric/underscore, no quotes
+                return key.allSatisfy { $0.isLetter || $0.isNumber || $0 == "_" || $0 == "-" }
+            }
+            return false
+        }
+        if hasYamlPattern && !trimmed.contains("{") && !trimmed.hasPrefix("[") {
+            // Additional check: multiple key: patterns
+            let keyColonCount = lines.filter { line in
+                let t = line.trimmingCharacters(in: .whitespaces)
+                return t.contains(":") && !t.hasPrefix("#")
+            }.count
+            if keyColonCount >= 2 {
+                return "yaml"
+            }
+        }
+
+        // Shell script indicators (common commands at line start)
+        let shellPatterns = ["export ", "alias ", "source ", "echo ", "if [", "for ", "while ", "case ", "function ", "#!/"]
+        for pattern in shellPatterns {
+            if lines.contains(where: { $0.trimmingCharacters(in: .whitespaces).hasPrefix(pattern) }) {
+                return "bash"
+            }
+        }
+
+        // Properties file detection (key=value without sections)
+        if hasKeyValue && !hasIniSection {
+            let kvCount = lines.filter { line in
+                let t = line.trimmingCharacters(in: .whitespaces)
+                return t.contains("=") && !t.hasPrefix("#") && !t.hasPrefix(";")
+            }.count
+            if kvCount >= 2 {
+                return "properties"
+            }
+        }
+
+        return nil  // True fallback - show as plain text
     }
 
     /// Get human-readable language name

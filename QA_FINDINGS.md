@@ -43,8 +43,9 @@
 
 ### ENH-001: Add syntax highlighting for .gitignore comments
 - **Priority**: Low
+- **Status**: ✅ **FIXED**
 - **Description**: `.gitignore` files show as plain text. GitHub highlights comments (`#`) differently.
-- **Suggestion**: Map `.gitignore` to a language that highlights `#` comments, or create custom gitignore highlighting
+- **Fix Applied**: Mapped all ignore-type files (`.gitignore`, `.dockerignore`, `.prettierignore`, etc.) to `bash` language for `#` comment highlighting. Also improved mappings for version files (`.nvmrc`, `.ruby-version`, etc.) to use `ini` and `requirements.txt` to use `properties`.
 
 ### ENH-002: Add .npmrc to security warning files
 - **Priority**: Medium
