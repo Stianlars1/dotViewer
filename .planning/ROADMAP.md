@@ -18,6 +18,7 @@ None
 - [ ] **Phase 2: UI Bug Fixes** - Fix user-facing UI issues in settings and preview
 - [ ] **Phase 3: Code Quality Fixes** - Address silent failures and code inconsistencies
 - [ ] **Phase 4: Verification & Polish** - Final QA pass ensuring no regressions
+- [ ] **Phase 5: App Store Preparation** - Enable sandbox with sandbox-compatible extension detection
 
 ## Phase Details
 
@@ -61,10 +62,21 @@ Plans:
 Plans:
 - [ ] 04-01: Comprehensive QA checklist and verification
 
+### Phase 5: App Store Preparation
+**Goal**: Re-enable sandbox with sandbox-compatible extension status detection for App Store distribution
+**Depends on**: Phase 4
+**Research**: Likely (Apple APIs for extension status in sandboxed apps)
+**Plans**: 1 plan
+
+Plans:
+- [ ] 05-01: Implement sandbox-compatible extension status detection using Apple APIs
+
+**Background**: Sandbox was disabled to allow `pluginkit` shell command to work. For App Store distribution, need to re-enable sandbox and use proper Apple APIs (ExtensionKit, Launch Services, or UTType APIs) to detect extension status.
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -72,3 +84,4 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 2. UI Bug Fixes | 0/3 | Not started | - |
 | 3. Code Quality Fixes | 0/2 | Not started | - |
 | 4. Verification & Polish | 0/1 | Not started | - |
+| 5. App Store Preparation | 0/1 | Not started | - |

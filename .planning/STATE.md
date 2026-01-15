@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 
 ## Current Position
 
-Phase: 1 of 4 (Info.plist & UTI Fixes)
+Phase: 1 of 5 (Info.plist & UTI Fixes)
 Plan: 1 of 2 in current phase
 Status: In progress
-Last activity: 2026-01-15 — Completed 01-01-PLAN.md
+Last activity: 2026-01-15 — Fixed sandbox issue, UAT in progress
 
-Progress: █░░░░░░░░░ 12.5%
+Progress: █░░░░░░░░░ 10% (1/10 plans)
 
 ## Performance Metrics
 
@@ -45,10 +45,11 @@ Recent decisions affecting current work:
 | 01-01 | UTI extensions without leading dot | macOS handles dot prefix for dotfiles |
 | 01-01 | Shell dotfiles conform to public.shell-script | Proper shell syntax highlighting |
 | 01-01 | Git dotfiles conform only to public.plain-text | Git configs are not executable scripts |
+| hotfix | Disable sandbox for now | Sandbox blocks pluginkit; Phase 5 will fix properly for App Store |
 
 ### Deferred Issues
 
-None yet.
+- **App Store sandbox**: Sandbox disabled to allow pluginkit. Phase 5 will implement sandbox-compatible detection.
 
 ### Pending Todos
 

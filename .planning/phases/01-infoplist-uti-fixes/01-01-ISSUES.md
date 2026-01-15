@@ -6,26 +6,6 @@
 
 ## Open Issues
 
-### UAT-001: Extension Status Detection Shows "Not Enabled" When Actually Enabled
-
-**Discovered:** 2026-01-15
-**Phase/Plan:** 01-01
-**Severity:** Major
-**Feature:** Extension status indicator in main app UI
-**Description:** The dotViewer app shows "Extension Not Enabled" with red X icon even when the QuickLook extension is actually enabled and working. User can verify the extension works by pressing Space on files in Finder.
-**Expected:** Green checkmark with "Extension Enabled" when extension is enabled in System Settings
-**Actual:** Red X with "Extension Not Enabled" despite extension being enabled and functional
-**Repro:**
-1. Install dotViewer from DMG
-2. Enable extension in System Settings > Privacy & Security > Extensions > Quick Look
-3. Open dotViewer app
-4. Observe status shows "Extension Not Enabled"
-5. Test QuickLook in Finder - it actually works
-
-**Root Cause:** `ExtensionStatusChecker.swift` line 56 was using `pluginkit -m` which doesn't show all plugins. Changed to `pluginkit -mA` to include all plugins.
-
-**Status:** FIXED - Code change applied, needs rebuild and test
-
 ### UAT-002: TypeScript/TSX Files Not Previewing
 
 **Discovered:** 2026-01-15
@@ -40,13 +20,26 @@
 2. Press Space to invoke QuickLook
 3. See document icon instead of code preview
 
-**Likely Cause:** User ran `lsregister -kill` which cleared Launch Services database. macOS needs restart to rebuild UTI associations. May also be affected by Xcode claiming TypeScript UTIs.
+**Likely Cause:** User ran `lsregister -kill` which cleared Launch Services database. May also be affected by Xcode claiming TypeScript UTIs with higher priority.
 
-**Status:** PENDING - User needs to restart Mac to rebuild Launch Services database
+**Status:** PENDING - Needs re-test after sandbox fix and rebuild
 
 ## Resolved Issues
 
-[None yet]
+### UAT-001: Extension Status Detection Shows "Not Enabled" When Actually Enabled
+
+**Discovered:** 2026-01-15
+**Resolved:** 2026-01-15
+**Phase/Plan:** 01-01
+**Severity:** Major
+**Feature:** Extension status indicator in main app UI
+**Description:** The dotViewer app shows "Extension Not Enabled" with red X icon even when the QuickLook extension is actually enabled and working.
+
+**Root Cause:** App sandbox was accidentally enabled in commit `b5db124` ("gwip before screenshots"). Sandboxed apps cannot run shell commands like `pluginkit`, causing the status check to silently fail.
+
+**Resolution:** Disabled sandbox in `dotViewer.entitlements` (set `com.apple.security.app-sandbox` to `false`). Added Phase 5 to roadmap for future App Store preparation with sandbox-compatible detection.
+
+**Status:** RESOLVED
 
 ---
 
