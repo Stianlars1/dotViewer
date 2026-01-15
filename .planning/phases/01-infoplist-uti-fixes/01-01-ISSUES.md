@@ -6,25 +6,26 @@
 
 ## Open Issues
 
+None.
+
+## Resolved Issues
+
 ### UAT-002: TypeScript/TSX Files Not Previewing
 
 **Discovered:** 2026-01-15
-**Phase/Plan:** 01-01
+**Resolved:** 2026-01-15
+**Phase/Plan:** 01-03
 **Severity:** Major
 **Feature:** QuickLook preview for .ts/.tsx files
 **Description:** Despite UTI declarations being present in Info.plist for TypeScript files, QuickLook shows document icon instead of code preview.
 **Expected:** Code preview with syntax highlighting for .ts and .tsx files
 **Actual:** Generic document icon, no preview content
-**Repro:**
-1. Navigate to a .ts or .tsx file in Finder
-2. Press Space to invoke QuickLook
-3. See document icon instead of code preview
 
-**Likely Cause:** User ran `lsregister -kill` which cleared Launch Services database. May also be affected by Xcode claiming TypeScript UTIs with higher priority.
+**Root Cause:** On systems without Xcode, macOS identifies `.ts` files as `public.mpeg-2-transport-stream` (MPEG-2 video) rather than TypeScript. The `.ts` extension is shared between TypeScript and MPEG-2 Transport Stream formats.
 
-**Status:** PENDING - Needs re-test after sandbox fix and rebuild
+**Resolution:** Added `com.microsoft.typescript` UTI declaration to dotViewer/Info.plist and added both `com.microsoft.typescript` and `public.mpeg-2-transport-stream` to QuickLookPreview/Info.plist QLSupportedContentTypes. This ensures TypeScript files preview correctly on both developer and non-developer Macs.
 
-## Resolved Issues
+**Status:** RESOLVED
 
 ### UAT-001: Extension Status Detection Shows "Not Enabled" When Actually Enabled
 
