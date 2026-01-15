@@ -28,6 +28,7 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
+				<string>com.microsoft.typescript</string>
 				<string>public.mpeg-2-transport-stream</string>
 				<string>public.swift-source</string>
 				<string>public.c-source</string>
