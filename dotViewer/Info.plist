@@ -354,6 +354,72 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.shell-script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.shell-dotfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bashrc</string>
+					<string>bash_profile</string>
+					<string>bash_aliases</string>
+					<string>bash_logout</string>
+					<string>zshrc</string>
+					<string>zshenv</string>
+					<string>zprofile</string>
+					<string>zlogin</string>
+					<string>zlogout</string>
+					<string>profile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.git-dotfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitconfig</string>
+					<string>gitignore</string>
+					<string>gitattributes</string>
+					<string>gitmodules</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JavaScript Module</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.javascript-module</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>mjs</string>
+					<string>cjs</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>
