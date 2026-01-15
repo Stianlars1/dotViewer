@@ -85,8 +85,11 @@ final class SharedSettings: @unchecked Sendable {
         }
         set {
             lock.withLock {
-                if let data = try? JSONEncoder().encode(newValue) {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
                     userDefaults.set(data, forKey: "customExtensions")
+                } catch {
+                    logger.error("Failed to encode custom extensions: \(error.localizedDescription)")
                 }
             }
         }
