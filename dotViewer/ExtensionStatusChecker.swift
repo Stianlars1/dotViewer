@@ -53,7 +53,7 @@ final class ExtensionStatusChecker: ObservableObject {
         await withCheckedContinuation { continuation in
             let task = Process()
             task.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
-            task.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
+            task.arguments = ["-mA", "-p", "com.apple.quicklook.preview"]
 
             let pipe = Pipe()
             task.standardOutput = pipe
