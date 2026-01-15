@@ -126,7 +126,12 @@ else
     BUILD_MODE="Developer ID"
 fi
 
-APP_PATH="$EXPORT_PATH/$APP_NAME.app"
+if [ "$APP_STORE" = true ]; then
+    # App Store exports create a .pkg file
+    APP_PATH="$EXPORT_PATH/$APP_NAME.pkg"
+else
+    APP_PATH="$EXPORT_PATH/$APP_NAME.app"
+fi
 DMG_FILENAME="$APP_NAME-$VERSION.dmg"
 DMG_PATH="$EXPORT_PATH/$DMG_FILENAME"
 
@@ -281,6 +286,42 @@ xcodebuild -exportArchive \
     -exportOptionsPlist "$EXPORT_OPTIONS" \
     -quiet
 
+if [ "$APP_STORE" = true ]; then
+    # App Store exports create a .pkg file
+    if [ ! -f "$APP_PATH" ]; then
+        print_error "Export failed - no pkg created"
+        exit 1
+    fi
+    print_success "Exported: $APP_PATH"
+
+    # Verify pkg signature
+    print_step "Step 5/8: Verifying package signature..."
+    pkgutil --check-signature "$APP_PATH"
+    if [ $? -eq 0 ]; then
+        print_success "Package signature valid"
+    else
+        print_warning "Package signature check returned non-zero"
+    fi
+
+    END_TIME=$(date +%s)
+    DURATION=$((END_TIME - START_TIME))
+
+    print_header "App Store Build Complete!"
+    echo "  Duration: ${DURATION}s"
+    echo ""
+    echo "  Package: $APP_PATH"
+    echo ""
+    echo -e "  ${BOLD}Next Steps:${NC}"
+    echo "  1. Open Transporter app"
+    echo "  2. Drag the .pkg file to Transporter"
+    echo "  3. Click Deliver"
+    echo ""
+    echo "  Or upload via command line:"
+    echo "  xcrun altool --upload-package -f \"$APP_PATH\" -t macos -u YOUR_APPLE_ID -p @keychain:AC_PASSWORD"
+    echo ""
+    exit 0
+fi
+
 if [ ! -d "$APP_PATH" ]; then
     print_error "Export failed - no app created"
     exit 1
@@ -306,30 +347,6 @@ fi
 # Show signing identity
 SIGNING_INFO=$(codesign -dv "$APP_PATH" 2>&1 | grep "Authority" | head -1)
 echo "    $SIGNING_INFO"
-
-# ============================================================================
-#  FOR APP STORE BUILDS - Stop here
-# ============================================================================
-
-if [ "$APP_STORE" = true ]; then
-    END_TIME=$(date +%s)
-    DURATION=$((END_TIME - START_TIME))
-
-    print_header "App Store Build Complete!"
-    echo "  Duration: ${DURATION}s"
-    echo ""
-    echo "  App: $APP_PATH"
-    echo ""
-    echo "  ${BOLD}Next Steps:${NC}"
-    echo "  1. Open Transporter app"
-    echo "  2. Drag the .app file to Transporter"
-    echo "  3. Click Deliver"
-    echo ""
-    echo "  Or upload via command line:"
-    echo "  xcrun altool --upload-app -f \"$APP_PATH\" -t macos --apiKey KEY --apiIssuer ISSUER"
-    echo ""
-    exit 0
-fi
 
 # ============================================================================
 #  STEP 6: Notarize App

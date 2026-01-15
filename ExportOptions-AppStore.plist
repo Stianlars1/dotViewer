@@ -5,10 +5,21 @@
     <key>method</key>
     <string>app-store-connect</string>
     <key>signingStyle</key>
-    <string>automatic</string>
+    <string>manual</string>
     <key>teamID</key>
     <string>7F5ZSQFCQ4</string>
     <key>uploadSymbols</key>
     <true/>
+    <key>generateAppStoreInformation</key>
+    <false/>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>com.stianlars1.dotViewer</key>
+        <string>dotViewer App Store</string>
+        <key>com.stianlars1.dotViewer.QuickLookPreview</key>
+        <string>QuickLookPreview App Store</string>
+    </dict>
+    <key>installerSigningCertificate</key>
+    <string>3rd Party Mac Developer Installer</string>
 </dict>
 </plist>
