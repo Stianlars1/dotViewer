@@ -14,7 +14,7 @@ None
 - Integer phases (1, 2, 3, 4): Planned milestone work
 - Decimal phases (e.g., 2.1): Urgent insertions if needed
 
-- [ ] **Phase 1: Info.plist & UTI Fixes** - Fix file type registration and language detection
+- [ ] **Phase 1: Info.plist & UTI Fixes** (In progress) - Fix file type registration and language detection
 - [ ] **Phase 2: UI Bug Fixes** - Fix user-facing UI issues in settings and preview
 - [ ] **Phase 3: Code Quality Fixes** - Address silent failures and code inconsistencies
 - [ ] **Phase 4: Verification & Polish** - Final QA pass ensuring no regressions
@@ -28,7 +28,7 @@ None
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Add common dotfiles to QuickLook Info.plist UTI declarations
+- [x] 01-01: Add common dotfiles to QuickLook Info.plist UTI declarations
 - [ ] 01-02: Add .mjs, .cjs, .mts, .cts mappings to LanguageDetector.extensionMap
 
 ### Phase 2: UI Bug Fixes
@@ -68,7 +68,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Info.plist & UTI Fixes | 0/2 | Not started | - |
+| 1. Info.plist & UTI Fixes | 1/2 | In progress | - |
 | 2. UI Bug Fixes | 0/3 | Not started | - |
 | 3. Code Quality Fixes | 0/2 | Not started | - |
 | 4. Verification & Polish | 0/1 | Not started | - |
