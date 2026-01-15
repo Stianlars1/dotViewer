@@ -70,6 +70,9 @@
 				<string>com.stianlars1.dotviewer.env</string>
 				<string>com.stianlars1.dotviewer.zsh</string>
 				<string>com.stianlars1.dotviewer.zsh-theme</string>
+				<string>com.stianlars1.dotviewer.shell-dotfile</string>
+				<string>com.stianlars1.dotviewer.git-dotfile</string>
+				<string>com.stianlars1.dotviewer.javascript-module</string>
 				<string>public.plain-text</string>
 				<string>public.text</string>
 				<string>public.source-code</string>
