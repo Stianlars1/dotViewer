@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 
 ## Current Position
 
-Phase: 1 of 5 (Info.plist & UTI Fixes)
-Plan: 1 of 2 in current phase
+Phase: 1 of 6 (Info.plist & UTI Fixes)
+Plan: 1 of 4 in current phase
 Status: In progress
-Last activity: 2026-01-15 — Fixed sandbox issue, UAT in progress
+Last activity: 2026-01-15 — Fixed sandbox issue, added new plans
 
-Progress: █░░░░░░░░░ 10% (1/10 plans)
+Progress: █░░░░░░░░░ 7% (1/14 plans)
 
 ## Performance Metrics
 

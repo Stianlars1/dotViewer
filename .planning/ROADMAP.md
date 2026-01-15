@@ -19,6 +19,7 @@ None
 - [ ] **Phase 3: Code Quality Fixes** - Address silent failures and code inconsistencies
 - [ ] **Phase 4: Verification & Polish** - Final QA pass ensuring no regressions
 - [ ] **Phase 5: App Store Preparation** - Enable sandbox with sandbox-compatible extension detection
+- [ ] **Phase 6: Performance & Syntax Highlighting** - Improve load times and evaluate better highlighting libraries
 
 ## Phase Details
 
@@ -26,11 +27,13 @@ None
 **Goal**: Fix custom file type activation (Bug #1) and TypeScript/JS variant detection (Bug #4)
 **Depends on**: Nothing (first phase)
 **Research**: Unlikely (Info.plist configuration, established patterns)
-**Plans**: 2 plans
+**Plans**: 4 plans
 
 Plans:
 - [x] 01-01: Add common dotfiles to QuickLook Info.plist UTI declarations
 - [ ] 01-02: Add .mjs, .cjs, .mts, .cts mappings to LanguageDetector.extensionMap
+- [ ] 01-03: Fix .ts/.tsx QuickLook preview (investigate UTI priority vs Xcode)
+- [ ] 01-04: Add .env syntax highlighting support
 
 ### Phase 2: UI Bug Fixes
 **Goal**: Fix edit functionality for custom types (Bug #2), uninstall button styling (Bug #3), and markdown toggle (Bug #5)
@@ -73,15 +76,30 @@ Plans:
 
 **Background**: Sandbox was disabled to allow `pluginkit` shell command to work. For App Store distribution, need to re-enable sandbox and use proper Apple APIs (ExtensionKit, Launch Services, or UTType APIs) to detect extension status.
 
+### Phase 6: Performance & Syntax Highlighting
+**Goal**: Improve file loading performance (currently 1-2s for 10-30kb files) and evaluate better syntax highlighting libraries
+**Depends on**: Phase 5
+**Research**: Likely (performance profiling, library evaluation)
+**Plans**: 2 plans
+
+Plans:
+- [ ] 06-01: Investigate and fix slow file loading (profile, identify bottlenecks)
+- [ ] 06-02: Evaluate syntax highlighting alternatives (HighlightSwift vs highlight/andre-simon.de)
+
+**References:**
+- SourceCodeSyntaxHighlight: https://github.com/sbarex/SourceCodeSyntaxHighlight
+- highlight by andre-simon.de: http://andre-simon.de/doku/highlight/en/highlight.php
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Info.plist & UTI Fixes | 1/2 | In progress | - |
+| 1. Info.plist & UTI Fixes | 1/4 | In progress | - |
 | 2. UI Bug Fixes | 0/3 | Not started | - |
 | 3. Code Quality Fixes | 0/2 | Not started | - |
 | 4. Verification & Polish | 0/1 | Not started | - |
 | 5. App Store Preparation | 0/1 | Not started | - |
+| 6. Performance & Syntax | 0/2 | Not started | - |
