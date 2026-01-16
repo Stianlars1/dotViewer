@@ -153,6 +153,13 @@ struct FileTypesView: View {
         saveCustomExtensions()
     }
 
+    private func updateCustomExtension(_ updated: CustomExtension) {
+        if let index = customExtensions.firstIndex(where: { $0.id == updated.id }) {
+            customExtensions[index] = updated
+            saveCustomExtensions()
+        }
+    }
+
     private func saveCustomExtensions() {
         SharedSettings.shared.customExtensions = customExtensions
     }
@@ -244,6 +251,113 @@ struct CustomExtensionRow: View {
             .buttonStyle(.borderless)
         }
         .padding(.vertical, 4)
+    }
+}
+
+struct EditCustomExtensionSheet: View {
+    @Environment(\.dismiss) private var dismiss
+
+    let customExtension: CustomExtension
+    let onSave: (CustomExtension) -> Void
+
+    @State private var displayName: String
+    @State private var selectedLanguage: String
+
+    init(customExtension: CustomExtension, onSave: @escaping (CustomExtension) -> Void) {
+        self.customExtension = customExtension
+        self.onSave = onSave
+        _displayName = State(initialValue: customExtension.displayName)
+        _selectedLanguage = State(initialValue: customExtension.highlightLanguage)
+    }
+
+    private var isValid: Bool {
+        !displayName.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            HStack {
+                Text("Edit Custom Extension")
+                    .font(.headline)
+                Spacer()
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding()
+
+            Divider()
+
+            // Form
+            Form {
+                Section {
+                    HStack {
+                        Text(".")
+                            .foregroundStyle(.secondary)
+                        Text(customExtension.extensionName)
+                            .foregroundStyle(.primary)
+                    }
+                } header: {
+                    Text("File Extension")
+                } footer: {
+                    Text("Extension cannot be changed")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Section {
+                    TextField("Display Name", text: $displayName)
+                } header: {
+                    Text("Display Name")
+                }
+
+                Section {
+                    Picker("Language", selection: $selectedLanguage) {
+                        ForEach(HighlightLanguage.all) { lang in
+                            Text(lang.displayName).tag(lang.id)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                } header: {
+                    Text("Syntax Highlighting")
+                }
+            }
+            .formStyle(.grouped)
+            .scrollContentBackground(.hidden)
+
+            Divider()
+
+            // Footer buttons
+            HStack {
+                Button("Cancel") {
+                    dismiss()
+                }
+                .keyboardShortcut(.cancelAction)
+
+                Spacer()
+
+                Button("Save Changes") {
+                    let updated = CustomExtension(
+                        id: customExtension.id,
+                        extensionName: customExtension.extensionName,
+                        displayName: displayName.trimmingCharacters(in: .whitespaces),
+                        highlightLanguage: selectedLanguage
+                    )
+                    onSave(updated)
+                    dismiss()
+                }
+                .keyboardShortcut(.defaultAction)
+                .disabled(!isValid)
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+        }
+        .frame(width: 400, height: 380)
     }
 }
 
