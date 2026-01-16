@@ -44,28 +44,36 @@ Plans:
 - [x] 02-03: Fix markdown RAW mode toggle hiding content (pre-existing fix)
 
 ### Phase 3: Performance & Syntax Highlighting
-**Goal**: Improve file loading performance (currently 1-2s for 10-30kb files) and evaluate better syntax highlighting libraries
+**Goal**: Replace slow JavaScriptCore-based HighlightSwift with fast native syntax highlighting
 **Depends on**: Phase 2
-**Research**: Likely (performance profiling, library evaluation)
-**Plans**: 3 plans
+**Research**: Complete (extensive research conducted 2026-01-16)
+**Plans**: 4 plans (3 primary + 1 contingency)
 
 Plans:
-- [ ] 03-01: Profile and identify performance bottlenecks
-- [ ] 03-02: Implement lazy/chunked loading for instant preview
-- [ ] 03-03: Evaluate and implement faster syntax highlighting
+- [ ] 03-01: Create Syntect Rust library with UniFFI bindings
+- [ ] 03-02: Build XCFramework and integrate with Xcode project
+- [ ] 03-03: Replace HighlightSwift with Syntect, validate performance
+- [ ] 03-04: (CONTINGENCY) Pure Swift pattern highlighter fallback
 
-**Problem**: QuickLook previews take 1-2 seconds for small files (10-30KB). Users expect instant previews.
+**Problem**: QuickLook previews take 1-2 seconds for small files (10-30KB). User navigates at ~140 BPM, requiring <430ms response.
 
-**Research Findings:**
-- Current: HighlightSwift (JavaScript bridge via highlight.js) - SLOW
-- Alternative 1: Andre-simon Highlight (native C++) - Fast, used by SourceCodeSyntaxHighlight
-- Alternative 2: Pure Swift regex (CodeColors approach) - "Lightning fast"
-- Root cause likely: JavaScript execution overhead
+**Root Cause**: HighlightSwift uses JavaScriptCore + highlight.js. JavaScriptCore is 12-15x slower than WKWebView for JS execution.
 
-**References:**
-- SourceCodeSyntaxHighlight: https://github.com/sbarex/SourceCodeSyntaxHighlight
+**Chosen Solution**: Syntect via UniFFI (Rust)
+- 16,000 lines/sec performance
+- 200+ languages built-in (Sublime Text syntaxes)
+- Battle-tested (used by bat, delta, many production tools)
+- Pre-compiled syntax dumps for 23ms startup
+
+**Fallback**: Pure Swift pattern highlighter (CodeColors-style)
+- If Rust/UniFFI proves too complex
+- Covers top 20 languages with <10ms performance
+
+**Research References:**
+- Syntect: https://github.com/trishume/syntect
+- UniFFI: https://github.com/mozilla/uniffi-rs
 - CodeColors: https://github.com/Oil3/CodeColors-Quicklook-Syntax-Highlighting
-- highlight by andre-simon.de: http://andre-simon.de/doku/highlight/en/highlight.php
+- JavaScriptCore slowness: https://replay.js.org/blog/javascriptcore-is-really-slow/
 
 ### Phase 4: App Store Preparation
 **Goal**: Re-enable sandbox with sandbox-compatible extension status detection for App Store distribution
@@ -101,7 +109,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
 | 2. UI Bug Fixes | 3/3 | Complete | 2026-01-16 |
-| 3. Performance & Syntax | 0/3 | Not started | - |
+| 3. Performance & Syntax | 0/4 | Planned | - |
 | 4. App Store Preparation | 0/1 | Not started | - |
 
-**Total Plans:** 10 → 7 remaining after removing duplicates and skipping QA
+**Total Plans:** 11 (6 complete, 5 remaining)
+- Phase 3 has 4 plans (3 primary + 1 contingency fallback)
