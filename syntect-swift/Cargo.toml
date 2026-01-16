@@ -1,0 +1,16 @@
+[package]
+name = "syntect-swift"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "staticlib"]
+name = "syntect_swift"
+
+[dependencies]
+syntect = { version = "5.2", default-features = true }
+uniffi = { version = "0.29", features = ["cli"] }
+once_cell = "1.20"
+
+[build-dependencies]
+uniffi = { version = "0.29", features = ["build"] }
