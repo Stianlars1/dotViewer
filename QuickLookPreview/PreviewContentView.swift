@@ -149,6 +149,14 @@ struct PreviewContentView: View {
     }
 
     private func highlightCode() async {
+        // Track highlight timing for performance monitoring
+        let startTime = CFAbsoluteTimeGetCurrent()
+        defer {
+            let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
+            let usedFast = FastSyntaxHighlighter.isSupported(state.language)
+            DotViewerLogger.preview.info("Highlight \(self.state.filename): \(String(format: "%.1f", elapsed))ms (\(usedFast ? "fast" : "HighlightSwift"), \(self.state.lineCount) lines)")
+        }
+
         // Use pre-highlighted content if available (from cache or pre-warming)
         if let preHighlighted = state.preHighlightedContent {
             highlightedContent = preHighlighted
@@ -212,7 +220,7 @@ struct PreviewContentView: View {
             return
         }
 
-        // For other files, use HighlightSwift with reliable timeout using TaskGroup
+        // For other files, use SyntaxHighlighter (which uses FastSyntaxHighlighter for supported languages)
         let highlighter = SyntaxHighlighter()
         let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
 

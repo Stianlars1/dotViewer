@@ -132,6 +132,11 @@ class ThemeManager: ObservableObject {
         return false
     }
 
+    /// Get syntax colors for the current theme
+    var syntaxColors: SyntaxColors {
+        SyntaxColors.forTheme(selectedTheme, systemIsDark: systemAppearanceIsDark)
+    }
+
     /// Get human-readable theme name
     var currentThemeName: String {
         switch selectedTheme {

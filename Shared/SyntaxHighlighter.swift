@@ -2,10 +2,32 @@ import Foundation
 import SwiftUI
 import HighlightSwift
 
+/// Unified syntax highlighter that uses FastSyntaxHighlighter for supported languages,
+/// falling back to HighlightSwift for languages without dedicated fast support.
 struct SyntaxHighlighter: Sendable {
+    private let fastHighlighter = FastSyntaxHighlighter()
     private let highlight = Highlight()
 
+    /// Highlight code with the most appropriate highlighter for the language
+    /// - Parameters:
+    ///   - code: Source code to highlight
+    ///   - language: Language identifier (e.g., "swift", "javascript")
+    /// - Returns: Attributed string with syntax highlighting
     func highlight(code: String, language: String?) async throws -> AttributedString {
+        // Try FastSyntaxHighlighter first for supported languages (native Swift, fast)
+        if FastSyntaxHighlighter.isSupported(language) {
+            let colors = await MainActor.run {
+                ThemeManager.shared.syntaxColors
+            }
+            return fastHighlighter.highlight(code: code, language: language, colors: colors)
+        }
+
+        // Fall back to HighlightSwift for unsupported languages
+        return try await highlightWithFallback(code: code, language: language)
+    }
+
+    /// Fallback highlighting using HighlightSwift (JavaScriptCore-based)
+    private func highlightWithFallback(code: String, language: String?) async throws -> AttributedString {
         do {
             // Determine the highlight mode
             let mode: HighlightMode
