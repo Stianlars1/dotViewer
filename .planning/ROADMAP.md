@@ -42,8 +42,8 @@ Plans:
 **Plans**: 3 plans (can parallelize)
 
 Plans:
-- [ ] 02-01: Add edit capability for custom file type extensions
-- [ ] 02-02: Apply destructive styling to uninstall button
+- [x] 02-01: Add edit capability for custom file type extensions
+- [x] 02-02: Apply destructive styling to uninstall button
 - [ ] 02-03: Fix markdown RAW mode toggle hiding content
 
 ### Phase 3: Verification & Polish
@@ -94,8 +94,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & UTI Fixes | 2/3 | In progress | - |
-| 2. UI Bug Fixes | 0/3 | Not started | - |
+| 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
+| 2. UI Bug Fixes | 2/3 | In progress | - |
 | 3. Verification & Polish | 0/1 | Not started | - |
 | 4. App Store Preparation | 0/1 | Not started | - |
 | 5. Performance & Syntax | 0/2 | Not started | - |
