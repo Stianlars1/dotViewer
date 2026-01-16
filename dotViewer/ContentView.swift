@@ -292,7 +292,7 @@ struct TroubleshootingRow: View {
 // MARK: - Settings View
 
 struct SettingsView: View {
-    @StateObject private var themeManager = ThemeManager.shared
+    @ObservedObject private var themeManager = ThemeManager.shared
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSize) / 1000.0
     @State private var showTruncationWarning = SharedSettings.shared.showTruncationWarning
     @State private var showPreviewHeader = SharedSettings.shared.showPreviewHeader
