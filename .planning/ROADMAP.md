@@ -31,7 +31,7 @@ None
 Plans:
 - [x] 01-01: Add common dotfiles to QuickLook Info.plist UTI declarations
 - [x] 01-02: Fix silent encoding failures in CustomExtension saving
-- [ ] 01-03: Fix .ts/.tsx QuickLook preview (investigate UTI priority vs Xcode)
+- [x] 01-03: Fix .ts/.tsx QuickLook preview (investigate UTI priority vs Xcode)
 
 **Note**: 01-02 was moved from Phase 3 (was 03-01) because it's foundational — must be fixed before any custom extension UI work.
 
