@@ -1,6 +1,5 @@
 import Foundation
 import SwiftUI
-import HighlightSwift
 
 @MainActor
 class ThemeManager: ObservableObject {
@@ -32,36 +31,6 @@ class ThemeManager: ObservableObject {
         selectedTheme = settings.selectedTheme
         fontSize = settings.fontSize
         showLineNumbers = settings.showLineNumbers
-    }
-
-    /// Get the current HighlightColors based on user preference and system appearance
-    var currentHighlightColors: HighlightColors {
-        switch selectedTheme {
-        case "auto":
-            return systemAppearanceIsDark ? .dark(.atomOne) : .light(.atomOne)
-        case "atomOneLight":
-            return .light(.atomOne)
-        case "atomOneDark":
-            return .dark(.atomOne)
-        case "github":
-            return .light(.github)
-        case "githubDark":
-            return .dark(.github)
-        case "xcode":
-            return .light(.xcode)
-        case "xcodeDark":
-            return .dark(.xcode)
-        case "solarizedLight":
-            return .light(.solarized)
-        case "solarizedDark":
-            return .dark(.solarized)
-        case "tokyoNight":
-            return .dark(.tokyoNight)
-        case "blackout":
-            return .dark(.atomOne) // Blackout uses Atom One Dark syntax colors
-        default:
-            return .light(.atomOne)
-        }
     }
 
     /// Get background color for the current theme

@@ -149,6 +149,8 @@ struct PreviewContentView: View {
     }
 
     private func highlightCode() async {
+        let logger = DotViewerLogger.preview
+
         // Use pre-highlighted content if available (from cache or pre-warming)
         if let preHighlighted = state.preHighlightedContent {
             highlightedContent = preHighlighted
@@ -158,21 +160,19 @@ struct PreviewContentView: View {
             return
         }
 
-        // Skip syntax highlighting for very large files (>2000 lines) - show plain text immediately
-        // This prevents the UI from hanging on massive files like package-lock.json
-        let maxLinesForHighlighting = 2000
+        // Skip syntax highlighting for very large files (>5000 lines)
+        // Even Syntect can slow down on huge files
+        let maxLinesForHighlighting = 5000
 
         if state.lineCount > maxLinesForHighlighting {
-            // Large file - skip highlighting entirely, show plain text immediately
+            logger.info("Skipping highlight for large file: \(state.lineCount) lines")
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
             return
         }
 
-        // Skip syntax highlighting for unknown file types - auto-detection is very slow
-        // Files like .viminfo have no known language, and HighlightSwift's automatic mode
-        // runs multiple parsers which can take 10+ seconds
+        // Skip syntax highlighting for unknown file types
         if state.language == nil {
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
@@ -181,7 +181,6 @@ struct PreviewContentView: View {
         }
 
         // Skip highlighting for files explicitly marked as plaintext (history files, logs, etc.)
-        // These files have no meaningful syntax and would just waste CPU cycles
         if state.language == "plaintext" {
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
@@ -189,7 +188,7 @@ struct PreviewContentView: View {
             return
         }
 
-        // Use custom highlighting for markdown (HighlightSwift has bugs that cause red text)
+        // Use custom highlighting for markdown (native SwiftUI rendering)
         if state.language == "markdown" {
             let result = highlightMarkdownRaw(state.content)
             highlightedContent = result
@@ -204,7 +203,6 @@ struct PreviewContentView: View {
         }
 
         // Content-based fast path: skip highlighting for files that don't look like code
-        // This catches data files, logs, and other non-code content that has a detected language
         if shouldSkipHighlightingBasedOnContent(state.content) {
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
@@ -212,59 +210,30 @@ struct PreviewContentView: View {
             return
         }
 
-        // For other files, use HighlightSwift with reliable timeout using TaskGroup
+        // Use Syntect for syntax highlighting (fast native Rust implementation)
+        let startTime = CFAbsoluteTimeGetCurrent()
         let highlighter = SyntaxHighlighter()
-        let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
 
-        // Use TaskGroup for reliable timeout with proper cancellation propagation
-        let result: AttributedString? = await withTaskGroup(of: AttributedString?.self) { group in
-            // Add the highlighting task
-            group.addTask {
-                do {
-                    return try await highlighter.highlight(
-                        code: self.state.content,
-                        language: self.state.language
-                    )
-                } catch {
-                    return nil
-                }
-            }
+        do {
+            let highlighted = try await highlighter.highlight(
+                code: state.content,
+                language: state.language
+            )
 
-            // Add the timeout task
-            group.addTask {
-                do {
-                    try await Task.sleep(nanoseconds: timeoutNanoseconds)
-                } catch {
-                    // Task was cancelled, return nil
-                }
-                return nil // Timeout returns nil
-            }
+            let elapsed = CFAbsoluteTimeGetCurrent() - startTime
+            logger.info("Highlighted \(state.content.count) chars in \(elapsed * 1000, format: .fixed(precision: 1))ms")
 
-            // Return the first non-nil result, or nil if timeout wins
-            var highlighted: AttributedString? = nil
-            for await taskResult in group {
-                if let result = taskResult {
-                    highlighted = result
-                    group.cancelAll() // Cancel remaining tasks
-                    break
-                }
-            }
-
-            // If we got nil from timeout, cancel the highlight task
-            group.cancelAll()
-            return highlighted
-        }
-
-        // Use result if available
-        if let highlighted = result {
             highlightedContent = highlighted
+
             // Cache the result
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
                 HighlightCache.shared.set(path: path, modDate: modDate, highlighted: highlighted)
             }
+        } catch {
+            logger.error("Highlighting failed: \(error.localizedDescription)")
         }
 
-        // Fade in the content smoothly (whether highlighting succeeded or timed out)
+        // Fade in the content smoothly
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }

@@ -36,8 +36,6 @@
 		A1000032 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000012 /* ThemeManager.swift */; };
 		A1000033 /* MarkdownWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000023 /* MarkdownWebView.swift */; };
 		A1000034 /* MarkdownStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000024 /* MarkdownStyles.swift */; };
-		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
-		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
 		A1000050 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000051 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000060 /* ExtensionStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000040 /* ExtensionStatusChecker.swift */; };
@@ -102,7 +100,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1000040 /* HighlightSwift in Frameworks */,
 				B1000003 /* SyntectSwiftFFI.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,7 +108,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A1000041 /* HighlightSwift in Frameworks */,
 				B1000004 /* SyntectSwiftFFI.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,9 +206,6 @@
 				A7000002 /* PBXTargetDependency */,
 			);
 			name = dotViewer;
-			packageProductDependencies = (
-				A5000001 /* HighlightSwift */,
-			);
 			productName = dotViewer;
 			productReference = A3000003 /* dotViewer.app */;
 			productType = "com.apple.product-type.application";
@@ -230,9 +223,6 @@
 			dependencies = (
 			);
 			name = QuickLookPreview;
-			packageProductDependencies = (
-				A5000002 /* HighlightSwift */,
-			);
 			productName = QuickLookPreview;
 			productReference = A3000002 /* QuickLookPreview.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -264,9 +254,6 @@
 				Base,
 			);
 			mainGroup = A6000000;
-			packageReferences = (
-				A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
-			);
 			productRefGroup = A6000004 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -650,30 +637,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/appstefan/HighlightSwift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		A5000001 /* HighlightSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
-			productName = HighlightSwift;
-		};
-		A5000002 /* HighlightSwift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
-			productName = HighlightSwift;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A3000000 /* Project object */;
 }
