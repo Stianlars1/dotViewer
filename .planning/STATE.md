@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 ## Current Position
 
 Phase: 3 of 4 (Performance & Syntax Highlighting)
-Plan: 1 of 2 (revised phase - Tree-sitter approach)
-Status: PLANNING - approach change
-Last activity: 2026-01-16 — Reverted Syntect, switching to Tree-sitter + Neon
+Plan: 1 of 2 — COMPLETED
+Status: CHECKPOINT — needs manual performance verification
+Last activity: 2026-01-16 — Implemented FastSyntaxHighlighter (pure Swift approach)
 
-Progress: ██████░░░░ 60% (6/10 plans complete, Phase 3 restarted)
+Progress: ███████░░░ 70% (7/10 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
+- Total plans completed: 9
 - Average duration: 3 min
-- Total execution time: 21 min
+- Total execution time: 26 min
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: ██████░░░░ 60% (6/10 plans complete, Phase 3 resta
 |-------|-------|-------|----------|
 | 01 | 3 | 3 min | 1 min |
 | 02 | 3 | 3 min | 1 min |
-| 03 | 2 | 15 min | 7.5 min |
+| 03 | 3 | 20 min | 6.7 min |
 
 ## Accumulated Context
 
@@ -51,7 +51,8 @@ Recent decisions affecting current work:
 | reorg | Skip Phase 3 QA | Tested during development; not needed as separate phase |
 | reorg | Swap Phase 4 ↔ 5 | Performance is critical for user retention; App Store can wait |
 | 03 | Abandon Syntect/Rust approach | 3 failed integration attempts; complexity too high |
-| 03 | Switch to Tree-sitter + Neon | All Swift packages, well-maintained, simpler integration |
+| 03 | Abandon Tree-sitter + Neon | Research showed similar complexity to Syntect (10+ packages, query files) |
+| 03 | Implement FastSyntaxHighlighter | Pure Swift regex approach, zero dependencies, proven codebase pattern |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -63,7 +64,7 @@ Recent decisions affecting current work:
 **Items confirmed as pre-existing fixes:**
 - 02-03 markdown toggle — was already working
 
-**Result:** 4 phases, 10 total plans (6 complete, 4 remaining)
+**Result:** 4 phases, 10 total plans (7 complete, 3 remaining)
 
 ### Performance Research (2026-01-16)
 
@@ -80,10 +81,12 @@ Recent decisions affecting current work:
 | Andre-simon Highlight | Native C++ | Fast | 200+ |
 | CodeColors approach | Swift regex | "Instant" | ~60 |
 
-**Recommended approach:**
-1. Profile first to confirm bottleneck
-2. Implement lazy loading for instant initial display
-3. Switch to faster highlighting library if JS is confirmed as bottleneck
+**Implemented approach:**
+FastSyntaxHighlighter - pure Swift regex-based highlighter with:
+- Pre-compiled static regex patterns
+- Efficient index mapping for O(1) AttributedString manipulation
+- Support for 20+ languages
+- Theme-aware colors matching all existing themes
 
 ### Syntect Approach — ABANDONED (2026-01-16)
 
@@ -100,20 +103,25 @@ Recent decisions affecting current work:
 - Build system complexity
 - Persistent integration issues across 3 attempts
 
-### Tree-sitter + Neon Approach — ACTIVE (2026-01-16)
+### Tree-sitter + Neon Approach — ABANDONED (2026-01-16)
 
-**New approach:**
-- Tree-sitter via Swift packages (ChimeHQ/SwiftTreeSitter + ChimeHQ/Neon)
-- All Swift native — no Rust, no FFI, no XCFramework
-- Used by Neovim, Zed, GitHub for syntax highlighting
-- ~20ms expected performance
+**Reason:** Research revealed integration complexity similar to Syntect:
+- 10+ separate SPM packages required (one per language)
+- Query files (highlights.scm) need proper bundling
+- High risk of similar integration failures
 
-**Benefits:**
-- Pure Swift Package Manager integration
-- Well-maintained by ChimeHQ (macOS dev tools company)
-- Proper AST-based parsing (more accurate than regex)
+### FastSyntaxHighlighter Approach — ACTIVE (2026-01-16)
 
-**Status:** Planning
+**Implementation:**
+- Pure Swift regex-based syntax highlighter
+- Zero external dependencies
+- Based on proven pattern already in codebase (markdown code blocks)
+- Falls back to HighlightSwift for unsupported languages
+
+**Supported languages (20+):**
+Swift, JavaScript, TypeScript, JSX, TSX, Python, Rust, Go, JSON, YAML, Bash, HTML, XML, CSS, SCSS, C, C++, Java, Kotlin, Ruby, PHP, SQL, Markdown
+
+**Expected performance:** <50ms for typical files
 
 ### Deferred Issues
 
@@ -125,11 +133,14 @@ None.
 
 ### Blockers/Concerns
 
-None.
+**CHECKPOINT:** Plan 03-01 complete, needs manual performance verification:
+1. Open various file types in QuickLook
+2. Check Console.app for timing logs (filter: com.stianlars1.dotViewer)
+3. Verify <100ms target at 140 BPM navigation
 
 ## Session Continuity
 
 Last session: 2026-01-16
-Stopped at: Reverted Syntect approach, planning Tree-sitter integration
+Stopped at: Plan 03-01 complete, awaiting manual verification
 Resume file: None
-Next: Create and execute 03-01-PLAN.md for Tree-sitter + Neon integration
+Next: Execute 03-02-PLAN.md after performance verification
