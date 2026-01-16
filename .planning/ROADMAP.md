@@ -47,31 +47,34 @@ Plans:
 **Goal**: Replace slow JavaScriptCore-based HighlightSwift with fast native syntax highlighting
 **Depends on**: Phase 2
 **Research**: Complete (extensive research conducted 2026-01-16)
-**Plans**: 4 plans (3 primary + 1 contingency)
+**Plans**: 2 plans (revised after Syntect approach abandoned)
 
 Plans:
-- [x] 03-01: Create Syntect Rust library with UniFFI bindings
-- [x] 03-02: Build XCFramework and integrate with Xcode project
-- [ ] 03-03: Replace HighlightSwift with Syntect, validate performance
-- [ ] 03-04: (CONTINGENCY) Pure Swift pattern highlighter fallback
+- [ ] 03-01: Integrate Tree-sitter + Neon for fast syntax highlighting
+- [ ] 03-02: (CONTINGENCY) Pure Swift pattern highlighter fallback
 
 **Problem**: QuickLook previews take 1-2 seconds for small files (10-30KB). User navigates at ~140 BPM, requiring <430ms response.
 
 **Root Cause**: HighlightSwift uses JavaScriptCore + highlight.js. JavaScriptCore is 12-15x slower than WKWebView for JS execution.
 
-**Chosen Solution**: Syntect via UniFFI (Rust)
-- 16,000 lines/sec performance
-- 200+ languages built-in (Sublime Text syntaxes)
-- Battle-tested (used by bat, delta, many production tools)
-- Pre-compiled syntax dumps for 23ms startup
+**Previous Attempt (Abandoned)**: Syntect via UniFFI (Rust)
+- 3 failed integration attempts due to module naming conflicts and build complexity
+- Reverted to HighlightSwift baseline
+
+**Current Solution**: Tree-sitter + Neon (Swift packages)
+- All Swift native — no Rust, no FFI, no XCFramework
+- ChimeHQ/SwiftTreeSitter + ChimeHQ/Neon
+- Used by Neovim, Zed, GitHub for syntax highlighting
+- ~20ms expected performance
+- Proper AST-based parsing (more accurate than regex)
 
 **Fallback**: Pure Swift pattern highlighter (CodeColors-style)
-- If Rust/UniFFI proves too complex
+- If Tree-sitter proves too complex
 - Covers top 20 languages with <10ms performance
 
 **Research References:**
-- Syntect: https://github.com/trishume/syntect
-- UniFFI: https://github.com/mozilla/uniffi-rs
+- SwiftTreeSitter: https://github.com/ChimeHQ/SwiftTreeSitter
+- Neon: https://github.com/ChimeHQ/Neon
 - CodeColors: https://github.com/Oil3/CodeColors-Quicklook-Syntax-Highlighting
 - JavaScriptCore slowness: https://replay.js.org/blog/javascriptcore-is-really-slow/
 
@@ -109,8 +112,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
 | 2. UI Bug Fixes | 3/3 | Complete | 2026-01-16 |
-| 3. Performance & Syntax | 2/4 | In progress | - |
+| 3. Performance & Syntax | 0/2 | Restarted (Tree-sitter approach) | - |
 | 4. App Store Preparation | 0/1 | Not started | - |
 
-**Total Plans:** 11 (8 complete, 3 remaining)
-- Phase 3 has 4 plans (3 primary + 1 contingency fallback)
+**Total Plans:** 9 (6 complete, 3 remaining)
+- Phase 3 revised: 2 plans (Tree-sitter + contingency fallback)
+- Previous Syntect plans (03-01 to 03-03) abandoned after 3 failed attempts

@@ -88,12 +88,14 @@ final class ExtensionStatusChecker: ObservableObject {
 
                 logger.debug("pluginkit output length: \(data.count) bytes")
 
-                // Parse: "+    bundleID(version)" = enabled, "-" = disabled, space = neutral
+                // Parse: "+    bundleID(version)" = enabled, "-" = disabled, "!" = override (enabled), space = neutral
                 for line in output.components(separatedBy: .newlines) {
                     if line.contains("com.stianlars1.dotViewer.QuickLookPreview") {
-                        // First char determines status: + = enabled, - = disabled
-                        let enabled = line.first == "+"
-                        logger.info("Found extension: enabled=\(enabled)")
+                        // First char determines status: + or ! = enabled, - = disabled
+                        // "!" means enabled via override (MDM or manual System Settings toggle)
+                        let firstChar = line.first
+                        let enabled = firstChar == "+" || firstChar == "!"
+                        logger.info("Found extension: status='\(String(describing: firstChar))' enabled=\(enabled)")
                         resumeOnce(enabled)
                         return
                     }

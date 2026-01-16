@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 ## Current Position
 
 Phase: 3 of 4 (Performance & Syntax Highlighting)
-Plan: 3 of 4 in current phase
-Status: CHECKPOINT - awaiting human verification
-Last activity: 2026-01-16 — 03-03 Task 3 (performance verification)
+Plan: 1 of 2 (revised phase - Tree-sitter approach)
+Status: PLANNING - approach change
+Last activity: 2026-01-16 — Reverted Syntect, switching to Tree-sitter + Neon
 
-Progress: █████████░ 90% (9/10 plans near complete, awaiting verification)
+Progress: ██████░░░░ 60% (6/10 plans complete, Phase 3 restarted)
 
 ## Performance Metrics
 
@@ -50,14 +50,8 @@ Recent decisions affecting current work:
 | hotfix | Disable sandbox for now | Sandbox blocks pluginkit; Phase 4 will fix properly for App Store |
 | reorg | Skip Phase 3 QA | Tested during development; not needed as separate phase |
 | reorg | Swap Phase 4 ↔ 5 | Performance is critical for user retention; App Store can wait |
-| 03-01 | Use once_cell::Lazy for SyntaxSet/ThemeSet | Pre-load at startup for fast subsequent calls |
-| 03-01 | Map atomOneDark -> base16-ocean.dark | Closest visual match from Syntect defaults |
-| 03-01 | Hex color strings (#RRGGBB) for FFI | Simple parsing in Swift, cross-platform compatible |
-| 03-02 | Use SyntectSwiftFFI as module name | Matches UniFFI generated import name in Swift bindings |
-| 03-02 | Include uniffi-bindgen binary in project | Ensures consistent version, no global install required |
-| 03-02 | Universal binary via lipo | Supports both Intel and Apple Silicon Macs |
-| 03-03 | Remove HighlightSwift dependency | No longer needed with native Syntect integration |
-| 03-03 | Increase max lines to 5000 | Syntect is fast enough for larger files |
+| 03 | Abandon Syntect/Rust approach | 3 failed integration attempts; complexity too high |
+| 03 | Switch to Tree-sitter + Neon | All Swift packages, well-maintained, simpler integration |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -91,18 +85,35 @@ Recent decisions affecting current work:
 2. Implement lazy loading for instant initial display
 3. Switch to faster highlighting library if JS is confirmed as bottleneck
 
-### Syntect Integration (2026-01-16)
+### Syntect Approach — ABANDONED (2026-01-16)
 
-**Implementation complete:**
+**Reason:** After 3 attempts, the Rust/UniFFI/XCFramework approach proved too complex with persistent integration issues. Reverting to HighlightSwift baseline and trying a simpler approach.
+
+**Original implementation (reverted):**
 - Rust native library with UniFFI bindings
 - XCFramework built (universal binary: arm64 + x86_64)
 - SyntaxHighlighter refactored to use Syntect
 - HighlightSwift dependency removed
-- Timing instrumentation added to PreviewContentView
 
-**Awaiting verification:**
-- Performance target: <100ms per file
-- Rapid navigation at 140 BPM
+**Issues encountered:**
+- Module naming conflicts
+- Build system complexity
+- Persistent integration issues across 3 attempts
+
+### Tree-sitter + Neon Approach — ACTIVE (2026-01-16)
+
+**New approach:**
+- Tree-sitter via Swift packages (ChimeHQ/SwiftTreeSitter + ChimeHQ/Neon)
+- All Swift native — no Rust, no FFI, no XCFramework
+- Used by Neovim, Zed, GitHub for syntax highlighting
+- ~20ms expected performance
+
+**Benefits:**
+- Pure Swift Package Manager integration
+- Well-maintained by ChimeHQ (macOS dev tools company)
+- Proper AST-based parsing (more accurate than regex)
+
+**Status:** Planning
 
 ### Deferred Issues
 
@@ -110,7 +121,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-1 pending — `/gsd:check-todos` to review
+None.
 
 ### Blockers/Concerns
 
@@ -119,6 +130,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-16
-Stopped at: 03-03 Task 3 checkpoint (human-verify)
+Stopped at: Reverted Syntect approach, planning Tree-sitter integration
 Resume file: None
-Next: User verifies performance, then 03-04-PLAN.md (optional cleanup/enhancements)
+Next: Create and execute 03-01-PLAN.md for Tree-sitter + Neon integration
