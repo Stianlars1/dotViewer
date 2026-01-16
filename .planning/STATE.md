@@ -10,11 +10,11 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 ## Current Position
 
 Phase: 3 of 4 (Performance & Syntax Highlighting)
-Plan: 2 of 4 in current phase
-Status: In progress
-Last activity: 2026-01-16 — Completed 03-02-PLAN.md (Build XCFramework)
+Plan: 3 of 4 in current phase
+Status: CHECKPOINT - awaiting human verification
+Last activity: 2026-01-16 — 03-03 Task 3 (performance verification)
 
-Progress: ████████░░ 80% (8/10 plans complete)
+Progress: █████████░ 90% (9/10 plans near complete, awaiting verification)
 
 ## Performance Metrics
 
@@ -56,6 +56,8 @@ Recent decisions affecting current work:
 | 03-02 | Use SyntectSwiftFFI as module name | Matches UniFFI generated import name in Swift bindings |
 | 03-02 | Include uniffi-bindgen binary in project | Ensures consistent version, no global install required |
 | 03-02 | Universal binary via lipo | Supports both Intel and Apple Silicon Macs |
+| 03-03 | Remove HighlightSwift dependency | No longer needed with native Syntect integration |
+| 03-03 | Increase max lines to 5000 | Syntect is fast enough for larger files |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -89,6 +91,19 @@ Recent decisions affecting current work:
 2. Implement lazy loading for instant initial display
 3. Switch to faster highlighting library if JS is confirmed as bottleneck
 
+### Syntect Integration (2026-01-16)
+
+**Implementation complete:**
+- Rust native library with UniFFI bindings
+- XCFramework built (universal binary: arm64 + x86_64)
+- SyntaxHighlighter refactored to use Syntect
+- HighlightSwift dependency removed
+- Timing instrumentation added to PreviewContentView
+
+**Awaiting verification:**
+- Performance target: <100ms per file
+- Rapid navigation at 140 BPM
+
 ### Deferred Issues
 
 - **App Store sandbox**: Sandbox disabled to allow pluginkit. Phase 4 will implement sandbox-compatible detection.
@@ -104,6 +119,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-16
-Stopped at: Completed 03-02-PLAN.md (Build XCFramework)
+Stopped at: 03-03 Task 3 checkpoint (human-verify)
 Resume file: None
-Next: Execute 03-03-PLAN.md (Swift wrapper implementation)
+Next: User verifies performance, then 03-04-PLAN.md (optional cleanup/enhancements)
