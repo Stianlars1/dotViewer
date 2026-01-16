@@ -5,34 +5,30 @@
 See: .planning/PROJECT.md (updated 2026-01-15)
 
 **Core value:** Fix all known bugs without breaking existing functionality — every fix must be verified to not regress current behavior.
-**Current focus:** Phase 2 — Extension Manager UI Improvements
+**Current focus:** Phase 3 — Performance & Syntax Highlighting (CRITICAL)
 
 ## Current Position
 
-Phase: 2 of 5 (UI Bug Fixes)
-Plan: 2 of 3 in current phase
-Status: In progress
-Last activity: 2026-01-16 — Completed 02-01-PLAN.md (custom extension edit)
+Phase: 3 of 4 (Performance & Syntax Highlighting)
+Plan: 0 of 3 in current phase
+Status: Not started (needs planning)
+Last activity: 2026-01-16 — Completed Phase 2 (all UI bug fixes)
 
-Progress: █████░░░░░ 50% (5/10 plans)
+Progress: ██████░░░░ 60% (6/10 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
+- Total plans completed: 6
 - Average duration: 1 min
-- Total execution time: 5 min
+- Total execution time: 6 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 3 min | 1 min |
-| 02 | 2 | 2 min | 1 min |
-
-**Recent Trend:**
-- Last 5 plans: 01-01 (1 min), 01-02 (1 min), 01-03 (1 min), 02-02 (1 min), 02-01 (2 min)
-- Trend: Consistent ~1-2 min per plan
+| 02 | 3 | 3 min | 1 min |
 
 ## Accumulated Context
 
@@ -51,22 +47,40 @@ Recent decisions affecting current work:
 | 02-01 | Extension name not editable in edit sheet | Serves as unique identifier; delete and re-add if different extension needed |
 | 02-02 | Use .borderedProminent + .tint(.red) for destructive buttons | Prominent style shows filled background; explicit tint ensures red color |
 | hotfix | Disable sandbox for now | Sandbox blocks pluginkit; Phase 4 will fix properly for App Store |
-| reorg | Encoding fix moved to Phase 1 | Foundational — must fix before custom extension UI work |
-| reorg | Removed 01-02, 01-04, 03-02 from roadmap | Already implemented or false issues |
+| reorg | Skip Phase 3 QA | Tested during development; not needed as separate phase |
+| reorg | Swap Phase 4 ↔ 5 | Performance is critical for user retention; App Store can wait |
 
-### Roadmap Reorganization (2026-01-15)
+### Roadmap Reorganization (2026-01-16)
 
-**Items removed (already done):**
-- .mjs, .cjs, .mts, .cts mappings (found in LanguageDetector.swift)
-- .env syntax highlighting (found in LanguageDetector.swift)
+**Phase reordering:**
+- Phase 3 (QA) → Skipped (tested during development)
+- Phase 4 (App Store) → Now Phase 4 (moved back)
+- Phase 5 (Performance) → Now Phase 3 (priority: critical)
 
-**Items removed (false issue):**
-- "Duplicate initializers" — two initializers serve different purposes
+**Items confirmed as pre-existing fixes:**
+- 02-03 markdown toggle — was already working
 
-**Items moved:**
-- Silent encoding fix moved from Phase 3 to Phase 1 (now 01-02)
+**Result:** 4 phases, 10 total plans (6 complete, 4 remaining)
 
-**Result:** 10 plans total (down from 14)
+### Performance Research (2026-01-16)
+
+**Problem:** 1-2 seconds to load 10-30KB files in QuickLook preview
+
+**Current implementation:**
+- HighlightSwift library (wraps highlight.js via JavaScript)
+- JavaScript bridge overhead is likely the bottleneck
+
+**Alternatives researched:**
+| Solution | Type | Speed | Languages |
+|----------|------|-------|-----------|
+| HighlightSwift (current) | JS bridge | Slow (1-2s) | 185+ |
+| Andre-simon Highlight | Native C++ | Fast | 200+ |
+| CodeColors approach | Swift regex | "Instant" | ~60 |
+
+**Recommended approach:**
+1. Profile first to confirm bottleneck
+2. Implement lazy loading for instant initial display
+3. Switch to faster highlighting library if JS is confirmed as bottleneck
 
 ### Deferred Issues
 
@@ -74,15 +88,15 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet.
+None.
 
 ### Blockers/Concerns
 
-None yet.
+None.
 
 ## Session Continuity
 
 Last session: 2026-01-16
-Stopped at: Completed Wave 1 of Phase 2 (02-01 + 02-02 in parallel)
+Stopped at: Completed Phase 2, reorganized roadmap for performance priority
 Resume file: None
-Next: Create 02-03-PLAN.md (markdown toggle fix) or proceed to Phase 3
+Next: `/gsd:plan-phase 3` to create performance investigation plans

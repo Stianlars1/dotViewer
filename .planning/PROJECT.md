@@ -17,18 +17,26 @@ Fix all known bugs without breaking existing functionality — every fix must be
 - ✓ Markdown rendering with raw/rendered toggle — existing
 - ✓ Custom file type registration via app UI — existing
 - ✓ Sensitive file detection and warning banners — existing
+- ✓ TypeScript/JS variants (.mjs, .cjs, .mts, .cts mappings) — already implemented
+- ✓ .env file syntax highlighting — already implemented
 
-### Active
+### Completed (Phase 1 & 2)
 
-- [ ] Bug #1: Custom file types activate after being added (add common dotfiles to Info.plist)
-- [ ] Bug #2: Users can edit custom file types (not just delete)
-- [ ] Bug #3: Uninstall button has proper destructive styling
-- [ ] Bug #4: TypeScript/JS variants work (.mjs, .cjs, .mts, .cts mappings)
-- [ ] Bug #5: Markdown RAW mode toggle doesn't hide content
-- [ ] Fix silent encoding failures when saving custom extensions
-- [ ] Consolidate duplicate CustomExtension initializers
-- [ ] Fix file size bounds checking inconsistency
-- [ ] Remove unused import in ContentView
+- [x] Bug #1: Custom file types activate after being added — 01-01 done
+- [x] Bug #2: Users can edit custom file types — 02-01 done
+- [x] Bug #3: Uninstall button has proper destructive styling — 02-02 done
+- [x] Bug #4: TypeScript/TSX QuickLook preview works — 01-03 done
+- [x] Bug #5: Markdown RAW mode toggle doesn't hide content — pre-existing fix
+- [x] Fix silent encoding failures when saving custom extensions — 01-02 done
+
+### Active (Phase 3)
+
+- [ ] Performance: QuickLook preview loads in <200ms (currently 1-2s)
+- [ ] Evaluate faster syntax highlighting alternatives
+
+### Deferred (Phase 4)
+
+- [ ] App Store: Re-enable sandbox with proper extension detection APIs
 
 ### Out of Scope
 
@@ -42,20 +50,20 @@ Fix all known bugs without breaking existing functionality — every fix must be
 - Swift 5.0 / SwiftUI / macOS 13.0+
 - Two-target architecture: Main app + QuickLook extension
 - App Groups for inter-process settings sync
-- HighlightSwift for syntax highlighting
+- HighlightSwift for syntax highlighting (JS-based, slow)
 
-**Root Causes Identified:**
-- Bug #1: Custom extensions stored in UserDefaults but not declared in QuickLook Info.plist — macOS doesn't route those files to the extension
-- Bug #4: LanguageDetector.extensionMap missing .mjs, .cjs, .mts, .cts entries
-- Bug #5: Likely SwiftUI view state/focus issue when toggling preview modes
+**Performance Issue Identified:**
+- 1-2 seconds to load 10-30KB files
+- Root cause: HighlightSwift uses JavaScript (highlight.js) with bridge overhead
+- Alternatives: andre-simon Highlight (native C++), pure Swift regex
 
 **Key Files:**
 - `QuickLookPreview/Info.plist` — UTI registrations
 - `Shared/LanguageDetector.swift` — extension → language mapping
-- `dotViewer/FileTypesView.swift` — custom extension UI
-- `dotViewer/ContentView.swift` — settings UI including uninstall button
-- `QuickLookPreview/PreviewContentView.swift` — markdown preview toggle
-- `Shared/SharedSettings.swift` — CustomExtension model
+- `Shared/SharedSettings.swift` — CustomExtension model & encoding
+- `Shared/SyntaxHighlighter.swift` — highlighting integration
+- `QuickLookPreview/PreviewViewController.swift` — file loading
+- `QuickLookPreview/PreviewContentView.swift` — highlighting orchestration
 
 ## Constraints
 
@@ -67,9 +75,12 @@ Fix all known bugs without breaking existing functionality — every fix must be
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Pre-register common dotfiles in Info.plist | Dynamic UTI registration too complex for QuickLook | — Pending |
-| Comprehensive depth with parallel execution | User wants thorough coverage, efficient execution | — Pending |
-| YOLO mode | Auto-approve execution for speed | — Pending |
+| Pre-register common dotfiles in Info.plist | Dynamic UTI registration too complex for QuickLook | ✓ Done in 01-01 |
+| Fix encoding failures before UI work | Data integrity is foundational | ✓ Done in 01-02 |
+| Extension name not editable in edit sheet | Serves as unique identifier | ✓ Done in 02-01 |
+| Skip QA phase | Tested during development | Removed from roadmap |
+| Prioritize performance over App Store | User retention depends on fast previews | Phase 3 = Performance |
+| Profile before library switch | Confirm JS bridge is the actual bottleneck | Planned in 03-01 |
 
 ---
-*Last updated: 2026-01-15 after initialization*
+*Last updated: 2026-01-16 after Phase 2 completion and roadmap reorg*
