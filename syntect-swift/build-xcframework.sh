@@ -29,27 +29,24 @@ lipo -create \
     target/aarch64-apple-darwin/release/libsyntect_swift.a \
     -output target/universal/release/libsyntect_swift.a
 
-# Create module.modulemap for the XCFramework
-cat > generated/module.modulemap << 'EOF'
-framework module SyntectSwift {
-    umbrella header "syntect_swiftFFI.h"
-    export *
-    module * { export * }
-}
-EOF
+# Create headers directory with proper structure for FFI module
+echo "Preparing headers..."
+mkdir -p ./headers
+cp ./generated/SyntectSwiftFFI.h ./headers/
+cp ./generated/SyntectSwiftFFI.modulemap ./headers/module.modulemap
 
-# Create XCFramework
+# Create XCFramework with proper FFI module name
 echo "Creating XCFramework..."
-rm -rf SyntectSwift.xcframework
+rm -rf SyntectSwiftFFI.xcframework
 xcodebuild -create-xcframework \
     -library target/universal/release/libsyntect_swift.a \
-    -headers generated/ \
-    -output SyntectSwift.xcframework
+    -headers headers/ \
+    -output SyntectSwiftFFI.xcframework
 
-echo "Done! XCFramework created at syntect-swift/SyntectSwift.xcframework"
+echo "Done! XCFramework created at syntect-swift/SyntectSwiftFFI.xcframework"
 echo ""
-echo "Generated files:"
-ls -la generated/
+echo "Generated Swift binding file: generated/SyntectSwift.swift"
+echo "Copy this to your Shared folder: cp generated/SyntectSwift.swift ../Shared/SyntectBridge.swift"
 echo ""
 echo "XCFramework structure:"
-ls -la SyntectSwift.xcframework/
+ls -laR SyntectSwiftFFI.xcframework/
