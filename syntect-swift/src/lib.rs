@@ -138,6 +138,55 @@ pub fn get_theme_background(theme: &str) -> String {
         .unwrap_or_else(|| "#1e1e1e".to_string())
 }
 
+/// Map dotViewer app theme names to Syntect theme names
+///
+/// dotViewer themes from ThemeManager.swift:
+/// - auto, atomOneLight, atomOneDark, github, githubDark
+/// - xcode, xcodeDark, solarizedLight, solarizedDark, tokyoNight, blackout
+///
+/// Syntect default themes:
+/// - base16-ocean.dark, base16-ocean.light, base16-mocha.dark
+/// - InspiredGitHub, base16-eighties.dark
+/// - Solarized (dark), Solarized (light)
+#[uniffi::export]
+pub fn map_dotviewer_theme(app_theme: &str) -> String {
+    match app_theme {
+        // Light themes
+        "atomOneLight" => "base16-ocean.light".to_string(),
+        "github" => "InspiredGitHub".to_string(),
+        "xcode" => "base16-ocean.light".to_string(),
+        "solarizedLight" => "Solarized (light)".to_string(),
+
+        // Dark themes
+        "atomOneDark" => "base16-ocean.dark".to_string(),
+        "githubDark" => "base16-ocean.dark".to_string(),
+        "xcodeDark" => "base16-eighties.dark".to_string(),
+        "solarizedDark" => "Solarized (dark)".to_string(),
+        "tokyoNight" => "base16-ocean.dark".to_string(),
+        "blackout" => "base16-mocha.dark".to_string(),
+
+        // Auto or default - use dark theme as default
+        "auto" | _ => "base16-ocean.dark".to_string(),
+    }
+}
+
+/// Highlight code using a dotViewer app theme name
+///
+/// This is a convenience function that maps dotViewer theme names to Syntect themes
+/// and then performs highlighting.
+#[uniffi::export]
+pub fn highlight_code_with_app_theme(code: &str, language: &str, app_theme: &str) -> HighlightResult {
+    let syntect_theme = map_dotviewer_theme(app_theme);
+    highlight_code(code, language, &syntect_theme)
+}
+
+/// Get the background color for a dotViewer app theme
+#[uniffi::export]
+pub fn get_app_theme_background(app_theme: &str) -> String {
+    let syntect_theme = map_dotviewer_theme(app_theme);
+    get_theme_background(&syntect_theme)
+}
+
 // UniFFI scaffolding - generates the FFI bindings
 uniffi::setup_scaffolding!();
 
@@ -192,5 +241,53 @@ mod tests {
         let result = highlight_code(code, "nonexistent_language", "base16-ocean.dark");
 
         assert!(!result.spans.is_empty(), "Should still produce spans for unknown language");
+    }
+
+    #[test]
+    fn test_theme_mapping() {
+        // Test light themes
+        assert_eq!(map_dotviewer_theme("atomOneLight"), "base16-ocean.light");
+        assert_eq!(map_dotviewer_theme("github"), "InspiredGitHub");
+        assert_eq!(map_dotviewer_theme("solarizedLight"), "Solarized (light)");
+
+        // Test dark themes
+        assert_eq!(map_dotviewer_theme("atomOneDark"), "base16-ocean.dark");
+        assert_eq!(map_dotviewer_theme("solarizedDark"), "Solarized (dark)");
+        assert_eq!(map_dotviewer_theme("blackout"), "base16-mocha.dark");
+
+        // Test auto/default
+        assert_eq!(map_dotviewer_theme("auto"), "base16-ocean.dark");
+        assert_eq!(map_dotviewer_theme("unknown_theme"), "base16-ocean.dark");
+    }
+
+    #[test]
+    fn test_highlight_with_app_theme() {
+        let code = "fn main() {}";
+
+        // Test with dotViewer theme names
+        let result_dark = highlight_code_with_app_theme(code, "Rust", "atomOneDark");
+        assert!(!result_dark.spans.is_empty(), "Should produce spans with app theme");
+        assert!(!result_dark.background.is_empty(), "Should have background");
+
+        let result_light = highlight_code_with_app_theme(code, "Rust", "atomOneLight");
+        assert!(!result_light.spans.is_empty(), "Should produce spans with light theme");
+
+        // Background colors should be different for dark vs light themes
+        assert_ne!(result_dark.background, result_light.background,
+            "Dark and light themes should have different backgrounds");
+    }
+
+    #[test]
+    fn test_app_theme_background() {
+        // Dark themes should have dark backgrounds
+        let dark_bg = get_app_theme_background("atomOneDark");
+        assert!(dark_bg.starts_with("#"), "Background should be hex color");
+
+        // Light themes should have light backgrounds
+        let light_bg = get_app_theme_background("atomOneLight");
+        assert!(light_bg.starts_with("#"), "Background should be hex color");
+
+        // They should be different
+        assert_ne!(dark_bg, light_bg, "Dark and light backgrounds should differ");
     }
 }
