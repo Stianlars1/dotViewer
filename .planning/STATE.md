@@ -110,7 +110,7 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None.
+1 pending — `/gsd:check-todos` to review
 
 ### Blockers/Concerns
 
