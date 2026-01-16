@@ -10,18 +10,18 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 ## Current Position
 
 Phase: 3 of 4 (Performance & Syntax Highlighting)
-Plan: 1 of 4 in current phase
+Plan: 2 of 4 in current phase
 Status: In progress
-Last activity: 2026-01-16 — Completed 03-01-PLAN.md (Syntect Rust library setup)
+Last activity: 2026-01-16 — Completed 03-02-PLAN.md (Build XCFramework)
 
-Progress: ███████░░░ 70% (7/10 plans complete)
+Progress: ████████░░ 80% (8/10 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 2 min
-- Total execution time: 11 min
+- Total plans completed: 8
+- Average duration: 3 min
+- Total execution time: 21 min
 
 **By Phase:**
 
@@ -29,7 +29,7 @@ Progress: ███████░░░ 70% (7/10 plans complete)
 |-------|-------|-------|----------|
 | 01 | 3 | 3 min | 1 min |
 | 02 | 3 | 3 min | 1 min |
-| 03 | 1 | 5 min | 5 min |
+| 03 | 2 | 15 min | 7.5 min |
 
 ## Accumulated Context
 
@@ -53,6 +53,9 @@ Recent decisions affecting current work:
 | 03-01 | Use once_cell::Lazy for SyntaxSet/ThemeSet | Pre-load at startup for fast subsequent calls |
 | 03-01 | Map atomOneDark -> base16-ocean.dark | Closest visual match from Syntect defaults |
 | 03-01 | Hex color strings (#RRGGBB) for FFI | Simple parsing in Swift, cross-platform compatible |
+| 03-02 | Use SyntectSwiftFFI as module name | Matches UniFFI generated import name in Swift bindings |
+| 03-02 | Include uniffi-bindgen binary in project | Ensures consistent version, no global install required |
+| 03-02 | Universal binary via lipo | Supports both Intel and Apple Silicon Macs |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -101,6 +104,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-16
-Stopped at: Completed 03-01-PLAN.md (Syntect Rust library setup)
+Stopped at: Completed 03-02-PLAN.md (Build XCFramework)
 Resume file: None
-Next: Execute 03-02-PLAN.md (Build XCFramework)
+Next: Execute 03-03-PLAN.md (Swift wrapper implementation)
