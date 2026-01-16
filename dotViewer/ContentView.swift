@@ -466,7 +466,8 @@ struct SettingsView: View {
                             Label("Uninstall dotViewer", systemImage: "trash")
                                 .frame(maxWidth: .infinity)
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
+                        .tint(.red)
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))

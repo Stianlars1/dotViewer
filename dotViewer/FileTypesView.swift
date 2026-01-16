@@ -5,6 +5,7 @@ struct FileTypesView: View {
     @State private var showAddCustom = false
     @State private var disabledTypes: Set<String> = SharedSettings.shared.disabledFileTypes
     @State private var customExtensions: [CustomExtension] = SharedSettings.shared.customExtensions
+    @State private var editingExtension: CustomExtension? = nil
 
     private let registry = FileTypeRegistry.shared
 
@@ -102,6 +103,7 @@ struct FileTypesView: View {
                             ForEach(filteredCustomExtensions) { ext in
                                 CustomExtensionRow(
                                     customExtension: ext,
+                                    onEdit: { editingExtension = ext },
                                     onDelete: { deleteCustomExtension(ext) }
                                 )
                             }
@@ -120,6 +122,14 @@ struct FileTypesView: View {
                 onAdd: { ext in
                     customExtensions.append(ext)
                     saveCustomExtensions()
+                }
+            )
+        }
+        .sheet(item: $editingExtension) { ext in
+            EditCustomExtensionSheet(
+                customExtension: ext,
+                onSave: { updated in
+                    updateCustomExtension(updated)
                 }
             )
         }
@@ -191,6 +201,7 @@ struct FileTypeRow: View {
 
 struct CustomExtensionRow: View {
     let customExtension: CustomExtension
+    let onEdit: () -> Void
     let onDelete: () -> Void
 
     var body: some View {
@@ -217,6 +228,13 @@ struct CustomExtensionRow: View {
             }
 
             Spacer()
+
+            Button {
+                onEdit()
+            } label: {
+                Image(systemName: "pencil")
+            }
+            .buttonStyle(.borderless)
 
             Button(role: .destructive) {
                 onDelete()
