@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-01-19)
 
 **Core value:** Fast, beautiful code previews in Finder
-**Current focus:** v1.0 shipped — ready for App Store submission or next milestone
+**Current focus:** v1.1 App Store Submission — preparing for Mac App Store
 
 ## Current Position
 
-Phase: Milestone complete
-Plan: N/A
-Status: v1.0 shipped
-Last activity: 2026-01-19 — Completed v1.0 milestone
+Phase: 5 of 12 (App Store Assets)
+Plan: Not started
+Status: Ready to plan
+Last activity: 2026-01-19 — Milestone v1.1 created
 
-Progress: ██████████ 100% (9/9 plans complete)
+Progress: ░░░░░░░░░░ 0%
 
 ## Performance Metrics
 
@@ -39,6 +39,10 @@ Progress: ██████████ 100% (9/9 plans complete)
 
 All decisions logged in PROJECT.md Key Decisions table.
 
+### v1.1 Decisions
+
+None yet.
+
 ### Deferred Issues
 
 None.
@@ -51,9 +55,13 @@ None.
 
 None.
 
+### Roadmap Evolution
+
+- Milestone v1.1 created: App Store Submission, 8 phases (Phase 5-12)
+
 ## Session Continuity
 
 Last session: 2026-01-19
-Stopped at: v1.0 milestone complete
+Stopped at: Milestone v1.1 initialization
 Resume file: None
-Next: `/gsd:new-milestone` for v1.1 or App Store submission
+Next: `/gsd:plan-phase 5` to plan App Store Assets phase
