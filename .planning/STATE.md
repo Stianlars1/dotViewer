@@ -9,12 +9,12 @@ See: .planning/PROJECT.md (updated 2026-01-15)
 
 ## Current Position
 
-Phase: 3 of 4 (Performance & Syntax Highlighting)
-Plan: 1 of 2 — COMPLETED
-Status: CHECKPOINT — needs manual performance verification
-Last activity: 2026-01-16 — Implemented FastSyntaxHighlighter (pure Swift approach)
+Phase: 3 of 4 (Performance & Syntax Highlighting) — COMPLETE
+Plan: 2 of 2 — COMPLETED
+Status: Phase complete
+Last activity: 2026-01-19 — Added comprehensive UTI support (100+ extensions)
 
-Progress: ███████░░░ 70% (7/10 plans complete)
+Progress: ████████░░ 80% (8/10 plans complete)
 
 ## Performance Metrics
 
@@ -53,6 +53,8 @@ Recent decisions affecting current work:
 | 03 | Abandon Syntect/Rust approach | 3 failed integration attempts; complexity too high |
 | 03 | Abandon Tree-sitter + Neon | Research showed similar complexity to Syntect (10+ packages, query files) |
 | 03 | Implement FastSyntaxHighlighter | Pure Swift regex approach, zero dependencies, proven codebase pattern |
+| 03-02 | Group related extensions in single UTI | Maintainability - backup, temp files together |
+| 03-02 | Map to closest highlight language | django for Jinja, dos for batch files |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -133,14 +135,11 @@ None.
 
 ### Blockers/Concerns
 
-**CHECKPOINT:** Plan 03-01 complete, needs manual performance verification:
-1. Open various file types in QuickLook
-2. Check Console.app for timing logs (filter: com.stianlars1.dotViewer)
-3. Verify <100ms target at 140 BPM navigation
+None.
 
 ## Session Continuity
 
-Last session: 2026-01-16
-Stopped at: Plan 03-01 complete, awaiting manual verification
+Last session: 2026-01-19
+Stopped at: Phase 3 complete (03-02-PLAN.md executed)
 Resume file: None
-Next: Execute 03-02-PLAN.md after performance verification
+Next: Plan Phase 4 (App Store Preparation)
