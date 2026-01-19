@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-01-15)
 
 **Core value:** Fix all known bugs without breaking existing functionality — every fix must be verified to not regress current behavior.
-**Current focus:** Phase 3 — Performance & Syntax Highlighting (CRITICAL)
+**Current focus:** Milestone complete
 
 ## Current Position
 
-Phase: 3 of 4 (Performance & Syntax Highlighting) — COMPLETE
-Plan: 2 of 2 — COMPLETED
-Status: Phase complete
-Last activity: 2026-01-19 — Added comprehensive UTI support (100+ extensions)
+Phase: 4 of 4 (App Store Preparation) — COMPLETE
+Plan: 1 of 1 — COMPLETED
+Status: Milestone complete
+Last activity: 2026-01-19 — Enabled App Sandbox with static setup guide
 
-Progress: ████████░░ 80% (8/10 plans complete)
+Progress: ██████████ 100% (9/9 plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 9
-- Average duration: 3 min
-- Total execution time: 26 min
+- Total plans completed: 10
+- Average duration: 3.1 min
+- Total execution time: 31 min
 
 **By Phase:**
 
@@ -30,6 +30,7 @@ Progress: ████████░░ 80% (8/10 plans complete)
 | 01 | 3 | 3 min | 1 min |
 | 02 | 3 | 3 min | 1 min |
 | 03 | 3 | 20 min | 6.7 min |
+| 04 | 1 | 5 min | 5 min |
 
 ## Accumulated Context
 
@@ -55,6 +56,8 @@ Recent decisions affecting current work:
 | 03 | Implement FastSyntaxHighlighter | Pure Swift regex approach, zero dependencies, proven codebase pattern |
 | 03-02 | Group related extensions in single UTI | Maintainability - backup, temp files together |
 | 03-02 | Map to closest highlight language | django for Jinja, dos for batch files |
+| 04-01 | Static setup guide instead of live status | No sandbox-friendly API exists; industry standard |
+| 04-01 | Quick Stats always visible | Cannot detect extension status in sandbox |
 
 ### Roadmap Reorganization (2026-01-16)
 
@@ -127,7 +130,7 @@ Swift, JavaScript, TypeScript, JSX, TSX, Python, Rust, Go, JSON, YAML, Bash, HTM
 
 ### Deferred Issues
 
-- **App Store sandbox**: Sandbox disabled to allow pluginkit. Phase 4 will implement sandbox-compatible detection.
+None (all resolved).
 
 ### Pending Todos
 
@@ -140,6 +143,6 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-19
-Stopped at: Phase 3 complete (03-02-PLAN.md executed)
+Stopped at: Milestone complete (04-01-PLAN.md executed)
 Resume file: None
-Next: Plan Phase 4 (App Store Preparation)
+Next: /gsd:complete-milestone to archive and prepare for next milestone

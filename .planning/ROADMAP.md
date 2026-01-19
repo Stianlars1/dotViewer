@@ -16,8 +16,8 @@ None
 
 - [x] **Phase 1: Foundation & UTI Fixes** - Fix data integrity and file type registration
 - [x] **Phase 2: UI Bug Fixes** - Fix user-facing UI issues in settings and preview
-- [ ] **Phase 3: Performance & Syntax Highlighting** - Improve load times (CRITICAL)
-- [ ] **Phase 4: App Store Preparation** - Enable sandbox with sandbox-compatible extension detection
+- [x] **Phase 3: Performance & Syntax Highlighting** - Improve load times (CRITICAL)
+- [x] **Phase 4: App Store Preparation** - Enable sandbox with sandbox-compatible extension detection
 
 ## Phase Details
 
@@ -69,12 +69,17 @@ Plans:
 **Goal**: Re-enable sandbox for App Store distribution
 **Depends on**: Phase 3
 **Research**: Complete (no public API for extension status in sandbox)
-**Plans**: 1 plan
+**Plans**: 1 plan — COMPLETE
 
 Plans:
-- [ ] 04-01: Enable App Sandbox and replace pluginkit with static setup guide
+- [x] 04-01: Enable App Sandbox and replace pluginkit with static setup guide
 
-**Background**: Sandbox was disabled to allow `pluginkit` shell command to work. Research confirmed there is no public sandbox-friendly API to detect QuickLook extension status. Industry standard for sandboxed Mac App Store apps is to show static setup instructions instead of live status detection.
+**Completed (04-01)**: App Sandbox Enablement
+- Enabled App Sandbox (com.apple.security.app-sandbox: true)
+- Replaced pluginkit-based ExtensionStatusChecker with sandbox-safe ExtensionHelper
+- StatusView shows static setup guide with numbered steps
+- No temporary exception entitlements (App Store compliant)
+- App runs without sandbox violations
 
 ## Removed/Skipped Items
 
@@ -100,9 +105,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
 | 2. UI Bug Fixes | 3/3 | Complete | 2026-01-16 |
 | 3. Performance & Syntax | 2/2 | Complete | 2026-01-19 |
-| 4. App Store Preparation | 0/1 | Planned | - |
+| 4. App Store Preparation | 1/1 | Complete | 2026-01-19 |
 
-**Total Plans:** 10 (8 complete, 1 remaining)
-- 03-01: FastSyntaxHighlighter implemented (pure Swift, <50ms performance)
-- 03-02: Comprehensive UTI declarations (100+ extensions)
-- 04-01: App Store sandbox preparation (planned)
+**Total Plans:** 9/9 complete (100%)
+
+**MILESTONE COMPLETE** - All 4 phases finished, ready for App Store submission.
