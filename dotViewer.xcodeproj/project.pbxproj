@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C874C88A5FAB4D26AB28DE3C /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
-		EA368CA9228D4FA487CE7694 /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
 		8096883F2F164EE40002706F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8096883E2F164EE40002706F /* Logger.swift */; };
 		809688402F164EE40002706F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8096883E2F164EE40002706F /* Logger.swift */; };
 		80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F12F1228C700412E97 /* SharedSettings.swift */; };
@@ -38,7 +36,9 @@
 		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
 		A1000050 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000051 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
-		A1000060 /* ExtensionStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000040 /* ExtensionStatusChecker.swift */; };
+		A1000060 /* ExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000040 /* ExtensionHelper.swift */; };
+		C874C88A5FAB4D26AB28DE3C /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
+		EA368CA9228D4FA487CE7694 /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,7 +66,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSyntaxHighlighter.swift; sourceTree = "<group>"; };
 		8096883E2F164EE40002706F /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		80F9F4EF2F1228C700412E97 /* FileTypeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeModel.swift; sourceTree = "<group>"; };
 		80F9F4F02F1228C700412E97 /* FileTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistry.swift; sourceTree = "<group>"; };
@@ -89,9 +88,10 @@
 		A2000023 /* MarkdownWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownWebView.swift; sourceTree = "<group>"; };
 		A2000024 /* MarkdownStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownStyles.swift; sourceTree = "<group>"; };
 		A2000030 /* HighlightCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightCache.swift; sourceTree = "<group>"; };
-		A2000040 /* ExtensionStatusChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionStatusChecker.swift; sourceTree = "<group>"; };
+		A2000040 /* ExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionHelper.swift; sourceTree = "<group>"; };
 		A3000002 /* QuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSyntaxHighlighter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,7 +131,7 @@
 				80F9F4F92F1228E100412E97 /* FileTypesView.swift */,
 				A2000001 /* dotViewerApp.swift */,
 				A2000002 /* ContentView.swift */,
-				A2000040 /* ExtensionStatusChecker.swift */,
+				A2000040 /* ExtensionHelper.swift */,
 				A2000003 /* Assets.xcassets */,
 				A2000004 /* Info.plist */,
 				A2000005 /* dotViewer.entitlements */,
@@ -300,7 +300,7 @@
 				80F9F4FA2F1228E100412E97 /* AddCustomExtensionSheet.swift in Sources */,
 				80F9F4FB2F1228E100412E97 /* FileTypesView.swift in Sources */,
 				A1000050 /* HighlightCache.swift in Sources */,
-				A1000060 /* ExtensionStatusChecker.swift in Sources */,
+				A1000060 /* ExtensionHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
