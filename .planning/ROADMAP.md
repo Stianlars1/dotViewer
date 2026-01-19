@@ -44,39 +44,27 @@ Plans:
 - [x] 02-03: Fix markdown RAW mode toggle hiding content (pre-existing fix)
 
 ### Phase 3: Performance & Syntax Highlighting
-**Goal**: Replace slow JavaScriptCore-based HighlightSwift with fast native syntax highlighting
+**Goal**: Fast syntax highlighting + comprehensive file type support
 **Depends on**: Phase 2
 **Research**: Complete (extensive research conducted 2026-01-16)
-**Plans**: 2 plans (revised after Syntect approach abandoned)
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: Integrate Tree-sitter + Neon for fast syntax highlighting
-- [ ] 03-02: (CONTINGENCY) Pure Swift pattern highlighter fallback
+- [x] 03-01: FastSyntaxHighlighter (pure Swift regex-based highlighting) — COMPLETED
+- [ ] 03-02: Comprehensive UTI declarations (100+ file extensions)
 
-**Problem**: QuickLook previews take 1-2 seconds for small files (10-30KB). User navigates at ~140 BPM, requiring <430ms response.
+**Completed (03-01)**: FastSyntaxHighlighter
+- Pure Swift regex-based syntax highlighter
+- Zero external dependencies
+- Supports 20+ languages
+- Falls back to HighlightSwift for unsupported languages
+- Performance: <50ms for typical files
 
-**Root Cause**: HighlightSwift uses JavaScriptCore + highlight.js. JavaScriptCore is 12-15x slower than WKWebView for JS execution.
-
-**Previous Attempt (Abandoned)**: Syntect via UniFFI (Rust)
-- 3 failed integration attempts due to module naming conflicts and build complexity
-- Reverted to HighlightSwift baseline
-
-**Current Solution**: Tree-sitter + Neon (Swift packages)
-- All Swift native — no Rust, no FFI, no XCFramework
-- ChimeHQ/SwiftTreeSitter + ChimeHQ/Neon
-- Used by Neovim, Zed, GitHub for syntax highlighting
-- ~20ms expected performance
-- Proper AST-based parsing (more accurate than regex)
-
-**Fallback**: Pure Swift pattern highlighter (CodeColors-style)
-- If Tree-sitter proves too complex
-- Covers top 20 languages with <10ms performance
-
-**Research References:**
-- SwiftTreeSitter: https://github.com/ChimeHQ/SwiftTreeSitter
-- Neon: https://github.com/ChimeHQ/Neon
-- CodeColors: https://github.com/Oil3/CodeColors-Quicklook-Syntax-Highlighting
-- JavaScriptCore slowness: https://replay.js.org/blog/javascriptcore-is-really-slow/
+**In Progress (03-02)**: Comprehensive UTI declarations
+- Problem: Users can't dynamically add file type support via Custom Types
+- Root cause: QuickLook routes files based on UTIs declared at compile time
+- Solution: Pre-declare 100+ common developer file extensions as UTIs
+- Result: Most files "just work" without app updates
 
 ### Phase 4: App Store Preparation
 **Goal**: Re-enable sandbox with sandbox-compatible extension status detection for App Store distribution
@@ -112,9 +100,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
 | 2. UI Bug Fixes | 3/3 | Complete | 2026-01-16 |
-| 3. Performance & Syntax | 0/2 | Restarted (Tree-sitter approach) | - |
+| 3. Performance & Syntax | 1/2 | In progress | - |
 | 4. App Store Preparation | 0/1 | Not started | - |
 
-**Total Plans:** 9 (6 complete, 3 remaining)
-- Phase 3 revised: 2 plans (Tree-sitter + contingency fallback)
-- Previous Syntect plans (03-01 to 03-03) abandoned after 3 failed attempts
+**Total Plans:** 9 (7 complete, 2 remaining)
+- 03-01: FastSyntaxHighlighter implemented (pure Swift, <50ms performance)
+- 03-02: Comprehensive UTI declarations (pending)
