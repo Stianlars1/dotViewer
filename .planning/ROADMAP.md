@@ -47,11 +47,11 @@ Plans:
 **Goal**: Fast syntax highlighting + comprehensive file type support
 **Depends on**: Phase 2
 **Research**: Complete (extensive research conducted 2026-01-16)
-**Plans**: 2 plans
+**Plans**: 2 plans — COMPLETE
 
 Plans:
-- [x] 03-01: FastSyntaxHighlighter (pure Swift regex-based highlighting) — COMPLETED
-- [ ] 03-02: Comprehensive UTI declarations (100+ file extensions)
+- [x] 03-01: FastSyntaxHighlighter (pure Swift regex-based highlighting)
+- [x] 03-02: Comprehensive UTI declarations (100+ file extensions)
 
 **Completed (03-01)**: FastSyntaxHighlighter
 - Pure Swift regex-based syntax highlighter
@@ -60,22 +60,21 @@ Plans:
 - Falls back to HighlightSwift for unsupported languages
 - Performance: <50ms for typical files
 
-**In Progress (03-02)**: Comprehensive UTI declarations
-- Problem: Users can't dynamically add file type support via Custom Types
-- Root cause: QuickLook routes files based on UTIs declared at compile time
-- Solution: Pre-declare 100+ common developer file extensions as UTIs
-- Result: Most files "just work" without app updates
+**Completed (03-02)**: Comprehensive UTI declarations
+- Added 100+ file extension UTI declarations
+- QuickLook extension supports all new UTIs
+- FileTypeRegistry provides language mappings
 
 ### Phase 4: App Store Preparation
-**Goal**: Re-enable sandbox with sandbox-compatible extension status detection for App Store distribution
+**Goal**: Re-enable sandbox for App Store distribution
 **Depends on**: Phase 3
-**Research**: Likely (Apple APIs for extension status in sandboxed apps)
+**Research**: Complete (no public API for extension status in sandbox)
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: Implement sandbox-compatible extension status detection using Apple APIs
+- [ ] 04-01: Enable App Sandbox and replace pluginkit with static setup guide
 
-**Background**: Sandbox was disabled to allow `pluginkit` shell command to work. For App Store distribution, need to re-enable sandbox and use proper Apple APIs (ExtensionKit, Launch Services, or UTType APIs) to detect extension status.
+**Background**: Sandbox was disabled to allow `pluginkit` shell command to work. Research confirmed there is no public sandbox-friendly API to detect QuickLook extension status. Industry standard for sandboxed Mac App Store apps is to show static setup instructions instead of live status detection.
 
 ## Removed/Skipped Items
 
@@ -100,9 +99,10 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & UTI Fixes | 3/3 | Complete | 2026-01-15 |
 | 2. UI Bug Fixes | 3/3 | Complete | 2026-01-16 |
-| 3. Performance & Syntax | 1/2 | In progress | - |
-| 4. App Store Preparation | 0/1 | Not started | - |
+| 3. Performance & Syntax | 2/2 | Complete | 2026-01-19 |
+| 4. App Store Preparation | 0/1 | Planned | - |
 
-**Total Plans:** 9 (7 complete, 2 remaining)
+**Total Plans:** 10 (8 complete, 1 remaining)
 - 03-01: FastSyntaxHighlighter implemented (pure Swift, <50ms performance)
-- 03-02: Comprehensive UTI declarations (pending)
+- 03-02: Comprehensive UTI declarations (100+ extensions)
+- 04-01: App Store sandbox preparation (planned)
