@@ -74,6 +74,60 @@
 				<string>com.stianlars1.dotviewer.shell-dotfile</string>
 				<string>com.stianlars1.dotviewer.git-dotfile</string>
 				<string>com.stianlars1.dotviewer.javascript-module</string>
+				<string>com.stianlars1.dotviewer.backup</string>
+				<!-- New UTIs added in Plan 03-02 -->
+				<string>com.stianlars1.dotviewer.dist-sample</string>
+				<string>com.stianlars1.dotviewer.env-config</string>
+				<string>com.stianlars1.dotviewer.config</string>
+				<string>com.stianlars1.dotviewer.rcfile</string>
+				<string>com.stianlars1.dotviewer.package-config</string>
+				<string>com.stianlars1.dotviewer.webserver-config</string>
+				<string>com.stianlars1.dotviewer.lockfile</string>
+				<string>com.stianlars1.dotviewer.logfile</string>
+				<string>com.stianlars1.dotviewer.pid-cache</string>
+				<string>com.stianlars1.dotviewer.datafile</string>
+				<string>com.stianlars1.dotviewer.lua</string>
+				<string>com.stianlars1.dotviewer.r</string>
+				<string>com.stianlars1.dotviewer.julia</string>
+				<string>com.stianlars1.dotviewer.nim</string>
+				<string>com.stianlars1.dotviewer.zig</string>
+				<string>com.stianlars1.dotviewer.vlang</string>
+				<string>com.stianlars1.dotviewer.dlang</string>
+				<string>com.stianlars1.dotviewer.elixir</string>
+				<string>com.stianlars1.dotviewer.erlang</string>
+				<string>com.stianlars1.dotviewer.clojure</string>
+				<string>com.stianlars1.dotviewer.fsharp</string>
+				<string>com.stianlars1.dotviewer.haskell</string>
+				<string>com.stianlars1.dotviewer.ocaml</string>
+				<string>com.stianlars1.dotviewer.tcl</string>
+				<string>com.stianlars1.dotviewer.assembly</string>
+				<string>com.stianlars1.dotviewer.nunjucks</string>
+				<string>com.stianlars1.dotviewer.twig</string>
+				<string>com.stianlars1.dotviewer.handlebars</string>
+				<string>com.stianlars1.dotviewer.pug</string>
+				<string>com.stianlars1.dotviewer.haml</string>
+				<string>com.stianlars1.dotviewer.liquid</string>
+				<string>com.stianlars1.dotviewer.doc-markup</string>
+				<string>com.stianlars1.dotviewer.terraform</string>
+				<string>com.stianlars1.dotviewer.hashicorp</string>
+				<string>com.stianlars1.dotviewer.kubernetes</string>
+				<string>com.stianlars1.dotviewer.devops</string>
+				<string>com.stianlars1.dotviewer.cmake</string>
+				<string>com.stianlars1.dotviewer.gradle-maven</string>
+				<string>com.stianlars1.dotviewer.package-manager</string>
+				<string>com.stianlars1.dotviewer.ruby-build</string>
+				<string>com.stianlars1.dotviewer.taskrunner</string>
+				<string>com.stianlars1.dotviewer.shell-variant</string>
+				<string>com.stianlars1.dotviewer.powershell</string>
+				<string>com.stianlars1.dotviewer.batch</string>
+				<string>com.stianlars1.dotviewer.vbscript</string>
+				<string>com.stianlars1.dotviewer.csharp</string>
+				<string>com.stianlars1.dotviewer.scala</string>
+				<string>com.stianlars1.dotviewer.astro</string>
+				<string>com.stianlars1.dotviewer.protobuf</string>
+				<string>com.stianlars1.dotviewer.less</string>
+				<string>com.stianlars1.dotviewer.rst</string>
+				<string>com.stianlars1.dotviewer.latex</string>
 				<string>public.plain-text</string>
 				<string>public.text</string>
 				<string>public.source-code</string>
