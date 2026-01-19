@@ -1,86 +1,84 @@
-# dotViewer Bug-Fix Release
+# dotViewer
 
 ## What This Is
 
-A bug-fix release for dotViewer, a macOS app with a QuickLook extension that provides syntax-highlighted previews of dotfiles and source code. This release addresses 5 user-reported bugs plus additional issues discovered during codebase exploration.
+A macOS app with a QuickLook extension that provides syntax-highlighted previews of dotfiles and source code. Supports 100+ file extensions with fast, native Swift syntax highlighting.
 
 ## Core Value
 
-Fix all known bugs without breaking existing functionality — every fix must be verified to not regress current behavior.
+Fast, beautiful code previews in Finder — press Space on any code file to see syntax-highlighted content instantly.
+
+## Current State (v1.0)
+
+**Shipped:** 2026-01-19
+
+**Capabilities:**
+- QuickLook preview of 100+ file types with syntax highlighting
+- FastSyntaxHighlighter: <50ms native Swift highlighting for 20+ languages
+- Theme support (10 themes, auto/light/dark modes)
+- Markdown rendering with raw/rendered toggle
+- Custom file type registration via app UI
+- Sensitive file detection and warning banners
+- App Sandbox enabled for Mac App Store
+
+**Tech Stack:**
+- Swift 5.0 / SwiftUI / macOS 13.0+
+- Two-target architecture: Main app + QuickLook extension
+- App Groups for inter-process settings sync
+- FastSyntaxHighlighter (primary) + HighlightSwift (fallback)
+
+**Codebase:**
+- 5,426 lines of Swift
+- 48 files
 
 ## Requirements
 
 ### Validated
 
-- ✓ QuickLook preview of 70+ file types with syntax highlighting — existing
-- ✓ Theme support (10 themes, auto/light/dark modes) — existing
-- ✓ Markdown rendering with raw/rendered toggle — existing
-- ✓ Custom file type registration via app UI — existing
-- ✓ Sensitive file detection and warning banners — existing
-- ✓ TypeScript/JS variants (.mjs, .cjs, .mts, .cts mappings) — already implemented
-- ✓ .env file syntax highlighting — already implemented
+- QuickLook preview of 100+ file types with syntax highlighting — v1.0
+- Theme support (10 themes, auto/light/dark modes) — v1.0
+- Markdown rendering with raw/rendered toggle — v1.0
+- Custom file type registration via app UI — v1.0
+- Sensitive file detection and warning banners — v1.0
+- TypeScript/JS variants (.mjs, .cjs, .mts, .cts mappings) — v1.0
+- .env file syntax highlighting — v1.0
+- Bug #1: Custom file types activate after being added — v1.0
+- Bug #2: Users can edit custom file types — v1.0
+- Bug #3: Uninstall button has proper destructive styling — v1.0
+- Bug #4: TypeScript/TSX QuickLook preview works — v1.0
+- Bug #5: Markdown RAW mode toggle doesn't hide content — v1.0
+- Performance: QuickLook preview loads in <50ms — v1.0
+- App Sandbox enabled for Mac App Store — v1.0
 
-### Completed (Phase 1 & 2)
+### Active
 
-- [x] Bug #1: Custom file types activate after being added — 01-01 done
-- [x] Bug #2: Users can edit custom file types — 02-01 done
-- [x] Bug #3: Uninstall button has proper destructive styling — 02-02 done
-- [x] Bug #4: TypeScript/TSX QuickLook preview works — 01-03 done
-- [x] Bug #5: Markdown RAW mode toggle doesn't hide content — pre-existing fix
-- [x] Fix silent encoding failures when saving custom extensions — 01-02 done
-
-### Active (Phase 3)
-
-- [ ] Performance: QuickLook preview loads in <200ms (currently 1-2s)
-- [ ] Evaluate faster syntax highlighting alternatives
-
-### Deferred (Phase 4)
-
-- [ ] App Store: Re-enable sandbox with proper extension detection APIs
+None — milestone complete, ready for new requirements.
 
 ### Out of Scope
 
-- New features — this is a bug-fix only release
 - Dynamic UTI registration at runtime — too complex, using pre-registered patterns instead
 - Automated test suite — manual QA is the verification method
-
-## Context
-
-**Codebase:**
-- Swift 5.0 / SwiftUI / macOS 13.0+
-- Two-target architecture: Main app + QuickLook extension
-- App Groups for inter-process settings sync
-- HighlightSwift for syntax highlighting (JS-based, slow)
-
-**Performance Issue Identified:**
-- 1-2 seconds to load 10-30KB files
-- Root cause: HighlightSwift uses JavaScript (highlight.js) with bridge overhead
-- Alternatives: andre-simon Highlight (native C++), pure Swift regex
-
-**Key Files:**
-- `QuickLookPreview/Info.plist` — UTI registrations
-- `Shared/LanguageDetector.swift` — extension → language mapping
-- `Shared/SharedSettings.swift` — CustomExtension model & encoding
-- `Shared/SyntaxHighlighter.swift` — highlighting integration
-- `QuickLookPreview/PreviewViewController.swift` — file loading
-- `QuickLookPreview/PreviewContentView.swift` — highlighting orchestration
-
-## Constraints
-
-- **Non-breaking**: Every fix must be verified to not regress existing functionality
-- **Manual QA**: User will test each fix before shipping
-- **No automated tests**: Manual verification is the QA process
+- Video chat integration — not relevant to code preview tool
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Pre-register common dotfiles in Info.plist | Dynamic UTI registration too complex for QuickLook | ✓ Done in 01-01 |
-| Fix encoding failures before UI work | Data integrity is foundational | ✓ Done in 01-02 |
-| Extension name not editable in edit sheet | Serves as unique identifier | ✓ Done in 02-01 |
+| Pre-register common dotfiles in Info.plist | Dynamic UTI registration too complex for QuickLook | Done in 01-01 |
+| Fix encoding failures before UI work | Data integrity is foundational | Done in 01-02 |
+| Extension name not editable in edit sheet | Serves as unique identifier | Done in 02-01 |
 | Skip QA phase | Tested during development | Removed from roadmap |
 | Prioritize performance over App Store | User retention depends on fast previews | Phase 3 = Performance |
-| Profile before library switch | Confirm JS bridge is the actual bottleneck | Planned in 03-01 |
+| Abandon Syntect/Rust approach | 3 failed integration attempts, complexity too high | Pivoted to FastSyntaxHighlighter |
+| Abandon Tree-sitter + Neon | Similar complexity to Syntect (10+ packages, query files) | Pivoted to FastSyntaxHighlighter |
+| FastSyntaxHighlighter | Pure Swift regex approach, zero dependencies, proven codebase pattern | Done in 03-01 |
+| Static setup guide over live detection | No sandbox-friendly API for extension status | Done in 04-01 |
+
+## Constraints
+
+- **App Store compliance**: Must maintain sandbox for distribution
+- **Manual QA**: User tests each release before shipping
+- **No automated tests**: Manual verification is the QA process
 
 ---
-*Last updated: 2026-01-16 after Phase 2 completion and roadmap reorg*
+*Last updated: 2026-01-19 after v1.0 milestone*
