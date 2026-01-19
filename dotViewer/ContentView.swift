@@ -45,7 +45,7 @@ struct ContentView: View {
 // MARK: - Status View
 
 struct StatusView: View {
-    @StateObject private var checker = ExtensionStatusChecker.shared
+    @StateObject private var helper = ExtensionHelper.shared
 
     var body: some View {
         ScrollView {
@@ -64,113 +64,88 @@ struct StatusView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
-            
+
                 .padding(.top, 20)
 
-                // Extension Status Card
+                // Setup Guide Card
                 VStack(spacing: 16) {
                     HStack(spacing: 12) {
-                        if checker.isChecking {
-                            ProgressView()
-                                .controlSize(.small)
-                        } else {
-                            Image(systemName: checker.isEnabled ? "checkmark.circle.fill" : "xmark.circle.fill")
-                                .font(.title2)
-                                .foregroundStyle(checker.isEnabled ? .green : .red)
-                        }
+                        Image(systemName: "puzzlepiece.extension")
+                            .font(.title2)
+                            .foregroundStyle(.blue)
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text(checker.isChecking ? "Checking Status..." : (checker.isEnabled ? "Extension Enabled" : "Extension Not Enabled"))
+                            Text("Enable Quick Look Extension")
                                 .font(.headline)
-                            Text(checker.isEnabled
-                                ? "dotViewer is ready to preview your files"
-                                : "Enable the extension in System Settings")
+                            Text("Follow these steps to enable dotViewer")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
 
                         Spacer()
-
-                        Button {
-                            checker.check()
-                        } label: {
-                            Image(systemName: "arrow.clockwise")
-                        }
-                        .buttonStyle(.borderless)
-                        .help("Refresh status")
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
 
-                    if !checker.isEnabled && !checker.isChecking {
-                        Button {
-                            openExtensionSettings()
-                        } label: {
-                            Label("Open Extension Settings", systemImage: "gear")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.large)
-
-                        // Troubleshooting tips
-                        VStack(alignment: .leading, spacing: 10) {
-                            Label("Troubleshooting", systemImage: "questionmark.circle")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-
-                            VStack(alignment: .leading, spacing: 6) {
-                                TroubleshootingRow(
-                                    step: "1",
-                                    text: "Open System Settings → Privacy & Security → Extensions"
-                                )
-                                TroubleshootingRow(
-                                    step: "2",
-                                    text: "Click \"Quick Look\" in the left sidebar"
-                                )
-                                TroubleshootingRow(
-                                    step: "3",
-                                    text: "Enable \"dotViewer Quick Look\" checkbox"
-                                )
-                                TroubleshootingRow(
-                                    step: "4",
-                                    text: "Try relaunching Finder (⌥ + right-click Finder → Relaunch)"
-                                )
-                            }
-                        }
-                        .padding()
-                        .background(Color.yellow.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+                    // Setup steps
+                    VStack(alignment: .leading, spacing: 10) {
+                        SetupStepRow(
+                            step: 1,
+                            text: "Click \"Open Extension Settings\" below"
+                        )
+                        SetupStepRow(
+                            step: 2,
+                            text: "Click \"Quick Look\" in the sidebar"
+                        )
+                        SetupStepRow(
+                            step: 3,
+                            text: "Enable \"dotViewer\" checkbox"
+                        )
+                        SetupStepRow(
+                            step: 4,
+                            text: "Try previewing a code file with Space in Finder"
+                        )
                     }
+                    .padding()
+                    .background(Color.blue.opacity(0.1), in: RoundedRectangle(cornerRadius: 10))
+
+                    Button {
+                        helper.openExtensionSettings()
+                    } label: {
+                        Label("Open Extension Settings", systemImage: "gear")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .controlSize(.large)
                 }
                 .frame(maxWidth: 400)
 
                 // Quick Stats
-                if checker.isEnabled {
-                    VStack(spacing: 16) {
-                        Text("Quick Stats")
-                            .font(.headline)
+                VStack(spacing: 16) {
+                    Text("Quick Stats")
+                        .font(.headline)
 
-                        HStack(spacing: 24) {
-                            StatCard(
-                                value: "\(FileTypeRegistry.shared.builtInTypes.count)",
-                                label: "Built-in Types",
-                                icon: "doc.text.fill",
-                                color: .blue
-                            )
+                    HStack(spacing: 24) {
+                        StatCard(
+                            value: "\(FileTypeRegistry.shared.builtInTypes.count)",
+                            label: "Built-in Types",
+                            icon: "doc.text.fill",
+                            color: .blue
+                        )
 
-                            StatCard(
-                                value: "\(SharedSettings.shared.customExtensions.count)",
-                                label: "Custom Types",
-                                icon: "plus.circle.fill",
-                                color: .orange
-                            )
+                        StatCard(
+                            value: "\(SharedSettings.shared.customExtensions.count)",
+                            label: "Custom Types",
+                            icon: "plus.circle.fill",
+                            color: .orange
+                        )
 
-                            StatCard(
-                                value: "\(SharedSettings.shared.disabledFileTypes.count)",
-                                label: "Disabled",
-                                icon: "eye.slash.fill",
-                                color: .gray
-                            )
-                        }
+                        StatCard(
+                            value: "\(SharedSettings.shared.disabledFileTypes.count)",
+                            label: "Disabled",
+                            icon: "eye.slash.fill",
+                            color: .gray
+                        )
                     }
                 }
 
@@ -209,19 +184,6 @@ struct StatusView: View {
             .padding(32)
         }
         .navigationTitle("Status")
-        .onAppear {
-            checker.check()
-        }
-        // Refresh when app becomes active
-        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            checker.check()
-        }
-    }
-
-    private func openExtensionSettings() {
-        if let url = URL(string: "x-apple.systempreferences:com.apple.ExtensionsPreferences") {
-            NSWorkspace.shared.open(url)
-        }
     }
 }
 
@@ -270,21 +232,22 @@ struct HowToRow: View {
     }
 }
 
-struct TroubleshootingRow: View {
-    let step: String
+struct SetupStepRow: View {
+    let step: Int
     let text: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 8) {
-            Text(step)
+        HStack(alignment: .top, spacing: 12) {
+            Text("\(step)")
                 .font(.caption)
                 .fontWeight(.bold)
-                .foregroundStyle(.orange)
-                .frame(width: 16)
+                .foregroundStyle(.white)
+                .frame(width: 20, height: 20)
+                .background(.blue, in: Circle())
 
             Text(text)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.subheadline)
+                .foregroundStyle(.primary)
         }
     }
 }
