@@ -442,6 +442,1060 @@
 				</array>
 			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.backup</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>backup</string>
+					<string>bak</string>
+					<string>old</string>
+					<string>orig</string>
+					<string>tmp</string>
+					<string>temp</string>
+					<string>swp</string>
+					<string>swo</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Dist/Sample Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Distribution Sample File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dist-sample</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dist</string>
+					<string>sample</string>
+					<string>example</string>
+					<string>default</string>
+					<string>template</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Environment-specific Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.env-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>local</string>
+					<string>development</string>
+					<string>dev</string>
+					<string>prod</string>
+					<string>production</string>
+					<string>staging</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Config Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Configuration File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>config</string>
+					<string>prefs</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- RC Config Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>RC Configuration File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.rcfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rc</string>
+					<string>editorconfig</string>
+					<string>prettierrc</string>
+					<string>eslintrc</string>
+					<string>babelrc</string>
+					<string>stylelintrc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Package Manager Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Package Manager Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.package-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>yarnrc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Web Server Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Web Server Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.webserver-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>htaccess</string>
+					<string>htpasswd</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Lock Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Lock File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.lockfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>lock</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Log Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Log File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.logfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>logs</string>
+					<string>out</string>
+					<string>err</string>
+					<string>debug</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- PID/Cache Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Process/Cache File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.pid-cache</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pid</string>
+					<string>cache</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Data Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Data File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.datafile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>csv</string>
+					<string>tsv</string>
+					<string>dat</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Lua -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Lua Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.lua</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>lua</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- R -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>R Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.r</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>r</string>
+					<string>R</string>
+					<string>rmd</string>
+					<string>Rmd</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Julia -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Julia Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.julia</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>jl</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Nim -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Nim Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nim</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nim</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Zig -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Zig Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zig</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- V -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>V Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vlang</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>v</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- D -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>D Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dlang</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>d</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Elixir -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Elixir Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.elixir</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ex</string>
+					<string>exs</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Erlang -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Erlang Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.erlang</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>erl</string>
+					<string>hrl</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Clojure -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Clojure Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.clojure</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>clj</string>
+					<string>cljs</string>
+					<string>cljc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- F# -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>F# Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.fsharp</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fs</string>
+					<string>fsx</string>
+					<string>fsi</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Haskell -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Haskell Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.haskell</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>hs</string>
+					<string>lhs</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- OCaml -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>OCaml Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ocaml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ml</string>
+					<string>mli</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Tcl -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Tcl Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.tcl</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tcl</string>
+					<string>tk</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Assembly -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Assembly Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.assembly</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>asm</string>
+					<string>s</string>
+					<string>S</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - Nunjucks/Jinja -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Template File (Nunjucks/Jinja)</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nunjucks</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>njk</string>
+					<string>nunjucks</string>
+					<string>jinja</string>
+					<string>jinja2</string>
+					<string>j2</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - Twig -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Twig Template</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.twig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>twig</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - Handlebars/Mustache -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Handlebars/Mustache Template</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.handlebars</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>hbs</string>
+					<string>handlebars</string>
+					<string>mustache</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - Pug/Jade -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Pug/Jade Template</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.pug</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pug</string>
+					<string>jade</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - HAML/Slim -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>HAML/Slim Template</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.haml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>haml</string>
+					<string>slim</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Template Languages - Liquid/EJS -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Liquid/EJS Template</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.liquid</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>liquid</string>
+					<string>ejs</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Markup - reStructuredText/AsciiDoc -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Documentation Markup</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.doc-markup</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>adoc</string>
+					<string>asciidoc</string>
+					<string>textile</string>
+					<string>org</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Terraform/HCL -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Terraform/HCL Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.terraform</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tf</string>
+					<string>tfvars</string>
+					<string>hcl</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- HashiCorp Tools -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>HashiCorp Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.hashicorp</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nomad</string>
+					<string>consul</string>
+					<string>vault</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Kubernetes/Helm -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Kubernetes/Helm Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.kubernetes</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>helm</string>
+					<string>k8s</string>
+					<string>kubernetes</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- DevOps Config Files -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>DevOps Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.devops</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vagrantfile</string>
+					<string>procfile</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- CMake -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CMake File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cmake</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cmake</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Build Tools - Gradle/Maven -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Build Configuration (Gradle/Maven)</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gradle-maven</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gradle</string>
+					<string>maven</string>
+					<string>pom</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Package Managers - Cargo/Cabal/Mix -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Package Manager File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.package-manager</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cargo</string>
+					<string>cabal</string>
+					<string>mix</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Ruby Build Tools -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby Build File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ruby-build</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gemfile</string>
+					<string>rakefile</string>
+					<string>guardfile</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Task Runners -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Task Runner File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.taskrunner</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>justfile</string>
+					<string>taskfile</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Shell Variants -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.shell-script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Script Variant</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.shell-variant</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fish</string>
+					<string>csh</string>
+					<string>tcsh</string>
+					<string>ksh</string>
+					<string>ash</string>
+					<string>dash</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- PowerShell -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>PowerShell Script</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.powershell</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ps1</string>
+					<string>psm1</string>
+					<string>psd1</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Windows Batch -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Windows Batch File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.batch</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bat</string>
+					<string>cmd</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- VBScript -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>VBScript</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vbscript</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vbs</string>
+					<string>vba</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- C# (additional) -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>C# Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.csharp</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cs</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Scala -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Scala Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.scala</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>scala</string>
+					<string>sc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Astro -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Astro Component</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.astro</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>astro</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Protocol Buffers -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Protocol Buffers</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.protobuf</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>proto</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Less -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Less Stylesheet</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.less</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>less</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- reStructuredText -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>reStructuredText</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.rst</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rst</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- LaTeX -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>LaTeX Document</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.latex</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tex</string>
+					<string>latex</string>
+				</array>
+			</dict>
+		</dict>
 	</array>
 </dict>
 </plist>
