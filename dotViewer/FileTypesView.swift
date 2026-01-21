@@ -6,6 +6,7 @@ struct FileTypesView: View {
     @State private var disabledTypes: Set<String> = SharedSettings.shared.disabledFileTypes
     @State private var customExtensions: [CustomExtension] = SharedSettings.shared.customExtensions
     @State private var editingExtension: CustomExtension? = nil
+    @State private var expandedCategories: Set<FileTypeCategory> = []
 
     private let registry = FileTypeRegistry.shared
 
@@ -74,7 +75,18 @@ struct FileTypesView: View {
             List {
                 // Built-in types by category
                 ForEach(filteredTypes, id: \.0) { category, types in
-                    Section {
+                    DisclosureGroup(
+                        isExpanded: Binding(
+                            get: { expandedCategories.contains(category) },
+                            set: { isExpanded in
+                                if isExpanded {
+                                    expandedCategories.insert(category)
+                                } else {
+                                    expandedCategories.remove(category)
+                                }
+                            }
+                        )
+                    ) {
                         ForEach(types) { type in
                             FileTypeRow(
                                 type: type,
@@ -82,15 +94,32 @@ struct FileTypesView: View {
                                 onToggle: { toggleType(type) }
                             )
                         }
-                    } header: {
-                        Label(category.rawValue, systemImage: category.icon)
-                            .font(.headline)
+                    } label: {
+                        HStack {
+                            Label(category.rawValue, systemImage: category.icon)
+                                .font(.headline)
+                            Spacer()
+                            Text("\(types.count)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
 
                 // Custom extensions section
                 if !customExtensions.isEmpty || !searchText.isEmpty {
-                    Section {
+                    DisclosureGroup(
+                        isExpanded: Binding(
+                            get: { expandedCategories.contains(.custom) },
+                            set: { isExpanded in
+                                if isExpanded {
+                                    expandedCategories.insert(.custom)
+                                } else {
+                                    expandedCategories.remove(.custom)
+                                }
+                            }
+                        )
+                    ) {
                         if filteredCustomExtensions.isEmpty && !searchText.isEmpty {
                             Text("No matching custom extensions")
                                 .foregroundStyle(.secondary)
@@ -108,9 +137,15 @@ struct FileTypesView: View {
                                 )
                             }
                         }
-                    } header: {
-                        Label(FileTypeCategory.custom.rawValue, systemImage: FileTypeCategory.custom.icon)
-                            .font(.headline)
+                    } label: {
+                        HStack {
+                            Label(FileTypeCategory.custom.rawValue, systemImage: FileTypeCategory.custom.icon)
+                                .font(.headline)
+                            Spacer()
+                            Text("\(customExtensions.count)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
