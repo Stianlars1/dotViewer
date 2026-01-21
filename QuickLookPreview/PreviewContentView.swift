@@ -213,9 +213,16 @@ struct PreviewContentView: View {
             let result = highlightMarkdownRaw(state.content)
             NSLog("[dotViewer PERF] [+%.3fs] markdown highlighting took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - markdownStart)
             highlightedContent = result
-            // Cache the result
+            // Cache the result (memory + disk)
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
-                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: result)
+                let theme = SharedSettings.shared.selectedTheme
+                HighlightCache.shared.set(
+                    path: path,
+                    modDate: modDate,
+                    theme: theme,
+                    highlighted: result
+                )
+                NSLog("[dotViewer PERF] highlightCode - cached markdown result for future use")
             }
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
@@ -286,10 +293,16 @@ struct PreviewContentView: View {
         // Use result if available
         if let highlighted = result {
             highlightedContent = highlighted
-            // Cache the result
+            // Cache the result (memory + disk)
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
-                NSLog("[dotViewer PERF] [+%.3fs] caching result", CFAbsoluteTimeGetCurrent() - startTime)
-                HighlightCache.shared.set(path: path, modDate: modDate, highlighted: highlighted)
+                let theme = SharedSettings.shared.selectedTheme
+                HighlightCache.shared.set(
+                    path: path,
+                    modDate: modDate,
+                    theme: theme,
+                    highlighted: highlighted
+                )
+                NSLog("[dotViewer PERF] [+%.3fs] cached result for future use", CFAbsoluteTimeGetCurrent() - startTime)
             }
         }
 
