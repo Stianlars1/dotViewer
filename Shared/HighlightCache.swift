@@ -30,40 +30,40 @@ final class HighlightCache: @unchecked Sendable {
     }
 
     /// Generate cache key for a file.
-    /// Key = SHA256(filePath + modificationDate + theme)
-    func cacheKey(path: String, modDate: Date, theme: String) -> String {
-        return diskCache.cacheKey(filePath: path, modificationDate: modDate, theme: theme)
+    /// Key = SHA256(filePath + modificationDate + theme + language)
+    func cacheKey(path: String, modDate: Date, theme: String, language: String?) -> String {
+        return diskCache.cacheKey(filePath: path, modificationDate: modDate, theme: theme, language: language)
     }
 
     /// Get cached highlighted content.
     /// Checks memory first (fast), then disk (persistent).
     /// Disk hits are promoted to memory for faster subsequent access.
-    func get(path: String, modDate: Date, theme: String) -> AttributedString? {
-        let key = cacheKey(path: path, modDate: modDate, theme: theme)
+    func get(path: String, modDate: Date, theme: String, language: String?) -> AttributedString? {
+        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
 
         // 1. Check memory cache (fast path)
         if let entry = getFromMemory(key: key) {
-            NSLog("[dotViewer Cache] Memory HIT for: \(path.components(separatedBy: "/").last ?? path)")
+            perfLog("[dotViewer Cache] Memory HIT for: \(path.components(separatedBy: "/").last ?? path)")
             return entry
         }
 
         // 2. Check disk cache (slower but persistent)
         if let diskEntry = diskCache.get(key: key) {
-            NSLog("[dotViewer Cache] Disk HIT, promoting to memory for: \(path.components(separatedBy: "/").last ?? path)")
+            perfLog("[dotViewer Cache] Disk HIT, promoting to memory for: \(path.components(separatedBy: "/").last ?? path)")
             // Promote to memory cache for faster subsequent access
             setInMemory(key: key, value: diskEntry)
             return diskEntry
         }
 
-        NSLog("[dotViewer Cache] MISS for: \(path.components(separatedBy: "/").last ?? path)")
+        perfLog("[dotViewer Cache] MISS for: \(path.components(separatedBy: "/").last ?? path)")
         return nil
     }
 
     /// Store highlighted content in both memory and disk.
     /// Memory write is synchronous (fast).
     /// Disk write is asynchronous (doesn't block caller).
-    func set(path: String, modDate: Date, theme: String, highlighted: AttributedString) {
-        let key = cacheKey(path: path, modDate: modDate, theme: theme)
+    func set(path: String, modDate: Date, theme: String, language: String?, highlighted: AttributedString) {
+        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
 
         // Write to memory (synchronous, fast)
         setInMemory(key: key, value: highlighted)
@@ -71,7 +71,7 @@ final class HighlightCache: @unchecked Sendable {
         // Write to disk (async, persistent)
         diskCache.set(key: key, value: highlighted)
 
-        NSLog("[dotViewer Cache] SET for: \(path.components(separatedBy: "/").last ?? path)")
+        perfLog("[dotViewer Cache] SET for: \(path.components(separatedBy: "/").last ?? path)")
     }
 
     // MARK: - Memory Cache Operations
@@ -81,10 +81,11 @@ final class HighlightCache: @unchecked Sendable {
             guard let entry = memoryCache[key] else { return nil }
 
             // Update access order for LRU
+            // Always append key - remove first if already present to maintain sync
             if let idx = accessOrder.firstIndex(of: key) {
                 accessOrder.remove(at: idx)
-                accessOrder.append(key)
             }
+            accessOrder.append(key)  // Always append to ensure memoryCache and accessOrder stay in sync
             return entry.highlighted
         }
     }
@@ -135,18 +136,18 @@ final class HighlightCache: @unchecked Sendable {
 
     // MARK: - Legacy API (deprecated, for backward compatibility)
 
-    /// Deprecated: Use get(path:modDate:theme:) instead.
-    /// This method uses "auto" as the default theme.
-    @available(*, deprecated, message: "Use get(path:modDate:theme:) instead")
+    /// Deprecated: Use get(path:modDate:theme:language:) instead.
+    /// This method uses "auto" as the default theme and nil language.
+    @available(*, deprecated, message: "Use get(path:modDate:theme:language:) instead")
     func get(path: String, modDate: Date) -> AttributedString? {
-        return get(path: path, modDate: modDate, theme: "auto")
+        return get(path: path, modDate: modDate, theme: "auto", language: nil)
     }
 
-    /// Deprecated: Use set(path:modDate:theme:highlighted:) instead.
-    /// This method uses "auto" as the default theme.
-    @available(*, deprecated, message: "Use set(path:modDate:theme:highlighted:) instead")
+    /// Deprecated: Use set(path:modDate:theme:language:highlighted:) instead.
+    /// This method uses "auto" as the default theme and nil language.
+    @available(*, deprecated, message: "Use set(path:modDate:theme:language:highlighted:) instead")
     func set(path: String, modDate: Date, highlighted: AttributedString) {
-        set(path: path, modDate: modDate, theme: "auto", highlighted: highlighted)
+        set(path: path, modDate: modDate, theme: "auto", language: nil, highlighted: highlighted)
     }
 
     /// Deprecated: Use clearMemory() or clearAll() instead.

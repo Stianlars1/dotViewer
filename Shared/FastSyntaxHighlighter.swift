@@ -102,21 +102,21 @@ struct FastSyntaxHighlighter: Sendable {
     /// - Returns: Attributed string with syntax highlighting
     func highlight(code: String, language: String?, colors: SyntaxColors) -> AttributedString {
         let totalStart = CFAbsoluteTimeGetCurrent()
-        NSLog("[dotViewer PERF] FastSyntaxHighlighter.highlight START - codeLen: %d chars, language: %@", code.count, language ?? "nil")
+        perfLog("[dotViewer PERF] FastSyntaxHighlighter.highlight START - codeLen: %d chars, language: %@", code.count, language ?? "nil")
 
         var result = AttributedString(code)
-        result.foregroundColor = colors.text
+        result.foregroundColor = Color(nsColor: colors.text)
 
         // Build index mapping for efficient attribute application
         var sectionStart = CFAbsoluteTimeGetCurrent()
         let mapping = buildIndexMapping(code: code, attributed: result)
         let codeNS = code as NSString
-        NSLog("[dotViewer PERF] [Fast +%.3fs] index mapping: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] index mapping: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // Get language-specific patterns
         sectionStart = CFAbsoluteTimeGetCurrent()
         let patterns = languagePatterns(for: language)
-        NSLog("[dotViewer PERF] [Fast +%.3fs] languagePatterns: %.3fs (keywords: %d, types: %d, builtins: %d)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.keywords.count, patterns.types.count, patterns.builtins.count)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] languagePatterns: %.3fs (keywords: %d, types: %d, builtins: %d)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.keywords.count, patterns.types.count, patterns.builtins.count)
 
         // Apply highlighting in order (more specific patterns first)
 
@@ -142,7 +142,7 @@ struct FastSyntaxHighlighter: Sendable {
         if patterns.supportsHtmlComments {
             applyHighlight(regex: Self.htmlCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
         }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] comments: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] comments: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 3. Strings
         sectionStart = CFAbsoluteTimeGetCurrent()
@@ -151,13 +151,13 @@ struct FastSyntaxHighlighter: Sendable {
         if patterns.supportsBacktickStrings {
             applyHighlight(regex: Self.backtickStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
         }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] strings: %.3fs (multiline was: %.3fs)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, multilineTime)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] strings: %.3fs (multiline was: %.3fs)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, multilineTime)
 
         // 4. Numbers
         sectionStart = CFAbsoluteTimeGetCurrent()
         applyHighlight(regex: Self.hexNumberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
         applyHighlight(regex: Self.numberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
-        NSLog("[dotViewer PERF] [Fast +%.3fs] numbers: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] numbers: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 5. Language-specific patterns
         sectionStart = CFAbsoluteTimeGetCurrent()
@@ -171,31 +171,32 @@ struct FastSyntaxHighlighter: Sendable {
         if patterns.supportsJsonKeys {
             applyHighlight(regex: Self.jsonKeyRegex, to: &result, code: codeNS, mapping: mapping, color: colors.keyword)
         }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] language-specific (html/json): %.3fs, xmlDataMode: %@", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.isXmlDataMode ? "YES" : "NO")
+        perfLog("[dotViewer PERF] [Fast +%.3fs] language-specific (html/json): %.3fs, xmlDataMode: %@", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.isXmlDataMode ? "YES" : "NO")
 
         // 6. Keywords - single-pass highlighting using alternation pattern O(n) instead of O(n × keywords)
         sectionStart = CFAbsoluteTimeGetCurrent()
         highlightWords(in: &result, code: codeNS, words: patterns.keywords, mapping: mapping, color: colors.keyword)
-        NSLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 7. Types - single-pass highlighting using alternation pattern O(n) instead of O(n × types)
         sectionStart = CFAbsoluteTimeGetCurrent()
         highlightWords(in: &result, code: codeNS, words: patterns.types, mapping: mapping, color: colors.type)
-        NSLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 8. Built-in functions - single-pass highlighting using alternation pattern O(n) instead of O(n × builtins)
         sectionStart = CFAbsoluteTimeGetCurrent()
         highlightWords(in: &result, code: codeNS, words: patterns.builtins, mapping: mapping, color: colors.function)
-        NSLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
-        NSLog("[dotViewer PERF] FastSyntaxHighlighter.highlight DONE - total: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart)
+        perfLog("[dotViewer PERF] FastSyntaxHighlighter.highlight DONE - total: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart)
         return result
     }
 
     // MARK: - Pattern Application
 
-    private func applyHighlight(regex: NSRegularExpression, to attributed: inout AttributedString, code: NSString, mapping: IndexMapping, color: Color) {
+    private func applyHighlight(regex: NSRegularExpression, to attributed: inout AttributedString, code: NSString, mapping: IndexMapping, color: NSColor) {
         let matches = regex.matches(in: code as String, options: [], range: NSRange(location: 0, length: code.length))
+        let swiftUIColor = Color(nsColor: color)
 
         for match in matches {
             let loc = match.range.location
@@ -208,25 +209,26 @@ struct FastSyntaxHighlighter: Sendable {
 
             guard startChar < mapping.attrIndices.count && endChar < mapping.attrIndices.count else { continue }
 
-            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].foregroundColor = color
+            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].foregroundColor = swiftUIColor
         }
     }
 
     /// Highlight a set of words in a single pass using alternation pattern.
     /// This is O(n) instead of O(n × words) when highlighting individually.
     /// Pattern: \b(word1|word2|word3|...)\b
-    private func highlightWords(in attributed: inout AttributedString, code: NSString, words: Set<String>, mapping: IndexMapping, color: Color) {
+    private func highlightWords(in attributed: inout AttributedString, code: NSString, words: Set<String>, mapping: IndexMapping, color: NSColor) {
         guard !words.isEmpty else { return }
 
-        // Escape each word and join with alternation
-        let escapedWords = words.map { NSRegularExpression.escapedPattern(for: $0) }
+        // Sort words for deterministic regex pattern (Set ordering is non-deterministic)
+        let sortedWords = words.sorted()
+        let escapedWords = sortedWords.map { NSRegularExpression.escapedPattern(for: $0) }
         let pattern = "\\b(\(escapedWords.joined(separator: "|")))\\b"
 
         guard let regex = try? NSRegularExpression(pattern: pattern) else { return }
         applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
     }
 
-    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, mapping: IndexMapping, color: Color) {
+    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, mapping: IndexMapping, color: NSColor) {
         let escapedWord = NSRegularExpression.escapedPattern(for: word)
         guard let regex = try? NSRegularExpression(pattern: "\\b\(escapedWord)\\b") else { return }
         applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
@@ -495,16 +497,18 @@ struct FastSyntaxHighlighter: Sendable {
 
 // MARK: - Syntax Colors
 
-/// Theme-aware syntax colors for highlighting
+/// Theme-aware syntax colors for highlighting.
+/// Uses NSColor instead of SwiftUI.Color for proper NSKeyedArchiver serialization
+/// (SwiftUI.Color is not archivable, causing disk cache failures).
 struct SyntaxColors: Sendable {
-    let keyword: Color
-    let string: Color
-    let comment: Color
-    let number: Color
-    let type: Color
-    let function: Color
-    let variable: Color
-    let text: Color
+    let keyword: NSColor
+    let string: NSColor
+    let comment: NSColor
+    let number: NSColor
+    let type: NSColor
+    let function: NSColor
+    let variable: NSColor
+    let text: NSColor
 
     /// Create syntax colors for a given theme
     static func forTheme(_ theme: String, systemIsDark: Bool) -> SyntaxColors {
@@ -518,110 +522,110 @@ struct SyntaxColors: Sendable {
         switch effectiveTheme {
         case "atomOneLight":
             return SyntaxColors(
-                keyword: Color(red: 0.65, green: 0.15, blue: 0.64),  // #a626a4
-                string: Color(red: 0.31, green: 0.63, blue: 0.31),   // #50a14f
-                comment: Color(red: 0.63, green: 0.63, blue: 0.65),  // #a0a1a7
-                number: Color(red: 0.72, green: 0.42, blue: 0.09),   // #b76b01
-                type: Color(red: 0.78, green: 0.56, blue: 0.09),     // #c18401
-                function: Color(red: 0.25, green: 0.47, blue: 0.95), // #4078f2
-                variable: Color(red: 0.90, green: 0.34, blue: 0.34), // #e45649
-                text: Color(red: 0.22, green: 0.23, blue: 0.26)      // #383a42
+                keyword: NSColor(red: 0.65, green: 0.15, blue: 0.64, alpha: 1.0),  // #a626a4
+                string: NSColor(red: 0.31, green: 0.63, blue: 0.31, alpha: 1.0),   // #50a14f
+                comment: NSColor(red: 0.63, green: 0.63, blue: 0.65, alpha: 1.0),  // #a0a1a7
+                number: NSColor(red: 0.72, green: 0.42, blue: 0.09, alpha: 1.0),   // #b76b01
+                type: NSColor(red: 0.78, green: 0.56, blue: 0.09, alpha: 1.0),     // #c18401
+                function: NSColor(red: 0.25, green: 0.47, blue: 0.95, alpha: 1.0), // #4078f2
+                variable: NSColor(red: 0.90, green: 0.34, blue: 0.34, alpha: 1.0), // #e45649
+                text: NSColor(red: 0.22, green: 0.23, blue: 0.26, alpha: 1.0)      // #383a42
             )
 
         case "atomOneDark", "blackout":
             return SyntaxColors(
-                keyword: Color(red: 0.78, green: 0.47, blue: 0.87),  // #c678dd
-                string: Color(red: 0.60, green: 0.76, blue: 0.47),   // #98c379
-                comment: Color(red: 0.36, green: 0.39, blue: 0.44),  // #5c6370
-                number: Color(red: 0.82, green: 0.60, blue: 0.40),   // #d19a66
-                type: Color(red: 0.90, green: 0.75, blue: 0.48),     // #e5c07b
-                function: Color(red: 0.38, green: 0.69, blue: 0.94), // #61afef
-                variable: Color(red: 0.88, green: 0.42, blue: 0.45), // #e06c75
-                text: Color(red: 0.67, green: 0.70, blue: 0.75)      // #abb2bf
+                keyword: NSColor(red: 0.78, green: 0.47, blue: 0.87, alpha: 1.0),  // #c678dd
+                string: NSColor(red: 0.60, green: 0.76, blue: 0.47, alpha: 1.0),   // #98c379
+                comment: NSColor(red: 0.36, green: 0.39, blue: 0.44, alpha: 1.0),  // #5c6370
+                number: NSColor(red: 0.82, green: 0.60, blue: 0.40, alpha: 1.0),   // #d19a66
+                type: NSColor(red: 0.90, green: 0.75, blue: 0.48, alpha: 1.0),     // #e5c07b
+                function: NSColor(red: 0.38, green: 0.69, blue: 0.94, alpha: 1.0), // #61afef
+                variable: NSColor(red: 0.88, green: 0.42, blue: 0.45, alpha: 1.0), // #e06c75
+                text: NSColor(red: 0.67, green: 0.70, blue: 0.75, alpha: 1.0)      // #abb2bf
             )
 
         case "github":
             return SyntaxColors(
-                keyword: Color(red: 0.84, green: 0.23, blue: 0.29),  // #d73a49
-                string: Color(red: 0.01, green: 0.18, blue: 0.39),   // #032f62
-                comment: Color(red: 0.42, green: 0.45, blue: 0.49),  // #6a737d
-                number: Color(red: 0.00, green: 0.36, blue: 0.60),   // #005cc5
-                type: Color(red: 0.42, green: 0.30, blue: 0.65),     // #6f42c1
-                function: Color(red: 0.42, green: 0.30, blue: 0.65), // #6f42c1
-                variable: Color(red: 0.14, green: 0.16, blue: 0.18), // #24292e
-                text: Color(red: 0.14, green: 0.16, blue: 0.18)      // #24292e
+                keyword: NSColor(red: 0.84, green: 0.23, blue: 0.29, alpha: 1.0),  // #d73a49
+                string: NSColor(red: 0.01, green: 0.18, blue: 0.39, alpha: 1.0),   // #032f62
+                comment: NSColor(red: 0.42, green: 0.45, blue: 0.49, alpha: 1.0),  // #6a737d
+                number: NSColor(red: 0.00, green: 0.36, blue: 0.60, alpha: 1.0),   // #005cc5
+                type: NSColor(red: 0.42, green: 0.30, blue: 0.65, alpha: 1.0),     // #6f42c1
+                function: NSColor(red: 0.42, green: 0.30, blue: 0.65, alpha: 1.0), // #6f42c1
+                variable: NSColor(red: 0.14, green: 0.16, blue: 0.18, alpha: 1.0), // #24292e
+                text: NSColor(red: 0.14, green: 0.16, blue: 0.18, alpha: 1.0)      // #24292e
             )
 
         case "githubDark":
             return SyntaxColors(
-                keyword: Color(red: 1.00, green: 0.48, blue: 0.45),  // #ff7b72
-                string: Color(red: 0.65, green: 0.84, blue: 1.00),   // #a5d6ff
-                comment: Color(red: 0.55, green: 0.58, blue: 0.62),  // #8b949e
-                number: Color(red: 0.47, green: 0.81, blue: 1.00),   // #79c0ff
-                type: Color(red: 0.49, green: 0.80, blue: 0.55),     // #7ee787
-                function: Color(red: 0.85, green: 0.74, blue: 1.00), // #d2a8ff
-                variable: Color(red: 0.79, green: 0.82, blue: 0.85), // #c9d1d9
-                text: Color(red: 0.79, green: 0.82, blue: 0.85)      // #c9d1d9
+                keyword: NSColor(red: 1.00, green: 0.48, blue: 0.45, alpha: 1.0),  // #ff7b72
+                string: NSColor(red: 0.65, green: 0.84, blue: 1.00, alpha: 1.0),   // #a5d6ff
+                comment: NSColor(red: 0.55, green: 0.58, blue: 0.62, alpha: 1.0),  // #8b949e
+                number: NSColor(red: 0.47, green: 0.81, blue: 1.00, alpha: 1.0),   // #79c0ff
+                type: NSColor(red: 0.49, green: 0.80, blue: 0.55, alpha: 1.0),     // #7ee787
+                function: NSColor(red: 0.85, green: 0.74, blue: 1.00, alpha: 1.0), // #d2a8ff
+                variable: NSColor(red: 0.79, green: 0.82, blue: 0.85, alpha: 1.0), // #c9d1d9
+                text: NSColor(red: 0.79, green: 0.82, blue: 0.85, alpha: 1.0)      // #c9d1d9
             )
 
         case "xcode":
             return SyntaxColors(
-                keyword: Color(red: 0.61, green: 0.14, blue: 0.58),  // #9b2393
-                string: Color(red: 0.77, green: 0.10, blue: 0.09),   // #c41a16
-                comment: Color(red: 0.36, green: 0.42, blue: 0.47),  // #5d6c79
-                number: Color(red: 0.11, green: 0.00, blue: 0.81),   // #1c00cf
-                type: Color(red: 0.44, green: 0.26, blue: 0.57),     // #703daa
-                function: Color(red: 0.20, green: 0.34, blue: 0.46), // #326d74
-                variable: Color(red: 0.00, green: 0.00, blue: 0.00), // #000000
-                text: Color(red: 0.00, green: 0.00, blue: 0.00)      // #000000
+                keyword: NSColor(red: 0.61, green: 0.14, blue: 0.58, alpha: 1.0),  // #9b2393
+                string: NSColor(red: 0.77, green: 0.10, blue: 0.09, alpha: 1.0),   // #c41a16
+                comment: NSColor(red: 0.36, green: 0.42, blue: 0.47, alpha: 1.0),  // #5d6c79
+                number: NSColor(red: 0.11, green: 0.00, blue: 0.81, alpha: 1.0),   // #1c00cf
+                type: NSColor(red: 0.44, green: 0.26, blue: 0.57, alpha: 1.0),     // #703daa
+                function: NSColor(red: 0.20, green: 0.34, blue: 0.46, alpha: 1.0), // #326d74
+                variable: NSColor(red: 0.00, green: 0.00, blue: 0.00, alpha: 1.0), // #000000
+                text: NSColor(red: 0.00, green: 0.00, blue: 0.00, alpha: 1.0)      // #000000
             )
 
         case "xcodeDark":
             return SyntaxColors(
-                keyword: Color(red: 0.99, green: 0.37, blue: 0.64),  // #fc5fa3
-                string: Color(red: 0.99, green: 0.42, blue: 0.36),   // #fc6a5d
-                comment: Color(red: 0.50, green: 0.55, blue: 0.60),  // #7f8c98
-                number: Color(red: 0.82, green: 0.78, blue: 0.53),   // #d0c887
-                type: Color(red: 0.36, green: 0.85, blue: 0.76),     // #5dd8c8
-                function: Color(red: 0.40, green: 0.60, blue: 1.00), // #6699ff
-                variable: Color(red: 1.00, green: 1.00, blue: 1.00), // #ffffff
-                text: Color(red: 1.00, green: 1.00, blue: 1.00)      // #ffffff
+                keyword: NSColor(red: 0.99, green: 0.37, blue: 0.64, alpha: 1.0),  // #fc5fa3
+                string: NSColor(red: 0.99, green: 0.42, blue: 0.36, alpha: 1.0),   // #fc6a5d
+                comment: NSColor(red: 0.50, green: 0.55, blue: 0.60, alpha: 1.0),  // #7f8c98
+                number: NSColor(red: 0.82, green: 0.78, blue: 0.53, alpha: 1.0),   // #d0c887
+                type: NSColor(red: 0.36, green: 0.85, blue: 0.76, alpha: 1.0),     // #5dd8c8
+                function: NSColor(red: 0.40, green: 0.60, blue: 1.00, alpha: 1.0), // #6699ff
+                variable: NSColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.0), // #ffffff
+                text: NSColor(red: 1.00, green: 1.00, blue: 1.00, alpha: 1.0)      // #ffffff
             )
 
         case "solarizedLight":
             return SyntaxColors(
-                keyword: Color(red: 0.52, green: 0.60, blue: 0.00),  // #859900
-                string: Color(red: 0.16, green: 0.63, blue: 0.60),   // #2aa198
-                comment: Color(red: 0.58, green: 0.63, blue: 0.63),  // #93a1a1
-                number: Color(red: 0.82, green: 0.43, blue: 0.12),   // #cb4b16
-                type: Color(red: 0.71, green: 0.54, blue: 0.00),     // #b58900
-                function: Color(red: 0.15, green: 0.55, blue: 0.82), // #268bd2
-                variable: Color(red: 0.83, green: 0.21, blue: 0.51), // #d33682
-                text: Color(red: 0.40, green: 0.48, blue: 0.51)      // #657b83
+                keyword: NSColor(red: 0.52, green: 0.60, blue: 0.00, alpha: 1.0),  // #859900
+                string: NSColor(red: 0.16, green: 0.63, blue: 0.60, alpha: 1.0),   // #2aa198
+                comment: NSColor(red: 0.58, green: 0.63, blue: 0.63, alpha: 1.0),  // #93a1a1
+                number: NSColor(red: 0.82, green: 0.43, blue: 0.12, alpha: 1.0),   // #cb4b16
+                type: NSColor(red: 0.71, green: 0.54, blue: 0.00, alpha: 1.0),     // #b58900
+                function: NSColor(red: 0.15, green: 0.55, blue: 0.82, alpha: 1.0), // #268bd2
+                variable: NSColor(red: 0.83, green: 0.21, blue: 0.51, alpha: 1.0), // #d33682
+                text: NSColor(red: 0.40, green: 0.48, blue: 0.51, alpha: 1.0)      // #657b83
             )
 
         case "solarizedDark":
             return SyntaxColors(
-                keyword: Color(red: 0.52, green: 0.60, blue: 0.00),  // #859900
-                string: Color(red: 0.16, green: 0.63, blue: 0.60),   // #2aa198
-                comment: Color(red: 0.35, green: 0.43, blue: 0.46),  // #586e75
-                number: Color(red: 0.82, green: 0.43, blue: 0.12),   // #cb4b16
-                type: Color(red: 0.71, green: 0.54, blue: 0.00),     // #b58900
-                function: Color(red: 0.15, green: 0.55, blue: 0.82), // #268bd2
-                variable: Color(red: 0.83, green: 0.21, blue: 0.51), // #d33682
-                text: Color(red: 0.51, green: 0.58, blue: 0.59)      // #839496
+                keyword: NSColor(red: 0.52, green: 0.60, blue: 0.00, alpha: 1.0),  // #859900
+                string: NSColor(red: 0.16, green: 0.63, blue: 0.60, alpha: 1.0),   // #2aa198
+                comment: NSColor(red: 0.35, green: 0.43, blue: 0.46, alpha: 1.0),  // #586e75
+                number: NSColor(red: 0.82, green: 0.43, blue: 0.12, alpha: 1.0),   // #cb4b16
+                type: NSColor(red: 0.71, green: 0.54, blue: 0.00, alpha: 1.0),     // #b58900
+                function: NSColor(red: 0.15, green: 0.55, blue: 0.82, alpha: 1.0), // #268bd2
+                variable: NSColor(red: 0.83, green: 0.21, blue: 0.51, alpha: 1.0), // #d33682
+                text: NSColor(red: 0.51, green: 0.58, blue: 0.59, alpha: 1.0)      // #839496
             )
 
         case "tokyoNight":
             return SyntaxColors(
-                keyword: Color(red: 0.73, green: 0.60, blue: 0.97),  // #bb9af7
-                string: Color(red: 0.62, green: 0.81, blue: 0.42),   // #9ece6a
-                comment: Color(red: 0.34, green: 0.37, blue: 0.54),  // #565f89
-                number: Color(red: 1.00, green: 0.62, blue: 0.47),   // #ff9e64
-                type: Color(red: 0.17, green: 0.80, blue: 0.87),     // #2ac3de
-                function: Color(red: 0.48, green: 0.64, blue: 0.97), // #7aa2f7
-                variable: Color(red: 0.78, green: 0.52, blue: 0.93), // #c678dd
-                text: Color(red: 0.66, green: 0.69, blue: 0.84)      // #a9b1d6
+                keyword: NSColor(red: 0.73, green: 0.60, blue: 0.97, alpha: 1.0),  // #bb9af7
+                string: NSColor(red: 0.62, green: 0.81, blue: 0.42, alpha: 1.0),   // #9ece6a
+                comment: NSColor(red: 0.34, green: 0.37, blue: 0.54, alpha: 1.0),  // #565f89
+                number: NSColor(red: 1.00, green: 0.62, blue: 0.47, alpha: 1.0),   // #ff9e64
+                type: NSColor(red: 0.17, green: 0.80, blue: 0.87, alpha: 1.0),     // #2ac3de
+                function: NSColor(red: 0.48, green: 0.64, blue: 0.97, alpha: 1.0), // #7aa2f7
+                variable: NSColor(red: 0.78, green: 0.52, blue: 0.93, alpha: 1.0), // #c678dd
+                text: NSColor(red: 0.66, green: 0.69, blue: 0.84, alpha: 1.0)      // #a9b1d6
             )
 
         default:

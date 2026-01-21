@@ -1,6 +1,32 @@
 import Foundation
 import os.log
 
+// MARK: - Performance Logging (DEBUG only)
+
+/// Performance logging that compiles to no-op in Release builds.
+/// This removes the 2-5ms overhead from NSLog calls in hot paths.
+#if DEBUG
+/// Log performance metrics (DEBUG builds only)
+/// - Parameter message: The message to log (supports string interpolation or format strings)
+/// - Parameter args: Optional arguments for NSLog-style format strings
+@inline(__always)
+func perfLog(_ message: String, _ args: CVarArg...) {
+    if args.isEmpty {
+        NSLog("%@", message)
+    } else {
+        withVaList(args) { va_list in
+            NSLogv(message, va_list)
+        }
+    }
+}
+#else
+/// Performance logging disabled in Release builds
+@inline(__always)
+func perfLog(_ message: String, _ args: CVarArg...) {
+    // No-op in Release builds - compiler optimizes this away
+}
+#endif
+
 /// Centralized logging for dotViewer using Apple's unified logging system
 /// Logs can be viewed in Console.app by filtering for subsystem "com.stianlars1.dotViewer"
 enum DotViewerLogger {

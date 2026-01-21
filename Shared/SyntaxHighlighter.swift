@@ -16,7 +16,7 @@ struct SyntaxHighlighter: Sendable {
     func highlight(code: String, language: String?) async throws -> AttributedString {
         let startTime = CFAbsoluteTimeGetCurrent()
         let fastSupported = FastSyntaxHighlighter.isSupported(language)
-        NSLog("[dotViewer PERF] SyntaxHighlighter.highlight START - language: %@, codeLen: %d chars, fastSupported: %@", language ?? "nil", code.count, fastSupported ? "YES" : "NO")
+        perfLog("[dotViewer PERF] SyntaxHighlighter.highlight START - language: %@, codeLen: %d chars, fastSupported: %@", language ?? "nil", code.count, fastSupported ? "YES" : "NO")
 
         // Try FastSyntaxHighlighter first for supported languages (native Swift, fast)
         if fastSupported {
@@ -24,21 +24,21 @@ struct SyntaxHighlighter: Sendable {
             let colors = await MainActor.run {
                 ThemeManager.shared.syntaxColors
             }
-            NSLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - colorStart)
+            perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - colorStart)
 
             let highlightStart = CFAbsoluteTimeGetCurrent()
             let result = fastHighlighter.highlight(code: code, language: language, colors: colors)
-            NSLog("[dotViewer PERF] [SH +%.3fs] FastSyntaxHighlighter.highlight took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - highlightStart)
-            NSLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: Fast", CFAbsoluteTimeGetCurrent() - startTime)
+            perfLog("[dotViewer PERF] [SH +%.3fs] FastSyntaxHighlighter.highlight took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - highlightStart)
+            perfLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: Fast", CFAbsoluteTimeGetCurrent() - startTime)
             return result
         }
 
         // Fall back to HighlightSwift for unsupported languages
-        NSLog("[dotViewer PERF] [SH +%.3fs] falling back to HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
+        perfLog("[dotViewer PERF] [SH +%.3fs] falling back to HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
         let fallbackStart = CFAbsoluteTimeGetCurrent()
         let result = try await highlightWithFallback(code: code, language: language)
-        NSLog("[dotViewer PERF] [SH +%.3fs] HighlightSwift fallback took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - fallbackStart)
-        NSLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
+        perfLog("[dotViewer PERF] [SH +%.3fs] HighlightSwift fallback took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - fallbackStart)
+        perfLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
         return result
     }
 
@@ -52,25 +52,25 @@ struct SyntaxHighlighter: Sendable {
             let mode: HighlightMode
             if let lang = language {
                 mode = .languageAlias(lang)
-                NSLog("[dotViewer PERF] [HS] using .languageAlias(%@)", lang)
+                perfLog("[dotViewer PERF] [HS] using .languageAlias(%@)", lang)
             } else {
-                NSLog("[dotViewer PERF] [HS] WARNING: No language detected, using plaintext to avoid auto-detection")
+                perfLog("[dotViewer PERF] [HS] WARNING: No language detected, using plaintext to avoid auto-detection")
                 mode = .languageAlias("plaintext")
             }
-            NSLog("[dotViewer PERF] highlightWithFallback called - language: %@, mode: languageAlias", language ?? "nil")
+            perfLog("[dotViewer PERF] highlightWithFallback called - language: %@, mode: languageAlias", language ?? "nil")
 
             // Get colors based on user's theme setting
             let colorStart = CFAbsoluteTimeGetCurrent()
             let colors = resolveColors()
-            NSLog("[dotViewer PERF] [HS +%.3fs] resolveColors took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - colorStart)
+            perfLog("[dotViewer PERF] [HS +%.3fs] resolveColors took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - colorStart)
 
             let requestStart = CFAbsoluteTimeGetCurrent()
             let result = try await highlight.request(code, mode: mode, colors: colors)
-            NSLog("[dotViewer PERF] [HS +%.3fs] highlight.request took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - requestStart)
+            perfLog("[dotViewer PERF] [HS +%.3fs] highlight.request took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - requestStart)
 
             return result.attributedText
         } catch {
-            NSLog("[dotViewer PERF] [HS] ERROR: %@, returning plain text", error.localizedDescription)
+            perfLog("[dotViewer PERF] [HS] ERROR: %@, returning plain text", error.localizedDescription)
             // Fallback: return plain text with monospace font
             let fontSize = SharedSettings.shared.fontSize
             var plainText = AttributedString(code)

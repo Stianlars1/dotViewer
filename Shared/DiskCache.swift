@@ -33,7 +33,7 @@ final class DiskCache: @unchecked Sendable {
                 .appendingPathComponent("HighlightCache", isDirectory: true)
             try? fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
             self.cacheDirectory = tempDir
-            NSLog("[dotViewer Cache] WARNING: App Group container not available, using temp directory")
+            perfLog("[dotViewer Cache] WARNING: App Group container not available, using temp directory")
             return
         }
 
@@ -45,16 +45,17 @@ final class DiskCache: @unchecked Sendable {
         // Create directory if needed
         try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
 
-        NSLog("[dotViewer Cache] DiskCache initialized at: \(cacheDirectory.path)")
+        perfLog("[dotViewer Cache] DiskCache initialized at: \(cacheDirectory.path)")
     }
 
     // MARK: - Cache Key Generation
 
-    /// Generate cache key from file metadata + theme.
-    /// Key = SHA256(filePath + modificationDate + theme)
-    /// This ensures cache invalidates when: file changes, file moves, or theme changes.
-    func cacheKey(filePath: String, modificationDate: Date, theme: String) -> String {
-        let input = "\(filePath)|\(modificationDate.timeIntervalSince1970)|\(theme)"
+    /// Generate cache key from file metadata + theme + language.
+    /// Key = SHA256(filePath + modificationDate + theme + language)
+    /// This ensures cache invalidates when: file changes, file moves, theme changes, or language detection changes.
+    func cacheKey(filePath: String, modificationDate: Date, theme: String, language: String?) -> String {
+        let lang = language ?? "unknown"
+        let input = "\(filePath)|\(modificationDate.timeIntervalSince1970)|\(theme)|\(lang)"
         let hash = SHA256.hash(data: Data(input.utf8))
         return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
@@ -85,11 +86,11 @@ final class DiskCache: @unchecked Sendable {
                         ofItemAtPath: fileURL.path
                     )
                 }
-                NSLog("[dotViewer Cache] Disk HIT for key: \(key.prefix(16))...")
+                perfLog("[dotViewer Cache] Disk HIT for key: \(key.prefix(16))...")
                 return AttributedString(nsAttrString)
             }
         } catch {
-            NSLog("[dotViewer Cache] Disk read error: \(error.localizedDescription)")
+            perfLog("[dotViewer Cache] Disk read error: \(error.localizedDescription)")
             // Remove corrupted file asynchronously
             writeQueue.async {
                 try? FileManager.default.removeItem(at: fileURL)
@@ -116,12 +117,12 @@ final class DiskCache: @unchecked Sendable {
                     requiringSecureCoding: false
                 )
                 try data.write(to: fileURL, options: .atomic)
-                NSLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(data.count) bytes)")
+                perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(data.count) bytes)")
 
                 // Trigger cleanup periodically
                 self.incrementWriteAndCleanupIfNeeded()
             } catch {
-                NSLog("[dotViewer Cache] Disk write error: \(error.localizedDescription)")
+                perfLog("[dotViewer Cache] Disk write error: \(error.localizedDescription)")
             }
         }
     }
@@ -167,7 +168,7 @@ final class DiskCache: @unchecked Sendable {
                 return
             }
 
-            NSLog("[dotViewer Cache] Cleanup: \(fileInfos.count) entries, \(totalSize / 1024)KB")
+            perfLog("[dotViewer Cache] Cleanup: \(fileInfos.count) entries, \(totalSize / 1024)KB")
 
             // Sort by modification date (oldest first for LRU eviction)
             fileInfos.sort { $0.date < $1.date }
@@ -182,10 +183,10 @@ final class DiskCache: @unchecked Sendable {
             }
 
             if removed > 0 {
-                NSLog("[dotViewer Cache] Cleaned up \(removed) old entries")
+                perfLog("[dotViewer Cache] Cleaned up \(removed) old entries")
             }
         } catch {
-            NSLog("[dotViewer Cache] Cleanup error: \(error.localizedDescription)")
+            perfLog("[dotViewer Cache] Cleanup error: \(error.localizedDescription)")
         }
     }
 
@@ -201,9 +202,9 @@ final class DiskCache: @unchecked Sendable {
                 for file in files {
                     try? self.fileManager.removeItem(at: file)
                 }
-                NSLog("[dotViewer Cache] Cache cleared")
+                perfLog("[dotViewer Cache] Cache cleared")
             } catch {
-                NSLog("[dotViewer Cache] Clear error: \(error.localizedDescription)")
+                perfLog("[dotViewer Cache] Clear error: \(error.localizedDescription)")
             }
         }
     }

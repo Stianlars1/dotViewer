@@ -29,7 +29,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
         // E2E PERFORMANCE TRACKING: Start time for entire preview pipeline
-        let e2eStartTime = CFAbsoluteTimeGetCurrent()
+        let _ = CFAbsoluteTimeGetCurrent()  // e2eStartTime - kept for manual timing analysis
         NSLog("═══════════════════════════════════════════════════════════════")
         NSLog("[dotViewer E2E] ▶▶▶ PREVIEW START: %@", url.lastPathComponent)
         NSLog("═══════════════════════════════════════════════════════════════")
@@ -86,12 +86,33 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
             // Count lines efficiently using UTF-8 byte scanning
             // This is O(n) but much faster than .components(separatedBy:) which allocates memory
-            let newlineByte = UInt8(ascii: "\n")
+            // Handles all line ending formats: \n (Unix), \r\n (Windows), \r (old Mac)
+            let lfByte = UInt8(ascii: "\n")
+            let crByte = UInt8(ascii: "\r")
             var totalLineCount = 1
+            var previousWasCR = false
             for byte in content.utf8 {
-                if byte == newlineByte {
+                if byte == lfByte {
                     totalLineCount += 1
+                    previousWasCR = false
+                } else if byte == crByte {
+                    // Don't count yet - wait to see if followed by \n
+                    if previousWasCR {
+                        // Previous \r was standalone (old Mac format)
+                        totalLineCount += 1
+                    }
+                    previousWasCR = true
+                } else {
+                    if previousWasCR {
+                        // Previous \r was standalone (old Mac format)
+                        totalLineCount += 1
+                    }
+                    previousWasCR = false
                 }
+            }
+            // Handle trailing \r if file ends with it
+            if previousWasCR {
+                totalLineCount += 1
             }
 
             let lineTruncated = totalLineCount > maxPreviewLines
@@ -120,7 +141,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 originalLines: totalLineCount
             )
 
-            // Check cache for pre-highlighted content (includes theme for invalidation)
+            // Check cache for pre-highlighted content (includes theme and language for invalidation)
             var cachedHighlight: AttributedString? = nil
             let effectiveLineCount = lineTruncated ? maxPreviewLines : totalLineCount
             if let modDate = modDate {
@@ -128,10 +149,11 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 cachedHighlight = HighlightCache.shared.get(
                     path: url.path,
                     modDate: modDate,
-                    theme: theme
+                    theme: theme,
+                    language: language
                 )
                 if cachedHighlight != nil {
-                    NSLog("[dotViewer PERF] Cache HIT in preparePreviewOfFile - skipping highlight")
+                    perfLog("[dotViewer PERF] Cache HIT in preparePreviewOfFile - skipping highlight")
                 }
             }
 
