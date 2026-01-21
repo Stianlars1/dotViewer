@@ -36,6 +36,8 @@
 		A1000034 /* MarkdownStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000024 /* MarkdownStyles.swift */; };
 		A1000040 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000001 /* HighlightSwift */; };
 		A1000041 /* HighlightSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A5000002 /* HighlightSwift */; };
+		A1000042 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = A5000004 /* Highlightr */; };
+		A1000043 /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = A5000005 /* Highlightr */; };
 		A1000050 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000051 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000060 /* ExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000040 /* ExtensionHelper.swift */; };
@@ -103,6 +105,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000040 /* HighlightSwift in Frameworks */,
+				A1000042 /* Highlightr in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,6 +114,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1000041 /* HighlightSwift in Frameworks */,
+				A1000043 /* Highlightr in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,6 +206,7 @@
 			name = dotViewer;
 			packageProductDependencies = (
 				A5000001 /* HighlightSwift */,
+				A5000004 /* Highlightr */,
 			);
 			productName = dotViewer;
 			productReference = A3000003 /* dotViewer.app */;
@@ -222,6 +227,7 @@
 			name = QuickLookPreview;
 			packageProductDependencies = (
 				A5000002 /* HighlightSwift */,
+				A5000005 /* Highlightr */,
 			);
 			productName = QuickLookPreview;
 			productReference = A3000002 /* QuickLookPreview.appex */;
@@ -256,6 +262,7 @@
 			mainGroup = A6000000;
 			packageReferences = (
 				A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */,
+				A5000003 /* XCRemoteSwiftPackageReference "Highlightr" */,
 			);
 			productRefGroup = A6000004 /* Products */;
 			projectDirPath = "";
@@ -652,6 +659,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		A5000003 /* XCRemoteSwiftPackageReference "Highlightr" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/raspu/Highlightr";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -664,6 +679,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A5000000 /* XCRemoteSwiftPackageReference "HighlightSwift" */;
 			productName = HighlightSwift;
+		};
+		A5000004 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5000003 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
+		};
+		A5000005 /* Highlightr */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A5000003 /* XCRemoteSwiftPackageReference "Highlightr" */;
+			productName = Highlightr;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
