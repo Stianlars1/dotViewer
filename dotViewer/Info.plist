@@ -390,16 +390,31 @@
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
+					<!-- Bash -->
 					<string>bashrc</string>
 					<string>bash_profile</string>
 					<string>bash_aliases</string>
 					<string>bash_logout</string>
+					<string>bash_history</string>
+					<!-- Zsh -->
 					<string>zshrc</string>
 					<string>zshenv</string>
 					<string>zprofile</string>
 					<string>zlogin</string>
 					<string>zlogout</string>
+					<!-- Generic Shell -->
 					<string>profile</string>
+					<string>login</string>
+					<string>logout</string>
+					<!-- C Shell -->
+					<string>cshrc</string>
+					<string>tcshrc</string>
+					<!-- Korn Shell -->
+					<string>kshrc</string>
+					<!-- Other Shell Configs -->
+					<string>inputrc</string>
+					<string>screenrc</string>
+					<string>dircolors</string>
 				</array>
 			</dict>
 		</dict>
@@ -420,6 +435,429 @@
 					<string>gitignore</string>
 					<string>gitattributes</string>
 					<string>gitmodules</string>
+					<string>gitignore_global</string>
+					<string>gitmessage</string>
+					<string>gitkeep</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Version Control (other) -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Version Control Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vcs-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<!-- Mercurial -->
+					<string>hgrc</string>
+					<string>hgignore</string>
+					<!-- SVN -->
+					<string>svnignore</string>
+					<!-- CVS -->
+					<string>cvsignore</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Editor Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Editor Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.editor-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<!-- Vim -->
+					<string>vimrc</string>
+					<string>gvimrc</string>
+					<string>exrc</string>
+					<string>viminfo</string>
+					<!-- Neovim -->
+					<string>nvim</string>
+					<!-- Nano -->
+					<string>nanorc</string>
+					<!-- Emacs -->
+					<string>emacs</string>
+					<string>spacemacs</string>
+					<!-- Universal -->
+					<string>editorconfig</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Docker/Container -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Docker Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.docker-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dockerignore</string>
+					<string>docker-compose</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- NPM/Node -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Node.js Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.node-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>npmrc</string>
+					<string>npmignore</string>
+					<string>nvmrc</string>
+					<string>node-version</string>
+					<string>babelrc</string>
+					<string>browserslistrc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Python Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.python-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pylintrc</string>
+					<string>flake8</string>
+					<string>pep8</string>
+					<string>pypirc</string>
+					<string>python-version</string>
+					<string>coveragerc</string>
+					<string>pydistutils</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Ruby Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ruby-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ruby-version</string>
+					<string>ruby-gemset</string>
+					<string>rvmrc</string>
+					<string>gemrc</string>
+					<string>irbrc</string>
+					<string>pryrc</string>
+					<string>rspec</string>
+					<string>simplecov</string>
+					<string>rubocop</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Rust Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Rust Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.rust-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rustfmt</string>
+					<string>clippy</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Go Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Go Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.go-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>go-version</string>
+					<string>golangci</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- IDE/Tool Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>IDE Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ide-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<!-- C/C++ -->
+					<string>clang-format</string>
+					<string>clang-tidy</string>
+					<string>ccls</string>
+					<string>clangd</string>
+					<!-- Debuggers -->
+					<string>gdbinit</string>
+					<string>lldbinit</string>
+					<!-- Sublime -->
+					<string>sublime-project</string>
+					<string>sublime-workspace</string>
+					<!-- Eclipse -->
+					<string>project</string>
+					<string>classpath</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Testing Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Test Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.test-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nycrc</string>
+					<string>jestrc</string>
+					<string>mocharc</string>
+					<string>c8rc</string>
+					<string>avarc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Linting Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Linter Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.lint-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>eslintrc</string>
+					<string>eslintignore</string>
+					<string>prettierrc</string>
+					<string>prettierignore</string>
+					<string>stylelintrc</string>
+					<string>stylelintignore</string>
+					<string>markdownlintrc</string>
+					<string>markdownlint</string>
+					<string>remarkrc</string>
+					<string>htmlhintrc</string>
+					<string>csslintrc</string>
+					<string>sasslintrc</string>
+					<string>yamllint</string>
+					<string>shellcheckrc</string>
+					<string>hadolint</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- CI/CD Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CI/CD Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cicd-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>travis</string>
+					<string>gitlab-ci</string>
+					<string>drone</string>
+					<string>appveyor</string>
+					<string>circleci</string>
+					<string>buildkite</string>
+					<string>jenkins</string>
+					<string>azure-pipelines</string>
+					<string>github</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Security/Network Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Security Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.security-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>netrc</string>
+					<string>pgpass</string>
+					<string>curlrc</string>
+					<string>wgetrc</string>
+					<string>ssh</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Search Tool Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Search Tool Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.search-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ackrc</string>
+					<string>agignore</string>
+					<string>rgignore</string>
+					<string>ignore</string>
+					<string>fdignore</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Terminal Multiplexer Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Terminal Multiplexer Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.tmux-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tmux</string>
+					<string>tmux.conf</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- ASDF Version Manager -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>ASDF Version Manager</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.asdf-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tool-versions</string>
+					<string>asdfrc</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- X11/Desktop Configs -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>X11 Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.x11-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>Xresources</string>
+					<string>Xdefaults</string>
+					<string>xinitrc</string>
+					<string>xprofile</string>
+					<string>xsession</string>
+					<string>Xauthority</string>
+				</array>
+			</dict>
+		</dict>
+		<!-- Environment/Direnv -->
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment Configuration</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.envrc-config</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>envrc</string>
+					<string>direnvrc</string>
 				</array>
 			</dict>
 		</dict>
