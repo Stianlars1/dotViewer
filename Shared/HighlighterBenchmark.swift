@@ -3,6 +3,13 @@ import SwiftUI
 import HighlightSwift
 import Highlightr
 
+// MARK: - DEBUG/BENCHMARKING UTILITY
+// This file is for performance benchmarking and debugging only.
+// It is NOT used in the production highlighting path.
+// - Production uses: FastSyntaxHighlighter (primary) + HighlightSwift (fallback)
+// - Highlightr dependency exists solely for this benchmark utility
+// TODO: P6-01 - Consider excluding this file from Release builds
+
 /// Benchmark utility for comparing syntax highlighter performance
 /// Compares: FastSyntaxHighlighter (Swift-native), HighlightSwift (JSCore), Highlightr (JSCore)
 struct HighlighterBenchmark: Sendable {
