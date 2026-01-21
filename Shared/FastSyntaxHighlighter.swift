@@ -101,25 +101,35 @@ struct FastSyntaxHighlighter: Sendable {
     ///   - colors: Syntax colors to use
     /// - Returns: Attributed string with syntax highlighting
     func highlight(code: String, language: String?, colors: SyntaxColors) -> AttributedString {
+        let totalStart = CFAbsoluteTimeGetCurrent()
+        NSLog("[dotViewer PERF] FastSyntaxHighlighter.highlight START - codeLen: %d chars, language: %@", code.count, language ?? "nil")
+
         var result = AttributedString(code)
         result.foregroundColor = colors.text
 
         // Build index mapping for efficient attribute application
+        var sectionStart = CFAbsoluteTimeGetCurrent()
         let mapping = buildIndexMapping(code: code, attributed: result)
         let codeNS = code as NSString
+        NSLog("[dotViewer PERF] [Fast +%.3fs] index mapping: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // Get language-specific patterns
+        sectionStart = CFAbsoluteTimeGetCurrent()
         let patterns = languagePatterns(for: language)
+        NSLog("[dotViewer PERF] [Fast +%.3fs] languagePatterns: %.3fs (keywords: %d, types: %d, builtins: %d)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.keywords.count, patterns.types.count, patterns.builtins.count)
 
         // Apply highlighting in order (more specific patterns first)
 
         // 1. Multi-line strings (before single-line strings)
+        sectionStart = CFAbsoluteTimeGetCurrent()
         if patterns.supportsMultilineStrings {
             applyHighlight(regex: Self.tripleDoubleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
             applyHighlight(regex: Self.tripleSingleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
         }
+        let multilineTime = CFAbsoluteTimeGetCurrent() - sectionStart
 
         // 2. Comments (before strings to handle commented strings correctly)
+        sectionStart = CFAbsoluteTimeGetCurrent()
         if patterns.supportsLineComments {
             applyHighlight(regex: Self.lineCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
         }
@@ -132,19 +142,25 @@ struct FastSyntaxHighlighter: Sendable {
         if patterns.supportsHtmlComments {
             applyHighlight(regex: Self.htmlCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] comments: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 3. Strings
+        sectionStart = CFAbsoluteTimeGetCurrent()
         applyHighlight(regex: Self.doubleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
         applyHighlight(regex: Self.singleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
         if patterns.supportsBacktickStrings {
             applyHighlight(regex: Self.backtickStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] strings: %.3fs (multiline was: %.3fs)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, multilineTime)
 
         // 4. Numbers
+        sectionStart = CFAbsoluteTimeGetCurrent()
         applyHighlight(regex: Self.hexNumberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
         applyHighlight(regex: Self.numberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
+        NSLog("[dotViewer PERF] [Fast +%.3fs] numbers: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 5. Language-specific patterns
+        sectionStart = CFAbsoluteTimeGetCurrent()
         if patterns.supportsHtmlTags {
             applyHighlight(regex: Self.htmlTagRegex, to: &result, code: codeNS, mapping: mapping, color: colors.keyword)
             applyHighlight(regex: Self.htmlAttributeRegex, to: &result, code: codeNS, mapping: mapping, color: colors.type)
@@ -153,22 +169,30 @@ struct FastSyntaxHighlighter: Sendable {
         if patterns.supportsJsonKeys {
             applyHighlight(regex: Self.jsonKeyRegex, to: &result, code: codeNS, mapping: mapping, color: colors.keyword)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] language-specific (html/json): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 6. Keywords
+        sectionStart = CFAbsoluteTimeGetCurrent()
         for keyword in patterns.keywords {
             highlightWord(in: &result, code: codeNS, word: keyword, mapping: mapping, color: colors.keyword)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 7. Types
+        sectionStart = CFAbsoluteTimeGetCurrent()
         for typeName in patterns.types {
             highlightWord(in: &result, code: codeNS, word: typeName, mapping: mapping, color: colors.type)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 8. Built-in functions (if any)
+        sectionStart = CFAbsoluteTimeGetCurrent()
         for builtin in patterns.builtins {
             highlightWord(in: &result, code: codeNS, word: builtin, mapping: mapping, color: colors.function)
         }
+        NSLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
+        NSLog("[dotViewer PERF] FastSyntaxHighlighter.highlight DONE - total: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart)
         return result
     }
 
