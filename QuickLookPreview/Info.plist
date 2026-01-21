@@ -132,6 +132,23 @@
 				<string>com.apple.dt.interfacebuilder.document.xib</string>
 				<string>com.apple.dt.document.xcprivacy</string>
 
+				<!-- Xcode Project Files -->
+				<string>com.apple.xcode.entitlements-property-list</string>
+				<string>com.apple.xcode.xcconfig</string>
+				<string>com.apple.xcode.xcscheme</string>
+				<string>com.apple.xcode.xcworkspacedata</string>
+				<string>com.apple.xcode.pbxproject</string>
+				<string>com.apple.xcode.playground</string>
+				<string>com.apple.dt.playground</string>
+				<string>com.apple.dt.playgroundpage</string>
+				<string>com.apple.xcode.storyboard</string>
+				<string>com.apple.xcode.xib</string>
+				<string>com.apple.xcode.stringsdict</string>
+				<string>com.apple.dt.document.scripting-definition</string>
+				<string>com.apple.xcode.intent-definition</string>
+				<string>com.apple.xcode.xcdatamodel</string>
+				<string>com.apple.xcode.xcdatamodeld</string>
+
 				<!-- Build Systems -->
 				<string>public.makefile</string>
 				<string>org.cmake.source</string>
