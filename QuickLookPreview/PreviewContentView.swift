@@ -149,22 +149,28 @@ struct PreviewContentView: View {
     }
 
     private func highlightCode() async {
-        // Track highlight timing for performance monitoring
+        // PERFORMANCE DIAGNOSTICS: Detailed timing instrumentation
         let startTime = CFAbsoluteTimeGetCurrent()
+        NSLog("[dotViewer PERF] highlightCode START - file: %@, lines: %d, language: %@", state.filename, state.lineCount, state.language ?? "nil")
+
         defer {
-            let elapsed = (CFAbsoluteTimeGetCurrent() - startTime) * 1000
+            let elapsed = CFAbsoluteTimeGetCurrent() - startTime
             let usedFast = FastSyntaxHighlighter.isSupported(state.language)
-            DotViewerLogger.preview.info("Highlight \(self.state.filename): \(String(format: "%.1f", elapsed))ms (\(usedFast ? "fast" : "HighlightSwift"), \(self.state.lineCount) lines)")
+            NSLog("[dotViewer PERF] highlightCode COMPLETE - total: %.3fs, highlighter: %@", elapsed, usedFast ? "Fast" : "HighlightSwift")
+            DotViewerLogger.preview.info("Highlight \(self.state.filename): \(String(format: "%.1f", elapsed * 1000))ms (\(usedFast ? "fast" : "HighlightSwift"), \(self.state.lineCount) lines)")
         }
 
         // Use pre-highlighted content if available (from cache or pre-warming)
+        NSLog("[dotViewer PERF] [+%.3fs] cache check START", CFAbsoluteTimeGetCurrent() - startTime)
         if let preHighlighted = state.preHighlightedContent {
+            NSLog("[dotViewer PERF] [+%.3fs] cache check: HIT (pre-highlighted)", CFAbsoluteTimeGetCurrent() - startTime)
             highlightedContent = preHighlighted
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
             return
         }
+        NSLog("[dotViewer PERF] [+%.3fs] cache check: MISS", CFAbsoluteTimeGetCurrent() - startTime)
 
         // Skip syntax highlighting for very large files (>2000 lines) - show plain text immediately
         // This prevents the UI from hanging on massive files like package-lock.json
@@ -172,6 +178,7 @@ struct PreviewContentView: View {
 
         if state.lineCount > maxLinesForHighlighting {
             // Large file - skip highlighting entirely, show plain text immediately
+            NSLog("[dotViewer PERF] [+%.3fs] SKIP: file too large (%d > %d lines)", CFAbsoluteTimeGetCurrent() - startTime, state.lineCount, maxLinesForHighlighting)
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
@@ -182,6 +189,7 @@ struct PreviewContentView: View {
         // Files like .viminfo have no known language, and HighlightSwift's automatic mode
         // runs multiple parsers which can take 10+ seconds
         if state.language == nil {
+            NSLog("[dotViewer PERF] [+%.3fs] SKIP: no language detected (would trigger slow auto-detection)", CFAbsoluteTimeGetCurrent() - startTime)
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
@@ -191,6 +199,7 @@ struct PreviewContentView: View {
         // Skip highlighting for files explicitly marked as plaintext (history files, logs, etc.)
         // These files have no meaningful syntax and would just waste CPU cycles
         if state.language == "plaintext" {
+            NSLog("[dotViewer PERF] [+%.3fs] SKIP: plaintext file (no syntax to highlight)", CFAbsoluteTimeGetCurrent() - startTime)
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
@@ -199,7 +208,10 @@ struct PreviewContentView: View {
 
         // Use custom highlighting for markdown (HighlightSwift has bugs that cause red text)
         if state.language == "markdown" {
+            NSLog("[dotViewer PERF] [+%.3fs] PATH: markdown (custom highlighting)", CFAbsoluteTimeGetCurrent() - startTime)
+            let markdownStart = CFAbsoluteTimeGetCurrent()
             let result = highlightMarkdownRaw(state.content)
+            NSLog("[dotViewer PERF] [+%.3fs] markdown highlighting took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - markdownStart)
             highlightedContent = result
             // Cache the result
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
@@ -214,6 +226,7 @@ struct PreviewContentView: View {
         // Content-based fast path: skip highlighting for files that don't look like code
         // This catches data files, logs, and other non-code content that has a detected language
         if shouldSkipHighlightingBasedOnContent(state.content) {
+            NSLog("[dotViewer PERF] [+%.3fs] SKIP: content-based heuristic (not code-like)", CFAbsoluteTimeGetCurrent() - startTime)
             withAnimation(.easeIn(duration: 0.15)) {
                 isReady = true
             }
@@ -221,8 +234,12 @@ struct PreviewContentView: View {
         }
 
         // For other files, use SyntaxHighlighter (which uses FastSyntaxHighlighter for supported languages)
+        let isFastSupported = FastSyntaxHighlighter.isSupported(state.language)
+        NSLog("[dotViewer PERF] [+%.3fs] PATH: SyntaxHighlighter (FastSyntaxHighlighter supported: %@)", CFAbsoluteTimeGetCurrent() - startTime, isFastSupported ? "YES" : "NO")
+
         let highlighter = SyntaxHighlighter()
         let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
+        let highlightStart = CFAbsoluteTimeGetCurrent()
 
         // Use TaskGroup for reliable timeout with proper cancellation propagation
         let result: AttributedString? = await withTaskGroup(of: AttributedString?.self) { group in
@@ -263,16 +280,21 @@ struct PreviewContentView: View {
             return highlighted
         }
 
+        let highlightDuration = CFAbsoluteTimeGetCurrent() - highlightStart
+        NSLog("[dotViewer PERF] [+%.3fs] SyntaxHighlighter.highlight took: %.3fs, result: %@", CFAbsoluteTimeGetCurrent() - startTime, highlightDuration, result != nil ? "success" : "nil (timeout?)")
+
         // Use result if available
         if let highlighted = result {
             highlightedContent = highlighted
             // Cache the result
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
+                NSLog("[dotViewer PERF] [+%.3fs] caching result", CFAbsoluteTimeGetCurrent() - startTime)
                 HighlightCache.shared.set(path: path, modDate: modDate, highlighted: highlighted)
             }
         }
 
         // Fade in the content smoothly (whether highlighting succeeded or timed out)
+        NSLog("[dotViewer PERF] [+%.3fs] setting isReady = true, starting animation", CFAbsoluteTimeGetCurrent() - startTime)
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }
