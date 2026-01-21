@@ -2,8 +2,9 @@
 
 ## Milestones
 
-- ✅ [v1.0 Bug-Fix Release](milestones/v1.0-ROADMAP.md) — Phases 1-4 (shipped 2026-01-19)
-- 🚧 **v1.1 App Store Submission** — Phases 5-12 (in progress)
+- [v1.0 Bug-Fix Release](milestones/v1.0-ROADMAP.md) — Phases 1-4 (shipped 2026-01-19)
+- **[v1.1 Performance Overhaul](milestones/v1.1-performance-ROADMAP.md)** — Phases P1-P6 (IN PROGRESS - BLOCKING)
+- v1.2 App Store Submission — Phases 6-12 (QUEUED)
 
 ## Completed Milestones
 
@@ -17,114 +18,123 @@
 
 </details>
 
+<details>
+<summary>v1.1 App Store Assets (Phase 5) — COMPLETED 2026-01-21</summary>
+
+- [x] Phase 5: App Store Assets (1/1 plan) — completed 2026-01-21
+
+</details>
+
 ## Progress
 
-| Phase | Milestone | Plans Complete | Status | Completed |
-|-------|-----------|----------------|--------|-----------|
-| 1. Foundation & UTI Fixes | v1.0 | 3/3 | Complete | 2026-01-15 |
-| 2. UI Bug Fixes | v1.0 | 3/3 | Complete | 2026-01-16 |
-| 3. Performance & Syntax | v1.0 | 2/2 | Complete | 2026-01-19 |
-| 4. App Store Preparation | v1.0 | 1/1 | Complete | 2026-01-19 |
-| 5. App Store Assets | v1.1 | 1/1 | Complete | 2026-01-21 |
-| 5.1. Critical Fixes | v1.1 | 0/1 | **In Progress** | - |
-| 6. App Store Connect Setup | v1.1 | 0/? | Not started | - |
-| 7. Metadata & Description | v1.1 | 0/? | Not started | - |
-| 8. Privacy & Legal | v1.1 | 0/? | Not started | - |
-| 9. Code Signing & Notarization | v1.1 | 0/? | Not started | - |
-| 10. TestFlight Beta | v1.1 | 0/? | Not started | - |
-| 11. Final Build & Submission | v1.1 | 0/? | Not started | - |
-| 12. Post-Submission | v1.1 | 0/? | Not started | - |
-
-**v1.0:** 9/9 complete (100%)
-**v1.1:** 0/? not started
+| Phase | Milestone | Plans | Status | Completed |
+|-------|-----------|-------|--------|-----------|
+| 1-4 | v1.0 | 9/9 | Complete | 2026-01-19 |
+| 5 | v1.1 Assets | 1/1 | Complete | 2026-01-21 |
+| P1 | v1.1 Performance | 0/1 | **NEXT** | - |
+| P2 | v1.1 Performance | 0/1 | Pending | - |
+| P3 | v1.1 Performance | 0/2 | Pending | - |
+| P4 | v1.1 Performance | 0/2 | Pending | - |
+| P5 | v1.1 Performance | 0/1 | Conditional | - |
+| P6 | v1.1 Performance | 0/1 | Pending | - |
+| 6-12 | v1.2 App Store | 0/? | Queued | - |
 
 ---
 
-## 🚧 v1.1 App Store Submission (In Progress)
+## v1.1 Performance Overhaul (BLOCKING - IN PROGRESS)
 
-**Milestone Goal:** Prepare and submit dotViewer to the Mac App Store
+**Priority:** CRITICAL
+**Goal:** Achieve <500ms highlighting for files up to 2000 lines
+**Blocks:** App Store Submission
 
-#### Phase 5: App Store Assets
-**Goal**: Create app icon (all Mac sizes) and marketing screenshots
-**Depends on**: v1.0 complete
-**Research**: Unlikely (standard asset work)
-**Plans**: 1
+See [v1.1-performance-ROADMAP.md](milestones/v1.1-performance-ROADMAP.md) for full details.
 
-Plans:
-- [x] 05-01: Screenshots and app icon — completed 2026-01-21
+### Phase P1: Diagnostics & Profiling
+**Goal:** Understand where time is spent before optimizing
+**Plans:** 1
+**Status:** NEXT
 
-#### Phase 5.1: Critical Fixes (Urgent Insertion)
-**Goal**: Fix performance issue with large file highlighting and add missing Xcode UTIs
-**Depends on**: Phase 5 complete
-**Research**: None (root cause identified)
-**Plans**: 1
+- [ ] P1-01: Add timing instrumentation, create DIAGNOSTICS.md
 
-Plans:
-- [ ] 05.1-01: Performance thresholds + Xcode UTIs
+### Phase P2: Quick Wins
+**Goal:** Low-effort fixes (mappings, detection optimization)
+**Depends on:** P1
+**Plans:** 1
 
-#### Phase 6: App Store Connect Setup
-**Goal**: Create app record in App Store Connect, configure pricing and availability
-**Depends on**: Phase 5
-**Research**: Likely (App Store Connect configuration)
-**Research topics**: App Store Connect setup for macOS apps, pricing tiers, availability settings
-**Plans**: TBD
+- [ ] P2-01: Add .plist mapping, Xcode UTIs, disable auto-detection
 
-Plans:
-- [ ] 06-01: TBD
+### Phase P3: Persistent Cache
+**Goal:** Cache survives QuickLook XPC termination
+**Depends on:** P2
+**Plans:** 2
 
-#### Phase 7: Metadata & Description
-**Goal**: Write compelling app description, select keywords and categories
-**Depends on**: Phase 6
-**Research**: Unlikely (copywriting task)
-**Plans**: TBD
+- [ ] P3-01: Create DiskCache with App Groups storage
+- [ ] P3-02: Integrate cache, verify persistence
 
-Plans:
-- [ ] 07-01: TBD
+### Phase P4: Highlighter Evaluation
+**Goal:** Data-driven highlighter decision
+**Depends on:** P3
+**Plans:** 2
 
-#### Phase 8: Privacy & Legal
-**Goal**: Create privacy policy and configure privacy practices declaration
-**Depends on**: Phase 6
-**Research**: Likely (Apple privacy requirements)
-**Research topics**: Apple's App Store privacy requirements, macOS privacy manifest, data collection disclosure
-**Plans**: TBD
+- [ ] P4-01: Benchmark all highlighters (Fast, HighlightSwift, Highlightr)
+- [ ] P4-02: Implement chosen solution
 
-Plans:
-- [ ] 08-01: TBD
+### Phase P5: Advanced Optimizations (CONDITIONAL)
+**Goal:** Additional optimizations if P1-P4 don't meet targets
+**Depends on:** P4
+**Plans:** 1-3
 
-#### Phase 9: Code Signing & Notarization
-**Goal**: Configure production certificates and notarization for Mac App Store
-**Depends on**: Phase 5
-**Research**: Likely (macOS distribution requirements)
-**Research topics**: Mac App Store code signing, notarization requirements, provisioning profiles
-**Plans**: TBD
+- [ ] P5-01: Progressive rendering, WKWebView, or regex optimization
 
-Plans:
-- [ ] 09-01: TBD
+### Phase P6: Integration & Verification
+**Goal:** Final verification before resuming App Store submission
+**Depends on:** P4 or P5
+**Plans:** 1
 
-#### Phase 10: TestFlight Beta
-**Goal**: Set up TestFlight for macOS, conduct internal testing
-**Depends on**: Phase 9
-**Research**: Likely (macOS TestFlight specifics)
-**Research topics**: TestFlight for macOS setup, beta testing workflow
-**Plans**: TBD
+- [ ] P6-01: Comprehensive testing, human verification
 
-Plans:
-- [ ] 10-01: TBD
+---
 
-#### Phase 11: Final Build & Submission
-**Goal**: Create final archive and submit to App Store review
-**Depends on**: Phases 7, 8, 10
-**Research**: Unlikely (standard Xcode workflow)
-**Plans**: TBD
+## v1.2 App Store Submission (QUEUED)
 
-Plans:
-- [ ] 11-01: TBD
+**Blocked by:** v1.1 Performance Overhaul
+**Resumes after:** P6 complete
 
-#### Phase 12: Post-Submission
-**Goal**: Monitor review status and respond to any reviewer feedback
-**Depends on**: Phase 11
-**Research**: Unlikely (reactive work)
-**Plans**: TBD
+### Phase 6: App Store Connect Setup
+**Goal:** Create app record, configure pricing and availability
+**Plans:** TBD
 
-Plans:
-- [ ] 12-01: TBD
+### Phase 7: Metadata & Description
+**Goal:** Write app description, keywords, categories
+**Plans:** TBD
+
+### Phase 8: Privacy & Legal
+**Goal:** Privacy policy, privacy practices declaration
+**Plans:** TBD
+
+### Phase 9: Code Signing & Notarization
+**Goal:** Production certificates, notarization
+**Plans:** TBD
+
+### Phase 10: TestFlight Beta
+**Goal:** Internal testing via TestFlight
+**Plans:** TBD
+
+### Phase 11: Final Build & Submission
+**Goal:** Submit to App Store review
+**Plans:** TBD
+
+### Phase 12: Post-Submission
+**Goal:** Monitor review, respond to feedback
+**Plans:** TBD
+
+---
+
+## Key Dates
+
+| Event | Date |
+|-------|------|
+| v1.0 Shipped | 2026-01-19 |
+| Performance Issue Identified | 2026-01-21 |
+| v1.1 Performance Milestone Created | 2026-01-21 |
+| App Store Submission Target | TBD (after performance fix) |
