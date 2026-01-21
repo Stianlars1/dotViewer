@@ -118,11 +118,19 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 originalLines: totalLineCount
             )
 
-            // Check cache for pre-highlighted content
+            // Check cache for pre-highlighted content (includes theme for invalidation)
             var cachedHighlight: AttributedString? = nil
             let effectiveLineCount = lineTruncated ? maxPreviewLines : totalLineCount
             if let modDate = modDate {
-                cachedHighlight = HighlightCache.shared.get(path: url.path, modDate: modDate)
+                let theme = SharedSettings.shared.selectedTheme
+                cachedHighlight = HighlightCache.shared.get(
+                    path: url.path,
+                    modDate: modDate,
+                    theme: theme
+                )
+                if cachedHighlight != nil {
+                    NSLog("[dotViewer PERF] Cache HIT in preparePreviewOfFile - skipping highlight")
+                }
             }
 
             // Create preview state
