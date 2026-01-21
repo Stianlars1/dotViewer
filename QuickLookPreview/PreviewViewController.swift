@@ -28,9 +28,11 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     // MARK: - QLPreviewingController
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
-        // DEBUG: Log that the extension is being invoked
-        NSLog("[dotViewer QL] preparePreviewOfFile called for: \(url.lastPathComponent)")
-        print("[dotViewer QL] preparePreviewOfFile called for: \(url.lastPathComponent)")
+        // E2E PERFORMANCE TRACKING: Start time for entire preview pipeline
+        let e2eStartTime = CFAbsoluteTimeGetCurrent()
+        NSLog("═══════════════════════════════════════════════════════════════")
+        NSLog("[dotViewer E2E] ▶▶▶ PREVIEW START: %@", url.lastPathComponent)
+        NSLog("═══════════════════════════════════════════════════════════════")
 
         let filename = url.lastPathComponent
         let ext = url.pathExtension.lowercased()
