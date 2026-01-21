@@ -58,6 +58,19 @@ struct LanguageDetector {
         "ini": "ini",
         "conf": "ini",
         "cfg": "ini",
+        "plist": "xml",
+        "entitlements": "xml",
+        "xcconfig": "ini",        // Key-value format
+        "xcscheme": "xml",
+        "xcworkspacedata": "xml",
+        "pbxproj": "ini",         // Actually a weird plist/ini hybrid, ini works better
+        "storyboard": "xml",
+        "xib": "xml",
+        "strings": "ini",         // Key = "Value" format
+        "stringsdict": "xml",     // XML plist format
+        "intentdefinition": "xml",
+        "xcdatamodel": "xml",
+        "playground": "xml",      // The contents.xcplayground is XML
 
         // Systems languages
         "swift": "swift",
@@ -227,6 +240,16 @@ struct LanguageDetector {
         ".cvsignore": "bash",
         ".hgignore": "bash",
         ".vscodeignore": "bash",
+
+        // Ruby/Fastlane build tools
+        "Podfile": "ruby",
+        "Fastfile": "ruby",
+        "Appfile": "ruby",
+        "Matchfile": "ruby",
+        "Snapfile": "ruby",
+        "Scanfile": "ruby",
+        "Gymfile": "ruby",
+        "Deliverfile": "ruby",
     ]
 
     /// Detect the language for a given file URL
