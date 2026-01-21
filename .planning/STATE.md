@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 Milestone: v1.1 Performance Overhaul (BLOCKING)
-Phase: P1 (Diagnostics & Profiling) - COMPLETE
-Plan: P2-01 ready for execution
-Status: Phase P1 complete, ready for P2
-Last activity: 2026-01-21 — P1-01 diagnostics instrumentation complete
+Phase: P2 (Quick Wins) - COMPLETE
+Plan: 1 of 1 in current phase
+Status: Phase P2 complete, ready for P3
+Last activity: 2026-01-21 — Completed P2-01-PLAN.md
 
-Progress (v1.1 Performance): █░░░░░░░░░ 12.5% (1/8 plans)
-Progress (Overall to App Store): ██░░░░░░░░ 18%
+Progress (v1.1 Performance): ██░░░░░░░░ 25% (2/8 plans)
+Progress (Overall to App Store): ██░░░░░░░░ 22%
 
 ## Performance Metrics
 
@@ -28,9 +28,10 @@ Progress (Overall to App Store): ██░░░░░░░░ 18%
 
 **v1.1 Performance Milestone:**
 - Total plans: 8-10 (P5 is conditional)
-- Plans completed: 1
+- Plans completed: 2
 - Started: 2026-01-21
 - P1-01 completed: 2026-01-21 (8 min)
+- P2-01 completed: 2026-01-21 (2 min)
 
 ## Accumulated Context
 
@@ -47,6 +48,8 @@ All decisions logged in PROJECT.md Key Decisions table.
 | Use NSLog for QuickLook extension logging | os_log may not surface from sandboxed extension; NSLog more reliable | P1-01 |
 | Consistent [dotViewer PERF] log prefix | Enables easy filtering in Console.app for performance analysis | P1-01 |
 | Section-based timing in FastSyntaxHighlighter | Isolates individual operations to identify specific bottlenecks | P1-01 |
+| Use plaintext fallback over auto-detection | Auto-detection runs multiple parsers (40-60% slower) | P2-01 |
+| Use system UTIs for Xcode files | Apple provides official UTIs (com.apple.xcode.*) | P2-01 |
 
 ### Performance Issue Context
 
@@ -56,8 +59,8 @@ See: .planning/CONTEXT-ISSUES.md
 1. In-memory cache lost when QuickLook XPC service terminates
 2. FastSyntaxHighlighter runs multiple regex passes
 3. AttributedString mutation is expensive for large files
-4. Missing direct extension mappings force content detection
-5. Potential auto-detection overhead
+4. ~~Missing direct extension mappings force content detection~~ (FIXED in P2-01)
+5. ~~Potential auto-detection overhead~~ (FIXED in P2-01)
 
 **Target:** <500ms highlighting for 2000-line files
 
@@ -83,17 +86,17 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: P1-01 complete, ready for P2
+Stopped at: P2-01 complete, ready for P3
 Resume file: None
-Next: `/gsd:execute-plan .planning/phases/P2-quick-wins/P2-01-PLAN.md`
+Next: `/gsd:plan-phase P3`
 
 ## Phase Overview
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
 | P1 | Diagnostics & Profiling | 1 | COMPLETE |
-| P2 | Quick Wins | 1 | **NEXT** |
-| P3 | Persistent Cache | 2 | Pending |
+| P2 | Quick Wins | 1 | COMPLETE |
+| P3 | Persistent Cache | 2 | **NEXT** |
 | P4 | Highlighter Evaluation | 2 | Pending |
 | P5 | Advanced Optimizations | 1-3 | Conditional |
 | P6 | Integration & Verification | 1 | Pending |
@@ -101,11 +104,11 @@ Next: `/gsd:execute-plan .planning/phases/P2-quick-wins/P2-01-PLAN.md`
 ## Quick Reference
 
 ```bash
-# Start Phase P2
-/gsd:execute-plan .planning/phases/P2-quick-wins/P2-01-PLAN.md
+# Start Phase P3
+/gsd:plan-phase P3
 
-# View P1-01 summary
-cat .planning/phases/P1-diagnostics/P1-01-SUMMARY.md
+# View P2-01 summary
+cat .planning/phases/P2-quick-wins/P2-01-SUMMARY.md
 
 # View performance diagnostics
 cat .planning/phases/P1-diagnostics/DIAGNOSTICS.md
