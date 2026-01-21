@@ -173,26 +173,20 @@ struct FastSyntaxHighlighter: Sendable {
         }
         NSLog("[dotViewer PERF] [Fast +%.3fs] language-specific (html/json): %.3fs, xmlDataMode: %@", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.isXmlDataMode ? "YES" : "NO")
 
-        // 6. Keywords
+        // 6. Keywords - single-pass highlighting using alternation pattern O(n) instead of O(n × keywords)
         sectionStart = CFAbsoluteTimeGetCurrent()
-        for keyword in patterns.keywords {
-            highlightWord(in: &result, code: codeNS, word: keyword, mapping: mapping, color: colors.keyword)
-        }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        highlightWords(in: &result, code: codeNS, words: patterns.keywords, mapping: mapping, color: colors.keyword)
+        NSLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
-        // 7. Types
+        // 7. Types - single-pass highlighting using alternation pattern O(n) instead of O(n × types)
         sectionStart = CFAbsoluteTimeGetCurrent()
-        for typeName in patterns.types {
-            highlightWord(in: &result, code: codeNS, word: typeName, mapping: mapping, color: colors.type)
-        }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        highlightWords(in: &result, code: codeNS, words: patterns.types, mapping: mapping, color: colors.type)
+        NSLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
-        // 8. Built-in functions (if any)
+        // 8. Built-in functions - single-pass highlighting using alternation pattern O(n) instead of O(n × builtins)
         sectionStart = CFAbsoluteTimeGetCurrent()
-        for builtin in patterns.builtins {
-            highlightWord(in: &result, code: codeNS, word: builtin, mapping: mapping, color: colors.function)
-        }
-        NSLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
+        highlightWords(in: &result, code: codeNS, words: patterns.builtins, mapping: mapping, color: colors.function)
+        NSLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs [single-pass]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         NSLog("[dotViewer PERF] FastSyntaxHighlighter.highlight DONE - total: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart)
         return result
@@ -216,6 +210,20 @@ struct FastSyntaxHighlighter: Sendable {
 
             attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].foregroundColor = color
         }
+    }
+
+    /// Highlight a set of words in a single pass using alternation pattern.
+    /// This is O(n) instead of O(n × words) when highlighting individually.
+    /// Pattern: \b(word1|word2|word3|...)\b
+    private func highlightWords(in attributed: inout AttributedString, code: NSString, words: Set<String>, mapping: IndexMapping, color: Color) {
+        guard !words.isEmpty else { return }
+
+        // Escape each word and join with alternation
+        let escapedWords = words.map { NSRegularExpression.escapedPattern(for: $0) }
+        let pattern = "\\b(\(escapedWords.joined(separator: "|")))\\b"
+
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return }
+        applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
     }
 
     private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, mapping: IndexMapping, color: Color) {
