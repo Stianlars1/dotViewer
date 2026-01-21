@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 Milestone: v1.1 Performance Overhaul (BLOCKING)
-Phase: P2 (Quick Wins) - COMPLETE
-Plan: 1 of 1 in current phase
-Status: Phase P2 complete, ready for P3
-Last activity: 2026-01-21 — Completed P2-01-PLAN.md
+Phase: P3 (Persistent Cache) - IN PROGRESS
+Plan: 1 of 2 in current phase
+Status: P3-01 complete, ready for P3-02
+Last activity: 2026-01-21 — Completed P3-01-PLAN.md
 
-Progress (v1.1 Performance): ██░░░░░░░░ 25% (2/8 plans)
-Progress (Overall to App Store): ██░░░░░░░░ 22%
+Progress (v1.1 Performance): ███░░░░░░░ 37% (3/8 plans)
+Progress (Overall to App Store): ██░░░░░░░░ 25%
 
 ## Performance Metrics
 
@@ -28,10 +28,11 @@ Progress (Overall to App Store): ██░░░░░░░░ 22%
 
 **v1.1 Performance Milestone:**
 - Total plans: 8-10 (P5 is conditional)
-- Plans completed: 2
+- Plans completed: 3
 - Started: 2026-01-21
 - P1-01 completed: 2026-01-21 (8 min)
 - P2-01 completed: 2026-01-21 (2 min)
+- P3-01 completed: 2026-01-21 (3 min)
 
 ## Accumulated Context
 
@@ -50,13 +51,15 @@ All decisions logged in PROJECT.md Key Decisions table.
 | Section-based timing in FastSyntaxHighlighter | Isolates individual operations to identify specific bottlenecks | P1-01 |
 | Use plaintext fallback over auto-detection | Auto-detection runs multiple parsers (40-60% slower) | P2-01 |
 | Use system UTIs for Xcode files | Apple provides official UTIs (com.apple.xcode.*) | P2-01 |
+| Sync reads, async writes for cache | Fast cache hits (<50ms) while not blocking highlighting | P3-01 |
+| SHA256 cache key = path + modDate + theme | Complete invalidation when any factor changes | P3-01 |
 
 ### Performance Issue Context
 
 See: .planning/CONTEXT-ISSUES.md
 
 **Root causes identified:**
-1. In-memory cache lost when QuickLook XPC service terminates
+1. ~~In-memory cache lost when QuickLook XPC service terminates~~ (ADDRESSED in P3-01 - disk cache added)
 2. FastSyntaxHighlighter runs multiple regex passes
 3. AttributedString mutation is expensive for large files
 4. ~~Missing direct extension mappings force content detection~~ (FIXED in P2-01)
@@ -86,9 +89,9 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: P2-01 complete, ready for P3
+Stopped at: P3-01 complete, ready for P3-02
 Resume file: None
-Next: `/gsd:plan-phase P3`
+Next: `/gsd:execute-plan P3-02`
 
 ## Phase Overview
 
@@ -96,7 +99,7 @@ Next: `/gsd:plan-phase P3`
 |-------|------|-------|--------|
 | P1 | Diagnostics & Profiling | 1 | COMPLETE |
 | P2 | Quick Wins | 1 | COMPLETE |
-| P3 | Persistent Cache | 2 | **NEXT** |
+| P3 | Persistent Cache | 2 | **IN PROGRESS (1/2)** |
 | P4 | Highlighter Evaluation | 2 | Pending |
 | P5 | Advanced Optimizations | 1-3 | Conditional |
 | P6 | Integration & Verification | 1 | Pending |
@@ -104,11 +107,11 @@ Next: `/gsd:plan-phase P3`
 ## Quick Reference
 
 ```bash
-# Start Phase P3
-/gsd:plan-phase P3
+# Execute next plan
+/gsd:execute-plan P3-02
 
-# View P2-01 summary
-cat .planning/phases/P2-quick-wins/P2-01-SUMMARY.md
+# View P3-01 summary
+cat .planning/phases/P3-persistent-cache/P3-01-SUMMARY.md
 
 # View performance diagnostics
 cat .planning/phases/P1-diagnostics/DIAGNOSTICS.md
