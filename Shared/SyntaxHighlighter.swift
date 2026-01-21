@@ -47,14 +47,17 @@ struct SyntaxHighlighter: Sendable {
         let fallbackStart = CFAbsoluteTimeGetCurrent()
         do {
             // Determine the highlight mode
+            // NEVER use .automatic - it runs multiple parsers and is 40-60% slower
+            // If we don't know the language, use plaintext to avoid auto-detection overhead
             let mode: HighlightMode
             if let lang = language {
                 mode = .languageAlias(lang)
                 NSLog("[dotViewer PERF] [HS] using .languageAlias(%@)", lang)
             } else {
-                mode = .automatic
-                NSLog("[dotViewer PERF] [HS] WARNING: using .automatic mode (slow!)")
+                NSLog("[dotViewer PERF] [HS] WARNING: No language detected, using plaintext to avoid auto-detection")
+                mode = .languageAlias("plaintext")
             }
+            NSLog("[dotViewer PERF] highlightWithFallback called - language: %@, mode: languageAlias", language ?? "nil")
 
             // Get colors based on user's theme setting
             let colorStart = CFAbsoluteTimeGetCurrent()
