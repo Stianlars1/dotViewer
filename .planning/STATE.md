@@ -10,13 +10,13 @@ See: .planning/PROJECT.md (updated 2026-01-19)
 ## Current Position
 
 Milestone: v1.1 Performance Overhaul (BLOCKING)
-Phase: P1 (Diagnostics & Profiling)
-Plan: P1-01 ready for execution
-Status: Ready for execution
-Last activity: 2026-01-21 — Performance milestone created with 6 phases
+Phase: P1 (Diagnostics & Profiling) - COMPLETE
+Plan: P2-01 ready for execution
+Status: Phase P1 complete, ready for P2
+Last activity: 2026-01-21 — P1-01 diagnostics instrumentation complete
 
-Progress (v1.1 Performance): ░░░░░░░░░░ 0%
-Progress (Overall to App Store): ██░░░░░░░░ 15%
+Progress (v1.1 Performance): █░░░░░░░░░ 12.5% (1/8 plans)
+Progress (Overall to App Store): ██░░░░░░░░ 18%
 
 ## Performance Metrics
 
@@ -28,8 +28,9 @@ Progress (Overall to App Store): ██░░░░░░░░ 15%
 
 **v1.1 Performance Milestone:**
 - Total plans: 8-10 (P5 is conditional)
-- Plans completed: 0
+- Plans completed: 1
 - Started: 2026-01-21
+- P1-01 completed: 2026-01-21 (8 min)
 
 ## Accumulated Context
 
@@ -43,6 +44,9 @@ All decisions logged in PROJECT.md Key Decisions table.
 |----------|-----------|--------|
 | Prioritize performance over App Store timeline | User experience is paramount; 15-second highlighting is unacceptable | Active |
 | Full overhaul approach | Quick fixes (line limits) defeat the app's purpose; need proper solution | Active |
+| Use NSLog for QuickLook extension logging | os_log may not surface from sandboxed extension; NSLog more reliable | P1-01 |
+| Consistent [dotViewer PERF] log prefix | Enables easy filtering in Console.app for performance analysis | P1-01 |
+| Section-based timing in FastSyntaxHighlighter | Isolates individual operations to identify specific bottlenecks | P1-01 |
 
 ### Performance Issue Context
 
@@ -79,16 +83,16 @@ None.
 ## Session Continuity
 
 Last session: 2026-01-21
-Stopped at: Performance milestone fully planned
+Stopped at: P1-01 complete, ready for P2
 Resume file: None
-Next: `/gsd:execute-plan .planning/phases/P1-diagnostics/P1-01-PLAN.md`
+Next: `/gsd:execute-plan .planning/phases/P2-quick-wins/P2-01-PLAN.md`
 
 ## Phase Overview
 
 | Phase | Name | Plans | Status |
 |-------|------|-------|--------|
-| P1 | Diagnostics & Profiling | 1 | **NEXT** |
-| P2 | Quick Wins | 1 | Pending |
+| P1 | Diagnostics & Profiling | 1 | COMPLETE |
+| P2 | Quick Wins | 1 | **NEXT** |
 | P3 | Persistent Cache | 2 | Pending |
 | P4 | Highlighter Evaluation | 2 | Pending |
 | P5 | Advanced Optimizations | 1-3 | Conditional |
@@ -97,8 +101,14 @@ Next: `/gsd:execute-plan .planning/phases/P1-diagnostics/P1-01-PLAN.md`
 ## Quick Reference
 
 ```bash
-# Start Phase P1
-/gsd:execute-plan .planning/phases/P1-diagnostics/P1-01-PLAN.md
+# Start Phase P2
+/gsd:execute-plan .planning/phases/P2-quick-wins/P2-01-PLAN.md
+
+# View P1-01 summary
+cat .planning/phases/P1-diagnostics/P1-01-SUMMARY.md
+
+# View performance diagnostics
+cat .planning/phases/P1-diagnostics/DIAGNOSTICS.md
 
 # View milestone details
 cat .planning/milestones/v1.1-performance-ROADMAP.md
