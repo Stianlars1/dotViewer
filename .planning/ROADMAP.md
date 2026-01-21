@@ -25,7 +25,8 @@
 | 2. UI Bug Fixes | v1.0 | 3/3 | Complete | 2026-01-16 |
 | 3. Performance & Syntax | v1.0 | 2/2 | Complete | 2026-01-19 |
 | 4. App Store Preparation | v1.0 | 1/1 | Complete | 2026-01-19 |
-| 5. App Store Assets | v1.1 | 0/? | Not started | - |
+| 5. App Store Assets | v1.1 | 1/1 | Complete | 2026-01-21 |
+| 5.1. Critical Fixes | v1.1 | 0/1 | **In Progress** | - |
 | 6. App Store Connect Setup | v1.1 | 0/? | Not started | - |
 | 7. Metadata & Description | v1.1 | 0/? | Not started | - |
 | 8. Privacy & Legal | v1.1 | 0/? | Not started | - |
@@ -47,10 +48,19 @@
 **Goal**: Create app icon (all Mac sizes) and marketing screenshots
 **Depends on**: v1.0 complete
 **Research**: Unlikely (standard asset work)
-**Plans**: TBD
+**Plans**: 1
 
 Plans:
-- [ ] 05-01: TBD (run /gsd:plan-phase 5 to break down)
+- [x] 05-01: Screenshots and app icon — completed 2026-01-21
+
+#### Phase 5.1: Critical Fixes (Urgent Insertion)
+**Goal**: Fix performance issue with large file highlighting and add missing Xcode UTIs
+**Depends on**: Phase 5 complete
+**Research**: None (root cause identified)
+**Plans**: 1
+
+Plans:
+- [ ] 05.1-01: Performance thresholds + Xcode UTIs
 
 #### Phase 6: App Store Connect Setup
 **Goal**: Create app record in App Store Connect, configure pricing and availability
