@@ -1,0 +1,21 @@
+# Sample YAML file for E2E testing
+name: dotViewer
+version: 1.1.0
+description: Quick Look extension for code files
+
+config:
+  theme: auto
+  fontSize: 12
+  showLineNumbers: true
+
+supported_extensions:
+  - .swift
+  - .js
+  - .ts
+  - .py
+  - .go
+  - .rs
+
+build:
+  configuration: Release
+  platform: macOS

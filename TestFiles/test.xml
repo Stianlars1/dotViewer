@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="dotViewer">
+    <version>1.1.0</version>
+    <description>Quick Look extension for code files</description>
+    <author email="contact@example.com">Stian Larsen</author>
+    <config>
+        <theme>auto</theme>
+        <fontSize>12</fontSize>
+        <showLineNumbers>true</showLineNumbers>
+    </config>
+    <extensions>
+        <extension>.swift</extension>
+        <extension>.js</extension>
+        <extension>.ts</extension>
+    </extensions>
+</project>
