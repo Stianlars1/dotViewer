@@ -55,6 +55,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.text</string>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -64,6 +65,8 @@
 			<string></string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.typescript</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://www.typescriptlang.org/</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -72,11 +75,17 @@
 					<string>mts</string>
 					<string>cts</string>
 				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/typescript</string>
+					<string>text/typescript</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.text</string>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -84,11 +93,18 @@
 			<string>TypeScript JSX</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.tsx</string>
+			<key>UTTypeReferenceURL</key>
+			<string>https://www.typescriptlang.org/</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
 					<string>tsx</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/typescript</string>
+					<string>text/typescript</string>
 				</array>
 			</dict>
 		</dict>
@@ -1933,6 +1949,33 @@
 					<string>latex</string>
 				</array>
 			</dict>
+		</dict>
+	</array>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>TypeScript Source</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.stianlars1.dotviewer.typescript</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>TypeScript JSX</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSHandlerRank</key>
+			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.stianlars1.dotviewer.tsx</string>
+			</array>
 		</dict>
 	</array>
 </dict>

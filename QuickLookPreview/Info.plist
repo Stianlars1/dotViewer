@@ -29,12 +29,22 @@
 			<key>QLSupportedContentTypes</key>
 			<array>
 				<!-- ============================================================ -->
+				<!-- Custom TypeScript UTIs FIRST - we own these                  -->
+				<!-- ============================================================ -->
+				<string>com.stianlars1.dotviewer.typescript</string>
+				<string>com.stianlars1.dotviewer.tsx</string>
+
+				<!-- Generic fallback for content sniffing -->
+				<string>public.data</string>
+
+				<!-- ============================================================ -->
 				<!-- SYSTEM UTIs - macOS assigns these by default                 -->
 				<!-- ============================================================ -->
 
-				<!-- TypeScript/JavaScript -->
+				<!-- TypeScript/JavaScript (system-defined, fallback) -->
 				<string>com.microsoft.typescript</string>
 				<string>public.typescript</string>
+				<!-- MPEG-2 kept for edge cases where .ts is actually video -->
 				<string>public.mpeg-2-transport-stream</string>
 				<string>public.avchd-mpeg-2-transport-stream</string>
 				<string>com.netscape.javascript-source</string>
@@ -160,11 +170,10 @@
 
 				<!-- ============================================================ -->
 				<!-- CUSTOM UTIs - dotViewer defined                              -->
+				<!-- (TypeScript UTIs moved to top for priority)                  -->
 				<!-- ============================================================ -->
 
 				<!-- Core Programming Languages -->
-				<string>com.stianlars1.dotviewer.typescript</string>
-				<string>com.stianlars1.dotviewer.tsx</string>
 				<string>com.stianlars1.dotviewer.jsx</string>
 				<string>com.stianlars1.dotviewer.rust</string>
 				<string>com.stianlars1.dotviewer.go</string>
@@ -449,11 +458,11 @@
 
 				<!-- ============================================================ -->
 				<!-- GENERIC FALLBACK UTIs - Catch-all for unknown types          -->
+				<!-- (public.data moved to position 0 for TypeScript .ts support) -->
 				<!-- ============================================================ -->
 				<string>public.text</string>
 				<string>public.source-code</string>
 				<string>public.script</string>
-				<string>public.data</string>
 				<string>public.content</string>
 				<string>public.item</string>
 				<string>public.unix-executable</string>

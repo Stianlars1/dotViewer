@@ -65,6 +65,9 @@ final class HighlightCache: @unchecked Sendable {
     func set(path: String, modDate: Date, theme: String, language: String?, highlighted: AttributedString) {
         let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
 
+        // Debug: Confirm HighlightCache.set() is being called
+        NSLog("[dotViewer Cache] HighlightCache.set() - writing to disk for: %@", path.components(separatedBy: "/").last ?? path)
+
         // Write to memory (synchronous, fast)
         setInMemory(key: key, value: highlighted)
 

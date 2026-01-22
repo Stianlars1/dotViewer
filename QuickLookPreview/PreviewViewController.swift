@@ -71,7 +71,13 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                 isTruncated = false
             }
 
-            // Binary check
+            // MPEG-2 Transport Stream detection for .ts files
+            // macOS may misidentify TypeScript files as video, so we sniff content
+            if ext == "ts" && isMPEG2TransportStream(data) {
+                throw PreviewError.binaryFile
+            }
+
+            // Binary check (null byte detection)
             let checkSize = min(data.count, 8192)
             let sample = data.prefix(checkSize)
             if sample.contains(0x00) {
@@ -200,6 +206,35 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     }
 
     // MARK: - Helpers
+
+    /// Detect if data is an MPEG-2 Transport Stream (video file)
+    /// MPEG-2 TS has 0x47 sync bytes at 188-byte intervals
+    /// Used to distinguish .ts video files from TypeScript source code
+    private func isMPEG2TransportStream(_ data: Data) -> Bool {
+        // MPEG-2 TS packet size is 188 bytes
+        let packetSize = 188
+        let syncByte: UInt8 = 0x47
+
+        // Need at least 3 packets to be confident
+        guard data.count >= packetSize * 3 else { return false }
+
+        // Check if first byte is sync byte
+        guard data[0] == syncByte else { return false }
+
+        // Check sync bytes at 188-byte intervals (at least 3 packets)
+        let checkCount = min(5, data.count / packetSize)
+        var syncCount = 0
+
+        for i in 0..<checkCount {
+            let offset = i * packetSize
+            if offset < data.count && data[offset] == syncByte {
+                syncCount += 1
+            }
+        }
+
+        // If most packets have sync byte at correct interval, it's MPEG-2
+        return syncCount >= 3
+    }
 
     private func formatFileSize(_ bytes: Int) -> String {
         let formatter = ByteCountFormatter()

@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D1000001 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000001 /* DiskCache.swift */; };
-		D1000002 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000001 /* DiskCache.swift */; };
 		8096883F2F164EE40002706F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8096883E2F164EE40002706F /* Logger.swift */; };
 		809688402F164EE40002706F /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8096883E2F164EE40002706F /* Logger.swift */; };
 		80F9F4F22F1228C700412E97 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80F9F4F12F1228C700412E97 /* SharedSettings.swift */; };
@@ -41,10 +39,12 @@
 		A1000050 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000051 /* HighlightCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000030 /* HighlightCache.swift */; };
 		A1000060 /* ExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000040 /* ExtensionHelper.swift */; };
-		C874C88A5FAB4D26AB28DE3C /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
-		EA368CA9228D4FA487CE7694 /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
 		B1000002 /* HighlighterBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* HighlighterBenchmark.swift */; };
 		B1000003 /* HighlighterBenchmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1000001 /* HighlighterBenchmark.swift */; };
+		C874C88A5FAB4D26AB28DE3C /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
+		D1000001 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000001 /* DiskCache.swift */; };
+		D1000002 /* DiskCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2000001 /* DiskCache.swift */; };
+		EA368CA9228D4FA487CE7694 /* FastSyntaxHighlighter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,9 +97,9 @@
 		A2000040 /* ExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionHelper.swift; sourceTree = "<group>"; };
 		A3000002 /* QuickLookPreview.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookPreview.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3000003 /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSyntaxHighlighter.swift; sourceTree = "<group>"; };
-		D2000001 /* DiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
 		B1000001 /* HighlighterBenchmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlighterBenchmark.swift; sourceTree = "<group>"; };
+		D2000001 /* DiskCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiskCache.swift; sourceTree = "<group>"; };
+		E0FC420730EC4F5EB87345F7 /* FastSyntaxHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FastSyntaxHighlighter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

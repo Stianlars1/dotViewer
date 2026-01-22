@@ -22,30 +22,75 @@ final class DiskCache: @unchecked Sendable {
     private let cleanupInterval: Int = 10
     private let cleanupLock = NSLock()
 
+    /// Cache format version - increment when serialization format changes
+    /// v1: NSKeyedArchiver (incompatible with SwiftUI AttributedString)
+    /// v2: RTF encoding (works with all AttributedString attributes)
+    private static let cacheVersion = 2
+    private let versionFile = "cache_version"
+
     private init() {
-        // Use App Groups container for cross-process persistence
-        // MUST match the identifier in entitlements files
-        guard let containerURL = fileManager.containerURL(
-            forSecurityApplicationGroupIdentifier: "group.stianlars1.dotViewer.shared"
-        ) else {
-            // Fallback to temporary directory - cache won't persist but app will still work
-            let tempDir = FileManager.default.temporaryDirectory
+        // Quick Look extension sandbox cannot create directories in App Group container.
+        // Use the extension's own Application Support directory instead.
+        // Note: Cache won't be shared with main app, but will persist across QL sessions.
+        let appSupportURLs = fileManager.urls(for: .applicationSupportDirectory, in: .userDomainMask)
+
+        if let appSupportURL = appSupportURLs.first {
+            cacheDirectory = appSupportURL
                 .appendingPathComponent("HighlightCache", isDirectory: true)
-            try? fileManager.createDirectory(at: tempDir, withIntermediateDirectories: true)
-            self.cacheDirectory = tempDir
-            perfLog("[dotViewer Cache] WARNING: App Group container not available, using temp directory")
-            return
+        } else {
+            // Fallback to temporary directory
+            cacheDirectory = FileManager.default.temporaryDirectory
+                .appendingPathComponent("HighlightCache", isDirectory: true)
+            perfLog("[dotViewer Cache] WARNING: Application Support not available, using temp directory")
         }
 
-        cacheDirectory = containerURL
-            .appendingPathComponent("Library", isDirectory: true)
-            .appendingPathComponent("Caches", isDirectory: true)
-            .appendingPathComponent("HighlightCache", isDirectory: true)
+        // Create directory if needed - with proper error handling
+        do {
+            try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+            NSLog("[dotViewer Cache] Init - cache directory created: %@", cacheDirectory.path)
+        } catch {
+            NSLog("[dotViewer Cache] ERROR creating cache directory: %@", error.localizedDescription)
+        }
 
-        // Create directory if needed
-        try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
-
+        // Verify directory exists
+        let exists = fileManager.fileExists(atPath: cacheDirectory.path)
+        NSLog("[dotViewer Cache] Init - cache directory exists: %@", exists ? "YES" : "NO")
         perfLog("[dotViewer Cache] DiskCache initialized at: \(cacheDirectory.path)")
+
+        // Migrate cache if version changed (clears old format entries)
+        migrateCacheIfNeeded()
+    }
+
+    /// Check cache version and clear if format changed
+    private func migrateCacheIfNeeded() {
+        let versionFileURL = cacheDirectory.appendingPathComponent(versionFile)
+
+        // Read current version
+        var currentVersion = 0
+        if let data = try? Data(contentsOf: versionFileURL),
+           let str = String(data: data, encoding: .utf8),
+           let version = Int(str) {
+            currentVersion = version
+        }
+
+        // If version mismatch, clear cache and write new version
+        if currentVersion != Self.cacheVersion {
+            perfLog("[dotViewer Cache] Cache version mismatch (\(currentVersion) → \(Self.cacheVersion)), clearing old cache")
+
+            // Clear all cached files (but not the version file)
+            if let files = try? fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil) {
+                for file in files where file.lastPathComponent != versionFile {
+                    try? fileManager.removeItem(at: file)
+                }
+            }
+
+            // Write new version
+            if let versionData = "\(Self.cacheVersion)".data(using: .utf8) {
+                try? versionData.write(to: versionFileURL, options: .atomic)
+            }
+
+            perfLog("[dotViewer Cache] Cache cleared and version updated to \(Self.cacheVersion)")
+        }
     }
 
     // MARK: - Cache Key Generation
@@ -73,22 +118,22 @@ final class DiskCache: @unchecked Sendable {
         }
 
         do {
-            let data = try Data(contentsOf: fileURL)
-            let nsAttrString = try NSKeyedUnarchiver.unarchivedObject(
-                ofClass: NSAttributedString.self,
-                from: data
+            // Read RTF data and decode to NSAttributedString
+            let rtfData = try Data(contentsOf: fileURL)
+            let nsAttrString = try NSAttributedString(
+                data: rtfData,
+                options: [.documentType: NSAttributedString.DocumentType.rtf],
+                documentAttributes: nil
             )
-            if let nsAttrString = nsAttrString {
-                // Update access time for LRU (async to not block read)
-                writeQueue.async {
-                    try? FileManager.default.setAttributes(
-                        [.modificationDate: Date()],
-                        ofItemAtPath: fileURL.path
-                    )
-                }
-                perfLog("[dotViewer Cache] Disk HIT for key: \(key.prefix(16))...")
-                return AttributedString(nsAttrString)
+            // Update access time for LRU (async to not block read)
+            writeQueue.async {
+                try? FileManager.default.setAttributes(
+                    [.modificationDate: Date()],
+                    ofItemAtPath: fileURL.path
+                )
             }
+            perfLog("[dotViewer Cache] Disk HIT for key: \(key.prefix(16))...")
+            return AttributedString(nsAttrString)
         } catch {
             perfLog("[dotViewer Cache] Disk read error: \(error.localizedDescription)")
             // Remove corrupted file asynchronously
@@ -105,19 +150,47 @@ final class DiskCache: @unchecked Sendable {
     /// Save AttributedString to disk.
     /// ASYNCHRONOUS - does not block the caller.
     func set(key: String, value: AttributedString) {
+        // Debug: Verify set() is being called
+        NSLog("[dotViewer Cache] set() called for key: %@", String(key.prefix(16)))
+
         writeQueue.async { [weak self] in
             guard let self = self else { return }
 
             let fileURL = self.cacheDirectory.appendingPathComponent(key)
 
+            // Ensure directory exists before writing (fallback if init failed)
+            if !self.fileManager.fileExists(atPath: self.cacheDirectory.path) {
+                do {
+                    try self.fileManager.createDirectory(at: self.cacheDirectory, withIntermediateDirectories: true)
+                    NSLog("[dotViewer Cache] Created cache directory on write: %@", self.cacheDirectory.path)
+                } catch {
+                    NSLog("[dotViewer Cache] ERROR creating directory on write: %@", error.localizedDescription)
+                    return
+                }
+            }
+
             do {
+                // Convert SwiftUI AttributedString to NSAttributedString
                 let nsAttrString = NSAttributedString(value)
-                let data = try NSKeyedArchiver.archivedData(
-                    withRootObject: nsAttrString,
-                    requiringSecureCoding: false
-                )
-                try data.write(to: fileURL, options: .atomic)
-                perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(data.count) bytes)")
+                let range = NSRange(location: 0, length: nsAttrString.length)
+
+                // Encode as RTF (avoids NSKeyedArchiver issues with SwiftUI attributes)
+                guard let rtfData = nsAttrString.rtf(from: range, documentAttributes: [
+                    .documentType: NSAttributedString.DocumentType.rtf
+                ]) else {
+                    NSLog("[dotViewer Cache] RTF encoding FAILED for key: %@", String(key.prefix(16)))
+                    perfLog("[dotViewer Cache] RTF encoding failed for key: \(key.prefix(16))...")
+                    return
+                }
+
+                // Debug: Log RTF data size
+                NSLog("[dotViewer Cache] RTF data size: %d bytes", rtfData.count)
+
+                try rtfData.write(to: fileURL, options: .atomic)
+
+                // Debug: Confirm write completed
+                NSLog("[dotViewer Cache] Write completed to: %@", fileURL.path)
+                perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(rtfData.count) bytes)")
 
                 // Trigger cleanup periodically
                 self.incrementWriteAndCleanupIfNeeded()
