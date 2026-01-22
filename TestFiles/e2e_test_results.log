@@ -1,0 +1,112 @@
+=== dotViewer E2E Test Runner ===
+Started at: tor. 22 jan. 2026 15.17.49 CET
+
+Resetting QuickLook...
+qlmanage: resetting quicklookd
+
+=== Test Files ===
+-rwxr-xr-x  1 stian  staff  1121 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/run_e2e_test.sh
+-rw-r--r--  1 stian  staff   187 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.env
+-rw-r--r--  1 stian  staff   635 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.go
+-rw-r--r--  1 stian  staff   517 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.js
+-rw-r--r--  1 stian  staff   372 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.json
+-rw-r--r--  1 stian  staff   358 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.md
+-rw-r--r--  1 stian  staff   490 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.plist
+-rw-r--r--  1 stian  staff   651 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.py
+-rw-r--r--  1 stian  staff   740 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.rs
+-rw-r--r--  1 stian  staff   508 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.sh
+-rw-r--r--  1 stian  staff   438 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.swift
+-rw-r--r--  1 stian  staff   588 21 jan. 16:22 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.ts
+-rw-r--r--  1 stian  staff   513 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.xml
+-rw-r--r--  1 stian  staff   302 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.yaml
+-rw-r--r--  1 stian  staff   553 21 jan. 13:55 /Users/stian/Developer/macOS Apps/dotViewer/TestFiles/test.zsh
+
+=== Starting Log Stream ===
+Press Ctrl+C to stop after testing
+
+Filtering the log data using "subsystem == "com.stianlars1.dotViewer""
+Timestamp                       Thread     Type        Activity             PID    TTL
+2026-01-22 15:20:42.413408+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 188 lines)
+2026-01-22 15:20:47.073105+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 315 lines)
+2026-01-22 15:20:48.456125+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 86 lines)
+2026-01-22 15:20:48.613664+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 82 lines)
+2026-01-22 15:20:48.911732+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 134 lines)
+2026-01-22 15:20:49.264756+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 188 lines)
+2026-01-22 15:20:50.196499+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 228 lines)
+2026-01-22 15:20:50.596511+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 335 lines)
+2026-01-22 15:20:51.073191+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 228 lines)
+2026-01-22 15:20:51.827672+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 910 lines)
+2026-01-22 15:20:53.539190+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 264 lines)
+2026-01-22 15:20:54.387844+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 433 lines)
+2026-01-22 15:21:45.020879+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 45 lines)
+2026-01-22 15:21:45.836809+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 167 lines)
+2026-01-22 15:21:48.392227+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 45 lines)
+2026-01-22 15:21:53.051176+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 4 lines)
+2026-01-22 15:21:53.144224+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 4 lines)
+2026-01-22 15:21:53.863391+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:21:54.320092+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:22:01.673195+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 589 lines)
+2026-01-22 15:22:04.119507+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 49 lines)
+2026-01-22 15:22:06.364389+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 589 lines)
+2026-01-22 15:22:06.905509+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 589 lines)
+2026-01-22 15:22:30.898600+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 17 lines)
+2026-01-22 15:22:31.624596+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:22:31.765663+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 4 lines)
+2026-01-22 15:22:31.960213+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 49 lines)
+2026-01-22 15:22:32.948195+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 49 lines)
+2026-01-22 15:23:07.511733+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 589 lines)
+2026-01-22 15:23:08.839752+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 45 lines)
+2026-01-22 15:23:11.537945+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 167 lines)
+2026-01-22 15:24:25.713347+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 433 lines)
+2026-01-22 15:24:29.966469+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 264 lines)
+2026-01-22 15:24:32.447858+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 910 lines)
+2026-01-22 15:24:34.561754+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 910 lines)
+2026-01-22 15:26:09.376722+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 315 lines)
+2026-01-22 15:26:13.035820+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 86 lines)
+2026-01-22 15:26:13.258395+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 82 lines)
+2026-01-22 15:26:13.385067+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 134 lines)
+2026-01-22 15:26:13.542846+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 188 lines)
+2026-01-22 15:26:13.732580+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 228 lines)
+2026-01-22 15:26:14.006327+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 195 lines)
+2026-01-22 15:26:15.170165+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 335 lines)
+2026-01-22 15:26:15.660365+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 228 lines)
+2026-01-22 15:26:16.161577+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 335 lines)
+2026-01-22 15:26:16.657804+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 195 lines)
+2026-01-22 15:26:17.089678+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 216 lines)
+2026-01-22 15:30:09.194062+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 431 lines)
+2026-01-22 15:34:56.333871+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 216 lines)
+2026-01-22 15:35:10.957438+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 216 lines)
+2026-01-22 15:35:27.780756+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 4 lines)
+2026-01-22 15:35:28.086340+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:35:29.925170+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 45 lines)
+2026-01-22 15:36:10.192385+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 45 lines)
+2026-01-22 15:37:47.251323+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 17 lines)
+2026-01-22 15:37:47.550011+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:37:47.698440+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 12 lines)
+2026-01-22 15:37:48.055458+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 4 lines)
+2026-01-22 15:37:48.538895+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 49 lines)
+2026-01-22 15:37:48.606984+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 589 lines)
+2026-01-22 15:37:48.795541+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 167 lines)
+2026-01-22 15:37:49.021675+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 433 lines)
+2026-01-22 15:37:53.136011+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 433 lines)
+2026-01-22 15:51:02.518109+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 335 lines)
+2026-01-22 15:54:58.197872+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:55:20.489513+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:57:05.755783+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:57:48.804395+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:58:02.833874+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:58:10.330078+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:58:40.889029+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 15:58:47.654373+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:28:21.501548+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:30:04.578943+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:30:43.067601+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:32:18.361409+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:33:35.295871+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:33:51.700207+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 69 lines)
+2026-01-22 22:34:29.130509+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 70 lines)
+2026-01-22 22:34:32.147843+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 70 lines)
+2026-01-22 22:34:38.694081+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 71 lines)
+2026-01-22 22:34:43.176280+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 71 lines)
+2026-01-22 22:34:45.655230+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 71 lines)
+2026-01-22 22:34:53.152205+0100 0x2143a    Info        0x0                  29443  0    QuickLookPreview: (QuickLookPreview.debug.dylib) [com.stianlars1.dotViewer:Preview] Highlight <private>: <private>ms (<private>, 72 lines)

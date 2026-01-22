@@ -1,0 +1,844 @@
+{
+  "numStartups": 169,
+  "installMethod": "native",
+  "autoUpdates": false,
+  "editorMode": "vim",
+  "hasSeenTasksHint": true,
+  "customApiKeyResponses": {
+    "approved": [
+      "CGo1Bb4dMuA-J-xlTgAA",
+      "0gfDOJ97oKw-rSKCpwAA",
+      "9eQpScAON5w-emyBkAAA"
+    ],
+    "rejected": []
+  },
+  "tipsHistory": {
+    "new-user-warmup": 2,
+    "plan-mode-for-complex-tasks": 2,
+    "terminal-setup": 166,
+    "memory-command": 167,
+    "theme-command": 154,
+    "colorterm-truecolor": 165,
+    "status-line": 165,
+    "stickers-command": 159,
+    "prompt-queue": 17,
+    "enter-to-steer-in-relatime": 154,
+    "todo-list": 156,
+    "install-github-app": 166,
+    "install-slack-app": 169,
+    "drag-and-drop-images": 169,
+    "paste-images-mac": 156,
+    "double-esc-code-restore": 156,
+    "continue": 156,
+    "shift-tab": 156,
+    "image-paste": 157,
+    "config-thinking-mode": 8,
+    "ultrathink-keyword": 81,
+    "btw-side-question": 10,
+    "custom-agents": 169,
+    "default-permission-mode-config": 166,
+    "desktop-app": 169,
+    "web-app": 165,
+    "mobile-app": 165,
+    "permissions": 169,
+    "rename-conversation": 167,
+    "custom-commands": 169,
+    "guest-passes": 165,
+    "frontend-design-plugin": 159,
+    "git-worktrees": 166,
+    "shift-enter": 135
+  },
+  "promptQueueUseCount": 115,
+  "showExpandedTodos": true,
+  "cachedStatsigGates": {
+    "tengu_log_1p_events": true,
+    "code_slack_app_install_banner": false,
+    "tengu_tool_pear": false,
+    "tengu_sumi": true,
+    "tengu_prompt_suggestion": true,
+    "tengu_year_end_2025_campaign_promo": false,
+    "tengu_streaming_tool_execution2": false,
+    "tengu_session_memory": false,
+    "tengu_disable_bypass_permissions_mode": false,
+    "tengu_c4w_usage_limit_notifications_enabled": true,
+    "tengu_thinkback": false,
+    "tengu_ant_attribution_header_new": true,
+    "tengu_tool_result_persistence": false,
+    "tengu_react_vulnerability_warning": false
+  },
+  "cachedDynamicConfigs": {
+    "tengu_1p_event_batch_config": {
+      "scheduledDelayMillis": 5000,
+      "maxExportBatchSize": 200,
+      "maxQueueSize": 8192
+    }
+  },
+  "cachedGrowthBookFeatures": {
+    "tengu_pid_based_version_locking": true,
+    "strawberry_granite_flag": "OFF",
+    "persimmon_marble_flag": "marble",
+    "tengu_mcp_tool_search": true,
+    "tengu_disable_bypass_permissions_mode": false,
+    "tengu_tool_pear": false,
+    "tengu_thinkback": false,
+    "tengu_sumi": true,
+    "tengu_c4w_usage_limit_notifications_enabled": true,
+    "tengu_react_vulnerability_warning": false,
+    "tengu_ant_attribution_header_new": true,
+    "tengu_accept_with_feedback": true,
+    "tengu_tool_search_unsupported_models": null,
+    "tengu_1p_event_batch_config": {
+      "scheduledDelayMillis": 5000,
+      "maxExportBatchSize": 200,
+      "maxQueueSize": 8192
+    },
+    "tengu_event_sampling_config": {},
+    "tengu-top-of-feed-tip": {
+      "tip": "",
+      "color": ""
+    },
+    "tengu_scratch": false,
+    "tengu_log_segment_events": false,
+    "tengu_log_datadog_events": true,
+    "tengu_post_compact_survey": false,
+    "tengu_streaming_tool_execution2": false,
+    "tengu_permission_explainer": false,
+    "tengu_prompt_suggestion": true,
+    "tengu_code_diff_cli": true,
+    "enhanced_telemetry_beta": false,
+    "tengu_chrome_auto_enable": false,
+    "tengu_compact_streaming_retry": false,
+    "tengu_session_memory": false,
+    "tengu_bash_haiku_prefetch": false,
+    "tengu_sm_compact": false,
+    "tengu_plan_mode_interview_phase": false,
+    "tengu_keybinding_customization": false,
+    "tengu_claudeai_mcp_connectors": false,
+    "tengu_plank_river_frost": "user_intent",
+    "tengu_attribution_header": false
+  },
+  "userID": "f9a875ccea4b8f89b8c5b0188ec4ca0f9c30ef09fffe59dba9b2dbbacc8da284",
+  "firstStartTime": "2026-01-06T12:28:13.300Z",
+  "sonnet45MigrationComplete": true,
+  "opus45MigrationComplete": true,
+  "changelogLastFetched": 1769041238166,
+  "officialMarketplaceAutoInstallAttempted": true,
+  "officialMarketplaceAutoInstalled": true,
+  "autoUpdatesProtectedForNative": true,
+  "thinkingMigrationComplete": true,
+  "githubRepoPaths": {
+    "sleipner-motor-as/web-next": [
+      "/Users/stian/Sleipner/git/web-next/main",
+      "/Users/stian/Sleipner/git/web-next"
+    ],
+    "sleipner-motor-as/odin": [
+      "/Users/stian/Sleipner/git/odin-code/odin/.venv/bin",
+      "/Users/stian/Sleipner/git/odin-code/odin/vue",
+      "/Users/stian/Sleipner/git/odin-code/odin/odin",
+      "/Users/stian/Sleipner/git/odin-code/odin"
+    ],
+    "sleipner-motor-as/sleipner-auth": [
+      "/Users/stian/Sleipner/git/sleipner-auth"
+    ]
+  },
+  "claudeCodeFirstTokenDate": "2025-08-14T21:33:42.899244Z",
+  "hasCompletedOnboarding": true,
+  "lastOnboardingVersion": "2.0.76",
+  "projects": {
+    "/Users/stian/Sleipner/git/web-next": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 4,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "exampleFiles": [
+        "payload-types.ts",
+        "products-service.ts",
+        "ProductCategories.ts",
+        "product-details.tsx",
+        "shop-page-service.ts"
+      ],
+      "exampleFilesGeneratedAt": 1768921295089,
+      "lastCost": 0.47614065000000005,
+      "lastAPIDuration": 118115,
+      "lastAPIDurationWithoutRetries": 118110,
+      "lastToolDuration": 644,
+      "lastDuration": 170869,
+      "lastLinesAdded": 0,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 418,
+      "lastTotalOutputTokens": 5134,
+      "lastTotalCacheCreationInputTokens": 60967,
+      "lastTotalCacheReadInputTokens": 567348,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 242,
+          "outputTokens": 47,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.000477
+        },
+        "claude-sonnet-4-5-20250929": {
+          "inputTokens": 176,
+          "outputTokens": 5087,
+          "cacheReadInputTokens": 567348,
+          "cacheCreationInputTokens": 60967,
+          "webSearchRequests": 0,
+          "costUSD": 0.47566365000000005
+        }
+      },
+      "lastSessionId": "cafbc469-1c04-434c-a10e-bf0579f493b4",
+      "reactVulnerabilityWarningCount": 3
+    },
+    "/Users/stian/Developer/macOS Apps/dotViewer": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 5,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 0.027503000000000003,
+      "lastAPIDuration": 9964,
+      "lastAPIDurationWithoutRetries": 9960,
+      "lastToolDuration": 0,
+      "lastDuration": 55730,
+      "lastLinesAdded": 0,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 26868,
+      "lastTotalOutputTokens": 127,
+      "lastTotalCacheCreationInputTokens": 0,
+      "lastTotalCacheReadInputTokens": 0,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 26868,
+          "outputTokens": 127,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.027503000000000003
+        }
+      },
+      "lastSessionId": "72ad5165-3fb4-4a4a-9e07-09e12b0114f8",
+      "exampleFiles": [
+        "PreviewContentView.swift",
+        "ContentView.swift",
+        "SharedSettings.swift",
+        "PreviewViewController.swift",
+        "SyntaxHighlighter.swift"
+      ],
+      "exampleFilesGeneratedAt": 1768895040033
+    },
+    "/Users/stian/Documents/spb1": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 1,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 0.9164640000000001,
+      "lastAPIDuration": 211895,
+      "lastAPIDurationWithoutRetries": 211886,
+      "lastToolDuration": 1197,
+      "lastDuration": 500934,
+      "lastLinesAdded": 449,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 7452,
+      "lastTotalOutputTokens": 9706,
+      "lastTotalCacheCreationInputTokens": 64020,
+      "lastTotalCacheReadInputTokens": 613494,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 3137,
+          "outputTokens": 239,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 10598,
+          "webSearchRequests": 0,
+          "costUSD": 0.017579499999999998
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 4315,
+          "outputTokens": 9467,
+          "cacheReadInputTokens": 613494,
+          "cacheCreationInputTokens": 53422,
+          "webSearchRequests": 0,
+          "costUSD": 0.8988845000000001
+        }
+      },
+      "lastSessionId": "43a86865-d717-4352-99d5-a6debee1ddf1"
+    },
+    "/Users/stian/Sleipner/git/odin-code/odin": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "exampleFiles": [
+        "views.py",
+        "models.py",
+        "serializers.py",
+        "agent.py",
+        "simul.py"
+      ],
+      "exampleFilesGeneratedAt": 1768911190774,
+      "hasCompletedProjectOnboarding": true,
+      "lastCost": 1.5230219000000005,
+      "lastAPIDuration": 493661,
+      "lastAPIDurationWithoutRetries": 493649,
+      "lastToolDuration": 173767,
+      "lastDuration": 1474947,
+      "lastLinesAdded": 488,
+      "lastLinesRemoved": 192,
+      "lastTotalInputTokens": 37252,
+      "lastTotalOutputTokens": 32965,
+      "lastTotalCacheCreationInputTokens": 195222,
+      "lastTotalCacheReadInputTokens": 1243944,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 37102,
+          "outputTokens": 16507,
+          "cacheReadInputTokens": 671024,
+          "cacheCreationInputTokens": 116503,
+          "webSearchRequests": 0,
+          "costUSD": 0.33236815
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 150,
+          "outputTokens": 16458,
+          "cacheReadInputTokens": 572920,
+          "cacheCreationInputTokens": 78719,
+          "webSearchRequests": 0,
+          "costUSD": 1.1906537500000005
+        }
+      },
+      "lastSessionId": "fdf2b9bf-f4e8-44fc-a194-7ace34adad8b"
+    },
+    "/private/tmp": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 0.48531525,
+      "lastAPIDuration": 79657,
+      "lastAPIDurationWithoutRetries": 79652,
+      "lastToolDuration": 55,
+      "lastDuration": 11841438,
+      "lastLinesAdded": 0,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 10682,
+      "lastTotalOutputTokens": 2768,
+      "lastTotalCacheCreationInputTokens": 66487,
+      "lastTotalCacheReadInputTokens": 144079,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 8150,
+          "outputTokens": 2326,
+          "cacheReadInputTokens": 144079,
+          "cacheCreationInputTokens": 45305,
+          "webSearchRequests": 0,
+          "costUSD": 0.45409575
+        },
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 2532,
+          "outputTokens": 442,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 21182,
+          "webSearchRequests": 0,
+          "costUSD": 0.0312195
+        }
+      },
+      "lastSessionId": "f8ec9180-c0d2-406b-b5de-08b0641a24b7"
+    },
+    "/Users/stian/Sleipner/git/sleipner-auth": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": true,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "exampleFiles": [
+        "Login.vue",
+        "Authenticated.vue",
+        "AuthenticationService.js",
+        "App.vue",
+        "CreateUser.vue"
+      ],
+      "exampleFilesGeneratedAt": 1768226254547,
+      "lastCost": 0.5452558999999999,
+      "lastAPIDuration": 145067,
+      "lastAPIDurationWithoutRetries": 145052,
+      "lastToolDuration": 47407,
+      "lastDuration": 9536830,
+      "lastLinesAdded": 1,
+      "lastLinesRemoved": 1,
+      "lastTotalInputTokens": 11916,
+      "lastTotalOutputTokens": 5305,
+      "lastTotalCacheCreationInputTokens": 44076,
+      "lastTotalCacheReadInputTokens": 388917,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 11760,
+          "outputTokens": 598,
+          "cacheReadInputTokens": 10719,
+          "cacheCreationInputTokens": 10719,
+          "webSearchRequests": 0,
+          "costUSD": 0.029220649999999997
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 156,
+          "outputTokens": 4707,
+          "cacheReadInputTokens": 378198,
+          "cacheCreationInputTokens": 33357,
+          "webSearchRequests": 0,
+          "costUSD": 0.51603525
+        }
+      },
+      "lastSessionId": "67ffd51f-a872-4a62-8766-223ab46941b7"
+    },
+    "/Users/stian": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [],
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 2.1397547499999994,
+      "lastAPIDuration": 427691,
+      "lastAPIDurationWithoutRetries": 427658,
+      "lastToolDuration": 36746,
+      "lastDuration": 6356297,
+      "lastLinesAdded": 422,
+      "lastLinesRemoved": 271,
+      "lastTotalInputTokens": 62216,
+      "lastTotalOutputTokens": 24215,
+      "lastTotalCacheCreationInputTokens": 124371,
+      "lastTotalCacheReadInputTokens": 1401898,
+      "lastTotalWebSearchRequests": 1,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 58922,
+          "outputTokens": 1464,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0,
+          "webSearchRequests": 0,
+          "costUSD": 0.06624200000000001
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 3294,
+          "outputTokens": 22751,
+          "cacheReadInputTokens": 1401898,
+          "cacheCreationInputTokens": 124371,
+          "webSearchRequests": 1,
+          "costUSD": 2.0735127499999995
+        }
+      },
+      "lastSessionId": "6acf3849-6d93-4819-b261-1a5ffbb337e9"
+    },
+    "/Users/stian/sleipner-dev": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 2,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [],
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      }
+    },
+    "/Users/stian/.sleipner-dev": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 20,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [
+        "sleipner-start.sh",
+        "sleipner-stop.sh",
+        "sleipner-status.sh",
+        "config.sh",
+        "CHANGELOG.md"
+      ],
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 1.6584157000000004,
+      "lastAPIDuration": 529214,
+      "lastAPIDurationWithoutRetries": 529203,
+      "lastToolDuration": 130757,
+      "lastDuration": 6988303,
+      "lastLinesAdded": 460,
+      "lastLinesRemoved": 124,
+      "lastTotalInputTokens": 12193,
+      "lastTotalOutputTokens": 29045,
+      "lastTotalCacheCreationInputTokens": 253286,
+      "lastTotalCacheReadInputTokens": 2235157,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 11804,
+          "outputTokens": 10326,
+          "cacheReadInputTokens": 197487,
+          "cacheCreationInputTokens": 107137,
+          "webSearchRequests": 0,
+          "costUSD": 0.21710395000000007
+        },
+        "claude-sonnet-4-5-20250929": {
+          "inputTokens": 389,
+          "outputTokens": 18719,
+          "cacheReadInputTokens": 2037670,
+          "cacheCreationInputTokens": 146149,
+          "webSearchRequests": 0,
+          "costUSD": 1.4413117500000006
+        }
+      },
+      "lastSessionId": "32255295-9c2a-4e0f-9a78-12117719ecf5",
+      "exampleFilesGeneratedAt": 1768996039461
+    },
+    "/Users/stian/.hammerspoon": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 19,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [],
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 5.500012849999999,
+      "lastAPIDuration": 956044,
+      "lastAPIDurationWithoutRetries": 953774,
+      "lastToolDuration": 297153,
+      "lastDuration": 67482869,
+      "lastLinesAdded": 703,
+      "lastLinesRemoved": 211,
+      "lastTotalInputTokens": 168033,
+      "lastTotalOutputTokens": 50997,
+      "lastTotalCacheCreationInputTokens": 443943,
+      "lastTotalCacheReadInputTokens": 2638075,
+      "lastTotalWebSearchRequests": 8,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 144806,
+          "outputTokens": 4638,
+          "cacheReadInputTokens": 56936,
+          "cacheCreationInputTokens": 18800,
+          "webSearchRequests": 0,
+          "costUSD": 0.19718960000000002
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 23227,
+          "outputTokens": 46359,
+          "cacheReadInputTokens": 2581139,
+          "cacheCreationInputTokens": 425143,
+          "webSearchRequests": 8,
+          "costUSD": 5.30282325
+        }
+      },
+      "lastSessionId": "ae9e696c-3c82-4738-a0c6-25fbedd1f1a7"
+    },
+    "/Users/stian/.zsh-custom": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 15,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [],
+      "reactVulnerabilityCache": {
+        "detected": false,
+        "package": null,
+        "packageName": null,
+        "version": null,
+        "packageManager": null
+      },
+      "lastCost": 1.3337069499999998,
+      "lastAPIDuration": 303830,
+      "lastAPIDurationWithoutRetries": 303804,
+      "lastToolDuration": 423192,
+      "lastDuration": 3021165,
+      "lastLinesAdded": 671,
+      "lastLinesRemoved": 0,
+      "lastTotalInputTokens": 35466,
+      "lastTotalOutputTokens": 16999,
+      "lastTotalCacheCreationInputTokens": 128821,
+      "lastTotalCacheReadInputTokens": 706617,
+      "lastTotalWebSearchRequests": 0,
+      "lastModelUsage": {
+        "claude-haiku-4-5-20251001": {
+          "inputTokens": 35317,
+          "outputTokens": 6952,
+          "cacheReadInputTokens": 106412,
+          "cacheCreationInputTokens": 20833,
+          "webSearchRequests": 0,
+          "costUSD": 0.10675945000000002
+        },
+        "claude-opus-4-5-20251101": {
+          "inputTokens": 149,
+          "outputTokens": 10047,
+          "cacheReadInputTokens": 600205,
+          "cacheCreationInputTokens": 107988,
+          "webSearchRequests": 0,
+          "costUSD": 1.2269474999999999
+        }
+      },
+      "lastSessionId": "d423fedb-47f1-4aea-a7c8-b39f8e0009bc"
+    }
+  },
+  "lastReleaseNotesSeen": "2.1.15",
+  "hasShownOpus45Notice": {
+    "3188cfef-b1aa-4ada-b4f2-fe0fe3ede3fd": true,
+    "da4010b3-0cf7-4829-967e-7a09e84292e0": true
+  },
+  "s1mAccessCache": {
+    "3188cfef-b1aa-4ada-b4f2-fe0fe3ede3fd": {
+      "hasAccess": false,
+      "hasAccessNotAsDefault": false,
+      "timestamp": 1769042220147
+    }
+  },
+  "hasIdeOnboardingBeenShown": {
+    "webstorm": true
+  },
+  "lastPlanModeUse": 1769042205965,
+  "groveConfigCache": {
+    "034d0e26-8648-4af6-a43e-ac4ffc7c1e11": {
+      "grove_enabled": true,
+      "timestamp": 1768983482849
+    }
+  },
+  "passesEligibilityCache": {
+    "3188cfef-b1aa-4ada-b4f2-fe0fe3ede3fd": {
+      "eligible": true,
+      "referral_code_details": {
+        "code": "YCYwYpUQpQ",
+        "campaign": "claude_code_guest_pass",
+        "referral_link": "https://claude.ai/referral/YCYwYpUQpQ"
+      },
+      "referrer_reward": null,
+      "timestamp": 1769042219919
+    }
+  },
+  "bypassPermissionsModeAccepted": true,
+  "lspRecommendationIgnoredCount": 3,
+  "passesUpsellSeenCount": 4,
+  "skillUsage": {
+    "brainstorming": {
+      "usageCount": 1,
+      "lastUsedAt": 1768293722357
+    },
+    "build-macos-apps": {
+      "usageCount": 3,
+      "lastUsedAt": 1768401713356
+    },
+    "explaining-code": {
+      "usageCount": 2,
+      "lastUsedAt": 1768314421649
+    },
+    "prompt-engineering-patterns": {
+      "usageCount": 3,
+      "lastUsedAt": 1768404876622
+    },
+    "gsd:help": {
+      "usageCount": 1,
+      "lastUsedAt": 1768389684004
+    },
+    "gsd:map-codebase": {
+      "usageCount": 8,
+      "lastUsedAt": 1768983496558
+    },
+    "gsd:create-roadmap": {
+      "usageCount": 7,
+      "lastUsedAt": 1768990948111
+    },
+    "gsd:new-project": {
+      "usageCount": 17,
+      "lastUsedAt": 1768985038449
+    },
+    "gsd:plan-phase": {
+      "usageCount": 30,
+      "lastUsedAt": 1768990538246
+    },
+    "gsd:check-todos": {
+      "usageCount": 2,
+      "lastUsedAt": 1768478008004
+    },
+    "gsd:execute-plan": {
+      "usageCount": 29,
+      "lastUsedAt": 1768986971481
+    },
+    "gsd:progress": {
+      "usageCount": 11,
+      "lastUsedAt": 1768980710724
+    },
+    "gsd:verify-work": {
+      "usageCount": 3,
+      "lastUsedAt": 1768806599613
+    },
+    "gsd:execute-phase": {
+      "usageCount": 5,
+      "lastUsedAt": 1768810222082
+    },
+    "gsd:add-phase": {
+      "usageCount": 1,
+      "lastUsedAt": 1768553505086
+    },
+    "gsd:add-todo": {
+      "usageCount": 2,
+      "lastUsedAt": 1768554883511
+    },
+    "gsd:plan-fix": {
+      "usageCount": 2,
+      "lastUsedAt": 1768895174648
+    },
+    "gsd:complete-milestone": {
+      "usageCount": 2,
+      "lastUsedAt": 1768980736724
+    },
+    "gsd:new-milestone": {
+      "usageCount": 5,
+      "lastUsedAt": 1768978600555
+    },
+    "gsd:pause-work": {
+      "usageCount": 2,
+      "lastUsedAt": 1768931451701
+    },
+    "statusline": {
+      "usageCount": 1,
+      "lastUsedAt": 1769000111364
+    }
+  },
+  "opusProMigrationComplete": true,
+  "cachedChromeExtensionInstalled": true,
+  "feedbackSurveyState": {
+    "lastShownTime": 1768807157516
+  },
+  "appleTerminalSetupInProgress": false,
+  "appleTerminalBackupPath": "/Users/stian/Library/Preferences/com.apple.Terminal.plist.bak",
+  "optionAsMetaKeyInstalled": true,
+  "hasAcknowledgedCostThreshold": true,
+  "s1mNonSubscriberAccessCache": {
+    "da4010b3-0cf7-4829-967e-7a09e84292e0": {
+      "hasAccess": false,
+      "timestamp": 1769029605957
+    }
+  },
+  "subscriptionNoticeCount": 1,
+  "anonymousId": "claudecode.v1.34891082-ac43-4382-a7a6-b260fef76179",
+  "oauthAccount": {
+    "accountUuid": "034d0e26-8648-4af6-a43e-ac4ffc7c1e11",
+    "emailAddress": "stian.larsen@mac.com",
+    "organizationUuid": "3188cfef-b1aa-4ada-b4f2-fe0fe3ede3fd",
+    "hasExtraUsageEnabled": true,
+    "displayName": "Stian",
+    "organizationRole": "admin",
+    "workspaceRole": null,
+    "organizationName": "stian.larsen@mac.com's Organization"
+  }
+}
