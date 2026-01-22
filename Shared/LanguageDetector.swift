@@ -331,13 +331,27 @@ struct LanguageDetector {
         let trimmed = sample.trimmingCharacters(in: .whitespacesAndNewlines)
 
         // JSON detection (starts with { or [)
+        // More strict checks to avoid false positives
         if trimmed.hasPrefix("{") || trimmed.hasPrefix("[") {
-            // Additional check: must contain quotes and colons for objects
-            if trimmed.hasPrefix("{") && trimmed.contains(":") && trimmed.contains("\"") {
-                return "json"
+            // For objects: require "key": pattern (quoted key followed by colon)
+            if trimmed.hasPrefix("{") {
+                // Look for JSON-style key-value pattern: "key":
+                let jsonKeyPattern = trimmed.range(of: "\"[^\"]+\"\\s*:", options: .regularExpression)
+                if jsonKeyPattern != nil {
+                    return "json"
+                }
             }
+            // For arrays: check for typical JSON array content
             if trimmed.hasPrefix("[") {
-                return "json"
+                // Arrays starting with { are likely JSON object arrays
+                let afterBracket = trimmed.dropFirst().trimmingCharacters(in: .whitespaces)
+                if afterBracket.hasPrefix("{") || afterBracket.hasPrefix("\"") || afterBracket.hasPrefix("[") {
+                    return "json"
+                }
+                // Check for number/boolean array
+                if afterBracket.first?.isNumber == true || afterBracket.hasPrefix("true") || afterBracket.hasPrefix("false") || afterBracket.hasPrefix("null") {
+                    return "json"
+                }
             }
         }
 

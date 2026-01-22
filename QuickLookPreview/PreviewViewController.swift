@@ -11,6 +11,9 @@ class PreviewViewController: NSViewController, QLPreviewingController {
 
     // MARK: - UI State
 
+    /// The hosting view for SwiftUI content.
+    /// NOTE: This property is accessed exclusively from the main thread via DispatchQueue.main.async.
+    /// Quick Look serializes preview requests, and all UI updates go through main queue dispatch.
     private var hostingView: NSHostingView<PreviewContentView>?
 
     /// Track current request URL to detect and skip stale requests during rapid navigation
@@ -324,6 +327,9 @@ extension Data {
     /// Detect string encoding with optimized fast path.
     /// PERFORMANCE: BOM check is O(1), UTF-8 check is the common case (99%+ of files).
     /// Returns immediately on UTF-8 success to avoid trying legacy encodings.
+    ///
+    /// NOTE: Returns nil only if NO encoding works (likely binary data).
+    /// Callers should handle nil by showing an error or treating as binary.
     var stringEncoding: String.Encoding? {
         // Fast path: Check BOM first (no allocation, just byte comparison)
         if self.starts(with: [0xEF, 0xBB, 0xBF]) {
@@ -343,12 +349,18 @@ extension Data {
         }
 
         // Fallback for legacy encodings (rare - only reached for non-UTF-8 files)
-        for encoding in [String.Encoding.isoLatin1, .windowsCP1252] {
+        // These encodings can represent any byte sequence, so they should always succeed
+        // for text files, making this a reasonable fallback chain.
+        for encoding in [String.Encoding.isoLatin1, .windowsCP1252, .macOSRoman] {
             if String(data: self, encoding: encoding) != nil {
+                NSLog("[dotViewer] Using fallback encoding: %@", String(describing: encoding))
                 return encoding
             }
         }
 
-        return .utf8
+        // If nothing works, this is likely binary data - return nil to signal error
+        // rather than silently mangling the content with a wrong encoding
+        NSLog("[dotViewer] WARNING: No valid encoding found for data, likely binary content")
+        return nil
     }
 }

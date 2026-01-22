@@ -37,6 +37,15 @@ struct FastSyntaxHighlighter: Sendable {
 
     // MARK: - Pre-compiled Regex Patterns (Static to avoid recompilation)
 
+    // SAFETY NOTE: These regex patterns use `try!` because:
+    // 1. All patterns are compile-time string literals that have been tested
+    // 2. Pattern compilation failure would indicate a programming error, not a runtime condition
+    // 3. These are static constants initialized once at app launch
+    // 4. If any pattern fails, the app should crash immediately during development
+    //    rather than silently failing later during syntax highlighting
+    //
+    // If modifying these patterns, test compilation in a playground first.
+
     // Comments
     private static let lineCommentRegex = try! NSRegularExpression(pattern: "//[^\n]*")
     private static let blockCommentRegex = try! NSRegularExpression(pattern: "/\\*[\\s\\S]*?\\*/")
@@ -245,20 +254,25 @@ struct FastSyntaxHighlighter: Sendable {
     /// This is O(n) instead of O(n × words) when highlighting individually.
     /// Pattern: \b(word1|word2|word3|...)\b
     /// PERFORMANCE: Uses cached pre-compiled patterns per language (saves 20-50ms per file)
+    ///
+    /// Thread Safety: Uses NSLock with withLock { } for automatic unlock on all exit paths.
+    /// The lock protects keywordPatternCache which is shared across highlighting operations.
     private func highlightWords(in attributed: inout AttributedString, code: NSString, words: Set<String>, mapping: IndexMapping, color: NSColor, language: String?) {
         guard !words.isEmpty else { return }
 
         // Create cache key using language and words hash for uniqueness
         let cacheKey = "\(language ?? "unknown")_\(words.hashValue)"
 
+        // Check cache first (short critical section)
+        let cachedRegex: NSRegularExpression? = Self.patternCacheLock.withLock {
+            Self.keywordPatternCache[cacheKey]
+        }
+
         let regex: NSRegularExpression
-        Self.patternCacheLock.lock()
-        if let cached = Self.keywordPatternCache[cacheKey] {
-            Self.patternCacheLock.unlock()
+        if let cached = cachedRegex {
             regex = cached
         } else {
-            Self.patternCacheLock.unlock()
-            // Sort words for deterministic regex pattern (Set ordering is non-deterministic)
+            // Build pattern outside lock (expensive operation)
             let sortedWords = words.sorted()
             let escapedWords = sortedWords.map { NSRegularExpression.escapedPattern(for: $0) }
             let pattern = "\\b(\(escapedWords.joined(separator: "|")))\\b"
@@ -266,10 +280,10 @@ struct FastSyntaxHighlighter: Sendable {
             guard let newRegex = try? NSRegularExpression(pattern: pattern) else { return }
             regex = newRegex
 
-            // Cache the compiled pattern
-            Self.patternCacheLock.lock()
-            Self.keywordPatternCache[cacheKey] = regex
-            Self.patternCacheLock.unlock()
+            // Cache the compiled pattern (short critical section)
+            Self.patternCacheLock.withLock {
+                Self.keywordPatternCache[cacheKey] = regex
+            }
         }
 
         applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)

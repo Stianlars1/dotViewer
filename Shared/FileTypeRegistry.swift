@@ -1,6 +1,12 @@
 import Foundation
 
 /// Central registry of all supported file types with O(1) lookup
+///
+/// Thread Safety (@unchecked Sendable justification):
+/// This class is inherently thread-safe because:
+/// - All properties (`builtInTypes`, `extensionToType`, `idToType`) are immutable after init
+/// - `SharedSettings.shared` access in query methods is itself thread-safe
+/// - No mutable state exists; the registry is read-only after construction
 final class FileTypeRegistry: @unchecked Sendable {
     static let shared = FileTypeRegistry()
 

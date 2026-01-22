@@ -9,6 +9,12 @@ import Foundation
 /// - On set(): Write to both memory (synchronous) and disk (async).
 /// - Memory handles fast repeated access (same file, scrolling)
 /// - Disk handles XPC restart survival
+///
+/// Thread Safety (@unchecked Sendable justification):
+/// This class is manually verified thread-safe through:
+/// - `lock`: NSLock protecting all memory cache operations (memoryCache, accessOrder)
+/// - `diskCache`: Delegated to DiskCache.shared which has its own synchronization
+/// - All public methods use `lock.withLock { }` for atomic access
 final class HighlightCache: @unchecked Sendable {
     static let shared = HighlightCache()
 
@@ -137,7 +143,16 @@ final class HighlightCache: @unchecked Sendable {
         return (memCount, diskStats)
     }
 
-    // MARK: - Legacy API (deprecated, for backward compatibility)
+    // MARK: - Legacy API (deprecated)
+
+    // NOTE: These legacy methods exist for backwards compatibility during transition.
+    // They were part of v1 cache API before theme/language were added to cache keys.
+    // Migration path:
+    // - get(path:modDate:) → get(path:modDate:theme:language:)
+    // - set(path:modDate:highlighted:) → set(path:modDate:theme:language:highlighted:)
+    // - clear() → clearMemory() or clearAll()
+    //
+    // These will be removed in a future version once all callers are migrated.
 
     /// Deprecated: Use get(path:modDate:theme:language:) instead.
     /// This method uses "auto" as the default theme and nil language.

@@ -11,9 +11,30 @@ struct AddCustomExtensionSheet: View {
 
     let onAdd: (CustomExtension) -> Void
 
+    // MARK: - Validation Constants
+
+    /// Reserved system extensions that should not be added as custom types
+    private static let reservedExtensions: Set<String> = [
+        "app", "framework", "bundle", "plugin", "kext", "xpc",
+        "dylib", "a", "o", "so", "dll", "exe", "bin",
+        "dmg", "pkg", "mpkg", "iso", "img",
+        "zip", "tar", "gz", "bz2", "xz", "rar", "7z",
+        "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
+        "jpg", "jpeg", "png", "gif", "bmp", "tiff", "webp", "heic", "heif",
+        "mp3", "mp4", "wav", "aac", "flac", "mov", "avi", "mkv", "webm"
+    ]
+
+    /// Maximum allowed extension length (reasonable limit)
+    private static let maxExtensionLength = 20
+
+    /// Characters that are not allowed in file extensions
+    private static let invalidExtensionChars = CharacterSet(charactersIn: "/\\:*?\"<>|. \t\n\r")
+
     private var isValid: Bool {
-        !extensionName.trimmingCharacters(in: .whitespaces).isEmpty &&
-        !displayName.trimmingCharacters(in: .whitespaces).isEmpty
+        let ext = cleanedExtension
+        return !ext.isEmpty &&
+               !displayName.trimmingCharacters(in: .whitespaces).isEmpty &&
+               validateExtension(ext) == nil
     }
 
     private var cleanedExtension: String {
@@ -21,6 +42,42 @@ struct AddCustomExtensionSheet: View {
             .lowercased()
             .trimmingCharacters(in: .whitespaces)
             .trimmingCharacters(in: CharacterSet(charactersIn: "."))
+    }
+
+    /// Validates an extension and returns an error message if invalid, nil if valid
+    private func validateExtension(_ ext: String) -> String? {
+        // Check for empty extension after cleaning
+        if ext.isEmpty {
+            return "Extension cannot be empty."
+        }
+
+        // Check length
+        if ext.count > Self.maxExtensionLength {
+            return "Extension is too long (max \(Self.maxExtensionLength) characters)."
+        }
+
+        // Check for path traversal attempts
+        if ext.contains("..") || ext.contains("/") || ext.contains("\\") {
+            return "Extension contains invalid characters."
+        }
+
+        // Check for invalid characters
+        if ext.unicodeScalars.contains(where: { Self.invalidExtensionChars.contains($0) }) {
+            return "Extension contains invalid characters (spaces, special characters, etc.)."
+        }
+
+        // Check for reserved system extensions
+        if Self.reservedExtensions.contains(ext) {
+            return "'\(ext)' is a reserved system extension and cannot be added."
+        }
+
+        // Must be alphanumeric (with optional hyphens/underscores)
+        let allowedChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-_"))
+        if !ext.unicodeScalars.allSatisfy({ allowedChars.contains($0) }) {
+            return "Extension must contain only letters, numbers, hyphens, or underscores."
+        }
+
+        return nil
     }
 
     var body: some View {
@@ -116,8 +173,14 @@ struct AddCustomExtensionSheet: View {
     }
 
     private func addExtension() {
-        // Validate extension doesn't already exist
         let ext = cleanedExtension
+
+        // Run validation checks
+        if let validationError = validateExtension(ext) {
+            errorMessage = validationError
+            showError = true
+            return
+        }
 
         // Check if extension already exists in built-in types
         if FileTypeRegistry.shared.fileType(for: ext) != nil {

@@ -5,6 +5,12 @@ private let logger = Logger(subsystem: "com.stianlars1.dotViewer", category: "Sh
 
 /// Manages settings shared between main app and Quick Look extension via App Groups
 /// Thread-safe for concurrent access from main app and Quick Look extension
+///
+/// Thread Safety (@unchecked Sendable justification):
+/// This class is manually verified thread-safe through:
+/// - `lock`: NSLock protecting all property access (getters and setters)
+/// - `userDefaults` and `isUsingAppGroup`: Immutable after initialization
+/// - All public properties use `lock.withLock { }` for atomic read/write
 final class SharedSettings: @unchecked Sendable {
     static let shared = SharedSettings()
 

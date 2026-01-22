@@ -31,14 +31,43 @@ struct PreviewContentView: View {
         state.language == "markdown"
     }
 
-    /// Detects potentially sensitive environment files
+    /// Detects potentially sensitive environment and credential files.
+    /// NOTE: This is UI-only (shows a warning banner). Users can still copy content.
     private var isEnvFile: Bool {
         let lowercased = state.filename.lowercased()
-        return lowercased.hasPrefix(".env") ||
-               lowercased == "credentials" ||
-               lowercased == "secrets" ||
-               lowercased.hasSuffix(".credentials") ||
-               lowercased.hasSuffix(".secrets")
+        let ext = (state.fileURL?.pathExtension ?? "").lowercased()
+
+        // Direct .env files and variants
+        if lowercased.hasPrefix(".env") { return true }
+
+        // Environment file variants
+        let envPatterns = [".env.example", ".env.template", ".env.sample", ".env.local", ".env.development", ".env.production", ".env.test"]
+        if envPatterns.contains(where: { lowercased == $0 || lowercased.hasSuffix($0) }) { return true }
+
+        // Credentials/secrets files
+        let credentialNames: Set<String> = [
+            "credentials", "secrets", ".credentials", ".secrets",
+            "credentials.json", "secrets.json", "secrets.yaml", "secrets.yml",
+            "service-account.json", "serviceaccount.json"
+        ]
+        if credentialNames.contains(lowercased) { return true }
+
+        // AWS config files
+        let awsFiles: Set<String> = ["credentials", "config"]
+        if awsFiles.contains(lowercased) && (state.fileURL?.path.contains(".aws/") ?? false) { return true }
+
+        // SSH private keys (by name pattern)
+        let sshKeyPatterns = ["id_rsa", "id_ed25519", "id_dsa", "id_ecdsa"]
+        if sshKeyPatterns.contains(where: { lowercased == $0 || lowercased.hasPrefix($0) }) { return true }
+
+        // Key/certificate files by extension
+        let sensitiveExtensions: Set<String> = ["pem", "key", "p12", "pfx", "keystore", "jks"]
+        if sensitiveExtensions.contains(ext) { return true }
+
+        // Suffix patterns
+        if lowercased.hasSuffix(".credentials") || lowercased.hasSuffix(".secrets") { return true }
+
+        return false
     }
 
     init(state: PreviewState) {
@@ -155,6 +184,10 @@ struct PreviewContentView: View {
         let startTime = CFAbsoluteTimeGetCurrent()
         perfLog("[dotViewer PERF] highlightCode START - file: %@, lines: %d, language: %@", state.filename, state.lineCount, state.language ?? "nil")
 
+        // Capture theme value on main thread before background work
+        // ThemeManager is @MainActor, so we must not access it from background contexts
+        let currentTheme = await MainActor.run { SharedSettings.shared.selectedTheme }
+
         defer {
             let elapsed = CFAbsoluteTimeGetCurrent() - startTime
             let usedFast = FastSyntaxHighlighter.isSupported(state.language)
@@ -223,11 +256,10 @@ struct PreviewContentView: View {
             highlightedContent = result
             // Cache the result (memory + disk)
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
-                let theme = SharedSettings.shared.selectedTheme
                 HighlightCache.shared.set(
                     path: path,
                     modDate: modDate,
-                    theme: theme,
+                    theme: currentTheme,
                     language: state.language,
                     highlighted: result
                 )
@@ -316,11 +348,10 @@ struct PreviewContentView: View {
             highlightedContent = highlighted
             // Cache the result (memory + disk)
             if let modDate = state.modificationDate, let path = state.fileURL?.path {
-                let theme = SharedSettings.shared.selectedTheme
                 HighlightCache.shared.set(
                     path: path,
                     modDate: modDate,
-                    theme: theme,
+                    theme: currentTheme,
                     language: state.language,
                     highlighted: highlighted
                 )
@@ -384,11 +415,12 @@ struct PreviewContentView: View {
     }
 
     /// Custom markdown syntax highlighting that matches the user's selected theme
+    @MainActor
     private func highlightMarkdownRaw(_ content: String) -> AttributedString {
         var attributed = AttributedString(content)
         let text = content
 
-        // Get theme-specific colors
+        // Get theme-specific colors (ThemeManager is @MainActor, so this is safe)
         let colors = markdownColorsForTheme(ThemeManager.shared.selectedTheme)
 
         // Helper to apply color to regex matches
@@ -421,6 +453,7 @@ struct PreviewContentView: View {
     }
 
     /// Returns theme-matched colors for markdown syntax highlighting
+    @MainActor
     private func markdownColorsForTheme(_ theme: String) -> (heading: Color, code: Color, link: Color, bold: Color, quote: Color) {
         switch theme {
         case "atomOneLight":
@@ -1291,6 +1324,8 @@ struct MarkdownBlockView: View {
     // MARK: - Simple Syntax Highlighting for Code Blocks
 
     // Pre-compiled regex patterns (static to avoid recompilation)
+    // SAFETY NOTE: These use `try!` because patterns are compile-time literals that
+    // have been tested. Failure indicates a programming error, not a runtime condition.
     private static let lineCommentRegex = try! NSRegularExpression(pattern: "//[^\n]*")
     private static let blockCommentRegex = try! NSRegularExpression(pattern: "/\\*[\\s\\S]*?\\*/")
     private static let hashCommentRegex = try! NSRegularExpression(pattern: "#[^\n]*")

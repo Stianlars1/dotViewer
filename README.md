@@ -94,6 +94,15 @@ The "Open in Editor" button may have limited functionality due to Quick Look ext
 ### Large Files
 Files over 2,000 lines display without syntax highlighting for performance. The content is still fully readable and scrollable.
 
+## Security
+
+dotViewer includes several security-conscious features:
+
+- **Sensitive File Detection** - Files like `.env`, credentials, SSH keys, and certificates display a warning banner
+- **Input Validation** - Custom file extensions are validated to prevent malformed entries
+- **Sandbox Compliance** - Operates within macOS sandbox with defense-in-depth path validation
+- **No Network Access** - All processing is local; no data leaves your machine
+
 ## Privacy
 
 dotViewer processes all files locally on your Mac. No data is collected, transmitted, or stored externally. See [PRIVACY.md](PRIVACY.md) for details.
