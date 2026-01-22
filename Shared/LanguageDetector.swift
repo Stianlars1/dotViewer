@@ -310,7 +310,8 @@ struct LanguageDetector {
     static func detectFromShebang(_ content: String) -> String? {
         guard content.hasPrefix("#!") else { return nil }
 
-        let firstLine = String(content.prefix(while: { $0 != "\n" }))
+        // Use Substring to avoid allocation
+        let firstLine = content.prefix(while: { $0 != "\n" })
 
         if firstLine.contains("python") { return "python" }
         if firstLine.contains("ruby") { return "ruby" }
@@ -327,7 +328,10 @@ struct LanguageDetector {
     /// Content-based language detection as fallback for unknown files
     /// Analyzes the first 500 characters to detect common file formats
     static func detectFromContent(_ content: String) -> String? {
-        let sample = String(content.prefix(500))
+        // Use prefix to get a Substring view (no allocation), only convert to String
+        // for operations that require it
+        let sampleEnd = content.index(content.startIndex, offsetBy: min(500, content.count))
+        let sample = content[content.startIndex..<sampleEnd]
         let trimmed = sample.trimmingCharacters(in: .whitespacesAndNewlines)
 
         // JSON detection (starts with { or [)
@@ -365,7 +369,7 @@ struct LanguageDetector {
 
         // INI detection ([section] headers)
         // Check for lines starting with [ and ending with ]
-        let lines = sample.components(separatedBy: .newlines)
+        let lines = sample.split(separator: "\n", omittingEmptySubsequences: false)
         let hasIniSection = lines.contains { line in
             let t = line.trimmingCharacters(in: .whitespaces)
             return t.hasPrefix("[") && t.hasSuffix("]") && t.count > 2

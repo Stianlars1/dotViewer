@@ -1,4 +1,5 @@
 import Foundation
+import os
 import SwiftUI
 
 /// High-performance pure Swift syntax highlighter using regex-based pattern matching.
@@ -75,8 +76,7 @@ struct FastSyntaxHighlighter: Sendable {
     /// Cache for pre-compiled keyword/type/builtin regex patterns per language.
     /// Key format: "\(language ?? "unknown")_\(wordsHashValue)"
     /// PERFORMANCE: Avoids recompiling regex patterns on every file (saves 20-50ms per file)
-    private static var keywordPatternCache: [String: NSRegularExpression] = [:]
-    private static let patternCacheLock = NSLock()
+    private static let patternCache = OSAllocatedUnfairLock(initialState: [String: NSRegularExpression]())
 
     // MARK: - Data File Detection
 
@@ -264,8 +264,8 @@ struct FastSyntaxHighlighter: Sendable {
         let cacheKey = "\(language ?? "unknown")_\(words.hashValue)"
 
         // Check cache first (short critical section)
-        let cachedRegex: NSRegularExpression? = Self.patternCacheLock.withLock {
-            Self.keywordPatternCache[cacheKey]
+        let cachedRegex: NSRegularExpression? = Self.patternCache.withLock { cache in
+            cache[cacheKey]
         }
 
         let regex: NSRegularExpression
@@ -281,8 +281,8 @@ struct FastSyntaxHighlighter: Sendable {
             regex = newRegex
 
             // Cache the compiled pattern (short critical section)
-            Self.patternCacheLock.withLock {
-                Self.keywordPatternCache[cacheKey] = regex
+            Self.patternCache.withLock { cache in
+                cache[cacheKey] = regex
             }
         }
 
@@ -314,58 +314,76 @@ struct FastSyntaxHighlighter: Sendable {
         var isXmlDataMode: Bool = false
     }
 
+    // MARK: - Cached Language Patterns (static to avoid re-allocation per file)
+
+    private static let cachedPatterns: [String: LanguagePatterns] = {
+        var map = [String: LanguagePatterns]()
+        let swift = buildSwiftPatterns()
+        map["swift"] = swift
+
+        let js = buildJavascriptPatterns()
+        for key in ["javascript", "js", "jsx"] { map[key] = js }
+
+        let ts = buildTypescriptPatterns()
+        for key in ["typescript", "ts", "tsx"] { map[key] = ts }
+
+        let py = buildPythonPatterns()
+        for key in ["python", "py"] { map[key] = py }
+
+        let rust = buildRustPatterns()
+        for key in ["rust", "rs"] { map[key] = rust }
+
+        let go = buildGoPatterns()
+        for key in ["go", "golang"] { map[key] = go }
+
+        map["json"] = buildJsonPatterns()
+
+        let yaml = buildYamlPatterns()
+        for key in ["yaml", "yml"] { map[key] = yaml }
+
+        let bash = buildBashPatterns()
+        for key in ["bash", "shell", "sh", "zsh"] { map[key] = bash }
+
+        map["html"] = buildHtmlPatterns()
+
+        let xml = buildXmlDataPatterns()
+        for key in ["xml", "plist"] { map[key] = xml }
+
+        let css = buildCssPatterns()
+        for key in ["css", "scss", "sass"] { map[key] = css }
+
+        let cpp = buildCppPatterns()
+        for key in ["c", "cpp", "c++", "h", "hpp"] { map[key] = cpp }
+
+        map["java"] = buildJavaPatterns()
+
+        let kotlin = buildKotlinPatterns()
+        for key in ["kotlin", "kt"] { map[key] = kotlin }
+
+        let ruby = buildRubyPatterns()
+        for key in ["ruby", "rb"] { map[key] = ruby }
+
+        map["php"] = buildPhpPatterns()
+        map["sql"] = buildSqlPatterns()
+
+        let md = buildMarkdownPatterns()
+        for key in ["markdown", "md"] { map[key] = md }
+
+        return map
+    }()
+
+    private static let genericPatternsCache = buildGenericPatterns()
+
     private func languagePatterns(for language: String?) -> LanguagePatterns {
         guard let lang = language?.lowercased() else {
-            return genericPatterns()
+            return Self.genericPatternsCache
         }
-
-        switch lang {
-        case "swift":
-            return swiftPatterns()
-        case "javascript", "js", "jsx":
-            return javascriptPatterns()
-        case "typescript", "ts", "tsx":
-            return typescriptPatterns()
-        case "python", "py":
-            return pythonPatterns()
-        case "rust", "rs":
-            return rustPatterns()
-        case "go", "golang":
-            return goPatterns()
-        case "json":
-            return jsonPatterns()
-        case "yaml", "yml":
-            return yamlPatterns()
-        case "bash", "shell", "sh", "zsh":
-            return bashPatterns()
-        case "html":
-            return htmlPatterns()
-        case "xml", "plist":
-            return xmlDataPatterns()
-        case "css", "scss", "sass":
-            return cssPatterns()
-        case "c", "cpp", "c++", "h", "hpp":
-            return cppPatterns()
-        case "java":
-            return javaPatterns()
-        case "kotlin", "kt":
-            return kotlinPatterns()
-        case "ruby", "rb":
-            return rubyPatterns()
-        case "php":
-            return phpPatterns()
-        case "sql":
-            return sqlPatterns()
-        case "markdown", "md":
-            return markdownPatterns()
-        default:
-            return genericPatterns()
-        }
+        return Self.cachedPatterns[lang] ?? Self.genericPatternsCache
     }
 
     // MARK: - Language-Specific Patterns
 
-    private func swiftPatterns() -> LanguagePatterns {
+    private static func buildSwiftPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["func", "let", "var", "if", "else", "guard", "return", "import", "class", "struct", "enum", "protocol", "extension", "private", "public", "internal", "fileprivate", "static", "final", "override", "init", "deinit", "self", "super", "nil", "true", "false", "for", "while", "repeat", "switch", "case", "default", "break", "continue", "fallthrough", "where", "in", "do", "try", "catch", "throw", "throws", "rethrows", "defer", "as", "is", "async", "await", "actor", "nonisolated", "isolated", "some", "any", "typealias", "associatedtype", "inout", "mutating", "nonmutating", "convenience", "required", "lazy", "weak", "unowned", "willSet", "didSet", "get", "set", "open", "package"]
         p.types = ["String", "Int", "Int8", "Int16", "Int32", "Int64", "UInt", "UInt8", "UInt16", "UInt32", "UInt64", "Double", "Float", "Float16", "Bool", "Array", "Dictionary", "Set", "Optional", "Result", "Error", "Never", "Void", "Any", "AnyObject", "Self", "View", "Color", "Text", "Button", "Image", "VStack", "HStack", "ZStack", "ForEach", "List", "NavigationView", "NavigationStack", "NavigationLink", "ScrollView", "LazyVStack", "LazyHStack", "GeometryReader", "Spacer", "Divider", "URL", "Data", "Date", "UUID", "Range", "ClosedRange", "Substring", "Character", "CGFloat", "CGPoint", "CGSize", "CGRect", "NSColor", "NSFont", "AttributedString", "Task", "MainActor", "Sendable"]
@@ -375,7 +393,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func javascriptPatterns() -> LanguagePatterns {
+    private static func buildJavascriptPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["function", "const", "let", "var", "if", "else", "return", "import", "export", "from", "default", "class", "extends", "new", "this", "super", "null", "undefined", "true", "false", "for", "while", "do", "switch", "case", "break", "continue", "try", "catch", "throw", "finally", "async", "await", "yield", "of", "in", "typeof", "instanceof", "void", "delete", "debugger", "with", "static", "get", "set"]
         p.types = ["Object", "Array", "String", "Number", "Boolean", "Function", "Symbol", "BigInt", "Map", "Set", "WeakMap", "WeakSet", "Promise", "Proxy", "Reflect", "Date", "RegExp", "Error", "TypeError", "RangeError", "SyntaxError", "JSON", "Math", "Intl", "ArrayBuffer", "DataView", "Int8Array", "Uint8Array", "Float32Array", "Float64Array"]
@@ -384,14 +402,14 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func typescriptPatterns() -> LanguagePatterns {
-        var p = javascriptPatterns()
+    private static func buildTypescriptPatterns() -> LanguagePatterns {
+        var p = buildJavascriptPatterns()
         p.keywords.formUnion(["interface", "type", "enum", "implements", "private", "public", "protected", "readonly", "abstract", "as", "is", "keyof", "infer", "extends", "never", "unknown", "any", "void", "declare", "namespace", "module", "require", "export", "import", "asserts", "satisfies"])
         p.types.formUnion(["string", "number", "boolean", "object", "any", "void", "never", "unknown", "null", "undefined", "Record", "Partial", "Required", "Readonly", "Pick", "Omit", "Exclude", "Extract", "NonNullable", "Parameters", "ReturnType", "InstanceType", "ThisType", "Awaited"])
         return p
     }
 
-    private func pythonPatterns() -> LanguagePatterns {
+    private static func buildPythonPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["def", "class", "if", "elif", "else", "return", "import", "from", "as", "try", "except", "finally", "raise", "with", "for", "while", "break", "continue", "pass", "lambda", "yield", "global", "nonlocal", "assert", "del", "in", "is", "not", "and", "or", "True", "False", "None", "self", "cls", "async", "await", "match", "case"]
         p.types = ["str", "int", "float", "bool", "list", "dict", "tuple", "set", "frozenset", "bytes", "bytearray", "memoryview", "type", "object", "complex", "range", "slice", "property", "classmethod", "staticmethod", "super"]
@@ -403,7 +421,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func rustPatterns() -> LanguagePatterns {
+    private static func buildRustPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["fn", "let", "mut", "const", "if", "else", "match", "return", "use", "mod", "pub", "crate", "self", "super", "struct", "enum", "impl", "trait", "for", "while", "loop", "break", "continue", "move", "ref", "static", "unsafe", "async", "await", "dyn", "where", "as", "in", "true", "false", "extern", "type", "macro_rules"]
         p.types = ["i8", "i16", "i32", "i64", "i128", "isize", "u8", "u16", "u32", "u64", "u128", "usize", "f32", "f64", "bool", "char", "str", "String", "Vec", "Option", "Result", "Box", "Rc", "Arc", "Cell", "RefCell", "Mutex", "RwLock", "HashMap", "HashSet", "BTreeMap", "BTreeSet", "VecDeque", "LinkedList", "BinaryHeap", "Cow", "Pin", "PhantomData", "Self"]
@@ -411,7 +429,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func goPatterns() -> LanguagePatterns {
+    private static func buildGoPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["func", "var", "const", "if", "else", "return", "import", "package", "type", "struct", "interface", "for", "range", "switch", "case", "default", "break", "continue", "go", "select", "chan", "defer", "map", "make", "new", "nil", "true", "false", "fallthrough", "goto"]
         p.types = ["string", "int", "int8", "int16", "int32", "int64", "uint", "uint8", "uint16", "uint32", "uint64", "uintptr", "float32", "float64", "complex64", "complex128", "bool", "byte", "rune", "error", "any"]
@@ -420,7 +438,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func jsonPatterns() -> LanguagePatterns {
+    private static func buildJsonPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["true", "false", "null"]
         p.supportsLineComments = false
@@ -429,7 +447,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func yamlPatterns() -> LanguagePatterns {
+    private static func buildYamlPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["true", "false", "null", "yes", "no", "on", "off"]
         p.supportsLineComments = false
@@ -438,7 +456,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func bashPatterns() -> LanguagePatterns {
+    private static func buildBashPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["if", "then", "else", "elif", "fi", "for", "while", "do", "done", "case", "esac", "in", "function", "return", "exit", "break", "continue", "local", "export", "readonly", "declare", "typeset", "unset", "shift", "set", "source", "alias", "unalias", "trap", "eval", "exec", "select", "until", "coproc", "time"]
         p.builtins = ["echo", "printf", "read", "cd", "pwd", "pushd", "popd", "dirs", "let", "test", "true", "false", "getopts", "hash", "type", "ulimit", "umask", "wait", "kill", "jobs", "fg", "bg", "disown", "suspend", "logout", "history", "fc", "bind", "builtin", "caller", "command", "compgen", "complete", "compopt", "enable", "help", "mapfile", "readarray", "shopt"]
@@ -449,7 +467,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func htmlPatterns() -> LanguagePatterns {
+    private static func buildHtmlPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.supportsLineComments = false
         p.supportsBlockComments = false
@@ -461,7 +479,7 @@ struct FastSyntaxHighlighter: Sendable {
     /// XML data mode patterns - for data files like plist, config, SOAP, etc.
     /// Skips expensive HTML tag regex (~230ms savings) since these are data files, not markup.
     /// Keeps comment, string, and number highlighting for readability.
-    private func xmlDataPatterns() -> LanguagePatterns {
+    private static func buildXmlDataPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.supportsLineComments = false
         p.supportsBlockComments = false
@@ -471,7 +489,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func cssPatterns() -> LanguagePatterns {
+    private static func buildCssPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["important", "inherit", "initial", "unset", "revert", "none", "auto", "block", "inline", "flex", "grid", "absolute", "relative", "fixed", "sticky", "static", "hidden", "visible", "scroll", "solid", "dashed", "dotted", "double", "groove", "ridge", "inset", "outset", "transparent", "currentColor"]
         p.types = ["px", "em", "rem", "vh", "vw", "vmin", "vmax", "ch", "ex", "cm", "mm", "in", "pt", "pc", "deg", "rad", "grad", "turn", "s", "ms", "Hz", "kHz", "dpi", "dpcm", "dppx", "fr"]
@@ -480,7 +498,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func cppPatterns() -> LanguagePatterns {
+    private static func buildCppPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["auto", "break", "case", "catch", "class", "const", "constexpr", "consteval", "constinit", "continue", "default", "delete", "do", "else", "enum", "explicit", "export", "extern", "false", "for", "friend", "goto", "if", "inline", "mutable", "namespace", "new", "noexcept", "nullptr", "operator", "private", "protected", "public", "register", "return", "sizeof", "static", "static_assert", "static_cast", "struct", "switch", "template", "this", "throw", "true", "try", "typedef", "typeid", "typename", "union", "using", "virtual", "volatile", "while", "alignas", "alignof", "and", "and_eq", "asm", "bitand", "bitor", "compl", "concept", "co_await", "co_return", "co_yield", "decltype", "dynamic_cast", "final", "not", "not_eq", "or", "or_eq", "override", "reinterpret_cast", "requires", "xor", "xor_eq"]
         p.types = ["void", "bool", "char", "char8_t", "char16_t", "char32_t", "wchar_t", "short", "int", "long", "float", "double", "signed", "unsigned", "size_t", "ptrdiff_t", "intptr_t", "uintptr_t", "int8_t", "int16_t", "int32_t", "int64_t", "uint8_t", "uint16_t", "uint32_t", "uint64_t", "string", "vector", "map", "unordered_map", "set", "unordered_set", "list", "deque", "array", "pair", "tuple", "optional", "variant", "any", "shared_ptr", "unique_ptr", "weak_ptr", "span", "string_view"]
@@ -488,7 +506,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func javaPatterns() -> LanguagePatterns {
+    private static func buildJavaPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "null", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while", "true", "false", "var", "yield", "record", "sealed", "non-sealed", "permits"]
         p.types = ["String", "Integer", "Long", "Double", "Float", "Boolean", "Character", "Byte", "Short", "Object", "Class", "System", "Math", "StringBuilder", "StringBuffer", "Array", "Arrays", "List", "ArrayList", "LinkedList", "Set", "HashSet", "TreeSet", "Map", "HashMap", "TreeMap", "LinkedHashMap", "Queue", "Deque", "Stack", "Vector", "Optional", "Stream", "Collector", "Collectors", "Comparator", "Iterator", "Iterable", "Exception", "Error", "RuntimeException", "Throwable", "Thread", "Runnable", "Callable", "Future", "CompletableFuture"]
@@ -496,14 +514,14 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func kotlinPatterns() -> LanguagePatterns {
-        var p = javaPatterns()
+    private static func buildKotlinPatterns() -> LanguagePatterns {
+        var p = buildJavaPatterns()
         p.keywords.formUnion(["fun", "val", "var", "when", "is", "in", "out", "object", "companion", "init", "constructor", "data", "inner", "open", "override", "lateinit", "by", "lazy", "inline", "noinline", "crossinline", "reified", "suspend", "tailrec", "operator", "infix", "external", "annotation", "expect", "actual", "typealias", "it", "where"])
         p.types.formUnion(["Any", "Unit", "Nothing", "Int", "Long", "Short", "Byte", "Float", "Double", "Char", "Boolean", "String", "Array", "IntArray", "LongArray", "ShortArray", "ByteArray", "FloatArray", "DoubleArray", "CharArray", "BooleanArray", "List", "MutableList", "Set", "MutableSet", "Map", "MutableMap", "Sequence", "Pair", "Triple", "Lazy", "Regex", "MatchResult", "MatchGroup"])
         return p
     }
 
-    private func rubyPatterns() -> LanguagePatterns {
+    private static func buildRubyPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["def", "class", "module", "if", "elsif", "else", "unless", "case", "when", "while", "until", "for", "do", "end", "begin", "rescue", "raise", "ensure", "retry", "return", "yield", "break", "next", "redo", "super", "self", "nil", "true", "false", "and", "or", "not", "in", "then", "alias", "defined?", "undef", "__FILE__", "__LINE__", "__ENCODING__", "BEGIN", "END", "attr_reader", "attr_writer", "attr_accessor", "private", "protected", "public", "include", "extend", "prepend", "require", "require_relative", "load", "autoload", "lambda", "proc", "loop"]
         p.types = ["String", "Integer", "Float", "Array", "Hash", "Symbol", "Range", "Regexp", "Time", "Date", "DateTime", "File", "Dir", "IO", "Exception", "StandardError", "RuntimeError", "TypeError", "ArgumentError", "NameError", "NoMethodError", "Class", "Module", "Object", "BasicObject", "Kernel", "Numeric", "TrueClass", "FalseClass", "NilClass", "Proc", "Method", "Binding", "Thread", "Fiber", "Enumerator", "Struct", "OpenStruct"]
@@ -512,7 +530,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func phpPatterns() -> LanguagePatterns {
+    private static func buildPhpPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["abstract", "and", "array", "as", "break", "callable", "case", "catch", "class", "clone", "const", "continue", "declare", "default", "do", "echo", "else", "elseif", "empty", "enddeclare", "endfor", "endforeach", "endif", "endswitch", "endwhile", "eval", "exit", "extends", "final", "finally", "fn", "for", "foreach", "function", "global", "goto", "if", "implements", "include", "include_once", "instanceof", "insteadof", "interface", "isset", "list", "match", "namespace", "new", "or", "print", "private", "protected", "public", "readonly", "require", "require_once", "return", "static", "switch", "throw", "trait", "try", "unset", "use", "var", "while", "xor", "yield", "true", "false", "null", "self", "parent"]
         p.types = ["string", "int", "integer", "float", "double", "bool", "boolean", "array", "object", "callable", "iterable", "void", "mixed", "never", "null", "resource", "stdClass", "Exception", "Error", "TypeError", "ArgumentCountError", "ArithmeticError", "DivisionByZeroError", "ParseError", "Throwable", "Iterator", "IteratorAggregate", "Traversable", "ArrayAccess", "Serializable", "Closure", "Generator", "DateTime", "DateTimeImmutable", "DateInterval", "DatePeriod"]
@@ -521,7 +539,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func sqlPatterns() -> LanguagePatterns {
+    private static func buildSqlPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["SELECT", "FROM", "WHERE", "AND", "OR", "NOT", "IN", "BETWEEN", "LIKE", "IS", "NULL", "AS", "ON", "JOIN", "INNER", "LEFT", "RIGHT", "OUTER", "FULL", "CROSS", "NATURAL", "USING", "ORDER", "BY", "ASC", "DESC", "NULLS", "FIRST", "LAST", "GROUP", "HAVING", "DISTINCT", "ALL", "UNION", "INTERSECT", "EXCEPT", "LIMIT", "OFFSET", "FETCH", "NEXT", "ROWS", "ONLY", "INSERT", "INTO", "VALUES", "UPDATE", "SET", "DELETE", "CREATE", "ALTER", "DROP", "TABLE", "INDEX", "VIEW", "DATABASE", "SCHEMA", "IF", "EXISTS", "CASCADE", "RESTRICT", "PRIMARY", "KEY", "FOREIGN", "REFERENCES", "UNIQUE", "CHECK", "DEFAULT", "CONSTRAINT", "AUTO_INCREMENT", "IDENTITY", "SERIAL", "NOT NULL", "WITH", "RECURSIVE", "CASE", "WHEN", "THEN", "ELSE", "END", "CAST", "CONVERT", "COALESCE", "NULLIF", "GREATEST", "LEAST", "EXISTS", "ANY", "SOME", "TRUE", "FALSE", "UNKNOWN"]
         // SQL keywords are case-insensitive, add lowercase versions
@@ -537,7 +555,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func markdownPatterns() -> LanguagePatterns {
+    private static func buildMarkdownPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         // Markdown doesn't really have "keywords" in the traditional sense
         // The highlighting is handled by specific markdown highlighting logic elsewhere
@@ -548,7 +566,7 @@ struct FastSyntaxHighlighter: Sendable {
         return p
     }
 
-    private func genericPatterns() -> LanguagePatterns {
+    private static func buildGenericPatterns() -> LanguagePatterns {
         var p = LanguagePatterns()
         p.keywords = ["function", "func", "def", "fn", "class", "struct", "enum", "interface", "trait", "if", "else", "elif", "elsif", "return", "import", "export", "from", "const", "let", "var", "val", "for", "while", "do", "switch", "case", "match", "when", "break", "continue", "try", "catch", "throw", "finally", "true", "false", "null", "nil", "None", "undefined", "self", "this", "new", "public", "private", "protected", "static", "void", "async", "await", "yield"]
         p.types = ["String", "Int", "Integer", "Float", "Double", "Bool", "Boolean", "Array", "List", "Map", "Dict", "Dictionary", "Set", "Object", "Any", "Error", "Exception", "Result", "Option", "Optional"]

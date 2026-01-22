@@ -1,4 +1,5 @@
 import Foundation
+import os
 
 /// Two-tier cache for highlighted code content.
 /// Memory tier: Fast access for current session
@@ -12,27 +13,43 @@ import Foundation
 ///
 /// Thread Safety (@unchecked Sendable justification):
 /// This class is manually verified thread-safe through:
-/// - `lock`: NSLock protecting all memory cache operations (memoryCache, accessOrder)
+/// - `cacheState`: OSAllocatedUnfairLock protecting all memory cache operations
 /// - `diskCache`: Delegated to DiskCache.shared which has its own synchronization
-/// - All public methods use `lock.withLock { }` for atomic access
+/// - All public methods use `cacheState.withLock { }` for atomic access
 final class HighlightCache: @unchecked Sendable {
     static let shared = HighlightCache()
 
-    private let lock = NSLock()
-    private var memoryCache: [String: MemoryCacheEntry] = [:]
-    private var accessOrder: [String] = []
+    private struct CacheState {
+        var memoryCache: [String: MemoryCacheEntry] = [:]
+        var accessOrder: [String] = []
+        var currentMemoryBytes: Int = 0
+    }
+
+    private let cacheState: OSAllocatedUnfairLock<CacheState>
     private let maxMemoryEntries = 20
+    private let maxMemoryBytes = 10 * 1024 * 1024  // 10MB byte limit
 
     private let diskCache = DiskCache.shared
 
     struct MemoryCacheEntry {
         let highlighted: AttributedString
         let cacheKey: String  // For disk cache coordination
+        let estimatedBytes: Int  // Estimated memory footprint
     }
 
     private init() {
-        memoryCache.reserveCapacity(maxMemoryEntries)
-        accessOrder.reserveCapacity(maxMemoryEntries)
+        var state = CacheState()
+        state.memoryCache.reserveCapacity(20)
+        state.accessOrder.reserveCapacity(20)
+        cacheState = OSAllocatedUnfairLock(initialState: state)
+    }
+
+    /// Estimate the memory size of an AttributedString.
+    /// Uses character count * 2 (UTF-16) + overhead for attributes.
+    private func estimateSize(_ attributed: AttributedString) -> Int {
+        let charCount = attributed.characters.count
+        // UTF-16 encoding (2 bytes/char) + attribute overhead (~24 bytes per run)
+        return charCount * 2 + 256  // minimum 256 bytes overhead
     }
 
     /// Generate cache key for a file.
@@ -71,9 +88,6 @@ final class HighlightCache: @unchecked Sendable {
     func set(path: String, modDate: Date, theme: String, language: String?, highlighted: AttributedString) {
         let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
 
-        // Debug: Confirm HighlightCache.set() is being called
-        NSLog("[dotViewer Cache] HighlightCache.set() - writing to disk for: %@", path.components(separatedBy: "/").last ?? path)
-
         // Write to memory (synchronous, fast)
         setInMemory(key: key, value: highlighted)
 
@@ -86,47 +100,60 @@ final class HighlightCache: @unchecked Sendable {
     // MARK: - Memory Cache Operations
 
     private func getFromMemory(key: String) -> AttributedString? {
-        lock.withLock {
-            guard let entry = memoryCache[key] else { return nil }
+        cacheState.withLock { state in
+            guard let entry = state.memoryCache[key] else { return nil }
 
             // Update access order for LRU
-            // Always append key - remove first if already present to maintain sync
-            if let idx = accessOrder.firstIndex(of: key) {
-                accessOrder.remove(at: idx)
+            if let idx = state.accessOrder.firstIndex(of: key) {
+                state.accessOrder.remove(at: idx)
             }
-            accessOrder.append(key)  // Always append to ensure memoryCache and accessOrder stay in sync
+            state.accessOrder.append(key)
             return entry.highlighted
         }
     }
 
     private func setInMemory(key: String, value: AttributedString) {
-        lock.withLock {
-            // If already in cache, update and move to end
-            if memoryCache[key] != nil {
-                memoryCache[key] = MemoryCacheEntry(highlighted: value, cacheKey: key)
-                if let idx = accessOrder.firstIndex(of: key) {
-                    accessOrder.remove(at: idx)
-                    accessOrder.append(key)
+        let entrySize = estimateSize(value)
+
+        // Skip caching if single entry exceeds the byte limit
+        guard entrySize <= maxMemoryBytes else {
+            perfLog("[HighlightCache] Entry too large to cache: \(entrySize) bytes")
+            return
+        }
+
+        cacheState.withLock { state in
+            // If already in cache, remove old entry's byte count first
+            if let existing = state.memoryCache[key] {
+                state.currentMemoryBytes -= existing.estimatedBytes
+                if let idx = state.accessOrder.firstIndex(of: key) {
+                    state.accessOrder.remove(at: idx)
                 }
-                return
             }
 
-            // Evict oldest if at capacity
-            while memoryCache.count >= maxMemoryEntries, let oldest = accessOrder.first {
-                memoryCache.removeValue(forKey: oldest)
-                accessOrder.removeFirst()
+            // Evict oldest entries until within both entry count and byte limits
+            while (!state.accessOrder.isEmpty &&
+                   (state.memoryCache.count >= maxMemoryEntries ||
+                    state.currentMemoryBytes + entrySize > maxMemoryBytes)),
+                  let oldest = state.accessOrder.first {
+                if let evicted = state.memoryCache.removeValue(forKey: oldest) {
+                    state.currentMemoryBytes -= evicted.estimatedBytes
+                }
+                state.accessOrder.removeFirst()
             }
 
-            memoryCache[key] = MemoryCacheEntry(highlighted: value, cacheKey: key)
-            accessOrder.append(key)
+            let entry = MemoryCacheEntry(highlighted: value, cacheKey: key, estimatedBytes: entrySize)
+            state.memoryCache[key] = entry
+            state.currentMemoryBytes += entrySize
+            state.accessOrder.append(key)
         }
     }
 
     /// Clear memory cache (disk cache remains for persistence).
     func clearMemory() {
-        lock.withLock {
-            memoryCache.removeAll()
-            accessOrder.removeAll()
+        cacheState.withLock { state in
+            state.memoryCache.removeAll()
+            state.accessOrder.removeAll()
+            state.currentMemoryBytes = 0
         }
     }
 
@@ -137,10 +164,12 @@ final class HighlightCache: @unchecked Sendable {
     }
 
     /// Get cache statistics.
-    func stats() -> (memory: Int, disk: (entries: Int, sizeKB: Int)) {
-        let memCount = lock.withLock { memoryCache.count }
+    func stats() -> (memory: (entries: Int, sizeBytes: Int), disk: (entries: Int, sizeKB: Int)) {
+        let (memCount, memBytes) = cacheState.withLock { state in
+            (state.memoryCache.count, state.currentMemoryBytes)
+        }
         let diskStats = diskCache.stats()
-        return (memCount, diskStats)
+        return ((memCount, memBytes), diskStats)
     }
 
     // MARK: - Legacy API (deprecated)

@@ -1,5 +1,6 @@
 import Foundation
 import CryptoKit
+import os
 import AppKit
 
 /// Disk-based cache for highlighted AttributedStrings.
@@ -26,13 +27,15 @@ final class DiskCache: @unchecked Sendable {
     private let writeQueue = DispatchQueue(label: "no.skreland.dotViewer.diskCache.write", qos: .utility)
 
     /// Track writes to trigger cleanup periodically (every N writes)
-    private var writeCount: Int = 0
+    private struct CleanupState {
+        var writeCount: Int = 0
+        var lastCleanupTime: Date = .distantPast
+    }
     private let cleanupInterval: Int = 10
-    private let cleanupLock = NSLock()
+    private let cleanupState: OSAllocatedUnfairLock<CleanupState>
 
     /// Rate limiting: Minimum time between cleanups (seconds)
     private let cleanupMinInterval: TimeInterval = 30.0
-    private var lastCleanupTime: Date = .distantPast
 
     /// Cache format version - increment when serialization format changes
     /// v1: NSKeyedArchiver (incompatible with SwiftUI AttributedString)
@@ -41,6 +44,8 @@ final class DiskCache: @unchecked Sendable {
     private let versionFile = "cache_version"
 
     private init() {
+        cleanupState = OSAllocatedUnfairLock(initialState: CleanupState())
+
         // Quick Look extension sandbox cannot create directories in App Group container.
         // Use the extension's own Application Support directory instead.
         // Note: Cache won't be shared with main app, but will persist across QL sessions.
@@ -56,17 +61,13 @@ final class DiskCache: @unchecked Sendable {
             perfLog("[dotViewer Cache] WARNING: Application Support not available, using temp directory")
         }
 
-        // Create directory if needed - with proper error handling
+        // Create directory if needed
         do {
             try fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
-            NSLog("[dotViewer Cache] Init - cache directory created: %@", cacheDirectory.path)
         } catch {
             NSLog("[dotViewer Cache] ERROR creating cache directory: %@", error.localizedDescription)
         }
 
-        // Verify directory exists
-        let exists = fileManager.fileExists(atPath: cacheDirectory.path)
-        NSLog("[dotViewer Cache] Init - cache directory exists: %@", exists ? "YES" : "NO")
         perfLog("[dotViewer Cache] DiskCache initialized at: \(cacheDirectory.path)")
 
         // Migrate cache if version changed (clears old format entries)
@@ -90,17 +91,10 @@ final class DiskCache: @unchecked Sendable {
             perfLog("[dotViewer Cache] Cache version mismatch (\(currentVersion) → \(Self.cacheVersion)), clearing old cache")
 
             // Clear all cached files (but not the version file)
-            do {
-                let files = try fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil)
+            if let files = try? fileManager.contentsOfDirectory(at: cacheDirectory, includingPropertiesForKeys: nil) {
                 for file in files where file.lastPathComponent != versionFile {
-                    do {
-                        try fileManager.removeItem(at: file)
-                    } catch {
-                        NSLog("[dotViewer Cache] WARNING: Failed to remove old cache file %@: %@", file.lastPathComponent, error.localizedDescription)
-                    }
+                    try? fileManager.removeItem(at: file)
                 }
-            } catch {
-                NSLog("[dotViewer Cache] WARNING: Failed to enumerate cache directory during migration: %@", error.localizedDescription)
             }
 
             // Write new version
@@ -190,15 +184,10 @@ final class DiskCache: @unchecked Sendable {
             )
             // Update access time for LRU (async to not block read)
             writeQueue.async {
-                do {
-                    try FileManager.default.setAttributes(
-                        [.modificationDate: Date()],
-                        ofItemAtPath: fileURL.path
-                    )
-                } catch {
-                    // Non-critical: LRU tracking may be slightly off, but cache still works
-                    NSLog("[dotViewer Cache] DEBUG: Failed to update access time for %@: %@", key.prefix(16) as CVarArg, error.localizedDescription)
-                }
+                try? FileManager.default.setAttributes(
+                    [.modificationDate: Date()],
+                    ofItemAtPath: fileURL.path
+                )
             }
             perfLog("[dotViewer Cache] Disk HIT for key: \(key.prefix(16))...")
             return AttributedString(nsAttrString)
@@ -206,12 +195,7 @@ final class DiskCache: @unchecked Sendable {
             perfLog("[dotViewer Cache] Disk read error: \(error.localizedDescription)")
             // Remove corrupted file asynchronously
             writeQueue.async {
-                do {
-                    try FileManager.default.removeItem(at: fileURL)
-                    NSLog("[dotViewer Cache] Removed corrupted cache file: %@", key.prefix(16) as CVarArg)
-                } catch {
-                    NSLog("[dotViewer Cache] WARNING: Failed to remove corrupted cache file %@: %@", key.prefix(16) as CVarArg, error.localizedDescription)
-                }
+                try? FileManager.default.removeItem(at: fileURL)
             }
         }
 
@@ -224,13 +208,7 @@ final class DiskCache: @unchecked Sendable {
     /// ASYNCHRONOUS - does not block the caller.
     func set(key: String, value: AttributedString) {
         // Validate key before using as filename
-        guard isValidCacheKey(key) else {
-            NSLog("[dotViewer Cache] set() rejected - invalid key")
-            return
-        }
-
-        // Debug: Verify set() is being called
-        NSLog("[dotViewer Cache] set() called for key: %@", String(key.prefix(16)))
+        guard isValidCacheKey(key) else { return }
 
         writeQueue.async { [weak self] in
             guard let self = self else { return }
@@ -241,9 +219,8 @@ final class DiskCache: @unchecked Sendable {
             if !self.fileManager.fileExists(atPath: self.cacheDirectory.path) {
                 do {
                     try self.fileManager.createDirectory(at: self.cacheDirectory, withIntermediateDirectories: true)
-                    NSLog("[dotViewer Cache] Created cache directory on write: %@", self.cacheDirectory.path)
                 } catch {
-                    NSLog("[dotViewer Cache] ERROR creating directory on write: %@", error.localizedDescription)
+                    perfLog("[dotViewer Cache] ERROR creating directory on write: \(error.localizedDescription)")
                     return
                 }
             }
@@ -257,18 +234,11 @@ final class DiskCache: @unchecked Sendable {
                 guard let rtfData = nsAttrString.rtf(from: range, documentAttributes: [
                     .documentType: NSAttributedString.DocumentType.rtf
                 ]) else {
-                    NSLog("[dotViewer Cache] RTF encoding FAILED for key: %@", String(key.prefix(16)))
                     perfLog("[dotViewer Cache] RTF encoding failed for key: \(key.prefix(16))...")
                     return
                 }
 
-                // Debug: Log RTF data size
-                NSLog("[dotViewer Cache] RTF data size: %d bytes", rtfData.count)
-
                 try rtfData.write(to: fileURL, options: .atomic)
-
-                // Debug: Confirm write completed
-                NSLog("[dotViewer Cache] Write completed to: %@", fileURL.path)
                 perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(rtfData.count) bytes)")
 
                 // Trigger cleanup periodically
@@ -284,19 +254,18 @@ final class DiskCache: @unchecked Sendable {
     /// Increment write counter and trigger cleanup if interval reached.
     /// Cleanup is rate-limited to avoid frequent disk scans during rapid file navigation.
     private func incrementWriteAndCleanupIfNeeded() {
-        var shouldCleanup = false
-
-        cleanupLock.withLock {
-            writeCount += 1
-            if writeCount >= cleanupInterval {
+        let shouldCleanup = cleanupState.withLock { state -> Bool in
+            state.writeCount += 1
+            if state.writeCount >= cleanupInterval {
                 // Check rate limiting - don't cleanup more often than cleanupMinInterval
                 let now = Date()
-                if now.timeIntervalSince(lastCleanupTime) >= cleanupMinInterval {
-                    writeCount = 0
-                    lastCleanupTime = now
-                    shouldCleanup = true
+                if now.timeIntervalSince(state.lastCleanupTime) >= cleanupMinInterval {
+                    state.writeCount = 0
+                    state.lastCleanupTime = now
+                    return true
                 }
             }
+            return false
         }
 
         // Run cleanup OUTSIDE the lock to avoid blocking writes during I/O
@@ -339,23 +308,15 @@ final class DiskCache: @unchecked Sendable {
 
             // Remove oldest until under limits
             var removed = 0
-            var removalErrors = 0
             while (fileInfos.count - removed > maxEntries || totalSize > maxCacheSize) && removed < fileInfos.count {
                 let file = fileInfos[removed]
                 do {
                     try fileManager.removeItem(at: file.url)
                     totalSize -= file.size
                 } catch {
-                    removalErrors += 1
-                    if removalErrors <= 3 { // Limit log spam
-                        NSLog("[dotViewer Cache] WARNING: Failed to remove cache file during cleanup: %@", error.localizedDescription)
-                    }
+                    // Non-critical: file may already be removed or locked
                 }
                 removed += 1
-            }
-
-            if removalErrors > 3 {
-                NSLog("[dotViewer Cache] WARNING: %d additional cleanup errors suppressed", removalErrors - 3)
             }
 
             if removed > 0 {
@@ -375,23 +336,11 @@ final class DiskCache: @unchecked Sendable {
                     at: self.cacheDirectory,
                     includingPropertiesForKeys: nil
                 )
-                var clearErrors = 0
                 for file in files {
-                    do {
-                        try self.fileManager.removeItem(at: file)
-                    } catch {
-                        clearErrors += 1
-                        if clearErrors <= 3 {
-                            NSLog("[dotViewer Cache] WARNING: Failed to clear cache file %@: %@", file.lastPathComponent, error.localizedDescription)
-                        }
-                    }
+                    try? self.fileManager.removeItem(at: file)
                 }
-                if clearErrors > 3 {
-                    NSLog("[dotViewer Cache] WARNING: %d additional clear errors suppressed", clearErrors - 3)
-                }
-                perfLog("[dotViewer Cache] Cache cleared (\(clearErrors) errors)")
+                perfLog("[dotViewer Cache] Cache cleared")
             } catch {
-                NSLog("[dotViewer Cache] ERROR: Failed to enumerate cache directory for clear: %@", error.localizedDescription)
                 perfLog("[dotViewer Cache] Clear error: \(error.localizedDescription)")
             }
         }
