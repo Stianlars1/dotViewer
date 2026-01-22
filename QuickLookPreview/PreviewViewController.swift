@@ -34,11 +34,7 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     // MARK: - QLPreviewingController
 
     func preparePreviewOfFile(at url: URL, completionHandler handler: @escaping (Error?) -> Void) {
-        // E2E PERFORMANCE TRACKING: Start time for entire preview pipeline
-        let _ = CFAbsoluteTimeGetCurrent()  // e2eStartTime - kept for manual timing analysis
-        NSLog("═══════════════════════════════════════════════════════════════")
-        NSLog("[dotViewer E2E] ▶▶▶ PREVIEW START: %@", url.lastPathComponent)
-        NSLog("═══════════════════════════════════════════════════════════════")
+        perfLog("[dotViewer] Preview start: \(url.lastPathComponent)")
 
         let filename = url.lastPathComponent
         let ext = url.pathExtension.lowercased()
@@ -353,14 +349,13 @@ extension Data {
         // for text files, making this a reasonable fallback chain.
         for encoding in [String.Encoding.isoLatin1, .windowsCP1252, .macOSRoman] {
             if String(data: self, encoding: encoding) != nil {
-                NSLog("[dotViewer] Using fallback encoding: %@", String(describing: encoding))
+                perfLog("[dotViewer] Using fallback encoding: \(encoding)")
                 return encoding
             }
         }
 
         // If nothing works, this is likely binary data - return nil to signal error
         // rather than silently mangling the content with a wrong encoding
-        NSLog("[dotViewer] WARNING: No valid encoding found for data, likely binary content")
         return nil
     }
 }

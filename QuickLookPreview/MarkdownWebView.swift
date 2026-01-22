@@ -52,7 +52,6 @@ struct MarkdownWebView: View {
     }
 
     private func parseMarkdown() {
-        NSLog("[MarkdownWebView] Parsing markdown (\(markdown.count) chars)")
 
         do {
             // Use Apple's native AttributedString markdown parser
@@ -74,10 +73,9 @@ struct MarkdownWebView: View {
             styled.font = .system(size: fontSize)
 
             attributedContent = styled
-            NSLog("[MarkdownWebView] ✅ Markdown parsed successfully")
 
         } catch {
-            NSLog("[MarkdownWebView] ⚠️ Markdown parsing failed: \(error.localizedDescription)")
+            perfLog("[MarkdownWebView] Markdown parsing failed: \(error.localizedDescription)")
             // On error, try simpler inline-only parsing
             do {
                 let simpleParsed = try AttributedString(
