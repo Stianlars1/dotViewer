@@ -843,7 +843,7 @@ struct MarkdownRenderedViewLegacy: View {
         func flushParagraph() {
             if !paragraphBuffer.isEmpty {
                 let joined = paragraphBuffer.joined(separator: " ")
-                blocks.append(MarkdownBlock(type: .paragraph, content: joined))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .paragraph, content: joined))
                 paragraphBuffer.removeAll()
             }
         }
@@ -855,22 +855,22 @@ struct MarkdownRenderedViewLegacy: View {
             // Check for block-level elements (these interrupt paragraphs)
             if trimmed.hasPrefix("# ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h1, content: String(trimmed.dropFirst(2))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h1, content: String(trimmed.dropFirst(2))))
             } else if trimmed.hasPrefix("## ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h2, content: String(trimmed.dropFirst(3))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h2, content: String(trimmed.dropFirst(3))))
             } else if trimmed.hasPrefix("### ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h3, content: String(trimmed.dropFirst(4))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h3, content: String(trimmed.dropFirst(4))))
             } else if trimmed.hasPrefix("#### ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h4, content: String(trimmed.dropFirst(5))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h4, content: String(trimmed.dropFirst(5))))
             } else if trimmed.hasPrefix("##### ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h5, content: String(trimmed.dropFirst(6))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h5, content: String(trimmed.dropFirst(6))))
             } else if trimmed.hasPrefix("###### ") {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .h6, content: String(trimmed.dropFirst(7))))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .h6, content: String(trimmed.dropFirst(7))))
             } else if trimmed.hasPrefix("```") {
                 flushParagraph()
                 // Code block with optional language
@@ -882,13 +882,13 @@ struct MarkdownRenderedViewLegacy: View {
                     codeLines.append(lines[currentIndex])
                     currentIndex += 1
                 }
-                blocks.append(MarkdownBlock(type: .codeBlock, content: codeLines.joined(separator: "\n"), language: language))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .codeBlock, content: codeLines.joined(separator: "\n"), language: language))
             } else if let imageMatch = trimmed.firstMatch(of: /^!\[([^\]]*)\]\(([^)]+)\)$/) {
                 // Image: ![alt](url)
                 flushParagraph()
                 let alt = String(imageMatch.1)
                 let url = String(imageMatch.2)
-                blocks.append(MarkdownBlock(type: .image, content: alt, imageURL: url))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .image, content: alt, imageURL: url))
             } else if trimmed.hasPrefix("|") && trimmed.hasSuffix("|") {
                 // Table row - collect all table rows
                 flushParagraph()
@@ -919,7 +919,7 @@ struct MarkdownRenderedViewLegacy: View {
                 }
 
                 if !tableRows.isEmpty {
-                    var block = MarkdownBlock(type: .table, content: "")
+                    var block = MarkdownBlock(id: blocks.count, type: .table, content: "")
                     block.tableRows = tableRows
                     blocks.append(block)
                 }
@@ -945,7 +945,7 @@ struct MarkdownRenderedViewLegacy: View {
                 }
 
                 if !taskItems.isEmpty {
-                    var block = MarkdownBlock(type: .taskList, content: "")
+                    var block = MarkdownBlock(id: blocks.count, type: .taskList, content: "")
                     block.taskItems = taskItems
                     blocks.append(block)
                 }
@@ -963,7 +963,7 @@ struct MarkdownRenderedViewLegacy: View {
                         break
                     }
                 }
-                blocks.append(MarkdownBlock(type: .unorderedList, content: listItems.joined(separator: "\n")))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .unorderedList, content: listItems.joined(separator: "\n")))
             } else if let match = trimmed.firstMatch(of: /^(\d+)\.\s+(.*)/) {
                 flushParagraph()
                 // Numbered list
@@ -977,7 +977,7 @@ struct MarkdownRenderedViewLegacy: View {
                         break
                     }
                 }
-                blocks.append(MarkdownBlock(type: .orderedList, content: listItems.joined(separator: "\n")))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .orderedList, content: listItems.joined(separator: "\n")))
             } else if trimmed.hasPrefix("> ") {
                 flushParagraph()
                 // Collect consecutive blockquote lines
@@ -991,14 +991,14 @@ struct MarkdownRenderedViewLegacy: View {
                         break
                     }
                 }
-                blocks.append(MarkdownBlock(type: .blockquote, content: quoteLines.joined(separator: "\n")))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .blockquote, content: quoteLines.joined(separator: "\n")))
             } else if trimmed == "---" || trimmed == "***" || trimmed == "___" {
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .horizontalRule, content: ""))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .horizontalRule, content: ""))
             } else if trimmed.isEmpty {
                 // Empty line - flush paragraph and add spacer
                 flushParagraph()
-                blocks.append(MarkdownBlock(type: .spacer, content: ""))
+                blocks.append(MarkdownBlock(id: blocks.count, type: .spacer, content: ""))
             } else {
                 // Regular text line - add to paragraph buffer
                 paragraphBuffer.append(trimmed)
@@ -1021,7 +1021,9 @@ struct TaskItem: Identifiable {
 }
 
 struct MarkdownBlock: Identifiable {
-    let id = UUID()
+    /// Deterministic ID based on block position to avoid unnecessary SwiftUI re-renders.
+    /// UUID() would cause every block to be treated as new on each parse.
+    let id: Int
     let type: MarkdownBlockType
     let content: String
     var language: String? = nil
