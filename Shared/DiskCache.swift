@@ -138,23 +138,14 @@ final class DiskCache: @unchecked Sendable {
     /// Defense in depth - sandbox provides primary protection, this adds logging.
     private func isValidCacheKey(_ key: String) -> Bool {
         // SHA256 hash should be exactly 64 hex characters
-        guard key.count == 64 else {
-            NSLog("[dotViewer Cache] WARNING: Invalid cache key length: %d (expected 64)", key.count)
-            return false
-        }
+        guard key.count == 64 else { return false }
 
         // Should only contain hex characters
         let hexChars = CharacterSet(charactersIn: "0123456789abcdef")
-        guard key.unicodeScalars.allSatisfy({ hexChars.contains($0) }) else {
-            NSLog("[dotViewer Cache] WARNING: Cache key contains non-hex characters")
-            return false
-        }
+        guard key.unicodeScalars.allSatisfy({ hexChars.contains($0) }) else { return false }
 
         // Paranoid check: no path traversal (shouldn't be possible with hex-only, but defense in depth)
-        if key.contains("..") || key.contains("/") || key.contains("\\") {
-            NSLog("[dotViewer Cache] WARNING: Cache key contains path traversal attempt: %@", key.prefix(20) as CVarArg)
-            return false
-        }
+        if key.contains("..") || key.contains("/") || key.contains("\\") { return false }
 
         return true
     }
