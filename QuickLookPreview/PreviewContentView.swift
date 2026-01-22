@@ -106,40 +106,42 @@ struct PreviewContentView: View {
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                     }
 
-                    // Content (fades in when ready)
-                    if isMarkdown && showRenderedMarkdown {
-                        // Rendered markdown view (Typora-inspired native SwiftUI)
-                        MarkdownRenderedViewLegacy(
-                            content: state.content,
-                            fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
-                        )
-                        .opacity(isReady ? 1 : 0)
-                    } else {
-                        // Code view
-                        ScrollView([.horizontal, .vertical]) {
-                            HStack(alignment: .top, spacing: 0) {
-                                // Hide line numbers in compact mode
-                                if settings.showLineNumbers && !isCompactMode {
-                                    LineNumbersColumn(
-                                        lineCount: state.lineCount,
-                                        fontSize: settings.fontSize
+                    // Content - ONLY render when ready to avoid expensive layout of large text
+                    // PERFORMANCE FIX: Using if instead of opacity prevents SwiftUI from
+                    // laying out 80KB+ of text while waiting for highlighting to complete.
+                    if isReady {
+                        if isMarkdown && showRenderedMarkdown {
+                            // Rendered markdown view (Typora-inspired native SwiftUI)
+                            MarkdownRenderedViewLegacy(
+                                content: state.content,
+                                fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
+                            )
+                        } else {
+                            // Code view
+                            ScrollView([.horizontal, .vertical]) {
+                                HStack(alignment: .top, spacing: 0) {
+                                    // Hide line numbers in compact mode
+                                    if settings.showLineNumbers && !isCompactMode {
+                                        LineNumbersColumn(
+                                            lineCount: state.lineCount,
+                                            fontSize: settings.fontSize
+                                        )
+                                    }
+
+                                    CodeContentView(
+                                        plainContent: state.content,
+                                        highlightedContent: highlightedContent,
+                                        fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
                                     )
                                 }
-
-                                CodeContentView(
-                                    plainContent: state.content,
-                                    highlightedContent: highlightedContent,
-                                    fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
-                                )
+                                .frame(minWidth: outerGeometry.size.width, minHeight: outerGeometry.size.height, alignment: .topLeading)
                             }
-                            .frame(minWidth: outerGeometry.size.width, minHeight: outerGeometry.size.height, alignment: .topLeading)
                         }
-                        .opacity(isReady ? 1 : 0)
                     }
                 }
             }
         }
-        .task {
+        .task(id: state.fileURL) {
             await highlightCode()
         }
     }
@@ -171,6 +173,12 @@ struct PreviewContentView: View {
             return
         }
         perfLog("[dotViewer PERF] [+%.3fs] cache check: MISS", CFAbsoluteTimeGetCurrent() - startTime)
+
+        // Cooperative cancellation check - bail early if user navigated away
+        guard !Task.isCancelled else {
+            perfLog("[dotViewer PERF] Task cancelled after cache check")
+            return
+        }
 
         // Skip syntax highlighting for very large files (>2000 lines) - show plain text immediately
         // This prevents the UI from hanging on massive files like package-lock.json
@@ -245,6 +253,12 @@ struct PreviewContentView: View {
         let isFastSupported = FastSyntaxHighlighter.isSupported(state.language)
         perfLog("[dotViewer PERF] [+%.3fs] PATH: SyntaxHighlighter (FastSyntaxHighlighter supported: %@)", CFAbsoluteTimeGetCurrent() - startTime, isFastSupported ? "YES" : "NO")
 
+        // Cooperative cancellation check - bail before expensive highlighting
+        guard !Task.isCancelled else {
+            perfLog("[dotViewer PERF] Task cancelled before highlighting")
+            return
+        }
+
         let highlighter = SyntaxHighlighter()
         let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
         let highlightStart = CFAbsoluteTimeGetCurrent()
@@ -290,6 +304,12 @@ struct PreviewContentView: View {
 
         let highlightDuration = CFAbsoluteTimeGetCurrent() - highlightStart
         perfLog("[dotViewer PERF] [+%.3fs] SyntaxHighlighter.highlight took: %.3fs, result: %@", CFAbsoluteTimeGetCurrent() - startTime, highlightDuration, result != nil ? "success" : "nil (timeout?)")
+
+        // Cooperative cancellation check - bail if user navigated away during highlighting
+        guard !Task.isCancelled else {
+            perfLog("[dotViewer PERF] Task cancelled after highlighting")
+            return
+        }
 
         // Use result if available
         if let highlighted = result {

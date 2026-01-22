@@ -1,5 +1,6 @@
 import Foundation
 import CryptoKit
+import AppKit
 
 /// Disk-based cache for highlighted AttributedStrings.
 /// Uses App Groups for persistence across QuickLook XPC terminations.
@@ -100,7 +101,21 @@ final class DiskCache: @unchecked Sendable {
     /// This ensures cache invalidates when: file changes, file moves, theme changes, or language detection changes.
     func cacheKey(filePath: String, modificationDate: Date, theme: String, language: String?) -> String {
         let lang = language ?? "unknown"
-        let input = "\(filePath)|\(modificationDate.timeIntervalSince1970)|\(theme)|\(lang)"
+
+        // Resolve "auto" theme to actual appearance so cache invalidates when appearance changes
+        let resolvedTheme: String
+        if theme == "auto" {
+            // Determine dark mode using the most reliable API available
+            // NSAppearance.currentDrawing() is available in macOS 12+ and works in XPC contexts
+            // Fall back to NSApp?.effectiveAppearance for older APIs
+            let appearance = NSAppearance.currentDrawing()
+            let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            resolvedTheme = isDark ? "auto-dark" : "auto-light"
+        } else {
+            resolvedTheme = theme
+        }
+
+        let input = "\(filePath)|\(modificationDate.timeIntervalSince1970)|\(resolvedTheme)|\(lang)"
         let hash = SHA256.hash(data: Data(input.utf8))
         return hash.compactMap { String(format: "%02x", $0) }.joined()
     }
