@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import os
 
 /// Two-tier cache for highlighted code content.
@@ -54,15 +55,15 @@ final class HighlightCache: @unchecked Sendable {
 
     /// Generate cache key for a file.
     /// Key = SHA256(filePath + modificationDate + theme + language)
-    func cacheKey(path: String, modDate: Date, theme: String, language: String?) -> String {
-        return diskCache.cacheKey(filePath: path, modificationDate: modDate, theme: theme, language: language)
+    func cacheKey(path: String, modDate: Date, theme: String, language: String?, isDark: Bool) -> String {
+        return diskCache.cacheKey(filePath: path, modificationDate: modDate, theme: theme, language: language, isDark: isDark)
     }
 
     /// Get cached highlighted content.
     /// Checks memory first (fast), then disk (persistent).
     /// Disk hits are promoted to memory for faster subsequent access.
-    func get(path: String, modDate: Date, theme: String, language: String?) -> AttributedString? {
-        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
+    func get(path: String, modDate: Date, theme: String, language: String?, isDark: Bool) -> AttributedString? {
+        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language, isDark: isDark)
 
         // 1. Check memory cache (fast path)
         if let entry = getFromMemory(key: key) {
@@ -85,8 +86,8 @@ final class HighlightCache: @unchecked Sendable {
     /// Store highlighted content in both memory and disk.
     /// Memory write is synchronous (fast).
     /// Disk write is asynchronous (doesn't block caller).
-    func set(path: String, modDate: Date, theme: String, language: String?, highlighted: AttributedString) {
-        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language)
+    func set(path: String, modDate: Date, theme: String, language: String?, isDark: Bool, highlighted: AttributedString) {
+        let key = cacheKey(path: path, modDate: modDate, theme: theme, language: language, isDark: isDark)
 
         // Write to memory (synchronous, fast)
         setInMemory(key: key, value: highlighted)
@@ -183,18 +184,20 @@ final class HighlightCache: @unchecked Sendable {
     //
     // These will be removed in a future version once all callers are migrated.
 
-    /// Deprecated: Use get(path:modDate:theme:language:) instead.
+    /// Deprecated: Use get(path:modDate:theme:language:isDark:) instead.
     /// This method uses "auto" as the default theme and nil language.
-    @available(*, deprecated, message: "Use get(path:modDate:theme:language:) instead")
+    @available(*, deprecated, message: "Use get(path:modDate:theme:language:isDark:) instead")
     func get(path: String, modDate: Date) -> AttributedString? {
-        return get(path: path, modDate: modDate, theme: "auto", language: nil)
+        let isDark = NSAppearance.currentDrawing().bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        return get(path: path, modDate: modDate, theme: "auto", language: nil, isDark: isDark)
     }
 
-    /// Deprecated: Use set(path:modDate:theme:language:highlighted:) instead.
+    /// Deprecated: Use set(path:modDate:theme:language:isDark:highlighted:) instead.
     /// This method uses "auto" as the default theme and nil language.
-    @available(*, deprecated, message: "Use set(path:modDate:theme:language:highlighted:) instead")
+    @available(*, deprecated, message: "Use set(path:modDate:theme:language:isDark:highlighted:) instead")
     func set(path: String, modDate: Date, highlighted: AttributedString) {
-        set(path: path, modDate: modDate, theme: "auto", language: nil, highlighted: highlighted)
+        let isDark = NSAppearance.currentDrawing().bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        set(path: path, modDate: modDate, theme: "auto", language: nil, isDark: isDark, highlighted: highlighted)
     }
 
     /// Deprecated: Use clearMemory() or clearAll() instead.

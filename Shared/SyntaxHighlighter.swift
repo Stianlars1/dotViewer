@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 import AppKit
 import HighlightSwift
+import os
 
 /// Unified syntax highlighter that uses FastSyntaxHighlighter for supported languages,
 /// falling back to HighlightSwift for languages without dedicated fast support.
@@ -13,10 +14,12 @@ struct SyntaxHighlighter: Sendable {
 
     /// Cached syntax colors to avoid MainActor.run overhead on every file.
     /// PERFORMANCE: Saves 10-30ms per file by avoiding main thread hop.
-    private static var cachedColors: SyntaxColors?
-    private static var cachedTheme: String?
-    private static var cachedAppearanceIsDark: Bool?
-    private static let colorCacheLock = NSLock()
+    private struct ColorCacheState: Sendable {
+        var colors: SyntaxColors?
+        var theme: String?
+        var appearanceIsDark: Bool?
+    }
+    private static let colorCache = OSAllocatedUnfairLock(initialState: ColorCacheState())
 
     /// Highlight code with the most appropriate highlighter for the language
     /// - Parameters:
@@ -32,49 +35,26 @@ struct SyntaxHighlighter: Sendable {
         if fastSupported {
             let colorStart = CFAbsoluteTimeGetCurrent()
 
-            // Fast path: use cached colors if theme and appearance unchanged
-            // PERFORMANCE FIX: Don't use MainActor.run - it causes 2+ second delays
-            // because the main thread is busy with SwiftUI layout.
-            // Instead, compute colors directly off the main thread.
             let currentTheme = SharedSettings.shared.selectedTheme
 
-            // Get current appearance BEFORE cache check (thread-safe)
-            // NSAppearance.currentDrawing() is documented as thread-safe in macOS 11+
+            // Get current appearance (thread-safe in macOS 11+)
             let appearance = NSAppearance.currentDrawing()
             let systemIsDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
 
-            // Double-checked locking pattern for thread-safe cache access
-            // First check without lock (fast path for cache hits)
-            if let cached = Self.cachedColors,
-               Self.cachedTheme == currentTheme,
-               Self.cachedAppearanceIsDark == systemIsDark {
-                perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: %.3fs (CACHED - fast path)", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - colorStart)
-                let highlightStart = CFAbsoluteTimeGetCurrent()
-                let result = fastHighlighter.highlight(code: code, language: language, colors: cached)
-                perfLog("[dotViewer PERF] [SH +%.3fs] FastSyntaxHighlighter.highlight took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - highlightStart)
-                perfLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: Fast", CFAbsoluteTimeGetCurrent() - startTime)
-                return result
-            }
-
-            // Acquire lock and check again (prevents duplicate computation by concurrent threads)
-            let colors: SyntaxColors
-            Self.colorCacheLock.lock()
-
-            if let cached = Self.cachedColors,
-               Self.cachedTheme == currentTheme,
-               Self.cachedAppearanceIsDark == systemIsDark {
-                // Cache hit after acquiring lock (another thread computed while we waited)
-                colors = cached
-                Self.colorCacheLock.unlock()
-                perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: %.3fs (CACHED - after lock)", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - colorStart)
-            } else {
-                // Cache miss - compute and store colors while holding lock
-                colors = SyntaxColors.forTheme(currentTheme, systemIsDark: systemIsDark)
-                Self.cachedColors = colors
-                Self.cachedTheme = currentTheme
-                Self.cachedAppearanceIsDark = systemIsDark
-                Self.colorCacheLock.unlock()
-                perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: %.3fs (computed, now cached)", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - colorStart)
+            // Thread-safe cache access via OSAllocatedUnfairLock
+            let colors: SyntaxColors = Self.colorCache.withLock { state in
+                if let cached = state.colors,
+                   state.theme == currentTheme,
+                   state.appearanceIsDark == systemIsDark {
+                    perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: CACHED", CFAbsoluteTimeGetCurrent() - startTime)
+                    return cached
+                }
+                let computed = SyntaxColors.forTheme(currentTheme, systemIsDark: systemIsDark)
+                state.colors = computed
+                state.theme = currentTheme
+                state.appearanceIsDark = systemIsDark
+                perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: computed, now cached", CFAbsoluteTimeGetCurrent() - startTime)
+                return computed
             }
 
             let highlightStart = CFAbsoluteTimeGetCurrent()
@@ -119,7 +99,9 @@ struct SyntaxHighlighter: Sendable {
             let result = try await highlight.request(code, mode: mode, colors: colors)
             perfLog("[dotViewer PERF] [HS +%.3fs] highlight.request took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - requestStart)
 
-            return result.attributedText
+            // Convert SwiftUI foregroundColor attributes to AppKit foregroundColor
+            // so colors survive RTF cache serialization (SwiftUI attrs are lost in NSAttributedString bridge)
+            return convertToAppKitColors(result.attributedText)
         } catch {
             perfLog("[dotViewer PERF] [HS] ERROR: %@, returning plain text", error.localizedDescription)
             // Fallback: return plain text with monospace font
@@ -166,5 +148,19 @@ struct SyntaxHighlighter: Sendable {
             return appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
         }
         return false
+    }
+
+    /// Convert SwiftUI foregroundColor attributes to AppKit foregroundColor.
+    /// SwiftUI-scope attributes are lost when bridging to NSAttributedString (for RTF cache),
+    /// so we must use AppKit-scope attributes to preserve colors across cache round-trips.
+    private func convertToAppKitColors(_ input: AttributedString) -> AttributedString {
+        var result = input
+        for run in input.runs {
+            if let swiftUIColor = run.foregroundColor {
+                result[run.range].appKit.foregroundColor = NSColor(swiftUIColor)
+                result[run.range].foregroundColor = nil
+            }
+        }
+        return result
     }
 }

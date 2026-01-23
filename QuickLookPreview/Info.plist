@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>dotViewer Quick Look</string>
+	<string>dotViewer</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -28,42 +28,24 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
-				<!-- ============================================================ -->
-				<!-- Custom TypeScript UTIs FIRST - we own these                  -->
-				<!-- ============================================================ -->
 				<string>com.stianlars1.dotviewer.typescript</string>
 				<string>com.stianlars1.dotviewer.tsx</string>
-
-				<!-- Generic fallback for content sniffing -->
 				<string>public.data</string>
-
-				<!-- ============================================================ -->
-				<!-- SYSTEM UTIs - macOS assigns these by default                 -->
-				<!-- ============================================================ -->
-
-				<!-- TypeScript/JavaScript (system-defined, fallback) -->
 				<string>com.microsoft.typescript</string>
 				<string>public.typescript</string>
-				<!-- MPEG-2 kept for edge cases where .ts is actually video -->
 				<string>public.mpeg-2-transport-stream</string>
 				<string>public.avchd-mpeg-2-transport-stream</string>
 				<string>com.netscape.javascript-source</string>
 				<string>public.javascript</string>
 				<string>org.nodejs.cjs</string>
 				<string>com.adobe.jsx</string>
-
-				<!-- Web Frameworks -->
 				<string>org.vuejs.vue</string>
 				<string>org.svelte.svelte</string>
-
-				<!-- Stylesheets -->
 				<string>public.css</string>
 				<string>com.barebones.bbedit.scss-source</string>
 				<string>org.lesscss.less</string>
 				<string>org.sass-lang.sass</string>
 				<string>org.stylus-lang.stylus</string>
-
-				<!-- Systems Languages -->
 				<string>public.swift-source</string>
 				<string>public.c-source</string>
 				<string>public.c-header</string>
@@ -78,8 +60,6 @@
 				<string>org.scala-lang.scala-source</string>
 				<string>com.microsoft.c-sharp</string>
 				<string>public.assembly-source</string>
-
-				<!-- Scripting Languages -->
 				<string>public.python-script</string>
 				<string>public.ruby-script</string>
 				<string>public.perl-script</string>
@@ -92,8 +72,6 @@
 				<string>org.haskell.source</string>
 				<string>org.r-project.r</string>
 				<string>org.clojure.source</string>
-
-				<!-- Shell Scripts -->
 				<string>public.shell-script</string>
 				<string>public.bash-script</string>
 				<string>public.zsh-script</string>
@@ -103,8 +81,6 @@
 				<string>org.fish.source</string>
 				<string>org.sbarex.ms-powershell</string>
 				<string>com.microsoft.batch-file</string>
-
-				<!-- Data Formats -->
 				<string>public.json</string>
 				<string>public.ndjson</string>
 				<string>public.yaml</string>
@@ -117,8 +93,6 @@
 				<string>public.comma-separated-values-text</string>
 				<string>public.tab-separated-values-text</string>
 				<string>org.openxmlformats.spreadsheetml.sheet</string>
-
-				<!-- Documentation -->
 				<string>public.html</string>
 				<string>public.xhtml</string>
 				<string>net.daringfireball.markdown</string>
@@ -130,8 +104,6 @@
 				<string>com.apple.log</string>
 				<string>org.asciidoc.asciidoc</string>
 				<string>org.opendocumentformat.text</string>
-
-				<!-- Apple-Specific -->
 				<string>com.apple.applescript.text</string>
 				<string>com.apple.applescript.script</string>
 				<string>public.make-source</string>
@@ -141,8 +113,6 @@
 				<string>com.apple.dt.interfacebuilder.document.storyboard</string>
 				<string>com.apple.dt.interfacebuilder.document.xib</string>
 				<string>com.apple.dt.document.xcprivacy</string>
-
-				<!-- Xcode Project Files -->
 				<string>com.apple.xcode.entitlements-property-list</string>
 				<string>com.apple.xcode.xcconfig</string>
 				<string>com.apple.xcode.xcscheme</string>
@@ -158,8 +128,6 @@
 				<string>com.apple.xcode.intent-definition</string>
 				<string>com.apple.xcode.xcdatamodel</string>
 				<string>com.apple.xcode.xcdatamodeld</string>
-
-				<!-- Build Systems -->
 				<string>public.makefile</string>
 				<string>org.cmake.source</string>
 				<string>org.bazel.source</string>
@@ -167,13 +135,6 @@
 				<string>org.gradle.source</string>
 				<string>org.apache.maven.pom</string>
 				<string>org.apache.ant.build</string>
-
-				<!-- ============================================================ -->
-				<!-- CUSTOM UTIs - dotViewer defined                              -->
-				<!-- (TypeScript UTIs moved to top for priority)                  -->
-				<!-- ============================================================ -->
-
-				<!-- Core Programming Languages -->
 				<string>com.stianlars1.dotviewer.jsx</string>
 				<string>com.stianlars1.dotviewer.rust</string>
 				<string>com.stianlars1.dotviewer.go</string>
@@ -246,8 +207,6 @@
 				<string>com.stianlars1.dotviewer.less</string>
 				<string>com.stianlars1.dotviewer.rst</string>
 				<string>com.stianlars1.dotviewer.latex</string>
-
-				<!-- Developer Tool Configs -->
 				<string>com.stianlars1.dotviewer.vcs-config</string>
 				<string>com.stianlars1.dotviewer.editor-config</string>
 				<string>com.stianlars1.dotviewer.docker-config</string>
@@ -266,163 +225,109 @@
 				<string>com.stianlars1.dotviewer.asdf-config</string>
 				<string>com.stianlars1.dotviewer.x11-config</string>
 				<string>com.stianlars1.dotviewer.envrc-config</string>
-
-				<!-- ============================================================ -->
-				<!-- COMPREHENSIVE DEVELOPER DOTFILES - Bulletproof Coverage      -->
-				<!-- ============================================================ -->
-
-				<!-- Shell History Files -->
 				<string>com.stianlars1.dotviewer.shell-history</string>
 				<string>com.stianlars1.dotviewer.repl-history</string>
-
-				<!-- SSH/Security -->
 				<string>com.stianlars1.dotviewer.ssh-config</string>
 				<string>com.stianlars1.dotviewer.ssh-keys</string>
 				<string>com.stianlars1.dotviewer.gpg-config</string>
-
-				<!-- Cargo/Rust Ecosystem -->
 				<string>com.stianlars1.dotviewer.cargo-config</string>
 				<string>com.stianlars1.dotviewer.rustup-config</string>
-
-				<!-- Node.js/JavaScript Ecosystem -->
 				<string>com.stianlars1.dotviewer.yarn-config</string>
 				<string>com.stianlars1.dotviewer.pnpm-config</string>
 				<string>com.stianlars1.dotviewer.bun-config</string>
 				<string>com.stianlars1.dotviewer.deno-config</string>
-
-				<!-- Python Ecosystem -->
 				<string>com.stianlars1.dotviewer.pip-config</string>
 				<string>com.stianlars1.dotviewer.poetry-config</string>
 				<string>com.stianlars1.dotviewer.conda-config</string>
 				<string>com.stianlars1.dotviewer.virtualenv-config</string>
 				<string>com.stianlars1.dotviewer.pyenv-config</string>
-
-				<!-- Database Configs -->
 				<string>com.stianlars1.dotviewer.postgres-config</string>
 				<string>com.stianlars1.dotviewer.mysql-config</string>
 				<string>com.stianlars1.dotviewer.redis-config</string>
 				<string>com.stianlars1.dotviewer.mongo-config</string>
 				<string>com.stianlars1.dotviewer.sqlite-config</string>
-
-				<!-- Cloud Provider Configs -->
 				<string>com.stianlars1.dotviewer.aws-config</string>
 				<string>com.stianlars1.dotviewer.gcloud-config</string>
 				<string>com.stianlars1.dotviewer.azure-config</string>
 				<string>com.stianlars1.dotviewer.digitalocean-config</string>
-
-				<!-- Container/Orchestration -->
 				<string>com.stianlars1.dotviewer.compose-config</string>
 				<string>com.stianlars1.dotviewer.k8s-config</string>
 				<string>com.stianlars1.dotviewer.helm-config</string>
 				<string>com.stianlars1.dotviewer.vagrant-config</string>
-
-				<!-- CI/CD Platform Configs -->
 				<string>com.stianlars1.dotviewer.github-config</string>
 				<string>com.stianlars1.dotviewer.gitlab-config</string>
 				<string>com.stianlars1.dotviewer.bitbucket-config</string>
 				<string>com.stianlars1.dotviewer.jenkins-config</string>
 				<string>com.stianlars1.dotviewer.circleci-config</string>
-
-				<!-- Deployment Platform Configs -->
 				<string>com.stianlars1.dotviewer.vercel-config</string>
 				<string>com.stianlars1.dotviewer.netlify-config</string>
 				<string>com.stianlars1.dotviewer.heroku-config</string>
 				<string>com.stianlars1.dotviewer.railway-config</string>
 				<string>com.stianlars1.dotviewer.fly-config</string>
-
-				<!-- Mac App Configs -->
 				<string>com.stianlars1.dotviewer.hammerspoon-config</string>
 				<string>com.stianlars1.dotviewer.karabiner-config</string>
 				<string>com.stianlars1.dotviewer.raycast-config</string>
 				<string>com.stianlars1.dotviewer.alfred-config</string>
 				<string>com.stianlars1.dotviewer.iterm-config</string>
-
-				<!-- Terminal Multiplexers -->
 				<string>com.stianlars1.dotviewer.screen-config</string>
 				<string>com.stianlars1.dotviewer.zellij-config</string>
-
-				<!-- Package Managers -->
 				<string>com.stianlars1.dotviewer.homebrew-config</string>
 				<string>com.stianlars1.dotviewer.apt-config</string>
 				<string>com.stianlars1.dotviewer.pacman-config</string>
-
-				<!-- Web Bundlers/Build Tools -->
 				<string>com.stianlars1.dotviewer.webpack-config</string>
 				<string>com.stianlars1.dotviewer.vite-config</string>
 				<string>com.stianlars1.dotviewer.rollup-config</string>
 				<string>com.stianlars1.dotviewer.esbuild-config</string>
 				<string>com.stianlars1.dotviewer.parcel-config</string>
 				<string>com.stianlars1.dotviewer.turbo-config</string>
-
-				<!-- Framework Configs -->
 				<string>com.stianlars1.dotviewer.nextjs-config</string>
 				<string>com.stianlars1.dotviewer.nuxt-config</string>
 				<string>com.stianlars1.dotviewer.remix-config</string>
 				<string>com.stianlars1.dotviewer.gatsby-config</string>
 				<string>com.stianlars1.dotviewer.angular-config</string>
 				<string>com.stianlars1.dotviewer.react-config</string>
-
-				<!-- Testing Frameworks -->
 				<string>com.stianlars1.dotviewer.jest-config</string>
 				<string>com.stianlars1.dotviewer.vitest-config</string>
 				<string>com.stianlars1.dotviewer.cypress-config</string>
 				<string>com.stianlars1.dotviewer.playwright-config</string>
 				<string>com.stianlars1.dotviewer.pytest-config</string>
 				<string>com.stianlars1.dotviewer.rspec-config</string>
-
-				<!-- Code Quality Tools -->
 				<string>com.stianlars1.dotviewer.eslint-config</string>
 				<string>com.stianlars1.dotviewer.prettier-config</string>
 				<string>com.stianlars1.dotviewer.stylelint-config</string>
 				<string>com.stianlars1.dotviewer.biome-config</string>
 				<string>com.stianlars1.dotviewer.oxlint-config</string>
-
-				<!-- Type Checking -->
 				<string>com.stianlars1.dotviewer.typescript-config</string>
 				<string>com.stianlars1.dotviewer.mypy-config</string>
 				<string>com.stianlars1.dotviewer.pyright-config</string>
-
-				<!-- Git Hooks/Automation -->
 				<string>com.stianlars1.dotviewer.husky-config</string>
 				<string>com.stianlars1.dotviewer.lint-staged-config</string>
 				<string>com.stianlars1.dotviewer.commitlint-config</string>
 				<string>com.stianlars1.dotviewer.semantic-release-config</string>
 				<string>com.stianlars1.dotviewer.changesets-config</string>
-
-				<!-- Monorepo Tools -->
 				<string>com.stianlars1.dotviewer.lerna-config</string>
 				<string>com.stianlars1.dotviewer.nx-config</string>
 				<string>com.stianlars1.dotviewer.turborepo-config</string>
 				<string>com.stianlars1.dotviewer.pnpm-workspace</string>
-
-				<!-- API/Schema -->
 				<string>com.stianlars1.dotviewer.openapi-config</string>
 				<string>com.stianlars1.dotviewer.swagger-config</string>
 				<string>com.stianlars1.dotviewer.graphql-config</string>
 				<string>com.stianlars1.dotviewer.grpc-config</string>
-
-				<!-- IaC/Infrastructure -->
 				<string>com.stianlars1.dotviewer.pulumi-config</string>
 				<string>com.stianlars1.dotviewer.cdk-config</string>
 				<string>com.stianlars1.dotviewer.ansible-config</string>
 				<string>com.stianlars1.dotviewer.serverless-config</string>
-
-				<!-- IDE/Editor Configs (VSCode, JetBrains, etc.) -->
 				<string>com.stianlars1.dotviewer.vscode-config</string>
 				<string>com.stianlars1.dotviewer.jetbrains-config</string>
 				<string>com.stianlars1.dotviewer.sublime-config</string>
 				<string>com.stianlars1.dotviewer.neovim-config</string>
 				<string>com.stianlars1.dotviewer.helix-config</string>
-
-				<!-- Mobile Development -->
 				<string>com.stianlars1.dotviewer.xcode-config</string>
 				<string>com.stianlars1.dotviewer.cocoapods-config</string>
 				<string>com.stianlars1.dotviewer.fastlane-config</string>
 				<string>com.stianlars1.dotviewer.gradle-config</string>
 				<string>com.stianlars1.dotviewer.flutter-config</string>
 				<string>com.stianlars1.dotviewer.expo-config</string>
-
-				<!-- Miscellaneous Developer Files -->
 				<string>com.stianlars1.dotviewer.license-file</string>
 				<string>com.stianlars1.dotviewer.readme-file</string>
 				<string>com.stianlars1.dotviewer.changelog-file</string>
@@ -432,34 +337,21 @@
 				<string>com.stianlars1.dotviewer.mailmap-file</string>
 				<string>com.stianlars1.dotviewer.ignore-file</string>
 				<string>com.stianlars1.dotviewer.attributes-file</string>
-
-				<!-- Oh-My-Zsh and Shell Customization -->
 				<string>com.stianlars1.dotviewer.omz-plugin</string>
 				<string>com.stianlars1.dotviewer.omz-theme</string>
 				<string>com.stianlars1.dotviewer.starship-config</string>
 				<string>com.stianlars1.dotviewer.p10k-config</string>
-
-				<!-- Debugging/Profiling -->
 				<string>com.stianlars1.dotviewer.debug-config</string>
 				<string>com.stianlars1.dotviewer.launch-config</string>
 				<string>com.stianlars1.dotviewer.tasks-config</string>
-
-				<!-- Documentation Generation -->
 				<string>com.stianlars1.dotviewer.typedoc-config</string>
 				<string>com.stianlars1.dotviewer.jsdoc-config</string>
 				<string>com.stianlars1.dotviewer.sphinx-config</string>
 				<string>com.stianlars1.dotviewer.mkdocs-config</string>
 				<string>com.stianlars1.dotviewer.docusaurus-config</string>
-
-				<!-- Runtime/Environment -->
 				<string>com.stianlars1.dotviewer.runtime-config</string>
 				<string>com.stianlars1.dotviewer.procfile</string>
 				<string>com.stianlars1.dotviewer.foreman-config</string>
-
-				<!-- ============================================================ -->
-				<!-- GENERIC FALLBACK UTIs - Catch-all for unknown types          -->
-				<!-- (public.data moved to position 0 for TypeScript .ts support) -->
-				<!-- ============================================================ -->
 				<string>public.text</string>
 				<string>public.source-code</string>
 				<string>public.script</string>

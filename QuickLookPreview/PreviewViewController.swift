@@ -56,6 +56,13 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         let requestURL = url
         currentRequestURL = url
 
+        // Resolve appearance on the main thread where drawing context is reliable.
+        // Background GCD queues have no NSAppearance context, causing cache key mismatches.
+        let isDarkMode: Bool = {
+            let appearance = NSAppearance.currentDrawing()
+            return appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        }()
+
         // Move all file I/O to background queue to avoid blocking Quick Look UI
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else {
@@ -148,7 +155,8 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                         path: url.path,
                         modDate: modDate,
                         theme: theme,
-                        language: language
+                        language: language,
+                        isDark: isDarkMode
                     )
                     if cachedHighlight != nil {
                         perfLog("[dotViewer PERF] Cache HIT in preparePreviewOfFile - skipping highlight")
@@ -166,7 +174,8 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                     truncationMessage: truncationMessage,
                     fileURL: url,
                     modificationDate: modDate,
-                    preHighlightedContent: cachedHighlight
+                    preHighlightedContent: cachedHighlight,
+                    isDarkMode: isDarkMode
                 )
 
                 // Present SwiftUI view on main thread
@@ -178,21 +187,21 @@ class PreviewViewController: NSViewController, QLPreviewingController {
                     }
 
                     let previewView = PreviewContentView(state: previewState)
-                    let hosting = NSHostingView(rootView: previewView)
-                    hosting.translatesAutoresizingMaskIntoConstraints = false
 
-                    // Remove any existing hosting view
-                    self.hostingView?.removeFromSuperview()
-
-                    self.view.addSubview(hosting)
-                    NSLayoutConstraint.activate([
-                        hosting.topAnchor.constraint(equalTo: self.view.topAnchor),
-                        hosting.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-                        hosting.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-                        hosting.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-                    ])
-
-                    self.hostingView = hosting
+                    if let existing = self.hostingView {
+                        existing.rootView = previewView
+                    } else {
+                        let hosting = NSHostingView(rootView: previewView)
+                        hosting.translatesAutoresizingMaskIntoConstraints = false
+                        self.view.addSubview(hosting)
+                        NSLayoutConstraint.activate([
+                            hosting.topAnchor.constraint(equalTo: self.view.topAnchor),
+                            hosting.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+                            hosting.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+                            hosting.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+                        ])
+                        self.hostingView = hosting
+                    }
                     handler(nil)
                 }
 

@@ -14,6 +14,7 @@ struct PreviewState {
     let fileURL: URL?
     let modificationDate: Date?
     let preHighlightedContent: AttributedString?
+    let isDarkMode: Bool
 }
 
 // MARK: - Main Preview View
@@ -72,8 +73,10 @@ struct PreviewContentView: View {
 
     init(state: PreviewState) {
         self.state = state
-        // Initialize markdown mode from settings
         _showRenderedMarkdown = State(initialValue: SharedSettings.shared.markdownRenderMode == "rendered")
+        // Skip "Highlighting..." badge entirely when cache provided pre-highlighted content
+        _highlightedContent = State(initialValue: state.preHighlightedContent)
+        _isReady = State(initialValue: state.preHighlightedContent != nil)
     }
 
     var body: some View {
@@ -111,60 +114,57 @@ struct PreviewContentView: View {
                     // Background always visible
                     backgroundColor
 
-                    // Loading indicator while highlighting
-                    if !isReady {
-                        VStack(spacing: 16) {
-                            ProgressView()
-                                .controlSize(.large)
-
-                            // Show what we're doing for larger files
-                            if state.lineCount > 500 {
-                                VStack(spacing: 4) {
-                                    Text("Highlighting \(state.lineCount) lines...")
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-
-                                    if let lang = state.language, lang != "plaintext" {
-                                        Text(LanguageDetector.displayName(for: lang))
-                                            .font(.caption2)
-                                            .foregroundStyle(.tertiary)
-                                    }
-                                }
-                            }
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    }
-
-                    // Content - ONLY render when ready to avoid expensive layout of large text
-                    // PERFORMANCE FIX: Using if instead of opacity prevents SwiftUI from
-                    // laying out 80KB+ of text while waiting for highlighting to complete.
-                    if isReady {
-                        if isMarkdown && showRenderedMarkdown {
-                            // Rendered markdown view (Typora-inspired native SwiftUI)
+                    if isMarkdown && showRenderedMarkdown {
+                        // Rendered markdown needs highlighting to complete
+                        if isReady {
                             MarkdownRenderedViewLegacy(
                                 content: state.content,
                                 fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
                             )
                         } else {
-                            // Code view
-                            ScrollView([.horizontal, .vertical]) {
-                                HStack(alignment: .top, spacing: 0) {
-                                    // Hide line numbers in compact mode
-                                    if settings.showLineNumbers && !isCompactMode {
-                                        LineNumbersColumn(
-                                            lineCount: state.lineCount,
-                                            fontSize: settings.fontSize
-                                        )
-                                    }
-
-                                    CodeContentView(
-                                        plainContent: state.content,
-                                        highlightedContent: highlightedContent,
-                                        fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
+                            ProgressView()
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        }
+                    } else {
+                        // Code/raw view - show IMMEDIATELY with plain text
+                        ScrollView([.horizontal, .vertical]) {
+                            HStack(alignment: .top, spacing: 0) {
+                                if settings.showLineNumbers && !isCompactMode {
+                                    LineNumbersColumn(
+                                        lineCount: state.lineCount,
+                                        fontSize: settings.fontSize
                                     )
                                 }
-                                .frame(minWidth: outerGeometry.size.width, minHeight: outerGeometry.size.height, alignment: .topLeading)
+
+                                CodeContentView(
+                                    plainContent: state.content,
+                                    highlightedContent: highlightedContent,
+                                    fontSize: isCompactMode ? settings.fontSize * 0.8 : settings.fontSize
+                                )
                             }
+                            .frame(minWidth: outerGeometry.size.width, minHeight: outerGeometry.size.height, alignment: .topLeading)
+                        }
+                        .animation(.easeIn(duration: 0.15), value: highlightedContent != nil)
+                    }
+
+                    // Non-blocking loading indicator (top-right corner)
+                    if !isReady && !(isMarkdown && showRenderedMarkdown) {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                HStack(spacing: 6) {
+                                    ProgressView()
+                                        .controlSize(.small)
+                                    Text("Highlighting...")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 6))
+                            }
+                            .padding(12)
+                            Spacer()
                         }
                     }
                 }
@@ -261,6 +261,7 @@ struct PreviewContentView: View {
                     modDate: modDate,
                     theme: currentTheme,
                     language: state.language,
+                    isDark: state.isDarkMode,
                     highlighted: result
                 )
                 perfLog("[dotViewer PERF] highlightCode - cached markdown result for future use")
@@ -353,6 +354,7 @@ struct PreviewContentView: View {
                     modDate: modDate,
                     theme: currentTheme,
                     language: state.language,
+                    isDark: state.isDarkMode,
                     highlighted: highlighted
                 )
                 perfLog("[dotViewer PERF] [+%.3fs] cached result for future use", CFAbsoluteTimeGetCurrent() - startTime)
@@ -424,7 +426,8 @@ struct PreviewContentView: View {
         let colors = markdownColorsForTheme(ThemeManager.shared.selectedTheme)
 
         // Helper to apply color to regex matches
-        func applyPattern(_ pattern: String, color: Color, bold: Bool = false) {
+        // Uses .appKit.foregroundColor (NSColor) to survive RTF cache serialization
+        func applyPattern(_ pattern: String, color: NSColor, bold: Bool = false) {
             guard let regex = try? NSRegularExpression(pattern: pattern, options: [.anchorsMatchLines]) else { return }
             let nsRange = NSRange(text.startIndex..., in: text)
             let matches = regex.matches(in: text, options: [], range: nsRange)
@@ -432,7 +435,7 @@ struct PreviewContentView: View {
             for match in matches {
                 guard let range = Range(match.range, in: text),
                       let attrRange = Range(range, in: attributed) else { continue }
-                attributed[attrRange].foregroundColor = color
+                attributed[attrRange].appKit.foregroundColor = color
                 if bold {
                     attributed[attrRange].inlinePresentationIntent = .stronglyEmphasized
                 }
@@ -453,80 +456,81 @@ struct PreviewContentView: View {
     }
 
     /// Returns theme-matched colors for markdown syntax highlighting
+    /// Uses NSColor to ensure colors survive RTF cache serialization
     @MainActor
-    private func markdownColorsForTheme(_ theme: String) -> (heading: Color, code: Color, link: Color, bold: Color, quote: Color) {
+    private func markdownColorsForTheme(_ theme: String) -> (heading: NSColor, code: NSColor, link: NSColor, bold: NSColor, quote: NSColor) {
         switch theme {
         case "atomOneLight":
             return (
-                heading: Color(hex: "#a626a4"),  // Purple - keywords
-                code: Color(hex: "#50a14f"),     // Green - strings
-                link: Color(hex: "#4078f2"),     // Blue - functions
-                bold: Color(hex: "#383a42"),     // Dark gray - text
-                quote: Color(hex: "#a0a1a7")     // Gray - comments
+                heading: NSColor(Color(hex: "#a626a4")),  // Purple - keywords
+                code: NSColor(Color(hex: "#50a14f")),     // Green - strings
+                link: NSColor(Color(hex: "#4078f2")),     // Blue - functions
+                bold: NSColor(Color(hex: "#383a42")),     // Dark gray - text
+                quote: NSColor(Color(hex: "#a0a1a7"))     // Gray - comments
             )
         case "atomOneDark", "blackout":
             return (
-                heading: Color(hex: "#c678dd"),  // Purple - keywords
-                code: Color(hex: "#98c379"),     // Green - strings
-                link: Color(hex: "#61afef"),     // Blue - functions
-                bold: Color(hex: "#abb2bf"),     // Light gray - text
-                quote: Color(hex: "#5c6370")     // Gray - comments
+                heading: NSColor(Color(hex: "#c678dd")),  // Purple - keywords
+                code: NSColor(Color(hex: "#98c379")),     // Green - strings
+                link: NSColor(Color(hex: "#61afef")),     // Blue - functions
+                bold: NSColor(Color(hex: "#abb2bf")),     // Light gray - text
+                quote: NSColor(Color(hex: "#5c6370"))     // Gray - comments
             )
         case "github":
             return (
-                heading: Color(hex: "#d73a49"),  // Red - keywords
-                code: Color(hex: "#032f62"),     // Dark blue - strings
-                link: Color(hex: "#0366d6"),     // Blue - links
-                bold: Color(hex: "#24292e"),     // Dark - text
-                quote: Color(hex: "#6a737d")     // Gray - comments
+                heading: NSColor(Color(hex: "#d73a49")),  // Red - keywords
+                code: NSColor(Color(hex: "#032f62")),     // Dark blue - strings
+                link: NSColor(Color(hex: "#0366d6")),     // Blue - links
+                bold: NSColor(Color(hex: "#24292e")),     // Dark - text
+                quote: NSColor(Color(hex: "#6a737d"))     // Gray - comments
             )
         case "githubDark":
             return (
-                heading: Color(hex: "#ff7b72"),  // Salmon - keywords
-                code: Color(hex: "#a5d6ff"),     // Light blue - strings
-                link: Color(hex: "#58a6ff"),     // Blue - links
-                bold: Color(hex: "#c9d1d9"),     // Light - text
-                quote: Color(hex: "#8b949e")     // Gray - comments
+                heading: NSColor(Color(hex: "#ff7b72")),  // Salmon - keywords
+                code: NSColor(Color(hex: "#a5d6ff")),     // Light blue - strings
+                link: NSColor(Color(hex: "#58a6ff")),     // Blue - links
+                bold: NSColor(Color(hex: "#c9d1d9")),     // Light - text
+                quote: NSColor(Color(hex: "#8b949e"))     // Gray - comments
             )
         case "xcode":
             return (
-                heading: Color(hex: "#9b2393"),  // Purple - keywords
-                code: Color(hex: "#c41a16"),     // Red - strings
-                link: Color(hex: "#0f68a0"),     // Blue - links
-                bold: Color(hex: "#000000"),     // Black - text
-                quote: Color(hex: "#5d6c79")     // Gray - comments
+                heading: NSColor(Color(hex: "#9b2393")),  // Purple - keywords
+                code: NSColor(Color(hex: "#c41a16")),     // Red - strings
+                link: NSColor(Color(hex: "#0f68a0")),     // Blue - links
+                bold: NSColor(Color(hex: "#000000")),     // Black - text
+                quote: NSColor(Color(hex: "#5d6c79"))     // Gray - comments
             )
         case "xcodeDark":
             return (
-                heading: Color(hex: "#fc5fa3"),  // Pink - keywords
-                code: Color(hex: "#fc6a5d"),     // Coral - strings
-                link: Color(hex: "#6699ff"),     // Blue - links
-                bold: Color(hex: "#ffffff"),     // White - text
-                quote: Color(hex: "#7f8c98")     // Gray - comments
+                heading: NSColor(Color(hex: "#fc5fa3")),  // Pink - keywords
+                code: NSColor(Color(hex: "#fc6a5d")),     // Coral - strings
+                link: NSColor(Color(hex: "#6699ff")),     // Blue - links
+                bold: NSColor(Color(hex: "#ffffff")),     // White - text
+                quote: NSColor(Color(hex: "#7f8c98"))     // Gray - comments
             )
         case "solarizedLight":
             return (
-                heading: Color(hex: "#859900"),  // Green - keywords
-                code: Color(hex: "#2aa198"),     // Cyan - strings
-                link: Color(hex: "#268bd2"),     // Blue - links
-                bold: Color(hex: "#657b83"),     // Base00 - text
-                quote: Color(hex: "#93a1a1")     // Base1 - comments
+                heading: NSColor(Color(hex: "#859900")),  // Green - keywords
+                code: NSColor(Color(hex: "#2aa198")),     // Cyan - strings
+                link: NSColor(Color(hex: "#268bd2")),     // Blue - links
+                bold: NSColor(Color(hex: "#657b83")),     // Base00 - text
+                quote: NSColor(Color(hex: "#93a1a1"))     // Base1 - comments
             )
         case "solarizedDark":
             return (
-                heading: Color(hex: "#859900"),  // Green - keywords
-                code: Color(hex: "#2aa198"),     // Cyan - strings
-                link: Color(hex: "#268bd2"),     // Blue - links
-                bold: Color(hex: "#839496"),     // Base0 - text
-                quote: Color(hex: "#586e75")     // Base01 - comments
+                heading: NSColor(Color(hex: "#859900")),  // Green - keywords
+                code: NSColor(Color(hex: "#2aa198")),     // Cyan - strings
+                link: NSColor(Color(hex: "#268bd2")),     // Blue - links
+                bold: NSColor(Color(hex: "#839496")),     // Base0 - text
+                quote: NSColor(Color(hex: "#586e75"))     // Base01 - comments
             )
         case "tokyoNight":
             return (
-                heading: Color(hex: "#bb9af7"),  // Purple - keywords
-                code: Color(hex: "#9ece6a"),     // Green - strings
-                link: Color(hex: "#7aa2f7"),     // Blue - links
-                bold: Color(hex: "#a9b1d6"),     // Light - text
-                quote: Color(hex: "#565f89")     // Gray - comments
+                heading: NSColor(Color(hex: "#bb9af7")),  // Purple - keywords
+                code: NSColor(Color(hex: "#9ece6a")),     // Green - strings
+                link: NSColor(Color(hex: "#7aa2f7")),     // Blue - links
+                bold: NSColor(Color(hex: "#a9b1d6")),     // Light - text
+                quote: NSColor(Color(hex: "#565f89"))     // Gray - comments
             )
         case "auto":
             // Follow system appearance

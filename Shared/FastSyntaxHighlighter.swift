@@ -140,7 +140,7 @@ struct FastSyntaxHighlighter: Sendable {
         perfLog("[dotViewer PERF] FastSyntaxHighlighter.highlight START - codeLen: %d chars, language: %@", code.count, language ?? "nil")
 
         var result = AttributedString(code)
-        result.foregroundColor = Color(nsColor: colors.text)
+        result.appKit.foregroundColor = colors.text
 
         // Build index mapping for efficient attribute application
         var sectionStart = CFAbsoluteTimeGetCurrent()
@@ -233,7 +233,6 @@ struct FastSyntaxHighlighter: Sendable {
 
     private func applyHighlight(regex: NSRegularExpression, to attributed: inout AttributedString, code: NSString, mapping: IndexMapping, color: NSColor) {
         let matches = regex.matches(in: code as String, options: [], range: NSRange(location: 0, length: code.length))
-        let swiftUIColor = Color(nsColor: color)
 
         for match in matches {
             let loc = match.range.location
@@ -246,7 +245,7 @@ struct FastSyntaxHighlighter: Sendable {
 
             guard startChar < mapping.attrIndices.count && endChar < mapping.attrIndices.count else { continue }
 
-            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].foregroundColor = swiftUIColor
+            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].appKit.foregroundColor = color
         }
     }
 

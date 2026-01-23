@@ -4,7 +4,7 @@ import AppKit
 // MARK: - Markdown Data Types
 
 struct TaskItem: Identifiable {
-    let id = UUID()
+    let id: Int
     let checked: Bool
     let text: String
 }
@@ -194,7 +194,7 @@ struct MarkdownRenderedViewLegacy: View {
                     if let match = taskLine.firstMatch(of: /^[-*]\s*\[([ xX])\]\s*(.*)$/) {
                         let isChecked = String(match.1).lowercased() == "x"
                         let text = String(match.2)
-                        taskItems.append(TaskItem(checked: isChecked, text: text))
+                        taskItems.append(TaskItem(id: taskItems.count, checked: isChecked, text: text))
                         currentIndex += 1
                     } else if taskLine.hasPrefix("- [") || taskLine.hasPrefix("* [") {
                         // Malformed task item - skip

@@ -111,17 +111,14 @@ final class DiskCache: @unchecked Sendable {
     /// Generate cache key from file metadata + theme + language.
     /// Key = SHA256(filePath + modificationDate + theme + language)
     /// This ensures cache invalidates when: file changes, file moves, theme changes, or language detection changes.
-    func cacheKey(filePath: String, modificationDate: Date, theme: String, language: String?) -> String {
+    func cacheKey(filePath: String, modificationDate: Date, theme: String, language: String?, isDark: Bool) -> String {
         let lang = language ?? "unknown"
 
-        // Resolve "auto" theme to actual appearance so cache invalidates when appearance changes
+        // Resolve "auto" theme using the caller-provided isDark flag.
+        // This avoids calling NSAppearance.currentDrawing() which returns
+        // unreliable results on background GCD queues (no drawing context).
         let resolvedTheme: String
         if theme == "auto" {
-            // Determine dark mode using the most reliable API available
-            // NSAppearance.currentDrawing() is available in macOS 12+ and works in XPC contexts
-            // Fall back to NSApp?.effectiveAppearance for older APIs
-            let appearance = NSAppearance.currentDrawing()
-            let isDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
             resolvedTheme = isDark ? "auto-dark" : "auto-light"
         } else {
             resolvedTheme = theme
@@ -201,42 +198,42 @@ final class DiskCache: @unchecked Sendable {
         // Validate key before using as filename
         guard isValidCacheKey(key) else { return }
 
-        writeQueue.async { [weak self] in
-            guard let self = self else { return }
+        let fileURL = self.cacheDirectory.appendingPathComponent(key)
 
-            let fileURL = self.cacheDirectory.appendingPathComponent(key)
-
-            // Ensure directory exists before writing (fallback if init failed)
-            if !self.fileManager.fileExists(atPath: self.cacheDirectory.path) {
-                do {
-                    try self.fileManager.createDirectory(at: self.cacheDirectory, withIntermediateDirectories: true)
-                } catch {
-                    perfLog("[dotViewer Cache] ERROR creating directory on write: \(error.localizedDescription)")
-                    return
-                }
-            }
-
+        // Ensure directory exists before writing (fallback if init failed)
+        if !self.fileManager.fileExists(atPath: self.cacheDirectory.path) {
             do {
-                // Convert SwiftUI AttributedString to NSAttributedString
-                let nsAttrString = NSAttributedString(value)
-                let range = NSRange(location: 0, length: nsAttrString.length)
-
-                // Encode as RTF (avoids NSKeyedArchiver issues with SwiftUI attributes)
-                guard let rtfData = nsAttrString.rtf(from: range, documentAttributes: [
-                    .documentType: NSAttributedString.DocumentType.rtf
-                ]) else {
-                    perfLog("[dotViewer Cache] RTF encoding failed for key: \(key.prefix(16))...")
-                    return
-                }
-
-                try rtfData.write(to: fileURL, options: .atomic)
-                perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(rtfData.count) bytes)")
-
-                // Trigger cleanup periodically
-                self.incrementWriteAndCleanupIfNeeded()
+                try self.fileManager.createDirectory(at: self.cacheDirectory, withIntermediateDirectories: true)
             } catch {
-                perfLog("[dotViewer Cache] Disk write error: \(error.localizedDescription)")
+                perfLog("[dotViewer Cache] ERROR creating directory on write: \(error.localizedDescription)")
+                return
             }
+        }
+
+        do {
+            // Convert AttributedString to NSAttributedString
+            let nsAttrString = NSAttributedString(value)
+            let range = NSRange(location: 0, length: nsAttrString.length)
+
+            // Encode as RTF (preserves AppKit foregroundColor attributes)
+            guard let rtfData = nsAttrString.rtf(from: range, documentAttributes: [
+                .documentType: NSAttributedString.DocumentType.rtf
+            ]) else {
+                perfLog("[dotViewer Cache] RTF encoding failed for key: \(key.prefix(16))...")
+                return
+            }
+
+            // Write synchronously so the cache is immediately available to other processes
+            // (e.g., spacebar QuickLook after Finder pane already highlighted)
+            try rtfData.write(to: fileURL, options: .atomic)
+            perfLog("[dotViewer Cache] Disk WRITE for key: \(key.prefix(16))... (\(rtfData.count) bytes)")
+
+            // Trigger cleanup asynchronously (doesn't need to block)
+            writeQueue.async { [weak self] in
+                self?.incrementWriteAndCleanupIfNeeded()
+            }
+        } catch {
+            perfLog("[dotViewer Cache] Disk write error: \(error.localizedDescription)")
         }
     }
 
