@@ -184,9 +184,9 @@ struct PreviewContentView: View {
         let startTime = CFAbsoluteTimeGetCurrent()
         perfLog("[dotViewer PERF] highlightCode START - file: %@, lines: %d, language: %@", state.filename, state.lineCount, state.language ?? "nil")
 
-        // Capture theme value on main thread before background work
-        // ThemeManager is @MainActor, so we must not access it from background contexts
-        let currentTheme = await MainActor.run { SharedSettings.shared.selectedTheme }
+        // Capture MainActor-isolated values before any background dispatch
+        let currentTheme = SharedSettings.shared.selectedTheme
+        let systemIsDark = state.isDarkMode
 
         defer {
             let elapsed = CFAbsoluteTimeGetCurrent() - startTime
@@ -292,22 +292,96 @@ struct PreviewContentView: View {
             return
         }
 
-        let highlighter = SyntaxHighlighter()
-        let timeoutNanoseconds: UInt64 = 2_000_000_000 // 2 seconds
+        let content = state.content
+        let language = state.language
+        let lineCount = state.lineCount
+        let progressiveThreshold = 200
+
+        // Progressive highlighting for files (200+ lines) with FastSyntaxHighlighter support
+        if isFastSupported && lineCount >= progressiveThreshold {
+            perfLog("[dotViewer PERF] [+%.3fs] PROGRESSIVE: %d lines, highlighting first 150 lines first", CFAbsoluteTimeGetCurrent() - startTime, lineCount)
+
+            // Extract first ~150 lines for immediate highlighting
+            let firstChunkLines = 150
+            let firstChunk = extractFirstLines(from: content, count: firstChunkLines)
+
+            // Phase 1: Highlight first chunk on a detached .userInitiated task
+            let chunkResult: AttributedString? = await Task.detached(priority: .userInitiated) {
+                let highlighter = SyntaxHighlighter()
+                return try? await highlighter.highlight(code: firstChunk, language: language, theme: currentTheme, isDark: systemIsDark)
+            }.value
+
+            guard !Task.isCancelled else {
+                perfLog("[dotViewer PERF] Task cancelled after progressive chunk")
+                return
+            }
+
+            // Show first chunk highlighted + plain text remainder immediately
+            if let chunkHighlighted = chunkResult {
+                let remainder = String(content.dropFirst(firstChunk.count))
+                var remainderAttr = AttributedString(remainder)
+                remainderAttr.foregroundColor = nil // Use default text color
+                highlightedContent = chunkHighlighted + remainderAttr
+                withAnimation(.easeIn(duration: 0.15)) {
+                    isReady = true
+                }
+                perfLog("[dotViewer PERF] [+%.3fs] PROGRESSIVE: first chunk displayed", CFAbsoluteTimeGetCurrent() - startTime)
+            }
+
+            // Phase 2: Highlight full file on a detached .utility task in background
+            let fullResult: AttributedString? = await Task.detached(priority: .utility) {
+                let highlighter = SyntaxHighlighter()
+                return try? await highlighter.highlight(code: content, language: language, theme: currentTheme, isDark: systemIsDark)
+            }.value
+
+            guard !Task.isCancelled else {
+                perfLog("[dotViewer PERF] Task cancelled after full progressive highlight")
+                return
+            }
+
+            if let fullHighlighted = fullResult {
+                // Swap in full result seamlessly (same colors, no flash)
+                highlightedContent = fullHighlighted
+                // Cache the full result
+                if let modDate = state.modificationDate, let path = state.fileURL?.path {
+                    HighlightCache.shared.set(
+                        path: path,
+                        modDate: modDate,
+                        theme: currentTheme,
+                        language: state.language,
+                        isDark: state.isDarkMode,
+                        highlighted: fullHighlighted
+                    )
+                    perfLog("[dotViewer PERF] [+%.3fs] PROGRESSIVE: full result cached", CFAbsoluteTimeGetCurrent() - startTime)
+                }
+            }
+
+            if !isReady {
+                withAnimation(.easeIn(duration: 0.15)) {
+                    isReady = true
+                }
+            }
+            return
+        }
+
+        // Standard path: highlight entire file on a detached background task
+        // Fast path (optimized single-pass scanner) gets more headroom; slow path keeps 2s
+        let timeoutNanoseconds: UInt64 = isFastSupported ? 4_000_000_000 : 2_000_000_000
         let highlightStart = CFAbsoluteTimeGetCurrent()
 
         // Use TaskGroup for reliable timeout with proper cancellation propagation
         let result: AttributedString? = await withTaskGroup(of: AttributedString?.self) { group in
-            // Add the highlighting task
+            // Add the highlighting task on a detached executor (off MainActor)
             group.addTask {
-                do {
-                    return try await highlighter.highlight(
-                        code: self.state.content,
-                        language: self.state.language
+                await Task.detached(priority: .userInitiated) {
+                    let highlighter = SyntaxHighlighter()
+                    return try? await highlighter.highlight(
+                        code: content,
+                        language: language,
+                        theme: currentTheme,
+                        isDark: systemIsDark
                     )
-                } catch {
-                    return nil
-                }
+                }.value
             }
 
             // Add the timeout task
@@ -366,6 +440,22 @@ struct PreviewContentView: View {
         withAnimation(.easeIn(duration: 0.15)) {
             isReady = true
         }
+    }
+
+    /// Extract the first N lines from a string efficiently
+    private func extractFirstLines(from content: String, count: Int) -> String {
+        var linesSeen = 0
+        var endIndex = content.startIndex
+        for char in content {
+            if char == "\n" {
+                linesSeen += 1
+                if linesSeen >= count {
+                    break
+                }
+            }
+            endIndex = content.index(after: endIndex)
+        }
+        return String(content[content.startIndex..<endIndex])
     }
 
     /// Heuristic to detect files that won't benefit from syntax highlighting

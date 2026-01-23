@@ -47,18 +47,7 @@ struct FastSyntaxHighlighter: Sendable {
     //
     // If modifying these patterns, test compilation in a playground first.
 
-    // Comments
-    private static let lineCommentRegex = try! NSRegularExpression(pattern: "//[^\n]*")
-    private static let blockCommentRegex = try! NSRegularExpression(pattern: "/\\*[\\s\\S]*?\\*/")
-    private static let hashCommentRegex = try! NSRegularExpression(pattern: "#[^\n]*")
-    private static let htmlCommentRegex = try! NSRegularExpression(pattern: "<!--[\\s\\S]*?-->")
-
-    // Strings
-    private static let doubleStringRegex = try! NSRegularExpression(pattern: "\"(?:[^\"\\\\]|\\\\.)*\"")
-    private static let singleStringRegex = try! NSRegularExpression(pattern: "'(?:[^'\\\\]|\\\\.)*'")
-    private static let backtickStringRegex = try! NSRegularExpression(pattern: "`(?:[^`\\\\]|\\\\.)*`")
-    private static let tripleDoubleStringRegex = try! NSRegularExpression(pattern: "\"\"\"[\\s\\S]*?\"\"\"")
-    private static let tripleSingleStringRegex = try! NSRegularExpression(pattern: "'''[\\s\\S]*?'''")
+    // Comment and string patterns are handled by scanCommentsAndStrings() single-pass scanner.
 
     // Numbers
     private static let numberRegex = try! NSRegularExpression(pattern: "\\b\\d+\\.?\\d*(?:[eE][+-]?\\d+)?\\b")
@@ -92,41 +81,6 @@ struct FastSyntaxHighlighter: Sendable {
         return dataLanguages.contains(lang)
     }
 
-    // MARK: - Index Mapping for O(1) Lookups
-
-    private struct IndexMapping {
-        let utf16ToChar: [Int]
-        let attrIndices: [AttributedString.Index]
-    }
-
-    private func buildIndexMapping(code: String, attributed: AttributedString) -> IndexMapping {
-        var utf16ToChar: [Int] = []
-        utf16ToChar.reserveCapacity(code.utf16.count + 1)
-        var charIdx = 0
-        for char in code {
-            for _ in 0..<char.utf16.count {
-                utf16ToChar.append(charIdx)
-            }
-            charIdx += 1
-        }
-        utf16ToChar.append(charIdx)
-
-        // Build AttributedString index array in O(n) using characters collection
-        // PERFORMANCE FIX: Previous code used `attributed.index(afterCharacter:)` which is O(n)
-        // per call, resulting in O(n²) total. Using `characters.index(after:)` is O(1) per call.
-        var attrIndices: [AttributedString.Index] = []
-        let charCount = attributed.characters.count
-        attrIndices.reserveCapacity(charCount + 1)
-        var currentIndex = attributed.startIndex
-        for _ in 0..<charCount {
-            attrIndices.append(currentIndex)
-            currentIndex = attributed.characters.index(after: currentIndex)
-        }
-        attrIndices.append(attributed.endIndex)
-
-        return IndexMapping(utf16ToChar: utf16ToChar, attrIndices: attrIndices)
-    }
-
     // MARK: - Main Highlight Function
 
     /// Highlight code synchronously using pattern matching
@@ -139,59 +93,35 @@ struct FastSyntaxHighlighter: Sendable {
         let totalStart = CFAbsoluteTimeGetCurrent()
         perfLog("[dotViewer PERF] FastSyntaxHighlighter.highlight START - codeLen: %d chars, language: %@", code.count, language ?? "nil")
 
-        var result = AttributedString(code)
-        result.appKit.foregroundColor = colors.text
-
-        // Build index mapping for efficient attribute application
-        var sectionStart = CFAbsoluteTimeGetCurrent()
-        let mapping = buildIndexMapping(code: code, attributed: result)
         let codeNS = code as NSString
-        perfLog("[dotViewer PERF] [Fast +%.3fs] index mapping: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
+        let fullRange = NSRange(location: 0, length: codeNS.length)
+        let mutableAttr = NSMutableAttributedString(string: code, attributes: [.foregroundColor: colors.text])
 
         // Get language-specific patterns
-        sectionStart = CFAbsoluteTimeGetCurrent()
+        var sectionStart = CFAbsoluteTimeGetCurrent()
         let patterns = languagePatterns(for: language)
         perfLog("[dotViewer PERF] [Fast +%.3fs] languagePatterns: %.3fs (keywords: %d, types: %d, builtins: %d)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, patterns.keywords.count, patterns.types.count, patterns.builtins.count)
 
         // Apply highlighting in order (more specific patterns first)
 
-        // 1. Multi-line strings (before single-line strings)
+        // 1-3. Comments + Strings: Single O(n) scan replaces 5-7 separate regex passes.
+        // Correctly handles // inside strings, quotes inside comments, escape sequences.
         sectionStart = CFAbsoluteTimeGetCurrent()
-        if patterns.supportsMultilineStrings {
-            applyHighlight(regex: Self.tripleDoubleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
-            applyHighlight(regex: Self.tripleSingleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
+        let tokens = scanCommentsAndStrings(in: codeNS, patterns: patterns)
+        if !tokens.isEmpty {
+            mutableAttr.beginEditing()
+            for token in tokens {
+                let color = token.category == .comment ? colors.comment : colors.string
+                mutableAttr.addAttribute(.foregroundColor, value: color, range: token.range)
+            }
+            mutableAttr.endEditing()
         }
-        let multilineTime = CFAbsoluteTimeGetCurrent() - sectionStart
-
-        // 2. Comments (before strings to handle commented strings correctly)
-        sectionStart = CFAbsoluteTimeGetCurrent()
-        if patterns.supportsLineComments {
-            applyHighlight(regex: Self.lineCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
-        }
-        if patterns.supportsBlockComments {
-            applyHighlight(regex: Self.blockCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
-        }
-        if patterns.supportsHashComments {
-            applyHighlight(regex: Self.hashCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
-        }
-        if patterns.supportsHtmlComments {
-            applyHighlight(regex: Self.htmlCommentRegex, to: &result, code: codeNS, mapping: mapping, color: colors.comment)
-        }
-        perfLog("[dotViewer PERF] [Fast +%.3fs] comments: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
-
-        // 3. Strings
-        sectionStart = CFAbsoluteTimeGetCurrent()
-        applyHighlight(regex: Self.doubleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
-        applyHighlight(regex: Self.singleStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
-        if patterns.supportsBacktickStrings {
-            applyHighlight(regex: Self.backtickStringRegex, to: &result, code: codeNS, mapping: mapping, color: colors.string)
-        }
-        perfLog("[dotViewer PERF] [Fast +%.3fs] strings: %.3fs (multiline was: %.3fs)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, multilineTime)
+        perfLog("[dotViewer PERF] [Fast +%.3fs] comments+strings (single-pass): %.3fs (%d tokens)", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, tokens.count)
 
         // 4. Numbers
         sectionStart = CFAbsoluteTimeGetCurrent()
-        applyHighlight(regex: Self.hexNumberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
-        applyHighlight(regex: Self.numberRegex, to: &result, code: codeNS, mapping: mapping, color: colors.number)
+        applyHighlight(regex: Self.hexNumberRegex, to: mutableAttr, searchRange: fullRange, color: colors.number)
+        applyHighlight(regex: Self.numberRegex, to: mutableAttr, searchRange: fullRange, color: colors.number)
         perfLog("[dotViewer PERF] [Fast +%.3fs] numbers: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 5. Language-specific patterns
@@ -200,53 +130,208 @@ struct FastSyntaxHighlighter: Sendable {
         // PERFORMANCE: Saves 100-250ms for data files by avoiding expensive regex on thousands of tags
         let skipHtmlTags = patterns.isXmlDataMode || Self.isDataFormat(language)
         if patterns.supportsHtmlTags && !skipHtmlTags {
-            applyHighlight(regex: Self.htmlTagRegex, to: &result, code: codeNS, mapping: mapping, color: colors.keyword)
-            applyHighlight(regex: Self.htmlAttributeRegex, to: &result, code: codeNS, mapping: mapping, color: colors.type)
+            applyHighlight(regex: Self.htmlTagRegex, to: mutableAttr, searchRange: fullRange, color: colors.keyword)
+            applyHighlight(regex: Self.htmlAttributeRegex, to: mutableAttr, searchRange: fullRange, color: colors.type)
         }
 
         if patterns.supportsJsonKeys {
-            applyHighlight(regex: Self.jsonKeyRegex, to: &result, code: codeNS, mapping: mapping, color: colors.keyword)
+            applyHighlight(regex: Self.jsonKeyRegex, to: mutableAttr, searchRange: fullRange, color: colors.keyword)
         }
         perfLog("[dotViewer PERF] [Fast +%.3fs] language-specific (html/json): %.3fs, skipHtmlTags: %@", CFAbsoluteTimeGetCurrent() - totalStart, CFAbsoluteTimeGetCurrent() - sectionStart, skipHtmlTags ? "YES" : "NO")
 
         // 6. Keywords - single-pass highlighting using alternation pattern O(n) instead of O(n × keywords)
         // Uses cached regex patterns per language for 95%+ savings on subsequent files
         sectionStart = CFAbsoluteTimeGetCurrent()
-        highlightWords(in: &result, code: codeNS, words: patterns.keywords, mapping: mapping, color: colors.keyword, language: language)
+        highlightWords(in: mutableAttr, searchRange: fullRange, words: patterns.keywords, color: colors.keyword, language: language)
         perfLog("[dotViewer PERF] [Fast +%.3fs] keywords (%d): %.3fs [single-pass, cached]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.keywords.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 7. Types - single-pass highlighting using alternation pattern O(n) instead of O(n × types)
         sectionStart = CFAbsoluteTimeGetCurrent()
-        highlightWords(in: &result, code: codeNS, words: patterns.types, mapping: mapping, color: colors.type, language: language)
+        highlightWords(in: mutableAttr, searchRange: fullRange, words: patterns.types, color: colors.type, language: language)
         perfLog("[dotViewer PERF] [Fast +%.3fs] types (%d): %.3fs [single-pass, cached]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.types.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
         // 8. Built-in functions - single-pass highlighting using alternation pattern O(n) instead of O(n × builtins)
         sectionStart = CFAbsoluteTimeGetCurrent()
-        highlightWords(in: &result, code: codeNS, words: patterns.builtins, mapping: mapping, color: colors.function, language: language)
+        highlightWords(in: mutableAttr, searchRange: fullRange, words: patterns.builtins, color: colors.function, language: language)
         perfLog("[dotViewer PERF] [Fast +%.3fs] builtins (%d): %.3fs [single-pass, cached]", CFAbsoluteTimeGetCurrent() - totalStart, patterns.builtins.count, CFAbsoluteTimeGetCurrent() - sectionStart)
 
+        let result = AttributedString(mutableAttr)
         perfLog("[dotViewer PERF] FastSyntaxHighlighter.highlight DONE - total: %.3fs", CFAbsoluteTimeGetCurrent() - totalStart)
         return result
     }
 
+    // MARK: - Single-Pass Comment/String Scanner
+
+    private enum TokenCategory {
+        case comment
+        case string
+    }
+
+    /// Single O(n) scan replacing 5-7 separate regex passes for comments and strings.
+    /// Correctly handles: `//` inside strings, quotes inside comments, escape sequences.
+    private func scanCommentsAndStrings(in code: NSString, patterns: LanguagePatterns) -> [(range: NSRange, category: TokenCategory)] {
+        var tokens: [(range: NSRange, category: TokenCategory)] = []
+        let length = code.length
+        var i = 0
+
+        while i < length {
+            let ch = code.character(at: i)
+
+            // --- Multi-line strings (""" or ''') - check before single-char quotes ---
+            if patterns.supportsMultilineStrings {
+                if ch == 0x22 /* " */ && i + 2 < length &&
+                   code.character(at: i + 1) == 0x22 && code.character(at: i + 2) == 0x22 {
+                    let start = i
+                    i += 3
+                    while i + 2 < length {
+                        if code.character(at: i) == 0x22 && code.character(at: i + 1) == 0x22 && code.character(at: i + 2) == 0x22 {
+                            i += 3
+                            break
+                        }
+                        i += 1
+                    }
+                    if i >= length { i = length } // unterminated - consume to end
+                    tokens.append((range: NSRange(location: start, length: i - start), category: .string))
+                    continue
+                }
+                if ch == 0x27 /* ' */ && i + 2 < length &&
+                   code.character(at: i + 1) == 0x27 && code.character(at: i + 2) == 0x27 {
+                    let start = i
+                    i += 3
+                    while i + 2 < length {
+                        if code.character(at: i) == 0x27 && code.character(at: i + 1) == 0x27 && code.character(at: i + 2) == 0x27 {
+                            i += 3
+                            break
+                        }
+                        i += 1
+                    }
+                    if i >= length { i = length }
+                    tokens.append((range: NSRange(location: start, length: i - start), category: .string))
+                    continue
+                }
+            }
+
+            // --- HTML comments (<!-- -->) ---
+            if patterns.supportsHtmlComments && ch == 0x3C /* < */ && i + 3 < length {
+                if code.character(at: i + 1) == 0x21 /* ! */ &&
+                   code.character(at: i + 2) == 0x2D /* - */ &&
+                   code.character(at: i + 3) == 0x2D /* - */ {
+                    let start = i
+                    i += 4
+                    while i + 2 < length {
+                        if code.character(at: i) == 0x2D && code.character(at: i + 1) == 0x2D && code.character(at: i + 2) == 0x3E /* > */ {
+                            i += 3
+                            break
+                        }
+                        i += 1
+                    }
+                    if i >= length { i = length }
+                    tokens.append((range: NSRange(location: start, length: i - start), category: .comment))
+                    continue
+                }
+            }
+
+            // --- Block comments (/* */) ---
+            if patterns.supportsBlockComments && ch == 0x2F /* / */ && i + 1 < length && code.character(at: i + 1) == 0x2A /* * */ {
+                let start = i
+                i += 2
+                while i + 1 < length {
+                    if code.character(at: i) == 0x2A && code.character(at: i + 1) == 0x2F {
+                        i += 2
+                        break
+                    }
+                    i += 1
+                }
+                if i >= length { i = length }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .comment))
+                continue
+            }
+
+            // --- Line comments (//) ---
+            if patterns.supportsLineComments && ch == 0x2F /* / */ && i + 1 < length && code.character(at: i + 1) == 0x2F {
+                let start = i
+                i += 2
+                while i < length && code.character(at: i) != 0x0A /* \n */ {
+                    i += 1
+                }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .comment))
+                continue
+            }
+
+            // --- Hash comments (#) ---
+            if patterns.supportsHashComments && ch == 0x23 /* # */ {
+                let start = i
+                i += 1
+                while i < length && code.character(at: i) != 0x0A {
+                    i += 1
+                }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .comment))
+                continue
+            }
+
+            // --- Double-quoted strings ---
+            if ch == 0x22 /* " */ {
+                let start = i
+                i += 1
+                while i < length {
+                    let sc = code.character(at: i)
+                    if sc == 0x5C /* \ */ {
+                        i += 2 // skip escaped char
+                        continue
+                    }
+                    if sc == 0x22 { i += 1; break }
+                    if sc == 0x0A { break } // unterminated at newline
+                    i += 1
+                }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .string))
+                continue
+            }
+
+            // --- Single-quoted strings ---
+            if ch == 0x27 /* ' */ {
+                let start = i
+                i += 1
+                while i < length {
+                    let sc = code.character(at: i)
+                    if sc == 0x5C { i += 2; continue }
+                    if sc == 0x27 { i += 1; break }
+                    if sc == 0x0A { break }
+                    i += 1
+                }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .string))
+                continue
+            }
+
+            // --- Backtick strings ---
+            if patterns.supportsBacktickStrings && ch == 0x60 /* ` */ {
+                let start = i
+                i += 1
+                while i < length {
+                    let sc = code.character(at: i)
+                    if sc == 0x5C { i += 2; continue }
+                    if sc == 0x60 { i += 1; break }
+                    i += 1
+                }
+                tokens.append((range: NSRange(location: start, length: i - start), category: .string))
+                continue
+            }
+
+            i += 1
+        }
+
+        return tokens
+    }
+
     // MARK: - Pattern Application
 
-    private func applyHighlight(regex: NSRegularExpression, to attributed: inout AttributedString, code: NSString, mapping: IndexMapping, color: NSColor) {
-        let matches = regex.matches(in: code as String, options: [], range: NSRange(location: 0, length: code.length))
-
+    private func applyHighlight(regex: NSRegularExpression, to mutableAttr: NSMutableAttributedString, searchRange: NSRange, color: NSColor) {
+        let matches = regex.matches(in: mutableAttr.string, options: [], range: searchRange)
+        guard !matches.isEmpty else { return }
+        mutableAttr.beginEditing()
         for match in matches {
-            let loc = match.range.location
-            let end = loc + match.range.length
-
-            guard loc < mapping.utf16ToChar.count && end <= mapping.utf16ToChar.count else { continue }
-
-            let startChar = mapping.utf16ToChar[loc]
-            let endChar = mapping.utf16ToChar[end]
-
-            guard startChar < mapping.attrIndices.count && endChar < mapping.attrIndices.count else { continue }
-
-            attributed[mapping.attrIndices[startChar]..<mapping.attrIndices[endChar]].appKit.foregroundColor = color
+            mutableAttr.addAttribute(.foregroundColor, value: color, range: match.range)
         }
+        mutableAttr.endEditing()
     }
 
     /// Highlight a set of words in a single pass using alternation pattern.
@@ -254,9 +339,9 @@ struct FastSyntaxHighlighter: Sendable {
     /// Pattern: \b(word1|word2|word3|...)\b
     /// PERFORMANCE: Uses cached pre-compiled patterns per language (saves 20-50ms per file)
     ///
-    /// Thread Safety: Uses NSLock with withLock { } for automatic unlock on all exit paths.
-    /// The lock protects keywordPatternCache which is shared across highlighting operations.
-    private func highlightWords(in attributed: inout AttributedString, code: NSString, words: Set<String>, mapping: IndexMapping, color: NSColor, language: String?) {
+    /// Thread Safety: Uses OSAllocatedUnfairLock with withLock { } for automatic unlock on all exit paths.
+    /// The lock protects patternCache which is shared across highlighting operations.
+    private func highlightWords(in mutableAttr: NSMutableAttributedString, searchRange: NSRange, words: Set<String>, color: NSColor, language: String?) {
         guard !words.isEmpty else { return }
 
         // Create cache key using language and words hash for uniqueness
@@ -285,13 +370,7 @@ struct FastSyntaxHighlighter: Sendable {
             }
         }
 
-        applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
-    }
-
-    private func highlightWord(in attributed: inout AttributedString, code: NSString, word: String, mapping: IndexMapping, color: NSColor) {
-        let escapedWord = NSRegularExpression.escapedPattern(for: word)
-        guard let regex = try? NSRegularExpression(pattern: "\\b\(escapedWord)\\b") else { return }
-        applyHighlight(regex: regex, to: &attributed, code: code, mapping: mapping, color: color)
+        applyHighlight(regex: regex, to: mutableAttr, searchRange: searchRange, color: color)
     }
 
     // MARK: - Language Patterns
