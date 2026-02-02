@@ -21,38 +21,33 @@ struct SyntaxHighlighter: Sendable {
     }
     private static let colorCache = OSAllocatedUnfairLock(initialState: ColorCacheState())
 
-    /// Highlight code with the most appropriate highlighter for the language
+    /// Highlight code with the most appropriate highlighter for the language.
+    /// Accepts pre-resolved theme/isDark to avoid MainActor access during highlighting.
     /// - Parameters:
     ///   - code: Source code to highlight
     ///   - language: Language identifier (e.g., "swift", "javascript")
+    ///   - theme: The theme name (e.g., "atomOneDark", "auto")
+    ///   - isDark: Whether the system appearance is dark
     /// - Returns: Attributed string with syntax highlighting
-    func highlight(code: String, language: String?) async throws -> AttributedString {
+    func highlight(code: String, language: String?, theme: String, isDark: Bool) async throws -> AttributedString {
         let startTime = CFAbsoluteTimeGetCurrent()
         let fastSupported = FastSyntaxHighlighter.isSupported(language)
         perfLog("[dotViewer PERF] SyntaxHighlighter.highlight START - language: %@, codeLen: %d chars, fastSupported: %@", language ?? "nil", code.count, fastSupported ? "YES" : "NO")
 
         // Try FastSyntaxHighlighter first for supported languages (native Swift, fast)
         if fastSupported {
-            let colorStart = CFAbsoluteTimeGetCurrent()
-
-            let currentTheme = SharedSettings.shared.selectedTheme
-
-            // Get current appearance (thread-safe in macOS 11+)
-            let appearance = NSAppearance.currentDrawing()
-            let systemIsDark = appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-
             // Thread-safe cache access via OSAllocatedUnfairLock
             let colors: SyntaxColors = Self.colorCache.withLock { state in
                 if let cached = state.colors,
-                   state.theme == currentTheme,
-                   state.appearanceIsDark == systemIsDark {
+                   state.theme == theme,
+                   state.appearanceIsDark == isDark {
                     perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: CACHED", CFAbsoluteTimeGetCurrent() - startTime)
                     return cached
                 }
-                let computed = SyntaxColors.forTheme(currentTheme, systemIsDark: systemIsDark)
+                let computed = SyntaxColors.forTheme(theme, systemIsDark: isDark)
                 state.colors = computed
-                state.theme = currentTheme
-                state.appearanceIsDark = systemIsDark
+                state.theme = theme
+                state.appearanceIsDark = isDark
                 perfLog("[dotViewer PERF] [SH +%.3fs] ThemeManager.syntaxColors: computed, now cached", CFAbsoluteTimeGetCurrent() - startTime)
                 return computed
             }
@@ -67,14 +62,14 @@ struct SyntaxHighlighter: Sendable {
         // Fall back to HighlightSwift for unsupported languages
         perfLog("[dotViewer PERF] [SH +%.3fs] falling back to HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
         let fallbackStart = CFAbsoluteTimeGetCurrent()
-        let result = try await highlightWithFallback(code: code, language: language)
+        let result = try await highlightWithFallback(code: code, language: language, theme: theme, isDark: isDark)
         perfLog("[dotViewer PERF] [SH +%.3fs] HighlightSwift fallback took: %.3fs", CFAbsoluteTimeGetCurrent() - startTime, CFAbsoluteTimeGetCurrent() - fallbackStart)
         perfLog("[dotViewer PERF] SyntaxHighlighter.highlight DONE - total: %.3fs, path: HighlightSwift", CFAbsoluteTimeGetCurrent() - startTime)
         return result
     }
 
     /// Fallback highlighting using HighlightSwift (JavaScriptCore-based)
-    private func highlightWithFallback(code: String, language: String?) async throws -> AttributedString {
+    private func highlightWithFallback(code: String, language: String?, theme: String, isDark: Bool) async throws -> AttributedString {
         let fallbackStart = CFAbsoluteTimeGetCurrent()
         do {
             // Determine the highlight mode
@@ -92,7 +87,7 @@ struct SyntaxHighlighter: Sendable {
 
             // Get colors based on user's theme setting
             let colorStart = CFAbsoluteTimeGetCurrent()
-            let colors = resolveColors()
+            let colors = resolveColors(theme: theme, isDark: isDark)
             perfLog("[dotViewer PERF] [HS +%.3fs] resolveColors took: %.3fs", CFAbsoluteTimeGetCurrent() - fallbackStart, CFAbsoluteTimeGetCurrent() - colorStart)
 
             let requestStart = CFAbsoluteTimeGetCurrent()
@@ -105,16 +100,13 @@ struct SyntaxHighlighter: Sendable {
         } catch {
             perfLog("[dotViewer PERF] [HS] ERROR: %@, returning plain text", error.localizedDescription)
             // Fallback: return plain text with monospace font
-            let fontSize = SharedSettings.shared.fontSize
             var plainText = AttributedString(code)
-            plainText.font = .system(size: fontSize, design: .monospaced)
+            plainText.font = .system(size: 12, design: .monospaced)
             return plainText
         }
     }
 
-    private func resolveColors() -> HighlightColors {
-        let theme = SharedSettings.shared.selectedTheme
-
+    private func resolveColors(theme: String, isDark: Bool) -> HighlightColors {
         switch theme {
         case "atomOneLight":
             return .light(.atomOne)
@@ -137,17 +129,10 @@ struct SyntaxHighlighter: Sendable {
         case "blackout":
             return .dark(.atomOne) // Blackout uses Atom One Dark syntax colors
         case "auto":
-            return systemIsDark ? .dark(.atomOne) : .light(.atomOne)
+            return isDark ? .dark(.atomOne) : .light(.atomOne)
         default:
             return .light(.atomOne)
         }
-    }
-
-    private var systemIsDark: Bool {
-        if let appearance = NSApp?.effectiveAppearance {
-            return appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-        }
-        return false
     }
 
     /// Convert SwiftUI foregroundColor attributes to AppKit foregroundColor.
