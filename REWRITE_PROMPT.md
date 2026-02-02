@@ -1,586 +1,1008 @@
-# dotViewer v2.0 - Complete Rewrite Prompt
+# dotViewer v2.0 - Complete Rewrite Specification
 
-**Use this prompt to start a fresh Claude Code session for rebuilding dotViewer from scratch.**
+**Version:** 2.0 (Improved)
+**Date:** 2026-02-02
+**Purpose:** Complete rewrite prompt for blazing-fast Quick Look extension
 
 ---
 
-## CRITICAL: Read These Files First
+## CRITICAL FIRST STEP
 
-Before starting ANY work, you MUST read these two research documents in the repository:
-
+**Before writing ANY code, read these files in the repository:**
 ```
-1. QUICKLOOK_PERFORMANCE_RESEARCH.md
-2. DOTVIEWER_VS_COMPETITORS_ANALYSIS.md
+1. QUICKLOOK_PERFORMANCE_RESEARCH.md - Competitor analysis
+2. DOTVIEWER_VS_COMPETITORS_ANALYSIS.md - Why v1 is slow
 ```
 
-These documents contain:
-- Analysis of 4 competitor Quick Look extensions (QLStephen, QLMarkdown, SourceCodeSyntaxHighlight)
-- Why dotViewer v1 is slow (JavaScript-based highlighting via HighlightSwift)
-- Architecture patterns that make competitors fast (native C/C++, XPC services)
-- Code examples from competitor source code
-
-**Do not proceed without reading and understanding these documents.**
+These explain why the old version was slow (JavaScript highlighting) and what competitors do (native C/C++).
 
 ---
 
 ## Project Overview
 
 ### What We're Building
-**dotViewer** - A macOS Quick Look extension for developers that previews:
-- Source code files with syntax highlighting
-- Dotfiles and config files (`.gitignore`, `.env`, `.bashrc`, etc.)
-- Markdown files with raw/rendered toggle
+**dotViewer** - A macOS Quick Look extension that previews:
+- Source code with **instant** syntax highlighting
+- Dotfiles and config files
+- Markdown with raw/rendered toggle
 - Any text-based file
 
-### Why We're Rewriting
-The current v1.0 uses **HighlightSwift** (JavaScript via JavaScriptCore) for syntax highlighting. This is **10-100x slower** than native C/C++ libraries used by competitors. Files >4KB appear slow, files >15KB take seconds.
+### Why Rewriting
+Current v1 uses JavaScript (HighlightSwift/highlight.js) which is 10-100x slower than native. Files >4KB are noticeably slow.
 
-### The Goal
-Rebuild dotViewer with **blazing fast performance** using native highlighting, matching or exceeding competitor speed while keeping the exact same UI/UX and features.
+### Performance Target
+```
+1KB file:  <50ms  (instant feel)
+10KB file: <100ms (instant feel)
+50KB file: <200ms (barely noticeable)
+100KB:     <500ms (acceptable)
+```
 
 ---
 
-## Architecture Decision: Fresh Project
+## Part 1: Project Structure (NEW XCODE PROJECT)
 
-**Create a brand new Xcode project.** Do not modify the existing codebase.
+Create a **brand new** Xcode project. Do NOT modify existing code.
 
-Reasons:
-1. Clean architecture from the start
-2. No legacy JavaScript highlighting code
-3. Proper XPC service integration from day one
-4. No risk of copying broken patterns
-5. Fresh Swift 6 / macOS 15+ patterns
+### Three Targets Required
 
-The existing codebase will serve as **UI/UX reference only**.
+```
+dotViewer.xcodeproj
+├── dotViewer/                    # Main App (SwiftUI)
+│   ├── dotViewerApp.swift
+│   ├── Views/
+│   │   ├── ContentView.swift     # Navigation container
+│   │   ├── StatusView.swift      # Extension status & onboarding
+│   │   ├── FileTypesView.swift   # File type management (ACCORDION!)
+│   │   └── SettingsView.swift    # All preferences
+│   ├── Models/
+│   │   ├── FileType.swift
+│   │   ├── FileTypeCategory.swift
+│   │   └── Theme.swift           # ENUM, not strings!
+│   ├── Services/
+│   │   ├── ExtensionStatusChecker.swift  # pluginkit detection
+│   │   └── SharedSettings.swift
+│   └── Info.plist
+│
+├── QuickLookExtension/           # Quick Look Extension
+│   ├── PreviewViewController.swift
+│   ├── PreviewView.swift         # SwiftUI preview
+│   ├── MarkdownRenderer.swift    # For rendered mode
+│   ├── Info.plist                # UTI declarations
+│   └── QuickLookExtension.entitlements
+│
+├── HighlightService/             # XPC Service (CRITICAL FOR SPEED)
+│   ├── main.swift
+│   ├── HighlightServiceDelegate.swift
+│   ├── HighlightServiceProtocol.swift
+│   ├── NativeHighlighter.swift   # Tree-sitter OR regex-based
+│   └── HighlightService.entitlements
+│
+└── Shared/                       # Shared Framework
+    ├── HighlightProtocol.swift
+    ├── FileTypeRegistry.swift
+    ├── LanguageDetector.swift
+    ├── ThemeColors.swift
+    └── SharedSettings.swift
+```
+
+### App Group Configuration
+Both the main app and extension need App Groups entitlement:
+```xml
+<key>com.apple.security.application-groups</key>
+<array>
+    <string>group.com.yourname.dotViewer.shared</string>
+</array>
+```
 
 ---
 
-## Target Architecture (Based on Competitor Research)
+## Part 2: Extension Status Detection (CRITICAL!)
 
-### Project Structure
-```
-dotViewer/                          # Main app (settings UI)
-├── App/
-│   ├── dotViewerApp.swift          # App entry point
-│   ├── ContentView.swift           # Main navigation
-│   ├── StatusView.swift            # Extension status & onboarding
-│   ├── FileTypesView.swift         # File type management
-│   └── SettingsView.swift          # User preferences
-├── Models/
-│   ├── FileType.swift              # File type definitions
-│   ├── Theme.swift                 # Theme enum (not strings!)
-│   └── Settings.swift              # Settings model
-└── Utilities/
-    └── ExtensionStatusChecker.swift
+The app must correctly detect if the Quick Look extension is enabled in System Settings.
 
-QuickLookExtension/                 # Quick Look extension
-├── PreviewViewController.swift     # QLPreviewingController entry point
-├── PreviewView.swift               # SwiftUI preview rendering
-└── Info.plist                      # UTI declarations
+### Implementation (EXACT COPY THIS)
 
-HighlightXPC/                       # XPC service for highlighting (NEW!)
-├── main.swift                      # XPC service entry
-├── HighlightService.swift          # XPC protocol implementation
-├── NativeHighlighter.swift         # Native C/C++ wrapper OR Tree-sitter
-└── HighlightXPC.entitlements
-
-Shared/                             # Shared framework
-├── HighlightProtocol.swift         # XPC communication protocol
-├── FileTypeRegistry.swift          # O(1) file type lookups
-├── LanguageDetector.swift          # Language detection
-├── ThemeColors.swift               # Theme color definitions
-└── SharedSettings.swift            # App Group settings
-```
-
-### Key Architectural Decisions
-
-1. **XPC Service for Highlighting**
-   - Like SourceCodeSyntaxHighlight
-   - Isolates heavy processing from Quick Look UI
-   - Can be killed without affecting Finder
-   - Memory released after preview closes
-
-2. **Native Highlighting Engine**
-   - **Option A:** Tree-sitter (modern, used by GitHub/VS Code)
-   - **Option B:** highlight C++ library (used by SourceCodeSyntaxHighlight)
-   - **NOT JavaScript** - this is the whole point of the rewrite
-
-3. **100KB Default File Limit**
-   - Match QLStephen's proven default
-   - User configurable via settings
-
-4. **App Groups for IPC**
-   - Settings shared between app and extension
-   - Same pattern as v1 (this works fine)
-
----
-
-## Features to Implement (Exact Parity with v1)
-
-### Quick Look Extension Features
-
-1. **Syntax Highlighting**
-   - 50+ languages support
-   - Multiple color themes (10 themes)
-   - Instant rendering (<100ms for typical files)
-
-2. **Markdown Support**
-   - Raw markdown view with syntax highlighting
-   - Rendered markdown view (Typora-inspired)
-   - Toggle between raw and rendered
-
-3. **File Info Header**
-   - Language badge
-   - Line count
-   - File size
-   - Copy to clipboard button
-
-4. **Security Warnings**
-   - Banner for `.env` and sensitive files
-   - Visual warning about API keys/secrets
-
-5. **Truncation Handling**
-   - Graceful truncation for large files
-   - Warning banner when truncated
-
-6. **Line Numbers**
-   - Optional (user preference)
-   - Efficient rendering (single Text view, not per-line)
-
-### Main App Features
-
-1. **Status View**
-   - Extension enable/disable status
-   - Quick stats (built-in types, custom types, disabled)
-   - Onboarding steps
-   - GitHub link
-
-2. **File Types View**
-   - Categorized list (7 categories)
-   - Search functionality
-   - Toggle individual types on/off
-   - Add custom extensions
-   - Show file count per category
-
-3. **Settings View**
-   - Theme selection dropdown
-   - Font size slider (10-20pt range)
-   - Show line numbers toggle
-   - Max file size slider (10KB-500KB+)
-   - Show truncation warning toggle
-   - Show file info header toggle
-   - Markdown preview mode (Raw/Rendered)
-   - Preview all file types toggle
-   - Theme preview code snippet
-   - Danger zone: Uninstall button
-
-### File Type Categories (100 total)
-1. **Web Development** (18 types) - JS, TS, JSX, TSX, HTML, CSS, SCSS, Vue, Svelte, etc.
-2. **Systems Languages** (17 types) - Swift, C, C++, Rust, Go, Java, Kotlin, etc.
-3. **Scripting** (17 types) - Python, Ruby, PHP, Perl, Lua, etc.
-4. **Data & Config** (19 types) - JSON, YAML, TOML, XML, INI, etc.
-5. **Shell & Terminal** (13 types) - Bash, Zsh, Fish, etc.
-6. **Documentation** (9 types) - Markdown, RST, AsciiDoc, etc.
-7. **Dotfiles** (7 types) - .gitignore, .env, .editorconfig, etc.
-
-### Themes (10 total)
-1. Auto (system appearance)
-2. Atom One Light
-3. Atom One Dark
-4. GitHub Light
-5. GitHub Dark
-6. Xcode Light
-7. Xcode Dark
-8. Solarized Light
-9. Solarized Dark
-10. Tokyo Night
-11. Blackout (pure dark)
-
----
-
-## UI/UX Specification
-
-### Design Language
-- **Style:** Native macOS, SwiftUI
-- **Feel:** Clean, minimal, developer-focused
-- **Colors:** Blue accent (#007AFF), dark sidebar, content area adapts to theme
-
-### Main App Window
-- **Size:** ~800x600 default, resizable
-- **Layout:** Sidebar navigation + content area
-- **Sidebar:** Dark background (#1E1E1E), blue selection highlight
-
-### Navigation Items
-```
-☑️ Status      (checkmark icon)
-📄 File Types  (document icon)
-⚙️ Settings    (gear icon)
-```
-
-### Status View Layout
-```
-┌─────────────────────────────────────────┐
-│              [Eye Logo]                  │
-│              dotViewer                   │
-│    Quick Look for Source Code & Dotfiles │
-│                                          │
-│  ┌────────────────────────────────────┐ │
-│  │ Enable Quick Look Extension        │ │
-│  │ Follow these steps to enable...    │ │
-│  │                                    │ │
-│  │ 1. Click "Open Extension Settings" │ │
-│  │ 2. Click "Quick Look" in sidebar   │ │
-│  │ 3. Enable "dotViewer" checkbox     │ │
-│  │ 4. Try previewing a file           │ │
-│  │                                    │ │
-│  │  [Open Extension Settings]         │ │
-│  └────────────────────────────────────┘ │
-│                                          │
-│           Quick Stats                    │
-│    100        0          0               │
-│  Built-in  Custom    Disabled            │
-│                                          │
-│           How to Use                     │
-│  1. Select any code file in Finder       │
-│  2. Press Space to Quick Look            │
-│  3. View syntax-highlighted preview      │
-│                                          │
-│  v1.0                      GitHub        │
-└─────────────────────────────────────────┘
-```
-
-### File Types View Layout
-```
-┌─────────────────────────────────────────┐
-│ [Search file types...]    [+ Add Custom]│
-│                                          │
-│ > 🌐 Web Development                  18 │
-│ > 💻 Systems Languages                17 │
-│ > </> Scripting                       17 │
-│ > 📄 Data & Config                    19 │
-│ > 🖥️ Shell & Terminal                 13 │
-│ > 📝 Documentation                     9 │
-│ v ⚙️ Dotfiles                          7 │
-│   ┌────────────────────────────────────┐│
-│   │ 🔵 Git Ignore                      ││
-│   │    .gitignore                      ││
-│   │ 🔵 Git Config                      ││
-│   │    .gitconfig, .gitattributes      ││
-│   │ 🔵 Environment                     ││
-│   │    .env, .env.local, .env.dev      ││
-│   └────────────────────────────────────┘│
-└─────────────────────────────────────────┘
-```
-
-### Settings View Layout
-```
-┌─────────────────────────────────────────┐
-│ Appearance                               │
-│                                          │
-│ Theme     [Blackout            ▼]        │
-│ Font Size [────●────────────] 13pt      │
-│ ☐ Show Line Numbers                      │
-│                                          │
-│ Preview Limits                           │
-│                                          │
-│ Max File Size [●────────────] 200 KB    │
-│ Files larger than this will be truncated │
-│ ☑️ Show Truncation Warning               │
-│                                          │
-│ Preview UI                               │
-│                                          │
-│ ☑️ Show File Info Header                 │
-│ Markdown Preview [Raw Code|Rendered]     │
-│ ☑️ Preview All File Types                │
-│                                          │
-│ Theme Preview                            │
-│ ┌────────────────────────────────────┐  │
-│ │ // Example code preview            │  │
-│ │ func greet(name: String) -> String │  │
-│ │     return "Hello, \(name)!"       │  │
-│ │ }                                  │  │
-│ └────────────────────────────────────┘  │
-│                                          │
-│ Danger Zone                              │
-│ ┌────────────────────────────────────┐  │
-│ │ Remove dotViewer from your system  │  │
-│ │    [🗑️ Uninstall dotViewer]        │  │
-│ └────────────────────────────────────┘  │
-└─────────────────────────────────────────┘
-```
-
-### Quick Look Preview Layout
-```
-┌─────────────────────────────────────────┐
-│ ≡  [</> Raw] [Markdown] 32 lines • 553b 📋│
-├─────────────────────────────────────────┤
-│ # Task List Test File                    │
-│                                          │
-│ This file tests TaskItem UUID stability. │
-│                                          │
-│ ## Sprint Backlog                        │
-│                                          │
-│ - [x] Implement syntax highlighting      │
-│ - [x] Add theme support                  │
-│ - [ ] Fix progressive rendering          │
-│                                          │
-│ ## Code Reference                        │
-│                                          │
-│ ```swift                                 │
-│ struct TaskItem: Identifiable {          │
-│     let id: UUID                         │
-│     let isChecked: Bool                  │
-│     let text: String                     │
-│ }                                        │
-│ ```                                      │
-└─────────────────────────────────────────┘
-```
-
-### Color Palette
 ```swift
-// Sidebar
-sidebarBackground: #1E1E1E
-sidebarText: #FFFFFF (primary), #8E8E93 (secondary)
-selectionBackground: #007AFF
-selectionText: #FFFFFF
+import SwiftUI
+import os.log
 
-// Content Area
-contentBackground: Theme-dependent
-accentColor: #007AFF (system blue)
-dangerColor: #FF3B30 (system red)
+private let logger = Logger(subsystem: "com.yourname.dotViewer", category: "StatusChecker")
 
-// Badges
-languageBadge: Blue background, blue text
-toggleOn: #34C759 (system green) or #007AFF
-toggleOff: #8E8E93 (gray)
+@MainActor
+final class ExtensionStatusChecker: ObservableObject {
+    static let shared = ExtensionStatusChecker()
+
+    @Published private(set) var isEnabled = false
+    @Published private(set) var isChecking = true
+
+    private var checkTask: Task<Void, Never>?
+
+    private init() {}
+
+    func check() {
+        checkTask?.cancel()
+        isChecking = true
+
+        checkTask = Task {
+            let enabled = await checkPluginkit()
+            guard !Task.isCancelled else { return }
+            self.isEnabled = enabled
+            self.isChecking = false
+        }
+    }
+
+    /// CRITICAL: Uses pluginkit to detect extension status
+    private nonisolated func checkPluginkit() async -> Bool {
+        await withCheckedContinuation { continuation in
+            let task = Process()
+            task.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
+            task.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
+
+            let pipe = Pipe()
+            task.standardOutput = pipe
+            task.standardError = FileHandle.nullDevice
+
+            var hasResumed = false
+            let resumeOnce: (Bool) -> Void = { result in
+                guard !hasResumed else { return }
+                hasResumed = true
+                continuation.resume(returning: result)
+            }
+
+            // Timeout after 5 seconds
+            DispatchQueue.global().asyncAfter(deadline: .now() + 5) {
+                task.terminate()
+                resumeOnce(false)
+            }
+
+            task.terminationHandler = { [pipe] _ in
+                let data = pipe.fileHandleForReading.readDataToEndOfFile()
+                let output = String(data: data, encoding: .utf8) ?? ""
+
+                // Parse: "+" prefix = enabled, "-" = disabled
+                for line in output.components(separatedBy: .newlines) {
+                    // IMPORTANT: Use YOUR bundle ID here!
+                    if line.contains("com.yourname.dotViewer.QuickLookExtension") {
+                        let enabled = line.first == "+"
+                        resumeOnce(enabled)
+                        return
+                    }
+                }
+                resumeOnce(false)
+            }
+
+            do {
+                try task.run()
+            } catch {
+                resumeOnce(false)
+            }
+        }
+    }
+}
+```
+
+### Status View Must Show Correct State
+
+```swift
+struct StatusView: View {
+    @ObservedObject private var statusChecker = ExtensionStatusChecker.shared
+
+    var body: some View {
+        VStack {
+            // Status indicator
+            HStack {
+                Circle()
+                    .fill(statusChecker.isEnabled ? Color.green : Color.red)
+                    .frame(width: 12, height: 12)
+                Text(statusChecker.isEnabled ? "Extension Enabled" : "Extension Disabled")
+            }
+
+            // Only show enable instructions if NOT enabled
+            if !statusChecker.isEnabled {
+                EnableInstructionsView()
+            }
+        }
+        .onAppear {
+            statusChecker.check()
+        }
+    }
+}
 ```
 
 ---
 
-## Performance Requirements
+## Part 3: Main App Views (THREE TABS)
 
-### Target Benchmarks
-| Metric | Target | Current v1 |
-|--------|--------|------------|
-| 1KB file | <50ms | ~100ms |
-| 10KB file | <100ms | ~500ms |
-| 50KB file | <200ms | 2-5 seconds |
-| 100KB file | <500ms | 5-10 seconds |
+### Navigation Structure
 
-### Non-Negotiable Performance Rules
-1. **Never block the UI thread** for highlighting
-2. **100KB default limit** (like QLStephen)
-3. **XPC service timeout** - kill after 3 seconds
-4. **Progressive rendering** - show content immediately, highlight async
-5. **Instant plain text fallback** - if highlighting fails, show plain text
+```swift
+struct ContentView: View {
+    enum Tab: String, CaseIterable {
+        case status = "Status"
+        case fileTypes = "File Types"
+        case settings = "Settings"
+
+        var icon: String {
+            switch self {
+            case .status: return "checkmark.circle"
+            case .fileTypes: return "doc.text"
+            case .settings: return "gear"
+            }
+        }
+    }
+
+    @State private var selectedTab: Tab = .status
+
+    var body: some View {
+        NavigationSplitView {
+            // Sidebar
+            List(Tab.allCases, id: \.self, selection: $selectedTab) { tab in
+                Label(tab.rawValue, systemImage: tab.icon)
+            }
+            .listStyle(.sidebar)
+            .frame(minWidth: 180)
+        } detail: {
+            // Content
+            switch selectedTab {
+            case .status:
+                StatusView()
+            case .fileTypes:
+                FileTypesView()
+            case .settings:
+                SettingsView()  // THIS MUST EXIST!
+            }
+        }
+        .frame(minWidth: 700, minHeight: 500)
+    }
+}
+```
 
 ---
 
-## Implementation Phases
+## Part 4: Settings View (COMPLETE SPECIFICATION)
 
-### Phase 1: Project Setup & Core Architecture
-1. Create new Xcode project with 3 targets:
-   - Main app (SwiftUI)
-   - Quick Look extension
-   - XPC service
-2. Set up App Groups for settings sharing
-3. Create XPC protocol for highlighting
-4. Implement basic file reading in extension
+**THIS VIEW MUST BE IMPLEMENTED. The v1 attempt was missing it.**
 
-### Phase 2: Native Highlighting Engine
-1. Research and choose: Tree-sitter vs highlight C++
-2. Integrate chosen library via SPM or manual integration
-3. Create Swift wrapper for native library
-4. Implement basic highlighting for 5 test languages
+### All Settings to Implement
+
+```swift
+struct SettingsView: View {
+    // App Group shared settings
+    @AppStorage("selectedTheme", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var selectedTheme = "auto"
+
+    @AppStorage("fontSize", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var fontSize = 13.0
+
+    @AppStorage("showLineNumbers", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var showLineNumbers = true
+
+    @AppStorage("maxFileSize", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var maxFileSize = 100_000  // 100KB default
+
+    @AppStorage("showTruncationWarning", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var showTruncationWarning = true
+
+    @AppStorage("showPreviewHeader", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var showPreviewHeader = true
+
+    @AppStorage("markdownRenderMode", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var markdownRenderMode = "raw"  // "raw" or "rendered"
+
+    @AppStorage("previewUnknownFiles", store: UserDefaults(suiteName: "group.com.yourname.dotViewer.shared"))
+    private var previewUnknownFiles = true
+
+    var body: some View {
+        Form {
+            // SECTION 1: Appearance
+            Section("Appearance") {
+                // Theme picker
+                Picker("Theme", selection: $selectedTheme) {
+                    Text("Auto (System)").tag("auto")
+                    Divider()
+                    Text("Atom One Light").tag("atomOneLight")
+                    Text("Atom One Dark").tag("atomOneDark")
+                    Text("GitHub Light").tag("github")
+                    Text("GitHub Dark").tag("githubDark")
+                    Text("Xcode Light").tag("xcode")
+                    Text("Xcode Dark").tag("xcodeDark")
+                    Text("Solarized Light").tag("solarizedLight")
+                    Text("Solarized Dark").tag("solarizedDark")
+                    Text("Tokyo Night").tag("tokyoNight")
+                    Text("Blackout").tag("blackout")
+                }
+
+                // Font size slider
+                HStack {
+                    Text("Font Size")
+                    Slider(value: $fontSize, in: 10...20, step: 1)
+                    Text("\(Int(fontSize))pt")
+                        .monospacedDigit()
+                        .frame(width: 40)
+                }
+
+                // Line numbers toggle
+                Toggle("Show Line Numbers", isOn: $showLineNumbers)
+            }
+
+            // SECTION 2: Preview Limits
+            Section("Preview Limits") {
+                // File size slider
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text("Max File Size")
+                        Spacer()
+                        Text(formatFileSize(maxFileSize))
+                            .foregroundStyle(.secondary)
+                    }
+                    Slider(
+                        value: Binding(
+                            get: { Double(maxFileSize) },
+                            set: { maxFileSize = Int($0) }
+                        ),
+                        in: 10_000...500_000,
+                        step: 10_000
+                    )
+                    Text("Files larger than this will be truncated in preview")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
+                Toggle("Show Truncation Warning", isOn: $showTruncationWarning)
+            }
+
+            // SECTION 3: Preview UI
+            Section("Preview UI") {
+                Toggle("Show File Info Header", isOn: $showPreviewHeader)
+                    .help("Shows filename, language, line count, and file size in preview")
+
+                // Markdown mode picker
+                Picker("Markdown Preview", selection: $markdownRenderMode) {
+                    Text("Raw Code").tag("raw")
+                    Text("Rendered").tag("rendered")
+                }
+                .pickerStyle(.segmented)
+                .help("How to display Markdown files (.md) in preview")
+
+                Toggle("Preview All File Types", isOn: $previewUnknownFiles)
+                    .help("Show plain text preview for unrecognized file types")
+            }
+
+            // SECTION 4: Theme Preview
+            Section("Theme Preview") {
+                ThemePreviewBox(theme: selectedTheme, fontSize: fontSize)
+                    .frame(height: 120)
+            }
+
+            // SECTION 5: Danger Zone
+            Section {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Danger Zone")
+                        .font(.headline)
+                        .foregroundStyle(.red)
+                    Text("Remove dotViewer from your system")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Button(role: .destructive) {
+                        uninstallApp()
+                    } label: {
+                        Label("Uninstall dotViewer", systemImage: "trash")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(.red)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
+    }
+
+    private func formatFileSize(_ bytes: Int) -> String {
+        if bytes >= 1_000_000 {
+            return "\(bytes / 1_000_000) MB"
+        } else {
+            return "\(bytes / 1_000) KB"
+        }
+    }
+
+    private func uninstallApp() {
+        // Move app to trash
+        NSWorkspace.shared.recycle([Bundle.main.bundleURL]) { _, _ in
+            NSApp.terminate(nil)
+        }
+    }
+}
+
+// Theme preview component
+struct ThemePreviewBox: View {
+    let theme: String
+    let fontSize: Double
+
+    var body: some View {
+        // Show sample code with selected theme colors
+        ScrollView {
+            Text(sampleCode)
+                .font(.system(size: fontSize, design: .monospaced))
+                .padding()
+        }
+        .background(backgroundColor)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private var sampleCode: AttributedString {
+        // Return syntax-highlighted sample code
+        var str = AttributedString("// Example code preview\nfunc greet(name: String) -> String {\n    return \"Hello, \\(name)!\"\n}")
+        // Apply theme colors...
+        return str
+    }
+
+    private var backgroundColor: Color {
+        // Return theme background color
+        theme.contains("Dark") || theme == "blackout" || theme == "tokyoNight"
+            ? Color(white: 0.1)
+            : Color(white: 0.95)
+    }
+}
+```
+
+---
+
+## Part 5: File Types View (ACCORDION EXPAND/COLLAPSE)
+
+**CRITICAL: Categories must be collapsible accordions, collapsed by default.**
+
+### Implementation
+
+```swift
+struct FileTypesView: View {
+    @State private var searchText = ""
+    @State private var expandedCategories: Set<FileTypeCategory> = []  // Empty = all collapsed
+    @State private var showingAddSheet = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Search bar + Add button
+            HStack {
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.secondary)
+                TextField("Search file types...", text: $searchText)
+                    .textFieldStyle(.plain)
+
+                Button {
+                    showingAddSheet = true
+                } label: {
+                    Label("Add Custom", systemImage: "plus")
+                }
+                .buttonStyle(.borderedProminent)
+            }
+            .padding()
+
+            Divider()
+
+            // Category list with accordions
+            List {
+                ForEach(FileTypeCategory.allCases.sorted(by: { $0.sortOrder < $1.sortOrder }), id: \.self) { category in
+                    CategoryAccordionView(
+                        category: category,
+                        isExpanded: expandedCategories.contains(category),
+                        onToggle: {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                if expandedCategories.contains(category) {
+                                    expandedCategories.remove(category)
+                                } else {
+                                    expandedCategories.insert(category)
+                                }
+                            }
+                        },
+                        searchText: searchText
+                    )
+                }
+            }
+            .listStyle(.plain)
+        }
+        .sheet(isPresented: $showingAddSheet) {
+            AddCustomExtensionSheet()
+        }
+    }
+}
+
+struct CategoryAccordionView: View {
+    let category: FileTypeCategory
+    let isExpanded: Bool
+    let onToggle: () -> Void
+    let searchText: String
+
+    private var fileTypes: [SupportedFileType] {
+        FileTypeRegistry.shared.builtInTypes
+            .filter { $0.category == category }
+            .filter { searchText.isEmpty ||
+                      $0.displayName.localizedCaseInsensitiveContains(searchText) ||
+                      $0.extensions.contains { $0.localizedCaseInsensitiveContains(searchText) }
+            }
+    }
+
+    var body: some View {
+        DisclosureGroup(
+            isExpanded: Binding(
+                get: { isExpanded },
+                set: { _ in onToggle() }
+            )
+        ) {
+            // Expanded content: list of file types
+            ForEach(fileTypes) { fileType in
+                FileTypeRow(fileType: fileType)
+            }
+        } label: {
+            // Category header
+            HStack {
+                Image(systemName: category.icon)
+                    .foregroundStyle(.blue)
+                    .frame(width: 24)
+                Text(category.rawValue)
+                    .fontWeight(.medium)
+                Spacer()
+                Text("\(fileTypes.count)")
+                    .foregroundStyle(.secondary)
+                    .font(.callout)
+            }
+        }
+    }
+}
+
+struct FileTypeRow: View {
+    let fileType: SupportedFileType
+    @State private var isEnabled: Bool
+
+    init(fileType: SupportedFileType) {
+        self.fileType = fileType
+        // Initialize from SharedSettings
+        let disabled = SharedSettings.shared.disabledFileTypes
+        self._isEnabled = State(initialValue: !disabled.contains(fileType.id))
+    }
+
+    var body: some View {
+        HStack {
+            Toggle("", isOn: $isEnabled)
+                .toggleStyle(.switch)
+                .labelsHidden()
+                .onChange(of: isEnabled) { _, newValue in
+                    var disabled = SharedSettings.shared.disabledFileTypes
+                    if newValue {
+                        disabled.remove(fileType.id)
+                    } else {
+                        disabled.insert(fileType.id)
+                    }
+                    SharedSettings.shared.disabledFileTypes = disabled
+                }
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(fileType.displayName)
+                    .fontWeight(.medium)
+                Text(fileType.extensionDisplay)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+        }
+        .padding(.leading, 28)  // Indent under category
+        .padding(.vertical, 4)
+    }
+}
+```
+
+---
+
+## Part 6: Quick Look Preview UI (EXACT SPECIFICATION)
+
+### Header Bar Components
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ≡ │ [</> Raw] │ [Language Badge] │ 32 lines • 553 byte │ 📋 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Implementation
+
+```swift
+struct PreviewView: View {
+    let state: PreviewState
+    @State private var highlightedContent: AttributedString?
+    @State private var showRenderedMarkdown: Bool
+
+    init(state: PreviewState) {
+        self.state = state
+        _showRenderedMarkdown = State(
+            initialValue: SharedSettings.shared.markdownRenderMode == "rendered"
+        )
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header (if enabled in settings)
+            if SharedSettings.shared.showPreviewHeader {
+                PreviewHeader(
+                    language: state.language,
+                    lineCount: state.lineCount,
+                    fileSize: state.fileSize,
+                    isMarkdown: state.language == "markdown",
+                    showRendered: $showRenderedMarkdown,
+                    onCopy: { copyToClipboard() }
+                )
+            }
+
+            // Truncation warning (if applicable)
+            if state.isTruncated && SharedSettings.shared.showTruncationWarning {
+                TruncationBanner(originalSize: state.originalFileSize)
+            }
+
+            // Content
+            if state.language == "markdown" && showRenderedMarkdown {
+                MarkdownRenderedView(content: state.content)
+            } else {
+                CodeView(
+                    content: state.content,
+                    highlightedContent: highlightedContent,
+                    showLineNumbers: SharedSettings.shared.showLineNumbers,
+                    fontSize: SharedSettings.shared.fontSize
+                )
+            }
+        }
+        .task {
+            await loadHighlighting()
+        }
+    }
+}
+
+struct PreviewHeader: View {
+    let language: String?
+    let lineCount: Int
+    let fileSize: String
+    let isMarkdown: Bool
+    @Binding var showRendered: Bool
+    let onCopy: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            // Menu button (hamburger)
+            Image(systemName: "line.3.horizontal")
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            // Raw/Rendered toggle (only for markdown)
+            if isMarkdown {
+                Button {
+                    showRendered.toggle()
+                } label: {
+                    HStack(spacing: 4) {
+                        Image(systemName: showRendered ? "doc.richtext" : "chevron.left.forwardslash.chevron.right")
+                        Text(showRendered ? "Rendered" : "Raw")
+                    }
+                    .font(.system(size: 11, weight: .medium))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color.purple.opacity(0.15))
+                    .foregroundStyle(.purple)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+
+            // Language badge
+            if let lang = language {
+                Text(lang.capitalized)
+                    .font(.system(size: 11, weight: .medium))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Color.blue.opacity(0.15))
+                    .foregroundStyle(.blue)
+                    .clipShape(Capsule())
+            }
+
+            // Stats
+            Text("\(lineCount) lines")
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+
+            Text("•")
+                .foregroundStyle(.tertiary)
+
+            Text(fileSize)
+                .font(.system(size: 11))
+                .foregroundStyle(.secondary)
+
+            // Copy button
+            Button(action: onCopy) {
+                Image(systemName: "doc.on.doc")
+                    .font(.system(size: 12))
+            }
+            .buttonStyle(.plain)
+            .help("Copy to clipboard")
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .background(.regularMaterial)
+    }
+}
+```
+
+---
+
+## Part 7: Native Syntax Highlighting (THE KEY TO PERFORMANCE)
+
+### Option A: Simple Regex-Based (RECOMMENDED FOR FIRST VERSION)
+
+This is faster than JavaScript and good enough for most cases:
+
+```swift
+struct NativeHighlighter {
+
+    func highlight(code: String, language: String, theme: Theme) -> AttributedString {
+        var result = AttributedString(code)
+        let colors = theme.colors
+
+        // Apply base text color
+        result.foregroundColor = colors.text
+
+        // Get patterns for language
+        let patterns = getPatterns(for: language)
+
+        // Apply highlighting
+        applyPattern(patterns.comments, color: colors.comment, to: &result, in: code)
+        applyPattern(patterns.strings, color: colors.string, to: &result, in: code)
+        applyPattern(patterns.keywords, color: colors.keyword, to: &result, in: code)
+        applyPattern(patterns.numbers, color: colors.number, to: &result, in: code)
+        applyPattern(patterns.types, color: colors.type, to: &result, in: code)
+
+        return result
+    }
+
+    private func applyPattern(_ pattern: String, color: Color, to result: inout AttributedString, in code: String) {
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: []) else { return }
+        let nsRange = NSRange(code.startIndex..., in: code)
+
+        for match in regex.matches(in: code, options: [], range: nsRange) {
+            guard let range = Range(match.range, in: code),
+                  let attrRange = Range(range, in: result) else { continue }
+            result[attrRange].foregroundColor = color
+        }
+    }
+
+    private func getPatterns(for language: String) -> LanguagePatterns {
+        switch language.lowercased() {
+        case "swift":
+            return LanguagePatterns(
+                comments: "//[^\n]*|/\\*[\\s\\S]*?\\*/",
+                strings: "\"(?:[^\"\\\\]|\\\\.)*\"",
+                keywords: "\\b(func|let|var|if|else|guard|return|import|class|struct|enum|protocol|extension|private|public|static|self|nil|true|false|for|while|switch|case|break|async|await)\\b",
+                numbers: "\\b\\d+\\.?\\d*\\b",
+                types: "\\b(String|Int|Double|Bool|Array|Dictionary|Set|Optional|View|Color|Text)\\b"
+            )
+        case "javascript", "typescript":
+            return LanguagePatterns(
+                comments: "//[^\n]*|/\\*[\\s\\S]*?\\*/",
+                strings: "\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'|`(?:[^`\\\\]|\\\\.)*`",
+                keywords: "\\b(function|const|let|var|if|else|return|import|export|class|extends|new|this|null|undefined|true|false|for|while|async|await|interface|type)\\b",
+                numbers: "\\b\\d+\\.?\\d*\\b",
+                types: "\\b(string|number|boolean|any|void|Promise|Array|Map|Set)\\b"
+            )
+        // Add more languages...
+        default:
+            return LanguagePatterns(
+                comments: "//[^\n]*|#[^\n]*",
+                strings: "\"(?:[^\"\\\\]|\\\\.)*\"|'(?:[^'\\\\]|\\\\.)*'",
+                keywords: "\\b(if|else|for|while|return|function|class|import|export|true|false|null)\\b",
+                numbers: "\\b\\d+\\.?\\d*\\b",
+                types: ""
+            )
+        }
+    }
+}
+
+struct LanguagePatterns {
+    let comments: String
+    let strings: String
+    let keywords: String
+    let numbers: String
+    let types: String
+}
+```
+
+### Option B: Tree-sitter (BETTER, BUT MORE COMPLEX)
+
+Use the `SwiftTreeSitter` package for true parsing:
+```swift
+// Package.swift dependency:
+.package(url: "https://github.com/ChimeHQ/SwiftTreeSitter", from: "0.8.0")
+```
+
+---
+
+## Part 8: Theme Definition (ENUM, NOT STRINGS!)
+
+```swift
+enum Theme: String, CaseIterable, Identifiable {
+    case auto = "auto"
+    case atomOneLight = "atomOneLight"
+    case atomOneDark = "atomOneDark"
+    case github = "github"
+    case githubDark = "githubDark"
+    case xcode = "xcode"
+    case xcodeDark = "xcodeDark"
+    case solarizedLight = "solarizedLight"
+    case solarizedDark = "solarizedDark"
+    case tokyoNight = "tokyoNight"
+    case blackout = "blackout"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .auto: return "Auto (System)"
+        case .atomOneLight: return "Atom One Light"
+        case .atomOneDark: return "Atom One Dark"
+        case .github: return "GitHub Light"
+        case .githubDark: return "GitHub Dark"
+        case .xcode: return "Xcode Light"
+        case .xcodeDark: return "Xcode Dark"
+        case .solarizedLight: return "Solarized Light"
+        case .solarizedDark: return "Solarized Dark"
+        case .tokyoNight: return "Tokyo Night"
+        case .blackout: return "Blackout"
+        }
+    }
+
+    var isDark: Bool {
+        switch self {
+        case .auto:
+            return NSApp.effectiveAppearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+        case .atomOneDark, .githubDark, .xcodeDark, .solarizedDark, .tokyoNight, .blackout:
+            return true
+        default:
+            return false
+        }
+    }
+
+    var colors: ThemeColors {
+        switch self {
+        case .auto:
+            return isDark ? Theme.atomOneDark.colors : Theme.atomOneLight.colors
+        case .atomOneLight:
+            return ThemeColors(
+                background: Color(hex: "#FAFAFA"),
+                text: Color(hex: "#383A42"),
+                keyword: Color(hex: "#A626A4"),
+                string: Color(hex: "#50A14F"),
+                comment: Color(hex: "#A0A1A7"),
+                number: Color(hex: "#986801"),
+                type: Color(hex: "#C18401")
+            )
+        case .atomOneDark:
+            return ThemeColors(
+                background: Color(hex: "#282C34"),
+                text: Color(hex: "#ABB2BF"),
+                keyword: Color(hex: "#C678DD"),
+                string: Color(hex: "#98C379"),
+                comment: Color(hex: "#5C6370"),
+                number: Color(hex: "#D19A66"),
+                type: Color(hex: "#E5C07B")
+            )
+        // ... define all themes
+        }
+    }
+}
+
+struct ThemeColors {
+    let background: Color
+    let text: Color
+    let keyword: Color
+    let string: Color
+    let comment: Color
+    let number: Color
+    let type: Color
+}
+
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: UInt64
+        (r, g, b) = ((int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
+        self.init(red: Double(r) / 255, green: Double(g) / 255, blue: Double(b) / 255)
+    }
+}
+```
+
+---
+
+## Part 9: File Type Registry (COMPLETE DATA)
+
+Include ALL file types from v1. Here are the categories and counts:
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| Web Development | 18 | TypeScript, JavaScript, JSX, TSX, Vue, Svelte, HTML, CSS, SCSS |
+| Systems Languages | 17 | Swift, C, C++, Rust, Go, Java, Kotlin, C# |
+| Scripting | 17 | Python, Ruby, PHP, Perl, Lua, R, Julia |
+| Data & Config | 19 | JSON, YAML, TOML, XML, INI, SQL, GraphQL |
+| Shell & Terminal | 13 | Bash, Zsh, Fish, PowerShell, Dockerfile, Makefile |
+| Documentation | 9 | Markdown, MDX, LaTeX, Plain Text |
+| Dotfiles | 7 | .gitignore, .env, .editorconfig, .npmrc |
+
+**Total: 100 file types**
+
+---
+
+## Part 10: Implementation Checklist
+
+### Phase 1: Project Setup
+- [ ] Create new Xcode project with 3 targets
+- [ ] Configure App Groups for both targets
+- [ ] Set up Info.plist with UTI declarations
+- [ ] Create basic navigation structure
+
+### Phase 2: Main App Views
+- [ ] StatusView with extension detection (pluginkit)
+- [ ] FileTypesView with accordion categories
+- [ ] SettingsView with all options
+- [ ] Theme preview component
 
 ### Phase 3: Quick Look Extension
-1. Implement PreviewViewController
-2. Create PreviewView (SwiftUI)
-3. Connect to XPC service
-4. Implement file size limits and truncation
-5. Add timeout protection
+- [ ] PreviewViewController entry point
+- [ ] PreviewView with header bar
+- [ ] File reading with size limits
+- [ ] Truncation handling
 
-### Phase 4: Main App UI
-1. Implement StatusView (exact copy of v1)
-2. Implement FileTypesView with categories
-3. Implement SettingsView with all options
-4. Connect to SharedSettings
+### Phase 4: Syntax Highlighting
+- [ ] Native regex-based highlighter
+- [ ] 10 theme color definitions
+- [ ] Language pattern definitions
+- [ ] Performance testing (<200ms for 50KB)
 
 ### Phase 5: Markdown Support
-1. Implement raw markdown highlighting
-2. Implement rendered markdown view
-3. Add toggle functionality
+- [ ] Raw markdown with highlighting
+- [ ] Rendered markdown view
+- [ ] Toggle between modes
 
-### Phase 6: Polish & Testing
-1. Add all 100 file types
-2. Add all 10 themes
-3. Performance testing
-4. Edge case handling
-
----
-
-## Reference Code from Competitors
-
-### XPC Service Pattern (from SourceCodeSyntaxHighlight)
-```swift
-// Protocol definition
-@objc protocol HighlightServiceProtocol {
-    func highlight(
-        code: String,
-        language: String,
-        theme: String,
-        reply: @escaping (Data?, Error?) -> Void
-    )
-}
-
-// Connection setup
-let connection = NSXPCConnection(serviceName: "com.yourapp.HighlightXPC")
-connection.remoteObjectInterface = NSXPCInterface(with: HighlightServiceProtocol.self)
-connection.resume()
-
-// Usage
-let service = connection.synchronousRemoteObjectProxyWithErrorHandler { error in
-    // Handle error, fall back to plain text
-}
-service.highlight(code: code, language: "swift", theme: "atomOneDark") { data, error in
-    // Use highlighted result
-}
-```
-
-### File Size Limiting (from QLStephen)
-```swift
-// Always read truncated data
-let maxSize = 102_400 // 100KB default
-let handle = try FileHandle(forReadingFrom: url)
-let data = handle.readData(ofLength: maxSize)
-handle.closeFile()
-
-let isTruncated = fileSize > maxSize
-```
-
-### Early Exit Pattern (from all competitors)
-```swift
-func preparePreviewOfFile(at url: URL, completionHandler: @escaping (Error?) -> Void) {
-    // Check 1: Cancellation
-    guard !QLPreviewRequestIsCancelled(request) else {
-        completionHandler(nil)
-        return
-    }
-
-    // Check 2: File exists
-    guard FileManager.default.fileExists(atPath: url.path) else {
-        completionHandler(PreviewError.fileNotFound)
-        return
-    }
-
-    // Check 3: Not binary
-    guard !isBinaryFile(at: url) else {
-        completionHandler(PreviewError.binaryFile)
-        return
-    }
-
-    // Proceed with preview...
-}
-```
-
----
-
-## Files to Study
-
-### In the Repository
-```
-QUICKLOOK_PERFORMANCE_RESEARCH.md  # Competitor analysis
-DOTVIEWER_VS_COMPETITORS_ANALYSIS.md  # Detailed comparison
-```
-
-### Competitor Source Code (External)
-```
-https://github.com/whomwah/qlstephen
-- QuickLookStephenProject/GeneratePreviewForURL.m (file size handling)
-
-https://github.com/sbarex/SourceCodeSyntaxHighlight
-- SyntaxHighlightRenderXPC/ (XPC service pattern)
-- highlight-wrapper/wrapper_highlight.cpp (C++ integration)
-
-https://github.com/sbarex/QLMarkdown
-- QLExtension/ (Quick Look extension)
-- Uses cmark-gfm (C library) for markdown
-```
+### Phase 6: Polish
+- [ ] Test all 100 file types
+- [ ] Test extension enable/disable detection
+- [ ] Test settings sync between app and extension
+- [ ] Performance benchmarks
 
 ---
 
 ## Success Criteria
 
-### Must Have
-- [ ] Preview appears in <200ms for 50KB files
-- [ ] All 100 file types supported
-- [ ] All 10 themes working
-- [ ] Markdown raw/rendered toggle
-- [ ] Settings persist between app and extension
-- [ ] File type enable/disable working
-- [ ] XPC service isolates highlighting
-- [ ] Graceful timeout fallback to plain text
-
-### Nice to Have
-- [ ] Caching for recently viewed files
-- [ ] Custom file type additions
-- [ ] Search in file types view
-
-### Non-Goals (for v2.0)
-- Thumbnail generation
-- Printing support
-- Export functionality
+1. **Extension status detection works correctly** - Green when enabled, red when disabled
+2. **All 3 tabs visible** - Status, File Types, Settings
+3. **Settings view complete** - All options from v1
+4. **File types accordion** - Collapsed by default, expandable
+5. **Syntax highlighting works** - Colors visible for code files
+6. **Quick Look preview matches v1** - Header bar, copy button, raw/rendered toggle
+7. **Performance** - 50KB file previews in <200ms
 
 ---
 
-## Getting Started Commands
+## Common Mistakes to Avoid
 
-```bash
-# Create new project
-# Use Xcode: File > New > Project > macOS > App
-# Add Quick Look Extension target
-# Add XPC Service target
-
-# Or clone and start fresh
-cd ~/Projects
-mkdir dotViewer-v2
-cd dotViewer-v2
-# Create Xcode project here
-
-# Reference the old repo for UI/UX only
-# Old repo: ~/path/to/old/dotViewer
-```
+1. **Don't use HighlightSwift** - It's JavaScript, too slow
+2. **Don't forget the Settings tab** - It was missing in first attempt
+3. **Don't hardcode bundle IDs** - Use your own bundle ID in pluginkit check
+4. **Don't forget App Group** - Settings won't sync without it
+5. **Don't make accordions expanded by default** - They should be collapsed
+6. **Don't skip the preview header** - It shows important file info
 
 ---
 
-## Final Notes
-
-### What to Keep from v1
-- UI/UX design (it's good!)
-- File type categories and structure
-- Theme names and color palettes
-- Settings options and defaults
-- App icon and branding
-
-### What to Throw Away from v1
-- HighlightSwift dependency (JavaScript - too slow)
-- All syntax highlighting code
-- Current PreviewContentView (1371 lines of spaghetti)
-- Inline highlighting in SwiftUI views
-
-### What's New in v2
-- XPC service architecture
-- Native C/C++ or Tree-sitter highlighting
-- Clean separation of concerns
-- Type-safe theme enum (not strings)
-- Proper error handling
+**Copy this entire document and paste it at the start of a new Claude Code session.**
 
 ---
 
-**Copy this entire document and paste it at the start of a new Claude Code session. The AI will have full context to rebuild dotViewer with blazing fast performance.**
-
----
-
-*Document created: 2026-02-02*
-*For use with: Claude Code (claude-3.5-sonnet or newer)*
-*Repository: https://github.com/Stianlars1/dotViewer*
+*Document version: 2.0*
+*Created: 2026-02-02*
