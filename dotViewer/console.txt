@@ -1,0 +1,77 @@
+```
+Acquiring assertion targeting [xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896] from originator [osservice<com.apple.Finder(501)>:5730] with description <RBSAssertionDescriptor| "com.apple.extension.session" ID:163-5730-52567 target:5896 attributes:[
+	<RBSLegacyAttribute| requestedReason:ViewService reason:ViewService flags:( AllowIdleSleep PreventTaskSuspend PreventTaskThrottleDown WantsForegroundResourcePriority )>,
+	<RBSAcquisitionCompletionAttribute| policy:AfterValidation>
+	]>	163: 0x1eeee9	2026-02-03 13:20:09.785382 +0100	runningboardd	13:20:09.785382+0100
+Assertion 163-5730-52567 (target:[xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896]) will be created as active	163: 0x1eeee9	2026-02-03 13:20:09.786117 +0100	runningboardd	13:20:09.786117+0100
+[xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896] Set jetsam priority to 100 [0] flag[1]	163: 0x1eec30	2026-02-03 13:20:09.823493 +0100	runningboardd	13:20:09.823493+0100
+Calculated state for xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}: running-active (role: UserInteractiveNonFocal) (endowments: <private>)	163: 0x1eeee0	2026-02-03 13:20:09.842789 +0100	runningboardd	13:20:09.842789+0100
+Received state update for 5896 (xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}, running-active-NotVisible	157: 0x1eec8c	2026-02-03 13:20:09.843696 +0100	WindowServer	13:20:09.843696+0100
+Received state update for 5896 (xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}, running-active-NotVisible	682: 0x1eeee2	2026-02-03 13:20:09.843792 +0100	gamepolicyd	13:20:09.843792+0100
+Received state update for 5896 (xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}, running-active-NotVisible	624: 0x1ee98a	2026-02-03 13:20:09.843873 +0100	UIKitSystem	13:20:09.843873+0100
+Launch request for xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}[0] is using uid 501 (divined from auid 501 euid 501)	163: 0x1eef32	2026-02-03 13:20:09.848505 +0100	runningboardd	13:20:09.848505+0100
+Executing launch request for xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0} (Launching extension com.apple.QuickLookUIFramework.QLPreviewGenerationExtension(491D5CDF-18B8-5FCD-9F34-7E30D447C6EE) for host 5730) from requestor: [osservice<com.apple.pluginkit.pkd(501)>:89530]	163: 0x1eef32	2026-02-03 13:20:09.848535 +0100	runningboardd	13:20:09.848535+0100
+Checking PreventLaunch: global:0 exPath:/System/Library/Frameworks/QuickLookUI.framework/Versions/A/PlugIns/QLPreviewGenerationExtension.appex/Contents/MacOS/QLPreviewGenerationExtension predicates:(null) allow:(null)	163: 0x1eef32	2026-02-03 13:20:09.848551 +0100	runningboardd	13:20:09.848551+0100
+Creating and launching job for: xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}	163: 0x1eef32	2026-02-03 13:20:09.848567 +0100	runningboardd	13:20:09.848567+0100
+'(null)' Submitting extension overlay (host PID 5730, path /System/Library/Frameworks/QuickLookUI.framework/Versions/A/PlugIns/QLPreviewGenerationExtension.appex/Contents/MacOS/QLPreviewGenerationExtension):
+<dictionary: 0x58eb65a40> { count = 3, transaction: 0, voucher = 0x0, contents =
+	"XPCService" => <dictionary: 0x58eb655c0> { count = 11, transaction: 0, voucher = 0x0, contents =
+		"_ManagedBy" => <string: 0x58ee94f60> { length = 22, contents = "com.apple.runningboard" }
+		"RunLoopType" => <string: 0x58ee97ba0> { length = 18, contents = "_NSApplicationMain" }
+		"Platform" => <int64: 0xa0ee4a0b070bfc27>: 1
+		"JoinExistingSession" => <bool: 0x1fb36e830>: true
+		"_SandboxProfile" => <string: 0x58ee948d0> { length = 17, contents = "quicklook-preview" }
+		"_AdditionalSubServices" => <dictionary: 0x58eb64de0> { count = 2, transaction: 0, voucher = 0x0, contents =
+			"viewbridge" => <bool: 0x1fb36e830>: true
+			"apple-extension-service" => <bool: 0x1fb36e830>: true
+		}
+		"PersonaEnterprise" => <int64: 0xa0ee4a0b070be367>: 1001
+		"_AdditionalProperties" => <dictionary: 0x58eb67900> { count = 1, transaction: 0, voucher = 0x0, contents =
+			"RunningBoard" => <dictionary: 0x58eb653e0> { count = 2, transaction: 0, voucher = 0x0, contents =
+				"RunningBoardLaunchedIdentity" => <dictionary: 0x58eb66820> { count = 6, transaction: 0, voucher = 0x0, contents =
+					"e" => <int64: 0xa0ee4a0b070bf387>: 501
+					"TYPE" => <int64: 0xa0ee4a0b070bfc0f>: 4
+					"h" => <int64: 0xa0ee4a0b070b4f3f>: 5730
+					"i" => <string: 0x58ee96400> { length = 59, contents = "com.apple.QuickLookUIFramework.QLPreviewGenerationExtension" }
+					"r" => <int64: 0xa0ee4a0b070bfc3f>: 2
+					"H" => <dictionary: 0x58eb674e0> { count = 5, transaction: 0, voucher = 0x0, contents =
+						"l" => <string: 0x58ee97780> { length = 16, contents = "com.apple.Finder" }
+						"t" => <int64: 0xa0ee4a0b070bfc3f>: 2
+						"TYPE" => <int64: 0xa0ee4a0b070bfc1f>: 6
+						"a" => <int64: 0xa0ee4a0b070bf387>: 501
+						"p" => <int64: 0xa0ee4a0b070bfc2f>: 0
+					}
+				}
+				"RunningBoardLaunched" => <bool: 0x1fb36e830>: true
+			}
+		}
+		"_OmitSandboxParameters" => <bool: 0x1fb36e830>: true
+		"ServiceType" => <string: 0x58ee97570> { length = 11, contents = "Application" }
+		"ProgramArguments" => <array: 0x58ee96b20> { count = 3, capacity = 8, contents =
+			0: <string: 0x58ee97ae0> { length = 146, contents = "/System/Library/Frameworks/QuickLookUI.framework/Versions/A/PlugIns/QLPreviewGenerationExtension.appex/Contents/MacOS/QLPreviewGenerationExtension" }
+			1: <string: 0x58ee96fd0> { length = 15, contents = "-AppleLanguages" }
+			2: <string: 0x58ee94ea0> { length = 15, contents = "("nb-NO", "nb")" }
+		}
+	}
+	"RunningBoard" => <dictionary: 0x58eb671e0> { count = 1, transaction: 0, voucher = 0x0, contents =
+		"Managed" => <bool: 0x1fb36e830>: true
+	}
+	"CFBundlePackageType" => <string: 0x58ee96af0> { length = 4, contents = "XPC!" }
+}	163: 0x1eeee0	2026-02-03 13:20:09.848656 +0100	runningboardd	13:20:09.848656+0100
+Acquiring assertion targeting [xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896] from originator [osservice<com.apple.Finder(501)>:5730] with description <RBSAssertionDescriptor| "com.apple.extension.session" ID:163-5730-52568 target:5896 attributes:[
+	<RBSLegacyAttribute| requestedReason:ViewService reason:ViewService flags:( AllowIdleSleep PreventTaskSuspend PreventTaskThrottleDown )>,
+	<RBSAcquisitionCompletionAttribute| policy:AfterValidation>
+	]>	163: 0x1eef32	2026-02-03 13:20:09.849251 +0100	runningboardd	13:20:09.849251+0100
+Assertion 163-5730-52568 (target:[xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896]) will be created as active	163: 0x1eef32	2026-02-03 13:20:09.849446 +0100	runningboardd	13:20:09.849446+0100
+Hit the server for a process handle 12ea7a4f00001708 that resolved to: [xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896]	5730: 0x1eef3e	2026-02-03 13:20:09.869570 +0100	Finder	13:20:09.869570+0100
+[0x14d9bb2a0] activating connection: mach=false listener=false peer=false name=com.apple.QuickLookUIFramework.QLPreviewGenerationExtension	5730: 0x1eef3e	2026-02-03 13:20:09.869626 +0100	Finder	13:20:09.869626+0100
+[0xb341c0f00] activating connection: mach=false listener=false peer=true name=com.apple.QuickLookUIFramework.QLPreviewGenerationExtension.peer[5730].0xb341c0f00	5896: 0x1ee795	2026-02-03 13:20:09.869806 +0100	QLPreviewGenerationExtension	13:20:09.869806+0100
+[u 491D5CDF-18B8-5FCD-9F34-7E30D447C6EE] [(null)((null))] Prepare received as euid = 501, uid = 501, personaid = 1001, type = DEFAULT, name = <private>	5896: 0x1ee795	2026-02-03 13:20:09.869927 +0100	QLPreviewGenerationExtension	13:20:09.869927+0100
+[u BEEBC293-C76B-47C0-A04F-89512E4C9E2A] [<private>(<private>)] Set sole personality.	5896: 0x1ee795	2026-02-03 13:20:09.870925 +0100	QLPreviewGenerationExtension	13:20:09.870925+0100
+Invalidating assertion 163-5730-52568 (target:[xpcservice<com.apple.QuickLookUIFramework.QLPreviewGenerationExtension([osservice<com.apple.Finder(501)>:5730])(501)>{vt hash: 0}:5896]) from originator [osservice<com.apple.Finder(501)>:5730]	163: 0x1eef32	2026-02-03 13:20:09.871341 +0100	runningboardd	13:20:09.871341+0100
+[u BEEBC293-C76B-47C0-A04F-89512E4C9E2A] [<private>(<private>)] Begin using received as euid = 501, uid = 501, personaid = 1001, type = DEFAULT, name = <private>	5896: 0x1ee795	2026-02-03 13:20:09.871140 +0100	QLPreviewGenerationExtension	13:20:09.871140+0100
+[0xb341c0a80] activating connection: mach=false listener=false peer=true name=com.apple.QuickLookUIFramework.QLPreviewGenerationExtension.apple-extension-service.peer[5730].0xb341c0a80	5896: 0x1ee795	2026-02-03 13:20:09.872426 +0100	QLPreviewGenerationExtension	13:20:09.872426+0100
+[0x14d9e9940] activating connection: mach=false listener=false peer=false name=com.apple.QuickLookUIFramework.QLPreviewGenerationExtension.apple-extension-service	5730: 0x1eef3e	2026-02-03 13:20:09.872138 +0100	Finder	13:20:09.872138+0100
+[0xb34114c80] activating connection: mach=false listener=false peer=false name=(anonymous)	5896: 0x14972c	2026-02-03 13:20:09.872575 +0100	QLPreviewGenerationExtension	13:20:09.872575+0100
+in _willPerformHostCallback: block ( UUID: 94A3E28B-20B1-441E-8B20-F315CB9CC304 error: (null) )	5896: 0x1ee795	2026-02-03 13:20:09.872832 +0100	QLPreviewGenerationExtension	13:20:09.872832+0100
+```

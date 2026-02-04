@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quick Look Extension Playground</title>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0e1116;
+    --panel: #141a22;
+    --muted: #9aa6b2;
+    --text: #e6edf3;
+    --accent: #63d2ff;
+    --accent-2: #f7c978;
+    --border: #273242;
+    --good: #7ee787;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: radial-gradient(1200px 800px at 20% -10%, #1b2230 0%, #0e1116 55%);
+    color: var(--text);
+  }
+  .wrap {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 16px;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  h1 { font-size: 18px; margin: 0 0 8px; }
+  h2 { font-size: 13px; margin: 16px 0 8px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+  label { display: block; font-size: 12px; color: var(--muted); margin: 10px 0 6px; }
+  input[type="text"], select, textarea {
+    width: 100%;
+    background: #0f141b;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+  textarea { min-height: 70px; resize: vertical; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .toggle { display: flex; align-items: center; gap: 8px; margin: 6px 0; }
+  .toggle input { transform: translateY(1px); }
+  .preset-bar { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
+  .preset {
+    background: #0f141b;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .preview {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px;
+  }
+  .window {
+    background: #0c1016;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 360px;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 12px;
+  }
+  .mock-file {
+    background: linear-gradient(160deg, #1b2330, #0d1118);
+    border: 1px solid #2b3646;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .mock-file h3 { margin: 0 0 8px; font-size: 16px; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 4px 8px;
+    border: 1px solid #2c3848;
+    border-radius: 999px;
+  }
+  .preview-pane {
+    background: #0f151e;
+    border: 1px dashed #2c3848;
+    border-radius: 12px;
+    padding: 14px;
+    display: grid;
+    gap: 10px;
+    align-content: start;
+  }
+  .preview-card {
+    background: #0b0f15;
+    border: 1px solid #253143;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .hl { color: var(--accent); }
+  .list { display: grid; gap: 6px; }
+  .footer {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+  }
+  .prompt {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+  }
+  .copy {
+    margin-top: 8px;
+    background: var(--accent);
+    color: #0b1116;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .copied { color: var(--good); font-size: 12px; margin-left: 8px; }
+  .small { font-size: 11px; color: var(--muted); }
+
+  @media (max-width: 900px) {
+    .wrap { grid-template-columns: 1fr; }
+    .window { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="panel">
+      <h1>Quick Look Extension Builder</h1>
+      <div class="small">Configure a SwiftUI Quick Look Extension for macOS 15.0+</div>
+
+      <h2>Presets</h2>
+      <div class="preset-bar">
+        <button class="preset" data-preset="minimal">Minimal Preview</button>
+        <button class="preset" data-preset="rich">Rich Preview + Inspector</button>
+        <button class="preset" data-preset="thumbs">Thumbnail Only</button>
+        <button class="preset" data-preset="pdf">PDF Focused</button>
+      </div>
+
+      <h2>Project</h2>
+      <label>Host App Name</label>
+      <input type="text" id="appName" value="PreviewKit" />
+
+      <div class="row">
+        <div>
+          <label>Bundle ID Prefix</label>
+          <input type="text" id="bundleId" value="com.example.preview" />
+        </div>
+        <div>
+          <label>Deployment Target</label>
+          <select id="deployment">
+            <option value="15.0" selected>macOS 15.0</option>
+            <option value="15.1">macOS 15.1</option>
+            <option value="15.2">macOS 15.2</option>
+          </select>
+        </div>
+      </div>
+
+      <h2>Extension Type</h2>
+      <label>Primary UI Framework</label>
+      <select id="framework">
+        <option value="SwiftUI" selected>SwiftUI (QLPreviewViewController)</option>
+        <option value="AppKit">AppKit (NSViewController)</option>
+      </select>
+
+      <div class="toggle"><input type="checkbox" id="useThumbnail" checked /> <label for="useThumbnail">Include Thumbnail Provider</label></div>
+      <div class="toggle"><input type="checkbox" id="usePreview" checked /> <label for="usePreview">Include Preview Provider</label></div>
+      <div class="toggle"><input type="checkbox" id="useInspector" /> <label for="useInspector">Include Inspector Panel</label></div>
+      <div class="toggle"><input type="checkbox" id="useMetadata" /> <label for="useMetadata">Expose Metadata (Info.plist)</label></div>
+
+      <h2>Content</h2>
+      <label>Supported UTTypes (comma-separated)</label>
+      <input type="text" id="uttypes" value="public.data" />
+
+      <label>File Extensions (comma-separated)</label>
+      <input type="text" id="extensions" value=".qls" />
+
+      <div class="toggle"><input type="checkbox" id="sampleData" checked /> <label for="sampleData">Include Sample File + Preview</label></div>
+      <div class="toggle"><input type="checkbox" id="useAsync" checked /> <label for="useAsync">Async File Loading</label></div>
+
+      <h2>Build Options</h2>
+      <div class="toggle"><input type="checkbox" id="includeTests" /> <label for="includeTests">Add Basic Tests</label></div>
+      <div class="toggle"><input type="checkbox" id="useLogging" checked /> <label for="useLogging">Add Unified Logging</label></div>
+
+      <label>Notes / Custom Requirements</label>
+      <textarea id="notes">SwiftUI preview should show a hero card with file summary.</textarea>
+    </div>
+
+    <div class="preview">
+      <div class="panel">
+        <div class="window">
+          <div class="mock-file">
+            <div>
+              <h3><span id="mockApp">PreviewKit</span> — <span class="hl" id="mockType">SwiftUI</span></h3>
+              <div class="badge">Quick Look Extension</div>
+            </div>
+            <div class="list">
+              <div class="preview-card">Deployment: <span id="mockDeployment">macOS 15.0</span></div>
+              <div class="preview-card">UTTypes: <span id="mockUTTypes">public.data</span></div>
+              <div class="preview-card">Extensions: <span id="mockExt">.qls</span></div>
+            </div>
+          </div>
+          <div class="preview-pane" id="previewPane">
+            <div class="preview-card">Preview Provider: <span id="mockPreview">On</span></div>
+            <div class="preview-card">Thumbnail Provider: <span id="mockThumb">On</span></div>
+            <div class="preview-card">Inspector: <span id="mockInspector">Off</span></div>
+            <div class="preview-card">Metadata: <span id="mockMetadata">Off</span></div>
+            <div class="preview-card">Async Loading: <span id="mockAsync">On</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="small">Generated prompt (copy into Codex)</div>
+        <div class="prompt" id="prompt"></div>
+        <button class="copy" id="copyBtn">Copy Prompt</button><span id="copied" class="copied" hidden>Copied!</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const DEFAULTS = {
+    appName: 'PreviewKit',
+    bundleId: 'com.example.preview',
+    deployment: '15.0',
+    framework: 'SwiftUI',
+    useThumbnail: true,
+    usePreview: true,
+    useInspector: false,
+    useMetadata: false,
+    uttypes: 'public.data',
+    extensions: '.qls',
+    sampleData: true,
+    useAsync: true,
+    includeTests: false,
+    useLogging: true,
+    notes: 'SwiftUI preview should show a hero card with file summary.'
+  };
+
+  const state = { ...DEFAULTS };
+
+  const els = {
+    appName: document.getElementById('appName'),
+    bundleId: document.getElementById('bundleId'),
+    deployment: document.getElementById('deployment'),
+    framework: document.getElementById('framework'),
+    useThumbnail: document.getElementById('useThumbnail'),
+    usePreview: document.getElementById('usePreview'),
+    useInspector: document.getElementById('useInspector'),
+    useMetadata: document.getElementById('useMetadata'),
+    uttypes: document.getElementById('uttypes'),
+    extensions: document.getElementById('extensions'),
+    sampleData: document.getElementById('sampleData'),
+    useAsync: document.getElementById('useAsync'),
+    includeTests: document.getElementById('includeTests'),
+    useLogging: document.getElementById('useLogging'),
+    notes: document.getElementById('notes'),
+    prompt: document.getElementById('prompt')
+  };
+
+  function updateState() {
+    state.appName = els.appName.value.trim() || DEFAULTS.appName;
+    state.bundleId = els.bundleId.value.trim() || DEFAULTS.bundleId;
+    state.deployment = els.deployment.value;
+    state.framework = els.framework.value;
+    state.useThumbnail = els.useThumbnail.checked;
+    state.usePreview = els.usePreview.checked;
+    state.useInspector = els.useInspector.checked;
+    state.useMetadata = els.useMetadata.checked;
+    state.uttypes = els.uttypes.value.trim() || DEFAULTS.uttypes;
+    state.extensions = els.extensions.value.trim() || DEFAULTS.extensions;
+    state.sampleData = els.sampleData.checked;
+    state.useAsync = els.useAsync.checked;
+    state.includeTests = els.includeTests.checked;
+    state.useLogging = els.useLogging.checked;
+    state.notes = els.notes.value.trim();
+  }
+
+  function renderPreview() {
+    document.getElementById('mockApp').textContent = state.appName;
+    document.getElementById('mockType').textContent = state.framework;
+    document.getElementById('mockDeployment').textContent = `macOS ${state.deployment}`;
+    document.getElementById('mockUTTypes').textContent = state.uttypes;
+    document.getElementById('mockExt').textContent = state.extensions;
+    document.getElementById('mockPreview').textContent = state.usePreview ? 'On' : 'Off';
+    document.getElementById('mockThumb').textContent = state.useThumbnail ? 'On' : 'Off';
+    document.getElementById('mockInspector').textContent = state.useInspector ? 'On' : 'Off';
+    document.getElementById('mockMetadata').textContent = state.useMetadata ? 'On' : 'Off';
+    document.getElementById('mockAsync').textContent = state.useAsync ? 'On' : 'Off';
+  }
+
+  function pushIf(parts, condition, text) {
+    if (condition) parts.push(text);
+  }
+
+  function updatePrompt() {
+    const parts = [];
+    parts.push(`Create an Xcode SwiftUI Quick Look Extension plugin for macOS ${state.deployment}.`);
+    parts.push(`Host app name is "${state.appName}" with bundle ID prefix "${state.bundleId}".`);
+
+    pushIf(parts, state.framework !== DEFAULTS.framework,
+      `Use ${state.framework} instead of SwiftUI for the preview controller.`
+    );
+
+    if (!state.usePreview && state.useThumbnail) {
+      parts.push('Only implement a thumbnail provider (no preview provider).');
+    } else if (state.usePreview && !state.useThumbnail) {
+      parts.push('Only implement a preview provider (no thumbnail provider).');
+    } else if (!state.usePreview && !state.useThumbnail) {
+      parts.push('Do not include preview or thumbnail providers yet; stub them for future work.');
+    }
+
+    pushIf(parts, state.useInspector, 'Include an Inspector panel with key metadata fields.');
+    pushIf(parts, state.useMetadata, 'Declare metadata keys in Info.plist for Spotlight + Quick Look.');
+
+    pushIf(parts, state.uttypes !== DEFAULTS.uttypes,
+      `Register supported UTTypes: ${state.uttypes}.`
+    );
+    pushIf(parts, state.extensions !== DEFAULTS.extensions,
+      `Support file extensions: ${state.extensions}.`
+    );
+
+    pushIf(parts, !state.sampleData, 'Skip sample data and demo file.');
+    pushIf(parts, !state.useAsync, 'Use synchronous file loading for the preview.' );
+
+    pushIf(parts, state.includeTests, 'Add basic unit tests for provider selection and data parsing.');
+    pushIf(parts, !state.useLogging, 'Do not add unified logging.' );
+
+    if (state.notes) {
+      parts.push(`Additional requirements: ${state.notes}`);
+    }
+
+    parts.push('Provide the extension structure, target settings, and minimal SwiftUI preview view code.');
+
+    els.prompt.textContent = parts.join(' ');
+  }
+
+  function updateAll() {
+    updateState();
+    renderPreview();
+    updatePrompt();
+  }
+
+  function applyPreset(name) {
+    const presets = {
+      minimal: {
+        framework: 'SwiftUI', useThumbnail: true, usePreview: true, useInspector: false,
+        useMetadata: false, uttypes: 'public.data', extensions: '.qls',
+        sampleData: true, useAsync: true, includeTests: false, useLogging: true,
+        notes: 'SwiftUI preview should show a hero card with file summary.'
+      },
+      rich: {
+        framework: 'SwiftUI', useThumbnail: true, usePreview: true, useInspector: true,
+        useMetadata: true, uttypes: 'public.data,public.content', extensions: '.qls,.qlpack',
+        sampleData: true, useAsync: true, includeTests: true, useLogging: true,
+        notes: 'Inspector shows tags, size, and author. Provide polished SwiftUI layout.'
+      },
+      thumbs: {
+        framework: 'SwiftUI', useThumbnail: true, usePreview: false, useInspector: false,
+        useMetadata: false, uttypes: 'public.data', extensions: '.qls',
+        sampleData: false, useAsync: true, includeTests: false, useLogging: true,
+        notes: 'Focus on high-quality thumbnails.'
+      },
+      pdf: {
+        framework: 'AppKit', useThumbnail: true, usePreview: true, useInspector: false,
+        useMetadata: true, uttypes: 'com.adobe.pdf', extensions: '.pdf',
+        sampleData: true, useAsync: true, includeTests: false, useLogging: true,
+        notes: 'Use PDFKit for rendering and zoom controls.'
+      }
+    };
+
+    const preset = presets[name];
+    if (!preset) return;
+
+    els.framework.value = preset.framework;
+    els.useThumbnail.checked = preset.useThumbnail;
+    els.usePreview.checked = preset.usePreview;
+    els.useInspector.checked = preset.useInspector;
+    els.useMetadata.checked = preset.useMetadata;
+    els.uttypes.value = preset.uttypes;
+    els.extensions.value = preset.extensions;
+    els.sampleData.checked = preset.sampleData;
+    els.useAsync.checked = preset.useAsync;
+    els.includeTests.checked = preset.includeTests;
+    els.useLogging.checked = preset.useLogging;
+    els.notes.value = preset.notes;
+
+    updateAll();
+  }
+
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.addEventListener('input', updateAll);
+    el.addEventListener('change', updateAll);
+  });
+
+  document.querySelectorAll('.preset').forEach(btn => {
+    btn.addEventListener('click', () => applyPreset(btn.dataset.preset));
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    const promptText = els.prompt.textContent;
+    try {
+      await navigator.clipboard.writeText(promptText);
+      const copied = document.getElementById('copied');
+      copied.hidden = false;
+      setTimeout(() => copied.hidden = true, 1200);
+    } catch (e) {
+      alert('Clipboard blocked. You can select and copy manually.');
+    }
+  });
+
+  updateAll();
+</script>
+</body>
+</html>

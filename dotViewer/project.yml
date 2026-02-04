@@ -1,0 +1,377 @@
+name: dotViewer
+options:
+  bundleIdPrefix: com.stianlars1
+  deploymentTarget:
+    macOS: "15.0"
+settings:
+  base:
+    DEVELOPMENT_TEAM: "7F5ZSQFCQ4"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "Apple Development"
+    "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development"
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    DEAD_CODE_STRIPPING: YES
+    STRING_CATALOG_GENERATE_SYMBOLS: YES
+packages: {}
+schemes:
+  dotViewer:
+    build:
+      targets:
+        dotViewer: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+targets:
+  dotViewer:
+    type: application
+    platform: macOS
+    sources:
+      - App
+      - Utilities
+    info:
+      path: App/Info.plist
+      properties:
+        UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.stianlars1.dotviewer.typescript
+            UTTypeDescription: TypeScript Source
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cts
+          - UTTypeIdentifier: com.stianlars1.dotviewer.env
+            UTTypeDescription: Environment Variables
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - env
+    entitlements:
+      path: App/dotViewer.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - group.stianlars1.dotViewer.shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer
+        DEAD_CODE_STRIPPING: YES
+    dependencies:
+      - target: Shared
+      - target: QuickLookExtension
+        embed: true
+      - target: QuickLookThumbnailExtension
+        embed: true
+  QuickLookExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - QuickLookExtension
+    info:
+      path: QuickLookExtension/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.preview
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewProvider
+          NSExtensionAttributes:
+            QLIsDataBasedPreview: true
+            QLSupportedContentTypes:
+              # Note: Quick Look matching appears to require exact UTType identifiers (not conformance).
+              # Keep this list broad for common source/text UTIs, plus `public.data` for dotfiles/unknowns.
+              - public.data
+              - public.plain-text
+              - public.text
+              - public.source-code
+              - public.script
+              - public.shell-script
+              - public.bash-script
+              - public.zsh-script
+              - public.ksh-script
+              - public.csh-script
+              - public.tcsh-script
+              - public.python-script
+              - public.ruby-script
+              - public.perl-script
+              - public.php-script
+              - public.swift-source
+              - com.netscape.javascript-source
+              - com.microsoft.typescript
+              - com.sun.java-source
+              - com.microsoft.c-sharp
+              - org.golang.go-script
+              - org.rust-lang.rust-script
+              - org.kotlinlang.source
+              - org.scala-lang.scala-source
+              - org.dlang.d-source
+              - org.haskell.haskell-script
+              - org.lua.lua-source
+              - org.julialang.julia
+              - org.iso.sql
+              - public.c-source
+              - public.c-header
+              - public.c-plus-plus-source
+              - public.c-plus-plus-header
+              - public.objective-c-source
+              - public.objective-c-plus-plus-source
+              - public.assembly-source
+              - public.make-source
+              - public.protobuf-source
+              - net.daringfireball.markdown
+              - net.ia.markdown
+              - org.asciidoc
+              - org.python.restructuredtext
+              - org.tug.tex
+              - org.orgmode
+              - com.textpattern.textile
+              - org.clojure
+              - public.json
+              - public.xml
+              - public.yaml
+              - public.toml
+              - com.apple.property-list
+              - com.microsoft.ini
+              - com.coteditor.conf
+              - com.coteditor.verilog
+              - com.apple.log
+              - com.apple.rez-source
+              - public.html
+              - public.xhtml
+              - public.css
+              - public.svg-image
+              - public.comma-separated-values-text
+              - public.tab-separated-values-text
+              - dev.svelte
+              - public.handlebars
+              - public.mustache
+              - com.fishshell.script
+              - com.stianlars1.dotviewer.typescript
+              - com.stianlars1.dotviewer.env
+    entitlements:
+      path: QuickLookExtension/QuickLookPreview.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.security.application-groups:
+          - group.stianlars1.dotViewer.shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.QuickLookPreview
+        DEAD_CODE_STRIPPING: YES
+    dependencies:
+      - target: Shared
+      - target: HighlightXPC
+        embed: true
+      - framework: QuickLookUI.framework
+  QuickLookThumbnailExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - QuickLookThumbnailExtension
+    info:
+      path: QuickLookThumbnailExtension/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.quicklook.thumbnail
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ThumbnailProvider
+          NSExtensionAttributes:
+            QLSupportedContentTypes:
+              - public.data
+              - public.plain-text
+              - public.text
+              - public.source-code
+              - public.script
+              - public.shell-script
+              - public.bash-script
+              - public.zsh-script
+              - public.ksh-script
+              - public.csh-script
+              - public.tcsh-script
+              - public.python-script
+              - public.ruby-script
+              - public.perl-script
+              - public.php-script
+              - public.swift-source
+              - com.netscape.javascript-source
+              - com.microsoft.typescript
+              - com.sun.java-source
+              - com.microsoft.c-sharp
+              - org.golang.go-script
+              - org.rust-lang.rust-script
+              - org.kotlinlang.source
+              - org.scala-lang.scala-source
+              - org.dlang.d-source
+              - org.haskell.haskell-script
+              - org.lua.lua-source
+              - org.julialang.julia
+              - org.iso.sql
+              - public.c-source
+              - public.c-header
+              - public.c-plus-plus-source
+              - public.c-plus-plus-header
+              - public.objective-c-source
+              - public.objective-c-plus-plus-source
+              - public.assembly-source
+              - public.make-source
+              - public.protobuf-source
+              - net.daringfireball.markdown
+              - net.ia.markdown
+              - org.asciidoc
+              - org.python.restructuredtext
+              - org.tug.tex
+              - org.orgmode
+              - com.textpattern.textile
+              - org.clojure
+              - public.json
+              - public.xml
+              - public.yaml
+              - public.toml
+              - com.apple.property-list
+              - com.microsoft.ini
+              - com.coteditor.conf
+              - com.coteditor.verilog
+              - com.apple.log
+              - com.apple.rez-source
+              - public.html
+              - public.xhtml
+              - public.css
+              - public.svg-image
+              - public.comma-separated-values-text
+              - public.tab-separated-values-text
+              - dev.svelte
+              - public.handlebars
+              - public.mustache
+              - com.fishshell.script
+              - com.stianlars1.dotviewer.typescript
+              - com.stianlars1.dotviewer.env
+    entitlements:
+      path: QuickLookThumbnailExtension/QuickLookThumbnail.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.files.user-selected.read-only: true
+        com.apple.security.application-groups:
+          - group.stianlars1.dotViewer.shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.QuickLookThumbnail
+        DEAD_CODE_STRIPPING: YES
+    dependencies:
+      - target: Shared
+      - target: HighlightXPC
+        embed: true
+      - framework: QuickLookThumbnailing.framework
+      - framework: WebKit.framework
+  HighlightXPC:
+    type: xpc-service
+    platform: macOS
+    sources:
+      - HighlightXPC
+      - path: TreeSitterVendor/tree-sitter/lib/src
+        group: TreeSitterVendor/Core
+        excludes:
+          - "lib.c"
+      - path: TreeSitterVendor/tree-sitter-swift/src
+        group: TreeSitterVendor/Grammars/Swift
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-python/src
+        group: TreeSitterVendor/Grammars/Python
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-javascript/src
+        group: TreeSitterVendor/Grammars/JavaScript
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-typescript/typescript/src
+        group: TreeSitterVendor/Grammars/TypeScript
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-typescript/tsx/src
+        group: TreeSitterVendor/Grammars/TSX
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-json/src
+        group: TreeSitterVendor/Grammars/JSON
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-yaml/src
+        group: TreeSitterVendor/Grammars/YAML
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-markdown/tree-sitter-markdown/src
+        group: TreeSitterVendor/Grammars/Markdown
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-bash/src
+        group: TreeSitterVendor/Grammars/Bash
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-html/src
+        group: TreeSitterVendor/Grammars/HTML
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-css/src
+        group: TreeSitterVendor/Grammars/CSS
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-xml/xml/src
+        group: TreeSitterVendor/Grammars/XML
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-ini/src
+        group: TreeSitterVendor/Grammars/INI
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-toml/src
+        group: TreeSitterVendor/Grammars/TOML
+        excludes:
+          - "*.json"
+    info:
+      path: HighlightXPC/Info.plist
+    entitlements:
+      path: HighlightXPC/HighlightXPC.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups:
+          - group.stianlars1.dotViewer.shared
+    resources:
+      - path: HighlightXPC/TreeSitterQueries
+        type: folder
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.HighlightXPC
+        SWIFT_OBJC_BRIDGING_HEADER: HighlightXPC/HighlightXPC-Bridging-Header.h
+        CLANG_CXX_LANGUAGE_STANDARD: "gnu++17"
+        CLANG_CXX_LIBRARY: "libc++"
+        DEAD_CODE_STRIPPING: YES
+        CLANG_ENABLE_MODULE_VERIFIER: YES
+        OTHER_CFLAGS:
+          - "$(inherited)"
+          - "-Wno-strict-prototypes"
+          - "-Wno-shorten-64-to-32"
+          - "-Wno-unused-function"
+          - "-Wno-uninitialized"
+          - "-Wno-conditional-uninitialized"
+          - "-Wno-comma"
+          - "-Wno-ambiguous-macro"
+          - "-Wno-macro-redefined"
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/TreeSitterVendor/tree-sitter/lib/include"
+    dependencies:
+      - target: Shared
+  Shared:
+    type: framework
+    platform: macOS
+    sources:
+      - Shared
+    info:
+      path: Shared/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.Shared
+        DEAD_CODE_STRIPPING: YES
+        CLANG_ENABLE_MODULE_VERIFIER: YES

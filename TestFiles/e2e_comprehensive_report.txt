@@ -1,0 +1,6 @@
+dotViewer Comprehensive E2E Report
+Generated: fre. 23 jan. 2026 02.17.10 CET
+
+PASS: 13  FAIL: 1  SKIP: 1  TOTAL: 15
+
+STATUS: 1 FAILURE(S)

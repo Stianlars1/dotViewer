@@ -1,0 +1,266 @@
+import Foundation
+@preconcurrency import QuickLookUI
+import CoreGraphics
+import UniformTypeIdentifiers
+import OSLog
+import Shared
+
+final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
+    private static let logger = Logger(subsystem: "com.stianlars1.dotViewer", category: "QuickLookPreview")
+    private static let routeLogger = Logger(subsystem: "com.stianlars1.dotViewer", category: "QuickLookRouting")
+
+    // If Quick Look calls the legacy, view-based API, log it so we can see it immediately.
+    func preparePreviewOfFile(at url: URL, completionHandler: @escaping (Error?) -> Void) {
+        Self.logger.log("preparePreviewOfFile called for \(url.lastPathComponent, privacy: .public)")
+        completionHandler(nil)
+    }
+
+    @available(macOSApplicationExtension 12.0, *)
+    func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
+        await Self.buildPreviewReply(for: request.fileURL, systemIsDark: Self.systemIsDark())
+    }
+
+    private static func buildPreviewReply(for url: URL, systemIsDark: Bool) async -> QLPreviewReply {
+        let actualPathExtension = url.pathExtension.lowercased()
+        let registry = FileTypeRegistry.shared
+        let key = FileTypeResolution.bestKey(for: url, registry: registry)
+        logger.log("Preview request: \(url.lastPathComponent, privacy: .public) ext=\(actualPathExtension, privacy: .public) key=\(key, privacy: .public)")
+        logger.log("SharedSettings appGroup=\(SharedSettings.shared.isUsingAppGroup, privacy: .public)")
+
+#if DEBUG
+        if url.deletingPathExtension().lastPathComponent == "dotviewer_heartbeat" {
+            let heartbeatHTML = """
+            <!doctype html>
+            <html><body style="font-family:-apple-system;padding:20px;">
+            <h2>dotViewer preview active</h2>
+            <p>Heartbeat OK for \(url.lastPathComponent)</p>
+            </body></html>
+            """
+            logger.log("Heartbeat preview returned for \(url.lastPathComponent, privacy: .public)")
+            return makeHTMLReply(html: heartbeatHTML)
+        }
+#endif
+
+        let (requestId, previousId) = await PreviewRequestCoordinator.shared.startNewRequest()
+        if let previousId {
+            HighlightXPCClient.shared.cancel(requestId: previousId)
+        }
+
+        let cacheEnabled = SharedSettings.shared.previewCacheEnabled
+        let cacheTTL = SharedSettings.shared.previewCacheTTLSeconds
+        let cacheMaxBytes = SharedSettings.shared.previewCacheMaxMB * 1_024 * 1_024
+        let forceTextForUnknown = SharedSettings.shared.previewForceTextForUnknown
+
+        await PreviewCache.shared.handleClearIfRequested()
+
+        let fileAttributes = FileAttributes.attributes(for: url)
+        let typeIsTextual = fileAttributes?.isTextual ?? false
+        let looksTextual = fileAttributes?.looksTextual ?? false
+        let isTextual = typeIsTextual || (forceTextForUnknown && looksTextual)
+        let isExtensionEnabled = registry.isExtensionEnabled(key)
+        let isKnownType = registry.fileType(for: key) != nil
+        let allowUnknown = SharedSettings.shared.previewAllFileTypes
+
+        routeLogger.log(
+            "Routing check ext=\(actualPathExtension, privacy: .public) key=\(key, privacy: .public) textual=\(isTextual, privacy: .public) allowUnknown=\(allowUnknown, privacy: .public) known=\(isKnownType, privacy: .public) enabled=\(isExtensionEnabled, privacy: .public) forceText=\(forceTextForUnknown, privacy: .public)"
+        )
+
+        if !isTextual {
+            routeLogger.log("Fallback: non-textual file without forceText for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        if !isExtensionEnabled || (!isKnownType && !allowUnknown) {
+            routeLogger.log("Fallback: extension disabled or unsupported type for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        let fileMeta = FileInspector.fileMetadata(for: url)
+        let fileSize = fileMeta.sizeBytes
+        let fileMtime = fileMeta.mtime
+
+        let languageId = registry.highlightLanguage(for: key) ?? "plaintext"
+        let languageName = registry.fileType(for: key)?.displayName ?? (key.isEmpty ? "Text" : key.uppercased())
+
+        let isMarkdown = ["md", "markdown", "mdx"].contains(key)
+        let showLineNumbers = SharedSettings.shared.showLineNumbers
+        let useMarkdownHighlight = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
+        let showBinaryWarning = !typeIsTextual
+        let encoding = fileAttributes?.stringEncoding ?? .utf8
+
+        routeLogger.debug("Preview routing: key=\(key, privacy: .public) lang=\(languageId, privacy: .public) markdown=\(isMarkdown, privacy: .public) known=\(isKnownType, privacy: .public) allowUnknown=\(allowUnknown, privacy: .public)")
+        let shouldHighlight = !(isMarkdown && !useMarkdownHighlight)
+
+        let routedExtensions: Set<String> = ["md", "markdown", "mdx", "json", "xml", "yaml", "yml", "tsx", "sh", "bash"]
+        if routedExtensions.contains(key) {
+            routeLogger.log(
+                "Preview route file=\(url.lastPathComponent, privacy: .public) key=\(key, privacy: .public) lang=\(languageId, privacy: .public) highlight=\(shouldHighlight, privacy: .public)"
+            )
+        }
+
+        let cacheKey = PreviewCacheKey(
+            url: url,
+            fileSize: fileSize,
+            mtime: fileMtime,
+            showLineNumbers: showLineNumbers,
+            codeFontSize: SharedSettings.shared.fontSize,
+            markdownUseSyntaxHighlightInRaw: useMarkdownHighlight,
+            allowUnknown: allowUnknown,
+            forceTextForUnknown: forceTextForUnknown,
+            languageId: languageId,
+            theme: SharedSettings.shared.selectedTheme,
+            showHeader: SharedSettings.shared.showFileInfoHeader,
+            markdownDefaultMode: SharedSettings.shared.markdownDefaultMode,
+            markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
+            markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
+            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride
+        )
+
+        if cacheEnabled, let cached = await PreviewCache.shared.load(key: cacheKey, ttlSeconds: cacheTTL) {
+            let info = PreviewInfo(
+                title: url.lastPathComponent,
+                language: languageName.isEmpty ? "Text" : languageName,
+                lineCount: cached.lineCount,
+                fileSizeBytes: cached.fileSizeBytes,
+                isTruncated: cached.isTruncated,
+                showTruncationWarning: SharedSettings.shared.showTruncationWarning,
+                showHeader: SharedSettings.shared.showFileInfoHeader,
+                isSensitive: SensitiveFileDetector.isSensitive(url: url),
+                rawText: cached.rawText,
+                rawHTML: cached.rawHTML,
+                renderedHTML: cached.renderedHTML,
+                codeFontSize: SharedSettings.shared.fontSize,
+                defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
+                markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+                markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
+                markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
+                markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+                showBinaryWarning: showBinaryWarning
+            )
+
+            let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
+            let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
+            routeLogger.log("HTML built (cache) for \(url.lastPathComponent, privacy: .public)")
+            return makeHTMLReply(html: html)
+        }
+
+        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
+            routeLogger.log("Fallback: request cancelled before read for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        let fileInfo: FileInfo
+        do {
+            fileInfo = try FileInspector.loadFile(url: url, maxBytes: SharedSettings.shared.maxFileSizeBytes, encoding: encoding)
+        } catch {
+            routeLogger.error("Read failed for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
+            routeLogger.log("Fallback: request cancelled after read for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        let rawHTML: String
+        if isMarkdown && !useMarkdownHighlight {
+            rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
+        } else if shouldHighlight {
+            if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
+                routeLogger.log("Fallback: request cancelled before highlight for \(url.lastPathComponent, privacy: .public)")
+                return QLPreviewReply(fileURL: url)
+            }
+            let highlightResult = await HighlightXPCClient.shared.highlight(
+                code: fileInfo.text,
+                language: languageId,
+                theme: SharedSettings.shared.selectedTheme,
+                showLineNumbers: showLineNumbers,
+                requestId: requestId,
+                timeout: 3.0
+            )
+
+            switch highlightResult {
+            case .success(let html):
+                rawHTML = html
+            case .failure(.cancelled):
+                routeLogger.log("Fallback: highlight cancelled for \(url.lastPathComponent, privacy: .public)")
+                return QLPreviewReply(fileURL: url)
+            case .failure:
+                rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
+            }
+        } else {
+            rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
+        }
+
+        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
+            routeLogger.log("Fallback: request cancelled after highlight for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        let renderedHTML: String?
+        if isMarkdown {
+            renderedHTML = MarkdownRenderer.renderHTML(from: fileInfo.text)
+        } else {
+            renderedHTML = nil
+        }
+
+        let info = PreviewInfo(
+            title: url.lastPathComponent,
+            language: languageName.isEmpty ? "Text" : languageName,
+            lineCount: fileInfo.lineCount,
+            fileSizeBytes: fileInfo.fileSizeBytes,
+            isTruncated: fileInfo.isTruncated,
+            showTruncationWarning: SharedSettings.shared.showTruncationWarning,
+            showHeader: SharedSettings.shared.showFileInfoHeader,
+            isSensitive: SensitiveFileDetector.isSensitive(url: url),
+            rawText: fileInfo.text,
+            rawHTML: rawHTML,
+            renderedHTML: renderedHTML,
+            codeFontSize: SharedSettings.shared.fontSize,
+            defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
+            markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
+            markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
+            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+            showBinaryWarning: showBinaryWarning
+        )
+
+        let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
+        routeLogger.log("HTML built for \(url.lastPathComponent, privacy: .public)")
+
+        if cacheEnabled && !info.isSensitive {
+            let entry = PreviewCacheEntry(
+                createdAt: Date(),
+                rawHTML: rawHTML,
+                renderedHTML: renderedHTML,
+                rawText: fileInfo.text,
+                lineCount: fileInfo.lineCount,
+                fileSizeBytes: fileInfo.fileSizeBytes,
+                isTruncated: fileInfo.isTruncated
+            )
+            await PreviewCache.shared.store(
+                key: cacheKey,
+                entry: entry,
+                ttlSeconds: cacheTTL,
+                maxBytes: cacheMaxBytes
+            )
+        }
+
+        return makeHTMLReply(html: html)
+    }
+
+    private static func systemIsDark() -> Bool {
+        // Simple, non-UI heuristic that works in app extensions.
+        (UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "").lowercased() == "dark"
+    }
+
+    private static func makeHTMLReply(html: String) -> QLPreviewReply {
+        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 700, height: 800)) { _ in
+            html.data(using: .utf8) ?? Data()
+        }
+        reply.stringEncoding = .utf8
+        return reply
+    }
+}

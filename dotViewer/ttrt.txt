@@ -1,0 +1,140 @@
+helgefmi requested changes 18 hours ago
+helgefmi
+left a comment
+Koden ser bra ut!
+
+En ting jeg tenker vi bør gjøre her er å ta i bruk public.sleipner.no.
+
+En sluttbruker skal aldri innom noe på odin.sleipner.no - dvs vi skal ikke ha noen visninger under odin.sleipner.no som ikke krever autentisering.
+
+Dette gjelder da både "disabled.html" og redirect-viewet.
+
+For å kjøre public, må du gjøre DJANGO_SETTINGS_MODULE=odin.settings.public.dev foran manage.py runserver, og sette det til en annen port. Så kan du teste f.eks. /shortlink/disabled/ og /shortlink/redirect/ om det er det vi velger å kalle det.
+
+Må da oppdaterer core/urls_public.py med de nye viewsa. Kan være greit om du legger de inn i odin/apps/shortlinks/public/ så det ligger for seg selv. Templaten kan ligge i odin/apps/shortlinks/templates/shortlinks/public/ så det er tydlig at det ikke er en del av den normale odin-appen, men public-appen.
+
+Bare å teamse om noe ikke makes sense :)
+
+odin/apps/shortlinks/templates/shortlinks/list.html
+
+{% block contents_table %}
+{{ block.super }}
+<script>
+@helgefmi
+helgefmi
+19 hours ago
+Fint om du legger all js i en .es6 fil slik som de andre modulene, og så lager en pipeline.py som linker inn scriptet.
+
+Du vil få problemer med {% url 'shortlinks_health_check_all' %} men bare bruk Urls.shortlinks_health_check_all() som er js versjon av url resolveren til Django.
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/templates/shortlinks/qr_code_panel.html
+        </div>
+    </div>
+    <script>
+        (function () {
+@helgefmi
+helgefmi
+19 hours ago
+Samme her
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/templates/shortlinks/status_panel.html
+</style>
+
+<script>
+(function() {
+@helgefmi
+helgefmi
+19 hours ago
+Samme her
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/admin.py
+    permission = 'shortlinks.can_create'
+    header = 'Create Short Link'
+
+    forms = OrderedDict([('ShortLinkForm', ShortLinkForm)])
+@helgefmi
+helgefmi
+19 hours ago
+Kan bare bruke vanlig dict her, {'Form': ShortLinkForm}
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/admin.py
+    permission = 'shortlinks.can_change'
+    header = 'Update Short Link'
+
+    forms = OrderedDict([('ShortLinkForm', ShortLinkForm)])
+@helgefmi
+helgefmi
+19 hours ago
+Samme her
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/apps.py
+
+class ShortlinksConfig(AppConfig):
+    name = 'odin.apps.shortlinks'
+    verbose_name = 'QR Code Shortener' No newline at end of file
+@helgefmi
+helgefmi
+19 hours ago
+Oop mangler newline, setter du opp editoren din til å alltid legge på newlines?
+
+Author
+@Stianlars1
+Stianlars1
+11 minutes ago
+will do
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/permissions.py
+from odin.apps.roles import permissions
+
+
+def get_permissions():
+@helgefmi
+helgefmi
+19 hours ago
+Vi trenger vel kun 'can_access' her. Og den brukes stort sett kun for at andre skal slippe å ha denne i menyen når det er kun marked som skal bruke dette uansett. Generelt sett om noen får se noe i Odin så skal de få redigere det også
+
+@Stianlars1	Reply...
+odin/apps/shortlinks/utils.py
+    - Single-char (indices 0-34):  1, 2, 3, ..., 9, A, B, C, ..., Z
+    - Two-char (indices 35-1259): 11, 12, ..., 1Z, 21, 22, ..., ZZ
+    """
+    if index < 0 or index >= MAX_CODES:
+@helgefmi
+helgefmi
+19 hours ago
+Ser ingen grunn til å ha en MAX_CODES?
+
+Tror dette her skal fungere:
+
+ret = ''
+i += 1
+while i > 0:
+    i -= 1
+    ret = CHARSET[i % BASE] + ret
+    i //= BASE
+return ret
+@Stianlars1	Reply...
+odin/settings/common/all.py
+
+assert len(FORECAST_ITEMS) == len(set(FORECAST_ITEMS))
+
+# Shortlinks Configuration // Todo: remove once implemented
+@helgefmi
+helgefmi
+18 hours ago
+Bare å legge inn SHORTLINK_BASE_URL til slp.as eller hva det ble til.
+
+@Stianlars1	Reply...
+Merge info
+Changes reviewed
+1 change requested by reviewers with write access.
+
+
+No conflicts with base branch
+Merging can be performed automatically.
