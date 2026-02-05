@@ -69,6 +69,36 @@ public final class SharedSettings: @unchecked Sendable {
         }
     }
 
+    public var thumbnailMaxBytes: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "thumbnailMaxBytes")
+                return value > 0 ? value : 24_000
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(4_000, min(100_000, newValue))
+                defaults.set(clamped, forKey: "thumbnailMaxBytes")
+            }
+        }
+    }
+
+    public var thumbnailMaxLines: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "thumbnailMaxLines")
+                return value > 0 ? value : 60
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(10, min(200, newValue))
+                defaults.set(clamped, forKey: "thumbnailMaxLines")
+            }
+        }
+    }
+
     public var showTruncationWarning: Bool {
         get { lock.withLock { defaults.object(forKey: "showTruncationWarning") as? Bool ?? true } }
         set { lock.withLock { defaults.set(newValue, forKey: "showTruncationWarning") } }

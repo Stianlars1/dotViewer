@@ -26,8 +26,11 @@ public enum FileInspector {
 
         let isTruncated = fileSizeBytes > maxBytes
         let text = decodeString(data: data, encoding: encoding)
-        let lineCount = max(countLines(in: text), 1)
+        return fileInfo(from: text, fileSizeBytes: fileSizeBytes, isTruncated: isTruncated)
+    }
 
+    public static func fileInfo(from text: String, fileSizeBytes: Int, isTruncated: Bool) -> FileInfo {
+        let lineCount = max(countLines(in: text), 1)
         return FileInfo(text: text, lineCount: lineCount, fileSizeBytes: fileSizeBytes, isTruncated: isTruncated)
     }
 

@@ -34,7 +34,7 @@ public final class FileTypeRegistry: @unchecked Sendable {
         return [
             // MARK: - Web Development
             SupportedFileType(id: "typescript", displayName: "TypeScript",
-                              extensions: ["cts"],
+                              extensions: ["ts", "cts"],
                               category: .webDevelopment, highlightLanguage: "typescript", isSystemUTI: false),
             SupportedFileType(id: "tsx", displayName: "TypeScript JSX",
                               extensions: ["tsx"],

@@ -1,7 +1,7 @@
 import Foundation
+import AppKit
 @preconcurrency import QuickLookUI
 import CoreGraphics
-import UniformTypeIdentifiers
 import OSLog
 import Shared
 
@@ -17,7 +17,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
     @available(macOSApplicationExtension 12.0, *)
     func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
-        await Self.buildPreviewReply(for: request.fileURL, systemIsDark: Self.systemIsDark())
+        let systemIsDark = await MainActor.run { Self.systemIsDark() }
+        return await Self.buildPreviewReply(for: request.fileURL, systemIsDark: systemIsDark)
     }
 
     private static func buildPreviewReply(for url: URL, systemIsDark: Bool) async -> QLPreviewReply {
@@ -55,8 +56,21 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         let fileAttributes = FileAttributes.attributes(for: url)
         let typeIsTextual = fileAttributes?.isTextual ?? false
-        let looksTextual = fileAttributes?.looksTextual ?? false
-        let isTextual = typeIsTextual || (forceTextForUnknown && looksTextual)
+        let looksTextualSample = fileAttributes?.looksTextual ?? false
+        let mimeType = fileAttributes?.mimeType ?? "application/octet-stream"
+
+        let isPlistFile = PlistConverter.isPropertyList(url: url)
+        let isBinaryPlist = isPlistFile && PlistConverter.isBinaryPlist(url: url)
+        let looksTextual = looksTextualSample || isBinaryPlist
+
+        let isTransportCandidate = TransportStreamDetector.isTransportStreamCandidate(url: url, mimeType: mimeType)
+        let transportMatches = isTransportCandidate && TransportStreamDetector.matchesTransportStreamSyncPattern(url: url)
+        if isTransportCandidate && (!looksTextualSample || transportMatches) {
+            routeLogger.log("Fallback: transport stream candidate for \(url.lastPathComponent, privacy: .public)")
+            return QLPreviewReply(fileURL: url)
+        }
+
+        let isTextual = typeIsTextual || isBinaryPlist || (forceTextForUnknown && looksTextualSample)
         let isExtensionEnabled = registry.isExtensionEnabled(key)
         let isKnownType = registry.fileType(for: key) != nil
         let allowUnknown = SharedSettings.shared.previewAllFileTypes
@@ -78,6 +92,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let fileMeta = FileInspector.fileMetadata(for: url)
         let fileSize = fileMeta.sizeBytes
         let fileMtime = fileMeta.mtime
+        let isEmptyFile = fileSize == 0
 
         let languageId = registry.highlightLanguage(for: key) ?? "plaintext"
         let languageName = registry.fileType(for: key)?.displayName ?? (key.isEmpty ? "Text" : key.uppercased())
@@ -85,13 +100,14 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let isMarkdown = ["md", "markdown", "mdx"].contains(key)
         let showLineNumbers = SharedSettings.shared.showLineNumbers
         let useMarkdownHighlight = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
-        let showBinaryWarning = !typeIsTextual
+        let showBinaryWarning = (!typeIsTextual && !looksTextual && !isEmptyFile)
+        let showUnknownTextWarning = (!typeIsTextual && looksTextualSample && !isKnownType && !isEmptyFile)
         let encoding = fileAttributes?.stringEncoding ?? .utf8
 
         routeLogger.debug("Preview routing: key=\(key, privacy: .public) lang=\(languageId, privacy: .public) markdown=\(isMarkdown, privacy: .public) known=\(isKnownType, privacy: .public) allowUnknown=\(allowUnknown, privacy: .public)")
         let shouldHighlight = !(isMarkdown && !useMarkdownHighlight)
 
-        let routedExtensions: Set<String> = ["md", "markdown", "mdx", "json", "xml", "yaml", "yml", "tsx", "sh", "bash"]
+        let routedExtensions: Set<String> = ["md", "markdown", "mdx", "json", "xml", "yaml", "yml", "ts", "tsx", "sh", "bash"]
         if routedExtensions.contains(key) {
             routeLogger.log(
                 "Preview route file=\(url.lastPathComponent, privacy: .public) key=\(key, privacy: .public) lang=\(languageId, privacy: .public) highlight=\(shouldHighlight, privacy: .public)"
@@ -136,6 +152,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
                 markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
                 markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+                themeName: SharedSettings.shared.selectedTheme,
+                showUnknownTextWarning: showUnknownTextWarning,
                 showBinaryWarning: showBinaryWarning
             )
 
@@ -145,32 +163,43 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             return makeHTMLReply(html: html)
         }
 
-        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
-            routeLogger.log("Fallback: request cancelled before read for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
+        let cancelledBeforeRead = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
+        if cancelledBeforeRead {
+            routeLogger.log("Request cancelled before read for \(url.lastPathComponent, privacy: .public)")
         }
 
+        let maxBytes = SharedSettings.shared.maxFileSizeBytes
         let fileInfo: FileInfo
-        do {
-            fileInfo = try FileInspector.loadFile(url: url, maxBytes: SharedSettings.shared.maxFileSizeBytes, encoding: encoding)
-        } catch {
-            routeLogger.error("Read failed for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
+        if isBinaryPlist {
+            guard let conversion = PlistConverter.convertBinaryPlistToXML(at: url, maxBytes: maxBytes) else {
+                routeLogger.log("Fallback: plist conversion failed for \(url.lastPathComponent, privacy: .public)")
+                return QLPreviewReply(fileURL: url)
+            }
+            let convertedTruncated = conversion.isTruncated || fileSize > maxBytes
+            fileInfo = FileInspector.fileInfo(
+                from: conversion.text,
+                fileSizeBytes: fileSize,
+                isTruncated: convertedTruncated
+            )
+        } else {
+            do {
+                fileInfo = try FileInspector.loadFile(url: url, maxBytes: maxBytes, encoding: encoding)
+            } catch {
+                routeLogger.error("Read failed for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
+                return QLPreviewReply(fileURL: url)
+            }
         }
 
-        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
-            routeLogger.log("Fallback: request cancelled after read for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
+        let cancelledAfterRead = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
+        if cancelledAfterRead {
+            routeLogger.log("Request cancelled after read for \(url.lastPathComponent, privacy: .public)")
         }
 
+        let shouldAttemptHighlight = shouldHighlight && !cancelledAfterRead
         let rawHTML: String
         if isMarkdown && !useMarkdownHighlight {
             rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
-        } else if shouldHighlight {
-            if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
-                routeLogger.log("Fallback: request cancelled before highlight for \(url.lastPathComponent, privacy: .public)")
-                return QLPreviewReply(fileURL: url)
-            }
+        } else if shouldAttemptHighlight {
             let highlightResult = await HighlightXPCClient.shared.highlight(
                 code: fileInfo.text,
                 language: languageId,
@@ -184,8 +213,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             case .success(let html):
                 rawHTML = html
             case .failure(.cancelled):
-                routeLogger.log("Fallback: highlight cancelled for \(url.lastPathComponent, privacy: .public)")
-                return QLPreviewReply(fileURL: url)
+                routeLogger.log("Highlight cancelled for \(url.lastPathComponent, privacy: .public); using plain text HTML")
+                rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
             case .failure:
                 rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
             }
@@ -193,13 +222,19 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
         }
 
-        if !(await PreviewRequestCoordinator.shared.isCurrent(requestId)) {
-            routeLogger.log("Fallback: request cancelled after highlight for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
+#if DEBUG
+        if shouldHighlight && !rawHTML.contains("tok-") {
+            routeLogger.log("Highlight output missing tok- spans for \(url.lastPathComponent, privacy: .public)")
+        }
+#endif
+
+        let cancelledAfterHighlight = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
+        if cancelledAfterHighlight {
+            routeLogger.log("Request cancelled after highlight for \(url.lastPathComponent, privacy: .public)")
         }
 
         let renderedHTML: String?
-        if isMarkdown {
+        if isMarkdown && !cancelledAfterHighlight {
             renderedHTML = MarkdownRenderer.renderHTML(from: fileInfo.text)
         } else {
             renderedHTML = nil
@@ -223,6 +258,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
             markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
             markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+            themeName: SharedSettings.shared.selectedTheme,
+            showUnknownTextWarning: showUnknownTextWarning,
             showBinaryWarning: showBinaryWarning
         )
 
@@ -230,7 +267,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
         routeLogger.log("HTML built for \(url.lastPathComponent, privacy: .public)")
 
-        if cacheEnabled && !info.isSensitive {
+        let shouldCache = cacheEnabled && !info.isSensitive && (await PreviewRequestCoordinator.shared.isCurrent(requestId))
+        if shouldCache {
             let entry = PreviewCacheEntry(
                 createdAt: Date(),
                 rawHTML: rawHTML,
@@ -251,9 +289,13 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         return makeHTMLReply(html: html)
     }
 
+    @MainActor
     private static func systemIsDark() -> Bool {
-        // Simple, non-UI heuristic that works in app extensions.
-        (UserDefaults.standard.string(forKey: "AppleInterfaceStyle") ?? "").lowercased() == "dark"
+        let appearance = NSApplication.shared.effectiveAppearance
+        if let match = appearance.bestMatch(from: [.darkAqua, .aqua]) {
+            return match == .darkAqua
+        }
+        return false
     }
 
     private static func makeHTMLReply(html: String) -> QLPreviewReply {

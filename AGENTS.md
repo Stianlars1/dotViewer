@@ -33,6 +33,15 @@ This file is a lightweight changelog of agent-assisted work in this workspace.
 - Added `scripts/dotviewer-gen-ql-content-types.sh` to generate a best-effort `QLSupportedContentTypes` list from `FileTypeRegistry`.
 - Verified routing via `scripts/dotviewer-ql-smoke.sh` for: `.py`, `.js`, `.swift`, `.go`, `.rs`, `.zsh`, `.tsx`, `.md`, `.json`, `.xml`, `.yaml`, `.env`, and `.gitignore` (all showed “HTML built …” logs).
 
+## 2026-02-05
+
+### Quick Look Preview + Thumbnail Reliability
+- Outcome: replaced WKWebView thumbnail snapshots with native CoreGraphics text thumbnails; prevented textual previews from falling back to icons on cancellation; added MPEG-TS gating for `.ts` routing; added binary plist conversion; refreshed preview UI (copy toast + compact header + tighter gutter) with auto-theme CSS.
+- Files: dotViewer/QuickLookExtension/PreviewProvider.swift, dotViewer/QuickLookThumbnailExtension/ThumbnailProvider.swift, dotViewer/QuickLookThumbnailExtension/TextThumbnailRenderer.swift, dotViewer/Shared/PreviewHTMLBuilder.swift, dotViewer/Shared/SharedSettings.swift, dotViewer/Shared/PlistConverter.swift, dotViewer/Shared/TransportStreamDetector.swift, dotViewer/Shared/FileInspector.swift, dotViewer/Shared/FileTypeRegistry.swift, dotViewer/HighlightXPC/TreeSitterHighlighter.swift, dotViewer/project.yml
+- Verified:
+  - ./scripts/dotviewer-ql-smoke.sh TestFiles/test.json → pass (HTML built log)
+- Follow-ups: manually verify Finder column preview + thumbnails for `.ts`, binary `.plist`, and rapid selection.
+
 ## Notes
 - XcodeGen regenerates `dotViewer/App/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, and the `.entitlements` files. Persistent changes for those live in `dotViewer/project.yml`.
 - To keep this file fresh, use the repo-local skill: `.agents/skills/update-agents-md/SKILL.md`.

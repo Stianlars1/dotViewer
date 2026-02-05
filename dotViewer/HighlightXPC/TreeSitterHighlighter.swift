@@ -115,6 +115,14 @@ final class TreeSitterHighlighter {
             captures.append(Capture(start: start, end: end, name: name))
         }
 
+        if captures.isEmpty {
+            let fallback = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
+            if shouldCancel?() == true {
+                return nil
+            }
+            captures = fallback
+        }
+
         captures.sort { lhs, rhs in
             if lhs.start == rhs.start {
                 return lhs.end > rhs.end

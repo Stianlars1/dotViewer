@@ -18,6 +18,8 @@ public struct PreviewInfo {
     public let markdownShowInlineImages: Bool
     public let markdownCustomCSS: String
     public let markdownCustomCSSOverride: Bool
+    public let themeName: String
+    public let showUnknownTextWarning: Bool
     public let showBinaryWarning: Bool
 
     public init(
@@ -38,6 +40,8 @@ public struct PreviewInfo {
         markdownShowInlineImages: Bool,
         markdownCustomCSS: String,
         markdownCustomCSSOverride: Bool,
+        themeName: String,
+        showUnknownTextWarning: Bool,
         showBinaryWarning: Bool
     ) {
         self.title = title
@@ -57,6 +61,8 @@ public struct PreviewInfo {
         self.markdownShowInlineImages = markdownShowInlineImages
         self.markdownCustomCSS = markdownCustomCSS
         self.markdownCustomCSSOverride = markdownCustomCSSOverride
+        self.themeName = themeName
+        self.showUnknownTextWarning = showUnknownTextWarning
         self.showBinaryWarning = showBinaryWarning
     }
 }
@@ -90,6 +96,7 @@ public enum PreviewHTMLBuilder {
             \(rawSection)
             \(renderedSection)
           </div>
+          <div id="toast" class="toast">Copied</div>
           <textarea id="raw-source" class="hidden">\(escapeHTML(info.rawText))</textarea>
           <script>
           \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil))
@@ -111,7 +118,12 @@ public enum PreviewHTMLBuilder {
           </div>
           <div class="header-right">
             \(markdownToggle)
-            <button class="icon-button" id="copy-button" title="Copy to clipboard">📋</button>
+            <button class="icon-button" id="copy-button" title="Copy to clipboard" aria-label="Copy to clipboard">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M16 4a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7zm0 1.5H9a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V6a.5.5 0 0 0-.5-.5z"/>
+                <path d="M7 8H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h7a2 2 0 0 0 2-2v-1h-1.5v1a.5.5 0 0 1-.5.5H6a.5.5 0 0 1-.5-.5v-8A.5.5 0 0 1 6 9h1V8z"/>
+              </svg>
+            </button>
           </div>
         </div>
         """
@@ -122,6 +134,10 @@ public enum PreviewHTMLBuilder {
 
         if info.isSensitive {
             banners.append("<div class=\"banner warning\">Sensitive file detected — handle with care.</div>")
+        }
+
+        if info.showUnknownTextWarning {
+            banners.append("<div class=\"banner neutral\">Unknown type — showing as text.</div>")
         }
 
         if info.showBinaryWarning {
@@ -157,25 +173,32 @@ public enum PreviewHTMLBuilder {
             return customCSS
         }
 
+        func cssVariables(for palette: ThemePalette) -> String {
+            """
+              --bg: \(palette.background);
+              --text: \(palette.text);
+              --comment: \(palette.comment);
+              --keyword: \(palette.keyword);
+              --string: \(palette.string);
+              --number: \(palette.number);
+              --type: \(palette.type);
+              --function: \(palette.function);
+              --property: \(palette.property);
+              --punctuation: \(palette.punctuation);
+              --accent: \(palette.accent);
+              --gutter: \(palette.isDark ? "#3B3F51" : "#C0C4CC");
+              --header: \(palette.isDark ? "#1F232B" : "#F2F3F5");
+              --surface: \(palette.isDark ? "#1E222A" : "#F5F7FA");
+              --surface-strong: \(palette.isDark ? "#2B303B" : "#E9EDF2");
+              --border: \(palette.isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)");
+              --link: \(palette.accent);
+            """
+        }
+
+        let basePalette = info.themeName == "auto" ? ThemePalette.atomOneLight : palette
         var baseCSS = """
         :root {
-          --bg: \(palette.background);
-          --text: \(palette.text);
-          --comment: \(palette.comment);
-          --keyword: \(palette.keyword);
-          --string: \(palette.string);
-          --number: \(palette.number);
-          --type: \(palette.type);
-          --function: \(palette.function);
-          --property: \(palette.property);
-          --punctuation: \(palette.punctuation);
-          --accent: \(palette.accent);
-          --gutter: \(palette.isDark ? "#3B3F51" : "#C0C4CC");
-          --header: \(palette.isDark ? "#1F232B" : "#F2F3F5");
-          --surface: \(palette.isDark ? "#1E222A" : "#F5F7FA");
-          --surface-strong: \(palette.isDark ? "#2B303B" : "#E9EDF2");
-          --border: \(palette.isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)");
-          --link: \(palette.accent);
+        \(cssVariables(for: basePalette))
         }
 
         html, body {
@@ -194,7 +217,7 @@ public enum PreviewHTMLBuilder {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 12px 16px;
+          padding: 8px 12px;
           background: var(--header);
           border-bottom: 1px solid rgba(0,0,0,0.08);
           position: sticky;
@@ -205,36 +228,58 @@ public enum PreviewHTMLBuilder {
         .header-right {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
         }
 
         .badge {
           background: rgba(0,122,255,0.2);
           color: var(--accent);
-          padding: 4px 10px;
+          padding: 2px 6px;
           border-radius: 999px;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 600;
-          margin-right: 8px;
+          margin-right: 6px;
         }
 
         .meta {
-          font-size: 12px;
+          font-size: 11px;
           color: var(--comment);
         }
 
         .icon-button {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           background: transparent;
-          border: none;
+          border: 1px solid transparent;
+          border-radius: 8px;
           cursor: pointer;
-          font-size: 16px;
+          width: 26px;
+          height: 26px;
+          padding: 0;
+          color: var(--text);
+        }
+
+        .icon-button svg {
+          width: 16px;
+          height: 16px;
+          fill: currentColor;
+        }
+
+        .icon-button:hover {
+          background: var(--surface-strong);
+          border-color: var(--border);
+        }
+
+        .icon-button:active {
+          transform: scale(0.98);
         }
 
         .banner {
-          margin: 12px 16px 0;
-          padding: 10px 12px;
+          margin: 10px 12px 0;
+          padding: 8px 10px;
           border-radius: 8px;
-          font-size: 13px;
+          font-size: 12px;
         }
 
         .banner.warning {
@@ -247,8 +292,14 @@ public enum PreviewHTMLBuilder {
           color: var(--accent);
         }
 
+        .banner.neutral {
+          background: var(--surface-strong);
+          color: var(--text);
+          border: 1px solid var(--border);
+        }
+
         .content {
-          padding: 16px;
+          padding: 12px;
           background: var(--bg);
           border: none;
           box-shadow: none;
@@ -258,20 +309,20 @@ public enum PreviewHTMLBuilder {
           display: inline-flex;
           background: rgba(127,127,127,0.2);
           border-radius: 10px;
-          padding: 4px;
+          padding: 2px;
         }
 
         .header-toggle {
-          margin-right: 4px;
+          margin-right: 2px;
         }
 
         .toggle-button {
           border: none;
           background: transparent;
           color: var(--text);
-          padding: 6px 12px;
+          padding: 4px 8px;
           border-radius: 8px;
-          font-size: 12px;
+          font-size: 11px;
           cursor: pointer;
         }
 
@@ -284,6 +335,7 @@ public enum PreviewHTMLBuilder {
           font-family: "SF Mono", Menlo, Monaco, monospace;
           font-size: \(codeFontSize)px;
           color: var(--text);
+          line-height: 1.45;
         }
 
         .line {
@@ -291,11 +343,12 @@ public enum PreviewHTMLBuilder {
         }
 
         .ln {
-          width: 44px;
+          width: 32px;
           text-align: right;
-          padding-right: 12px;
+          padding-right: 8px;
           color: var(--gutter);
           user-select: none;
+          font-size: 11px;
         }
 
         .code-line {
@@ -401,7 +454,39 @@ public enum PreviewHTMLBuilder {
         .hidden {
           display: none;
         }
+
+        .toast {
+          position: fixed;
+          right: 12px;
+          bottom: 12px;
+          padding: 6px 10px;
+          border-radius: 8px;
+          background: var(--surface-strong);
+          color: var(--text);
+          border: 1px solid var(--border);
+          font-size: 12px;
+          opacity: 0;
+          transform: translateY(6px);
+          transition: opacity 0.2s ease, transform 0.2s ease;
+          pointer-events: none;
+        }
+
+        .toast.show {
+          opacity: 1;
+          transform: translateY(0);
+        }
         """
+        if info.themeName == "auto" {
+            let darkPalette = ThemePalette.atomOneDark
+            baseCSS += """
+
+            @media (prefers-color-scheme: dark) {
+              :root {
+            \(cssVariables(for: darkPalette))
+              }
+            }
+            """
+        }
         if !inlineImagesCSS.isEmpty {
             baseCSS += "\n" + inlineImagesCSS
         }
@@ -415,9 +500,38 @@ public enum PreviewHTMLBuilder {
         guard hasRendered else {
             return """
             const copyButton = document.getElementById('copy-button');
+            const toast = document.getElementById('toast');
+            let toastTimer = null;
+
+            function showToast(message) {
+              if (!toast) return;
+              toast.textContent = message;
+              toast.classList.add('show');
+              if (toastTimer) clearTimeout(toastTimer);
+              toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+            }
+
+            function writeClipboard(text) {
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text);
+              }
+              return new Promise(resolve => {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                try { document.execCommand('copy'); } catch (e) {}
+                document.body.removeChild(textarea);
+                resolve();
+              });
+            }
+
             copyButton?.addEventListener('click', () => {
               const text = document.getElementById('raw-source')?.value || '';
-              navigator.clipboard.writeText(text);
+              writeClipboard(text).then(() => showToast('Copied'));
             });
             """
         }
@@ -426,10 +540,41 @@ public enum PreviewHTMLBuilder {
         const rawView = document.getElementById('raw-view');
         const renderedView = document.getElementById('rendered-view');
         const buttons = document.querySelectorAll('.toggle-button');
+        const copyButton = document.getElementById('copy-button');
+        const toast = document.getElementById('toast');
+        let toastTimer = null;
+        let currentMode = '\(defaultMode == "rendered" ? "rendered" : "raw")';
+
+        function showToast(message) {
+          if (!toast) return;
+          toast.textContent = message;
+          toast.classList.add('show');
+          if (toastTimer) clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+        }
+
+        function writeClipboard(text) {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(text);
+          }
+          return new Promise(resolve => {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try { document.execCommand('copy'); } catch (e) {}
+            document.body.removeChild(textarea);
+            resolve();
+          });
+        }
 
         function setMode(mode) {
           // Header (and toggle) can be disabled via user settings. In that case, we must still
           // switch the visible view without assuming buttons exist.
+          currentMode = mode;
           buttons.forEach(btn => {
             const isActive = btn.dataset.mode === mode;
             btn.classList.toggle('active', isActive);
@@ -448,12 +593,16 @@ public enum PreviewHTMLBuilder {
           btn.addEventListener('click', () => setMode(btn.dataset.mode));
         });
 
-        setMode('\(defaultMode == "rendered" ? "rendered" : "raw")');
+        setMode(currentMode);
 
-        const copyButton = document.getElementById('copy-button');
         copyButton?.addEventListener('click', () => {
-          const text = document.getElementById('raw-source')?.value || '';
-          navigator.clipboard.writeText(text);
+          let text = '';
+          if (currentMode === 'rendered' && renderedView) {
+            text = renderedView.innerText || '';
+          } else {
+            text = document.getElementById('raw-source')?.value || '';
+          }
+          writeClipboard(text).then(() => showToast('Copied'));
         });
         """
     }

@@ -83,6 +83,7 @@ targets:
               # Note: Quick Look matching appears to require exact UTType identifiers (not conformance).
               # Keep this list broad for common source/text UTIs, plus `public.data` for dotfiles/unknowns.
               - public.data
+              - public.mpeg-2-transport-stream
               - public.plain-text
               - public.text
               - public.source-code
@@ -180,6 +181,7 @@ targets:
           NSExtensionAttributes:
             QLSupportedContentTypes:
               - public.data
+              - public.mpeg-2-transport-stream
               - public.plain-text
               - public.text
               - public.source-code
@@ -260,10 +262,7 @@ targets:
         DEAD_CODE_STRIPPING: YES
     dependencies:
       - target: Shared
-      - target: HighlightXPC
-        embed: true
       - framework: QuickLookThumbnailing.framework
-      - framework: WebKit.framework
   HighlightXPC:
     type: xpc-service
     platform: macOS
