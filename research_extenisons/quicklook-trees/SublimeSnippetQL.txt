@@ -1,0 +1,16 @@
+SublimeSnippetQL
+├── SublimeSnippetQL
+│   ├── en.lproj
+│   │   └── InfoPlist.strings
+│   ├── Resources
+│   │   └── tmpl.html
+│   ├── GeneratePreviewForURL.m
+│   ├── GenerateThumbnailForURL.m
+│   ├── main.c
+│   ├── SublimeSnippetQL-Info.plist
+│   └── SublimeSnippetQL-Prefix.pch
+├── SublimeSnippetQL.xcodeproj
+│   └── project.pbxproj
+├── .gitignore
+├── README.md
+└── screenshot.png

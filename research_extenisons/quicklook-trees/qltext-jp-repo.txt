@@ -1,0 +1,15 @@
+qltext-jp-repo
+├── qltext-jp
+│   ├── GeneratePreviewForURL.c
+│   ├── GenerateThumbnailForURL.c
+│   ├── Info.plist
+│   ├── main.c
+│   ├── NSData+DetectEncoding.h
+│   └── NSData+DetectEncoding.m
+├── qltext-jp.xcodeproj
+│   ├── project.xcworkspace
+│   │   └── contents.xcworkspacedata
+│   └── project.pbxproj
+├── .gitignore
+├── LICENSE
+└── README.md

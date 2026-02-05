@@ -1,0 +1,17 @@
+QuickLookCodeSnippet
+├── QuickLookCodeSnippet.xcodeproj
+│   ├── project.xcworkspace
+│   │   └── contents.xcworkspacedata
+│   └── project.pbxproj
+├── Resources
+│   ├── QuickLookCodeSnippet-Info.plist
+│   └── template.html
+├── Source
+│   ├── CodeSnippetConstants.h
+│   ├── CodeSnippetConstants.m
+│   ├── GeneratePreviewForURL.m
+│   ├── GenerateThumbnailForURL.m
+│   └── main.c
+├── .gitignore
+├── License.txt
+└── README.md
