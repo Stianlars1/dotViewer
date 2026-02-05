@@ -3,3 +3,31 @@ research_extensions/
 competitors
 tmp
 output
+Competitors
+SourceCodeSyntaxHighlight
+tmp
+output
+
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+
+# Distribution
+dist/
+*.dmg
+
+# Swift Package Manager
+.build/
+Packages/
+Package.resolved
+
+# Dev logs
