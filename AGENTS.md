@@ -42,6 +42,14 @@ This file is a lightweight changelog of agent-assisted work in this workspace.
   - ./scripts/dotviewer-ql-smoke.sh TestFiles/test.json → pass (HTML built log)
 - Follow-ups: manually verify Finder column preview + thumbnails for `.ts`, binary `.plist`, and rapid selection.
 
+### Git Add Failure (Embedded Repos)
+- Outcome: fixed `git add -A` failure by ignoring typo-path research clone folders that contain nested Git repos and unstaging accidental embedded-repo entries.
+- Files: .gitignore
+- Verified:
+  - git restore --staged research_extenisons/quicklook-research research_extenisons/qlmarkdown_repo research_extenisons/qlstephen → pass
+  - git --no-optional-locks add -A → pass
+- Follow-ups: decide whether `.DS_Store` should remain tracked.
+
 ## Notes
 - XcodeGen regenerates `dotViewer/App/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, and the `.entitlements` files. Persistent changes for those live in `dotViewer/project.yml`.
 - To keep this file fresh, use the repo-local skill: `.agents/skills/update-agents-md/SKILL.md`.
