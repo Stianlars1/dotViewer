@@ -1,0 +1,2665 @@
+[
+  {
+    "id": "ada",
+    "displayName": "ADA95",
+    "extensions": [
+      "a",
+      "adb",
+      "ads",
+      "gnad"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ada"
+  },
+  {
+    "id": "alan",
+    "displayName": "ALAN Interactive Fiction Language",
+    "extensions": [
+      "alan",
+      "i"
+    ],
+    "filenames": [],
+    "highlightLanguage": "alan"
+  },
+  {
+    "id": "algol",
+    "displayName": "ALGOL 68",
+    "extensions": [
+      "alg"
+    ],
+    "filenames": [],
+    "highlightLanguage": "algol"
+  },
+  {
+    "id": "ampl",
+    "displayName": "AMPL",
+    "extensions": [
+      "dat",
+      "run"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ampl"
+  },
+  {
+    "id": "amtrix",
+    "displayName": "AMTrix",
+    "extensions": [
+      "hnd",
+      "s4",
+      "s4h",
+      "s4t",
+      "t4"
+    ],
+    "filenames": [],
+    "highlightLanguage": "amtrix"
+  },
+  {
+    "id": "assembler",
+    "displayName": "Generic Assembler",
+    "extensions": [
+      "29k",
+      "68s",
+      "68x",
+      "a51",
+      "asm",
+      "x86"
+    ],
+    "filenames": [],
+    "highlightLanguage": "assembler"
+  },
+  {
+    "id": "fasm",
+    "displayName": "fasm",
+    "extensions": [
+      "asm",
+      "inc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fasm"
+  },
+  {
+    "id": "asp",
+    "displayName": "Active Server Pages",
+    "extensions": [
+      "ascx",
+      "ashx",
+      "aspx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "asp"
+  },
+  {
+    "id": "ats",
+    "displayName": "Applied Type System",
+    "extensions": [
+      "dats"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ats"
+  },
+  {
+    "id": "aspect",
+    "displayName": "Abstract",
+    "extensions": [
+      "was",
+      "wud"
+    ],
+    "filenames": [],
+    "highlightLanguage": "aspect"
+  },
+  {
+    "id": "ballerina",
+    "displayName": "Ballerina",
+    "extensions": [
+      "bal"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ballerina"
+  },
+  {
+    "id": "bat",
+    "displayName": "MS DOS Batch",
+    "extensions": [
+      "cmd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bat"
+  },
+  {
+    "id": "c",
+    "displayName": "C and C++",
+    "extensions": [
+      "c++",
+      "cc",
+      "cpp",
+      "cu",
+      "cxx",
+      "h",
+      "hh",
+      "hpp",
+      "hxx",
+      "inl",
+      "ipp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c"
+  },
+  {
+    "id": "cmake",
+    "displayName": "CMake",
+    "extensions": [
+      "cmake"
+    ],
+    "filenames": [
+      "cmakelists.txt"
+    ],
+    "highlightLanguage": "cmake"
+  },
+  {
+    "id": "charmm",
+    "displayName": "Charmm",
+    "extensions": [
+      "inp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "charmm"
+  },
+  {
+    "id": "coldfusion",
+    "displayName": "ColdFusion MX",
+    "extensions": [
+      "cfc",
+      "cfm"
+    ],
+    "filenames": [],
+    "highlightLanguage": "coldfusion"
+  },
+  {
+    "id": "cobol",
+    "displayName": "COBOL",
+    "extensions": [
+      "cbl",
+      "cob"
+    ],
+    "filenames": [],
+    "highlightLanguage": "cobol"
+  },
+  {
+    "id": "crystal",
+    "displayName": "Crystal",
+    "extensions": [
+      "cr"
+    ],
+    "filenames": [],
+    "highlightLanguage": "crystal"
+  },
+  {
+    "id": "conf",
+    "displayName": "Generic config files",
+    "extensions": [
+      "anacrontab"
+    ],
+    "filenames": [],
+    "highlightLanguage": "conf"
+  },
+  {
+    "id": "delphi",
+    "displayName": "delphi",
+    "extensions": [
+      "dpr",
+      "dpr pas",
+      "pas"
+    ],
+    "filenames": [],
+    "highlightLanguage": "delphi"
+  },
+  {
+    "id": "diff",
+    "displayName": "Diff",
+    "extensions": [
+      "patch"
+    ],
+    "filenames": [],
+    "highlightLanguage": "diff"
+  },
+  {
+    "id": "docker",
+    "displayName": "Docker",
+    "extensions": [
+      "dockerfile"
+    ],
+    "filenames": [],
+    "highlightLanguage": "docker"
+  },
+  {
+    "id": "dts",
+    "displayName": "Device Tree Source",
+    "extensions": [
+      "dtsi"
+    ],
+    "filenames": [],
+    "highlightLanguage": "dts"
+  },
+  {
+    "id": "eiffel",
+    "displayName": "Eiffel",
+    "extensions": [
+      "e",
+      "se"
+    ],
+    "filenames": [],
+    "highlightLanguage": "eiffel"
+  },
+  {
+    "id": "elixir",
+    "displayName": "Elixir",
+    "extensions": [
+      "ex",
+      "exs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "elixir"
+  },
+  {
+    "id": "erlang",
+    "displayName": "Erlang",
+    "extensions": [
+      "erl",
+      "hrl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "erlang"
+  },
+  {
+    "id": "euphoria",
+    "displayName": "Euphoria",
+    "extensions": [
+      "eu",
+      "ew",
+      "ex",
+      "exw",
+      "wxu"
+    ],
+    "filenames": [],
+    "highlightLanguage": "euphoria"
+  },
+  {
+    "id": "fortran77",
+    "displayName": "Fortran 77",
+    "extensions": [
+      "f",
+      "for",
+      "ftn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fortran77"
+  },
+  {
+    "id": "fortran90",
+    "displayName": "Fortran 90",
+    "extensions": [
+      "f90",
+      "f95"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fortran90"
+  },
+  {
+    "id": "gambas",
+    "displayName": "Gambas",
+    "extensions": [
+      "class"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gambas"
+  },
+  {
+    "id": "gdscript",
+    "displayName": "GDScript",
+    "extensions": [
+      "gd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gdscript"
+  },
+  {
+    "id": "haskell",
+    "displayName": "Haskell",
+    "extensions": [
+      "hs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "haskell"
+  },
+  {
+    "id": "hugo",
+    "displayName": "Hugo",
+    "extensions": [
+      "hug"
+    ],
+    "filenames": [],
+    "highlightLanguage": "hugo"
+  },
+  {
+    "id": "ini",
+    "displayName": "INI",
+    "extensions": [
+      "cfg",
+      "desktop",
+      "doxyfile",
+      "inf",
+      "kdev3",
+      "reg",
+      "conf",
+      "properties",
+      "prefs",
+      "editorconfig"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ini"
+  },
+  {
+    "id": "java",
+    "displayName": "Java",
+    "extensions": [
+      "gradle",
+      "groovy",
+      "grv",
+      "jenkinsfile"
+    ],
+    "filenames": [],
+    "highlightLanguage": "java"
+  },
+  {
+    "id": "julia",
+    "displayName": "Julia",
+    "extensions": [
+      "jl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "julia"
+  },
+  {
+    "id": "kotlin",
+    "displayName": "Kotlin",
+    "extensions": [
+      "kt",
+      "kts"
+    ],
+    "filenames": [],
+    "highlightLanguage": "kotlin"
+  },
+  {
+    "id": "limbo",
+    "displayName": "Limbo",
+    "extensions": [
+      "b"
+    ],
+    "filenames": [],
+    "highlightLanguage": "limbo"
+  },
+  {
+    "id": "lisp",
+    "displayName": "Lisp",
+    "extensions": [
+      "cl",
+      "clisp",
+      "el",
+      "fas",
+      "fasl",
+      "lsp",
+      "mud",
+      "rkt",
+      "sbcl",
+      "sch",
+      "scm",
+      "scom",
+      "sld",
+      "sls",
+      "sps",
+      "ss"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lisp"
+  },
+  {
+    "id": "make",
+    "displayName": "Make",
+    "extensions": [
+      "gnumakefile",
+      "mak",
+      "makefile",
+      "mk"
+    ],
+    "filenames": [],
+    "highlightLanguage": "make"
+  },
+  {
+    "id": "meson",
+    "displayName": "Meson",
+    "extensions": [
+      "meson"
+    ],
+    "filenames": [
+      "meson.build",
+      "meson_options.txt"
+    ],
+    "highlightLanguage": "meson"
+  },
+  {
+    "id": "snmp",
+    "displayName": "SNMP",
+    "extensions": [
+      "mib",
+      "smi"
+    ],
+    "filenames": [],
+    "highlightLanguage": "snmp"
+  },
+  {
+    "id": "ocaml",
+    "displayName": "Objective Caml",
+    "extensions": [
+      "ml",
+      "mli"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ocaml"
+  },
+  {
+    "id": "mod2",
+    "displayName": "Modula2",
+    "extensions": [
+      "def",
+      "mod"
+    ],
+    "filenames": [],
+    "highlightLanguage": "mod2"
+  },
+  {
+    "id": "mod3",
+    "displayName": "Modula3",
+    "extensions": [
+      "i3",
+      "m3"
+    ],
+    "filenames": [],
+    "highlightLanguage": "mod3"
+  },
+  {
+    "id": "oberon",
+    "displayName": "Oberon",
+    "extensions": [
+      "ooc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "oberon"
+  },
+  {
+    "id": "php",
+    "displayName": "PHP",
+    "extensions": [
+      "php3",
+      "php4",
+      "php5",
+      "php6",
+      "php7",
+      "phps",
+      "phpt"
+    ],
+    "filenames": [],
+    "highlightLanguage": "php"
+  },
+  {
+    "id": "pike",
+    "displayName": "Pike",
+    "extensions": [
+      "pmod"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pike"
+  },
+  {
+    "id": "pl1",
+    "displayName": "PL/1",
+    "extensions": [
+      "bdy",
+      "ff",
+      "fp",
+      "fpp",
+      "rpp",
+      "sf",
+      "sp",
+      "spb",
+      "spe",
+      "spp",
+      "sps",
+      "wf",
+      "wp",
+      "wpb",
+      "wpp",
+      "wps"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pl1"
+  },
+  {
+    "id": "perl",
+    "displayName": "Perl",
+    "extensions": [
+      "cgi",
+      "perl",
+      "pl",
+      "plex",
+      "plx",
+      "pm"
+    ],
+    "filenames": [],
+    "highlightLanguage": "perl"
+  },
+  {
+    "id": "polygen",
+    "displayName": "Polygen",
+    "extensions": [
+      "grm"
+    ],
+    "filenames": [],
+    "highlightLanguage": "polygen"
+  },
+  {
+    "id": "pro",
+    "displayName": "Prolog",
+    "extensions": [
+      "pro"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pro"
+  },
+  {
+    "id": "qmake",
+    "displayName": "QMake Project",
+    "extensions": [
+      "pro"
+    ],
+    "filenames": [],
+    "highlightLanguage": "qmake"
+  },
+  {
+    "id": "progress",
+    "displayName": "Progress",
+    "extensions": [
+      "i",
+      "p",
+      "w"
+    ],
+    "filenames": [],
+    "highlightLanguage": "progress"
+  },
+  {
+    "id": "ruby",
+    "displayName": "Ruby",
+    "extensions": [
+      "appfile",
+      "appraisals",
+      "berksfile",
+      "brewfile",
+      "capfile",
+      "cgi",
+      "cheffile",
+      "config.ru",
+      "deliverfile",
+      "fastfile",
+      "fcgi",
+      "gemfile",
+      "gemspec",
+      "guardfile",
+      "irbrc",
+      "jbuilder",
+      "podfile",
+      "podspec",
+      "pp",
+      "prawn",
+      "rabl",
+      "rake",
+      "rakefile",
+      "rantfile",
+      "rb",
+      "rbx",
+      "rjs",
+      "ruby",
+      "scanfile",
+      "simplecov",
+      "snapfile",
+      "thor",
+      "thorfile",
+      "vagrantfile"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ruby"
+  },
+  {
+    "id": "rexx",
+    "displayName": "Rexx",
+    "extensions": [
+      "rex",
+      "rx",
+      "the"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rexx"
+  },
+  {
+    "id": "sh",
+    "displayName": "Sh",
+    "extensions": [
+      "bash",
+      "ebuild",
+      "eclass",
+      "zsh"
+    ],
+    "filenames": [
+      ".bashrc",
+      ".zshrc"
+    ],
+    "highlightLanguage": "sh"
+  },
+  {
+    "id": "smalltalk",
+    "displayName": "Smalltalk",
+    "extensions": [
+      "gst",
+      "sq",
+      "st"
+    ],
+    "filenames": [],
+    "highlightLanguage": "smalltalk"
+  },
+  {
+    "id": "sybase",
+    "displayName": "Sybase SQL",
+    "extensions": [
+      "sp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sybase"
+  },
+  {
+    "id": "tcl",
+    "displayName": "Tcl/Tk",
+    "extensions": [
+      "itcl",
+      "wish"
+    ],
+    "filenames": [],
+    "highlightLanguage": "tcl"
+  },
+  {
+    "id": "tex",
+    "displayName": "TeX and LaTeX",
+    "extensions": [
+      "cls",
+      "sty"
+    ],
+    "filenames": [],
+    "highlightLanguage": "tex"
+  },
+  {
+    "id": "vb",
+    "displayName": "Visual Basic",
+    "extensions": [
+      "bas",
+      "basic",
+      "bi",
+      "vbs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "vb"
+  },
+  {
+    "id": "verilog",
+    "displayName": "Verilog",
+    "extensions": [
+      "v"
+    ],
+    "filenames": [],
+    "highlightLanguage": "verilog"
+  },
+  {
+    "id": "html",
+    "displayName": "HTML",
+    "extensions": [
+      "htm",
+      "jinja",
+      "twig",
+      "xhtml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html"
+  },
+  {
+    "id": "xml",
+    "displayName": "XML",
+    "extensions": [
+      "csproj",
+      "dtd",
+      "ecf",
+      "ent",
+      "glade",
+      "hdr",
+      "hub",
+      "jnlp",
+      "nrm",
+      "opml",
+      "resx",
+      "rss",
+      "sgm",
+      "sgml",
+      "tld",
+      "vxml",
+      "wml",
+      "xsd",
+      "xsl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml"
+  },
+  {
+    "id": "fsharp",
+    "displayName": "F#",
+    "extensions": [
+      "fs",
+      "fsi",
+      "fsx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fsharp"
+  },
+  {
+    "id": "informix",
+    "displayName": "Informix",
+    "extensions": [
+      "4gl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "informix"
+  },
+  {
+    "id": "blitzbasic",
+    "displayName": "Blitz Basic",
+    "extensions": [
+      "bb"
+    ],
+    "filenames": [],
+    "highlightLanguage": "blitzbasic"
+  },
+  {
+    "id": "innosetup",
+    "displayName": "Inno Setup",
+    "extensions": [
+      "iss"
+    ],
+    "filenames": [],
+    "highlightLanguage": "innosetup"
+  },
+  {
+    "id": "lotus",
+    "displayName": "Lotus",
+    "extensions": [
+      "ls"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lotus"
+  },
+  {
+    "id": "ascend",
+    "displayName": "ASCEND",
+    "extensions": [
+      "a4c"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ascend"
+  },
+  {
+    "id": "actionscript",
+    "displayName": "ActionScript",
+    "extensions": [
+      "as"
+    ],
+    "filenames": [],
+    "highlightLanguage": "actionscript"
+  },
+  {
+    "id": "express",
+    "displayName": "Express",
+    "extensions": [
+      "exp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "express"
+  },
+  {
+    "id": "haxe",
+    "displayName": "haXe",
+    "extensions": [
+      "hx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "haxe"
+  },
+  {
+    "id": "pyrex",
+    "displayName": "Pyrex",
+    "extensions": [
+      "pyx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pyrex"
+  },
+  {
+    "id": "abap4",
+    "displayName": "Abap4",
+    "extensions": [
+      "abp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "abap4"
+  },
+  {
+    "id": "csharp",
+    "displayName": "C#",
+    "extensions": [
+      "cs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "csharp"
+  },
+  {
+    "id": "interlis",
+    "displayName": "INTERLIS",
+    "extensions": [
+      "ili"
+    ],
+    "filenames": [],
+    "highlightLanguage": "interlis"
+  },
+  {
+    "id": "logtalk",
+    "displayName": "Logtalk",
+    "extensions": [
+      "lgt"
+    ],
+    "filenames": [],
+    "highlightLanguage": "logtalk"
+  },
+  {
+    "id": "matlab",
+    "displayName": "Matlab",
+    "extensions": [
+      "m"
+    ],
+    "filenames": [],
+    "highlightLanguage": "matlab"
+  },
+  {
+    "id": "nsis",
+    "displayName": "NSIS",
+    "extensions": [
+      "nsh",
+      "nsi"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nsis"
+  },
+  {
+    "id": "bison",
+    "displayName": "Bison",
+    "extensions": [
+      "y"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bison"
+  },
+  {
+    "id": "squirrel",
+    "displayName": "Squirrel",
+    "extensions": [
+      "nut"
+    ],
+    "filenames": [],
+    "highlightLanguage": "squirrel"
+  },
+  {
+    "id": "luban",
+    "displayName": "Luban",
+    "extensions": [
+      "lbn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "luban"
+  },
+  {
+    "id": "maya",
+    "displayName": "Maya",
+    "extensions": [
+      "mel"
+    ],
+    "filenames": [],
+    "highlightLanguage": "maya"
+  },
+  {
+    "id": "nemerle",
+    "displayName": "Nemerle",
+    "extensions": [
+      "n"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nemerle"
+  },
+  {
+    "id": "paradox",
+    "displayName": "Paradox",
+    "extensions": [
+      "sc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "paradox"
+  },
+  {
+    "id": "netrexx",
+    "displayName": "NetRexx",
+    "extensions": [
+      "nrx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "netrexx"
+  },
+  {
+    "id": "clearbasic",
+    "displayName": "ClearBasic",
+    "extensions": [
+      "cb"
+    ],
+    "filenames": [],
+    "highlightLanguage": "clearbasic"
+  },
+  {
+    "id": "graphviz",
+    "displayName": "Graphviz",
+    "extensions": [
+      "dot"
+    ],
+    "filenames": [],
+    "highlightLanguage": "graphviz"
+  },
+  {
+    "id": "small",
+    "displayName": "SMALL",
+    "extensions": [
+      "sma"
+    ],
+    "filenames": [],
+    "highlightLanguage": "small"
+  },
+  {
+    "id": "autoit",
+    "displayName": "AutoIt",
+    "extensions": [
+      "au3"
+    ],
+    "filenames": [],
+    "highlightLanguage": "autoit"
+  },
+  {
+    "id": "chill",
+    "displayName": "CHILL",
+    "extensions": [
+      "chl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "chill"
+  },
+  {
+    "id": "autohotkey",
+    "displayName": "AutoHotKey",
+    "extensions": [
+      "ahk"
+    ],
+    "filenames": [],
+    "highlightLanguage": "autohotkey"
+  },
+  {
+    "id": "fame",
+    "displayName": "FAME",
+    "extensions": [
+      "fame"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fame"
+  },
+  {
+    "id": "modelica",
+    "displayName": "Modelica",
+    "extensions": [
+      "mo"
+    ],
+    "filenames": [],
+    "highlightLanguage": "modelica"
+  },
+  {
+    "id": "maple",
+    "displayName": "Maple",
+    "extensions": [
+      "mpl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "maple"
+  },
+  {
+    "id": "jasmin",
+    "displayName": "Jasmin",
+    "extensions": [
+      "j"
+    ],
+    "filenames": [],
+    "highlightLanguage": "jasmin"
+  },
+  {
+    "id": "snobol",
+    "displayName": "SNOBOL",
+    "extensions": [
+      "sno"
+    ],
+    "filenames": [],
+    "highlightLanguage": "snobol"
+  },
+  {
+    "id": "icon",
+    "displayName": "Icon",
+    "extensions": [
+      "icn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "icon"
+  },
+  {
+    "id": "felix",
+    "displayName": "Felix",
+    "extensions": [
+      "flx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "felix"
+  },
+  {
+    "id": "lindenscript",
+    "displayName": "Linden Script",
+    "extensions": [
+      "lsl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lindenscript"
+  },
+  {
+    "id": "lilypond",
+    "displayName": "Lilypond",
+    "extensions": [
+      "ly"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lilypond"
+  },
+  {
+    "id": "nasal",
+    "displayName": "Nasal",
+    "extensions": [
+      "nas"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nasal"
+  },
+  {
+    "id": "clean",
+    "displayName": "Clean",
+    "extensions": [
+      "icl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "clean"
+  },
+  {
+    "id": "bibtex",
+    "displayName": "BibTeX",
+    "extensions": [
+      "bib"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bibtex"
+  },
+  {
+    "id": "python",
+    "displayName": "Python",
+    "extensions": [
+      "cpy",
+      "gyp",
+      "gypi",
+      "pxd",
+      "pxi",
+      "py",
+      "py3",
+      "pyi",
+      "pyw",
+      "pyx",
+      "rpy",
+      "sconstruct",
+      "snakefile",
+      "wscript"
+    ],
+    "filenames": [
+      "sconstruct"
+    ],
+    "highlightLanguage": "python"
+  },
+  {
+    "id": "txt",
+    "displayName": "Plain text",
+    "extensions": [
+      "text"
+    ],
+    "filenames": [],
+    "highlightLanguage": "txt"
+  },
+  {
+    "id": "n3",
+    "displayName": "N3",
+    "extensions": [
+      "nt",
+      "ttl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "n3"
+  },
+  {
+    "id": "biferno",
+    "displayName": "Biferno",
+    "extensions": [
+      "bfr"
+    ],
+    "filenames": [],
+    "highlightLanguage": "biferno"
+  },
+  {
+    "id": "scilab",
+    "displayName": "Scilab",
+    "extensions": [
+      "sce",
+      "sci"
+    ],
+    "filenames": [],
+    "highlightLanguage": "scilab"
+  },
+  {
+    "id": "msl",
+    "displayName": "mIRC Scripting",
+    "extensions": [
+      "nbs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "msl"
+  },
+  {
+    "id": "yaml",
+    "displayName": "Ansible YAML",
+    "extensions": [
+      "yml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaml"
+  },
+  {
+    "id": "vimscript",
+    "displayName": "vimscript",
+    "extensions": [
+      "gvimrc",
+      "vim",
+      "vimrc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "vimscript"
+  },
+  {
+    "id": "purebasic",
+    "displayName": "PureBASIC",
+    "extensions": [
+      "pb",
+      "pbf",
+      "pbi"
+    ],
+    "filenames": [],
+    "highlightLanguage": "purebasic"
+  },
+  {
+    "id": "markdown",
+    "displayName": "GitHub Flavored Markdown",
+    "extensions": [
+      "markdown",
+      "md",
+      "mdx",
+      "mdtxt",
+      "rmd",
+      "qmd",
+      "mkd",
+      "mkdn",
+      "mdown"
+    ],
+    "filenames": [],
+    "highlightLanguage": "markdown"
+  },
+  {
+    "id": "clojure",
+    "displayName": "Clojure",
+    "extensions": [
+      "clj",
+      "cljc",
+      "cljs",
+      "edn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "clojure"
+  },
+  {
+    "id": "solidity",
+    "displayName": "Solidity",
+    "extensions": [
+      "sol"
+    ],
+    "filenames": [],
+    "highlightLanguage": "solidity"
+  },
+  {
+    "id": "ps1",
+    "displayName": "Ps1",
+    "extensions": [
+      "psd1",
+      "psm1"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ps1"
+  },
+  {
+    "id": "exapunks",
+    "displayName": "EXAPUNKS",
+    "extensions": [
+      "exa",
+      "exapunks"
+    ],
+    "filenames": [],
+    "highlightLanguage": "exapunks"
+  },
+  {
+    "id": "awk",
+    "displayName": "(G)AWK",
+    "extensions": [
+      "awk"
+    ],
+    "filenames": [],
+    "highlightLanguage": "awk"
+  },
+  {
+    "id": "js",
+    "displayName": "Js",
+    "extensions": [
+      "js"
+    ],
+    "filenames": [],
+    "highlightLanguage": "js"
+  },
+  {
+    "id": "abap",
+    "displayName": "ABAP/4",
+    "extensions": [
+      "abap"
+    ],
+    "filenames": [],
+    "highlightLanguage": "abap"
+  },
+  {
+    "id": "abc",
+    "displayName": "ABC",
+    "extensions": [
+      "abc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "abc"
+  },
+  {
+    "id": "abnf",
+    "displayName": "Advanced Backus-Naur Form",
+    "extensions": [
+      "abnf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "abnf"
+  },
+  {
+    "id": "agda",
+    "displayName": "Agda",
+    "extensions": [
+      "agda"
+    ],
+    "filenames": [],
+    "highlightLanguage": "agda"
+  },
+  {
+    "id": "applescript",
+    "displayName": "AppleScript",
+    "extensions": [
+      "applescript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "applescript"
+  },
+  {
+    "id": "arc",
+    "displayName": "Arc",
+    "extensions": [
+      "arc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "arc"
+  },
+  {
+    "id": "arm",
+    "displayName": "ARM",
+    "extensions": [
+      "arm"
+    ],
+    "filenames": [],
+    "highlightLanguage": "arm"
+  },
+  {
+    "id": "as400cl",
+    "displayName": "AS/400 CL",
+    "extensions": [
+      "as400cl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "as400cl"
+  },
+  {
+    "id": "asciidoc",
+    "displayName": "AsciiDoc",
+    "extensions": [
+      "asciidoc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "asciidoc"
+  },
+  {
+    "id": "avenue",
+    "displayName": "Avenue",
+    "extensions": [
+      "avenue"
+    ],
+    "filenames": [],
+    "highlightLanguage": "avenue"
+  },
+  {
+    "id": "bbcode",
+    "displayName": "BBcode",
+    "extensions": [
+      "bbcode"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bbcode"
+  },
+  {
+    "id": "bcpl",
+    "displayName": "BCPL",
+    "extensions": [
+      "bcpl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bcpl"
+  },
+  {
+    "id": "bms",
+    "displayName": "BM Script",
+    "extensions": [
+      "bms"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bms"
+  },
+  {
+    "id": "bnf",
+    "displayName": "Backus-Naur Form",
+    "extensions": [
+      "bnf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bnf"
+  },
+  {
+    "id": "boo",
+    "displayName": "Boo",
+    "extensions": [
+      "boo"
+    ],
+    "filenames": [],
+    "highlightLanguage": "boo"
+  },
+  {
+    "id": "ceylon",
+    "displayName": "Ceylon",
+    "extensions": [
+      "ceylon"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ceylon"
+  },
+  {
+    "id": "chpl",
+    "displayName": "Chapel",
+    "extensions": [
+      "chpl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "chpl"
+  },
+  {
+    "id": "clipper",
+    "displayName": "Clipper",
+    "extensions": [
+      "clipper"
+    ],
+    "filenames": [],
+    "highlightLanguage": "clipper"
+  },
+  {
+    "id": "clp",
+    "displayName": "Clips",
+    "extensions": [
+      "clp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "clp"
+  },
+  {
+    "id": "coffeescript",
+    "displayName": "Coffeescript",
+    "extensions": [
+      "coffeescript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "coffeescript"
+  },
+  {
+    "id": "crk",
+    "displayName": "Crack",
+    "extensions": [
+      "crk"
+    ],
+    "filenames": [],
+    "highlightLanguage": "crk"
+  },
+  {
+    "id": "cs_block_regex",
+    "displayName": "Coffeescript Block Regex",
+    "extensions": [
+      "cs_block_regex"
+    ],
+    "filenames": [],
+    "highlightLanguage": "cs_block_regex"
+  },
+  {
+    "id": "critic",
+    "displayName": "CriticMarkup",
+    "extensions": [
+      "critic"
+    ],
+    "filenames": [],
+    "highlightLanguage": "critic"
+  },
+  {
+    "id": "css",
+    "displayName": "CSS",
+    "extensions": [
+      "css"
+    ],
+    "filenames": [],
+    "highlightLanguage": "css"
+  },
+  {
+    "id": "d",
+    "displayName": "D",
+    "extensions": [
+      "d"
+    ],
+    "filenames": [],
+    "highlightLanguage": "d"
+  },
+  {
+    "id": "dart",
+    "displayName": "Dart",
+    "extensions": [
+      "dart"
+    ],
+    "filenames": [],
+    "highlightLanguage": "dart"
+  },
+  {
+    "id": "dockerfile",
+    "displayName": "Dockerfile",
+    "extensions": [
+      "dockerfile"
+    ],
+    "filenames": [],
+    "highlightLanguage": "dockerfile"
+  },
+  {
+    "id": "dylan",
+    "displayName": "Dylan",
+    "extensions": [
+      "dylan"
+    ],
+    "filenames": [],
+    "highlightLanguage": "dylan"
+  },
+  {
+    "id": "ebnf",
+    "displayName": "Extended Backus-Naur Form",
+    "extensions": [
+      "ebnf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ebnf"
+  },
+  {
+    "id": "ebnf2",
+    "displayName": "EBNF2",
+    "extensions": [
+      "ebnf2"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ebnf2"
+  },
+  {
+    "id": "email",
+    "displayName": "E-Mail treated as Markup",
+    "extensions": [
+      "email"
+    ],
+    "filenames": [],
+    "highlightLanguage": "email"
+  },
+  {
+    "id": "erb",
+    "displayName": "ERB Templates",
+    "extensions": [
+      "erb"
+    ],
+    "filenames": [],
+    "highlightLanguage": "erb"
+  },
+  {
+    "id": "excel",
+    "displayName": "Excel Formulas",
+    "extensions": [
+      "excel"
+    ],
+    "filenames": [],
+    "highlightLanguage": "excel"
+  },
+  {
+    "id": "fea",
+    "displayName": "OpenType Feature File",
+    "extensions": [
+      "fea"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fea"
+  },
+  {
+    "id": "fish",
+    "displayName": "Fish",
+    "extensions": [
+      "fish"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fish"
+  },
+  {
+    "id": "frink",
+    "displayName": "Frink",
+    "extensions": [
+      "frink"
+    ],
+    "filenames": [],
+    "highlightLanguage": "frink"
+  },
+  {
+    "id": "fstab",
+    "displayName": "fstab config file",
+    "extensions": [
+      "fstab"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fstab"
+  },
+  {
+    "id": "fx",
+    "displayName": "Java FX",
+    "extensions": [
+      "fx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "fx"
+  },
+  {
+    "id": "gdb",
+    "displayName": "gdb",
+    "extensions": [
+      "gdb"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gdb"
+  },
+  {
+    "id": "go",
+    "displayName": "Go",
+    "extensions": [
+      "go"
+    ],
+    "filenames": [],
+    "highlightLanguage": "go"
+  },
+  {
+    "id": "haml",
+    "displayName": "Haml (HTML Abstraction Markup Language)",
+    "extensions": [
+      "haml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "haml"
+  },
+  {
+    "id": "hare",
+    "displayName": "Hare",
+    "extensions": [
+      "hare"
+    ],
+    "filenames": [],
+    "highlightLanguage": "hare"
+  },
+  {
+    "id": "hcl",
+    "displayName": "Hecl",
+    "extensions": [
+      "hcl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "hcl"
+  },
+  {
+    "id": "httpd",
+    "displayName": "Apache Config",
+    "extensions": [
+      "httpd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "httpd"
+  },
+  {
+    "id": "idl",
+    "displayName": "IDL",
+    "extensions": [
+      "idl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "idl"
+  },
+  {
+    "id": "idlang",
+    "displayName": "Interactive Data Language",
+    "extensions": [
+      "idlang"
+    ],
+    "filenames": [],
+    "highlightLanguage": "idlang"
+  },
+  {
+    "id": "inc_luatex",
+    "displayName": "Lua (for LuaTeX)",
+    "extensions": [
+      "inc_luatex"
+    ],
+    "filenames": [],
+    "highlightLanguage": "inc_luatex"
+  },
+  {
+    "id": "io",
+    "displayName": "IO",
+    "extensions": [
+      "io"
+    ],
+    "filenames": [],
+    "highlightLanguage": "io"
+  },
+  {
+    "id": "javascript",
+    "displayName": "Javascript",
+    "extensions": [
+      "javascript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "javascript"
+  },
+  {
+    "id": "js_regex",
+    "displayName": "Javascript Regex",
+    "extensions": [
+      "js_regex"
+    ],
+    "filenames": [],
+    "highlightLanguage": "js_regex"
+  },
+  {
+    "id": "json",
+    "displayName": "JSON",
+    "extensions": [
+      "json"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json"
+  },
+  {
+    "id": "jsp",
+    "displayName": "JavaServer Pages",
+    "extensions": [
+      "jsp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "jsp"
+  },
+  {
+    "id": "jsx",
+    "displayName": "JSX",
+    "extensions": [
+      "jsx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "jsx"
+  },
+  {
+    "id": "ldif",
+    "displayName": "LDAP",
+    "extensions": [
+      "ldif"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ldif"
+  },
+  {
+    "id": "less",
+    "displayName": "LESS",
+    "extensions": [
+      "less"
+    ],
+    "filenames": [],
+    "highlightLanguage": "less"
+  },
+  {
+    "id": "lhs",
+    "displayName": "Haskell LHS",
+    "extensions": [
+      "lhs"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lhs"
+  },
+  {
+    "id": "lotos",
+    "displayName": "Lotos",
+    "extensions": [
+      "lotos"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lotos"
+  },
+  {
+    "id": "lua",
+    "displayName": "Lua",
+    "extensions": [
+      "lua"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lua"
+  },
+  {
+    "id": "makefile",
+    "displayName": "Make",
+    "extensions": [
+      "makefile"
+    ],
+    "filenames": [],
+    "highlightLanguage": "makefile"
+  },
+  {
+    "id": "mercury",
+    "displayName": "Mercury",
+    "extensions": [
+      "mercury"
+    ],
+    "filenames": [],
+    "highlightLanguage": "mercury"
+  },
+  {
+    "id": "miranda",
+    "displayName": "Miranda",
+    "extensions": [
+      "miranda"
+    ],
+    "filenames": [],
+    "highlightLanguage": "miranda"
+  },
+  {
+    "id": "moon",
+    "displayName": "MoonScript",
+    "extensions": [
+      "moon"
+    ],
+    "filenames": [],
+    "highlightLanguage": "moon"
+  },
+  {
+    "id": "ms",
+    "displayName": "MaxScript",
+    "extensions": [
+      "ms"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ms"
+  },
+  {
+    "id": "mssql",
+    "displayName": "MSSQL",
+    "extensions": [
+      "mssql"
+    ],
+    "filenames": [],
+    "highlightLanguage": "mssql"
+  },
+  {
+    "id": "mxml",
+    "displayName": "Magic eXtensible Markup",
+    "extensions": [
+      "mxml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "mxml"
+  },
+  {
+    "id": "nt",
+    "displayName": "N-Triples, Turtle, SPARQL",
+    "extensions": [
+      "ttl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nt"
+  },
+  {
+    "id": "nbc",
+    "displayName": "NeXT Byte Codes",
+    "extensions": [
+      "nbc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nbc"
+  },
+  {
+    "id": "nginx",
+    "displayName": "Nginx configuration",
+    "extensions": [
+      "nginx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nginx"
+  },
+  {
+    "id": "nice",
+    "displayName": "Nice",
+    "extensions": [
+      "nice"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nice"
+  },
+  {
+    "id": "nim",
+    "displayName": "Nim",
+    "extensions": [
+      "nim"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nim"
+  },
+  {
+    "id": "nix",
+    "displayName": "Nix Expression Language",
+    "extensions": [
+      "nix"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nix"
+  },
+  {
+    "id": "nxc",
+    "displayName": "Not eXactly C",
+    "extensions": [
+      "nxc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "nxc"
+  },
+  {
+    "id": "objc",
+    "displayName": "Objective C",
+    "extensions": [
+      "objc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "objc"
+  },
+  {
+    "id": "octave",
+    "displayName": "Octave",
+    "extensions": [
+      "octave"
+    ],
+    "filenames": [],
+    "highlightLanguage": "octave"
+  },
+  {
+    "id": "oorexx",
+    "displayName": "OpenObjectRexx",
+    "extensions": [
+      "oorexx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "oorexx"
+  },
+  {
+    "id": "org",
+    "displayName": "Emacs Org-Mode",
+    "extensions": [
+      "org"
+    ],
+    "filenames": [],
+    "highlightLanguage": "org"
+  },
+  {
+    "id": "os",
+    "displayName": "Object Script",
+    "extensions": [
+      "os"
+    ],
+    "filenames": [],
+    "highlightLanguage": "os"
+  },
+  {
+    "id": "oz",
+    "displayName": "Oz",
+    "extensions": [
+      "oz"
+    ],
+    "filenames": [],
+    "highlightLanguage": "oz"
+  },
+  {
+    "id": "pas",
+    "displayName": "Pascal",
+    "extensions": [
+      "pas"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pas"
+  },
+  {
+    "id": "pdf",
+    "displayName": "Portable Document Format",
+    "extensions": [
+      "pdf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pdf"
+  },
+  {
+    "id": "plperl",
+    "displayName": "PL/Perl",
+    "extensions": [
+      "plperl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plperl"
+  },
+  {
+    "id": "plpython",
+    "displayName": "PL/Python",
+    "extensions": [
+      "plpython"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plpython"
+  },
+  {
+    "id": "pltcl",
+    "displayName": "PL/Tcl",
+    "extensions": [
+      "pltcl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pltcl"
+  },
+  {
+    "id": "po",
+    "displayName": "PO translation",
+    "extensions": [
+      "po"
+    ],
+    "filenames": [],
+    "highlightLanguage": "po"
+  },
+  {
+    "id": "pony",
+    "displayName": "Pony",
+    "extensions": [
+      "pony"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pony"
+  },
+  {
+    "id": "pov",
+    "displayName": "POV-Ray",
+    "extensions": [
+      "pov"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pov"
+  },
+  {
+    "id": "powershell",
+    "displayName": "Microsoft PowerShell",
+    "extensions": [
+      "powershell"
+    ],
+    "filenames": [],
+    "highlightLanguage": "powershell"
+  },
+  {
+    "id": "purs",
+    "displayName": "purescript",
+    "extensions": [
+      "purescript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "purs"
+  },
+  {
+    "id": "ps",
+    "displayName": "PostScript",
+    "extensions": [
+      "ps"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ps"
+  },
+  {
+    "id": "psl",
+    "displayName": "PATROL",
+    "extensions": [
+      "psl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "psl"
+  },
+  {
+    "id": "pure",
+    "displayName": "Pure",
+    "extensions": [
+      "pure"
+    ],
+    "filenames": [],
+    "highlightLanguage": "pure"
+  },
+  {
+    "id": "q",
+    "displayName": "Qore",
+    "extensions": [
+      "q"
+    ],
+    "filenames": [],
+    "highlightLanguage": "q"
+  },
+  {
+    "id": "qml",
+    "displayName": "QML",
+    "extensions": [
+      "qml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "qml"
+  },
+  {
+    "id": "qu",
+    "displayName": "Qu",
+    "extensions": [
+      "qu"
+    ],
+    "filenames": [],
+    "highlightLanguage": "qu"
+  },
+  {
+    "id": "r",
+    "displayName": "R",
+    "extensions": [
+      "r"
+    ],
+    "filenames": [],
+    "highlightLanguage": "r"
+  },
+  {
+    "id": "rebol",
+    "displayName": "Rebol",
+    "extensions": [
+      "rebol"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rebol"
+  },
+  {
+    "id": "rego",
+    "displayName": "Rego",
+    "extensions": [
+      "rego"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rego"
+  },
+  {
+    "id": "rnc",
+    "displayName": "Relax NG",
+    "extensions": [
+      "rnc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rnc"
+  },
+  {
+    "id": "rpg",
+    "displayName": "RPG",
+    "extensions": [
+      "rpg"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rpg"
+  },
+  {
+    "id": "rpl",
+    "displayName": "RPL Programming Language",
+    "extensions": [
+      "rpl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rpl"
+  },
+  {
+    "id": "rst",
+    "displayName": "reStructured Text",
+    "extensions": [
+      "rst"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rst"
+  },
+  {
+    "id": "rust",
+    "displayName": "Rust",
+    "extensions": [
+      "rust"
+    ],
+    "filenames": [],
+    "highlightLanguage": "rust"
+  },
+  {
+    "id": "s",
+    "displayName": "PowerPC Assembler",
+    "extensions": [
+      "s"
+    ],
+    "filenames": [],
+    "highlightLanguage": "s"
+  },
+  {
+    "id": "sam",
+    "displayName": "Sequence Alignment Map (use with sam_seq.lua plug-in)",
+    "extensions": [
+      "sam"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sam"
+  },
+  {
+    "id": "sas",
+    "displayName": "SAS",
+    "extensions": [
+      "sas"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sas"
+  },
+  {
+    "id": "scad",
+    "displayName": "OpenSCAD",
+    "extensions": [
+      "scad"
+    ],
+    "filenames": [],
+    "highlightLanguage": "scad"
+  },
+  {
+    "id": "scala",
+    "displayName": "Scala",
+    "extensions": [
+      "scala"
+    ],
+    "filenames": [],
+    "highlightLanguage": "scala"
+  },
+  {
+    "id": "scss",
+    "displayName": "SASS/SCSS",
+    "extensions": [
+      "scss"
+    ],
+    "filenames": [],
+    "highlightLanguage": "scss"
+  },
+  {
+    "id": "shellscript",
+    "displayName": "Bash",
+    "extensions": [
+      "shellscript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "shellscript"
+  },
+  {
+    "id": "slim",
+    "displayName": "Slim (experimental)",
+    "extensions": [
+      "slim"
+    ],
+    "filenames": [],
+    "highlightLanguage": "slim"
+  },
+  {
+    "id": "sml",
+    "displayName": "Standard ML",
+    "extensions": [
+      "sml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sml"
+  },
+  {
+    "id": "spec",
+    "displayName": "RPM Spec",
+    "extensions": [
+      "spec"
+    ],
+    "filenames": [],
+    "highlightLanguage": "spec"
+  },
+  {
+    "id": "spn",
+    "displayName": "SPIN SQL",
+    "extensions": [
+      "spn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "spn"
+  },
+  {
+    "id": "sql",
+    "displayName": "PL/SQL",
+    "extensions": [
+      "sql"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sql"
+  },
+  {
+    "id": "styl",
+    "displayName": "Stylus",
+    "extensions": [
+      "styl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "styl"
+  },
+  {
+    "id": "svg",
+    "displayName": "SVG",
+    "extensions": [
+      "svg"
+    ],
+    "filenames": [],
+    "highlightLanguage": "svg"
+  },
+  {
+    "id": "swift",
+    "displayName": "Swift",
+    "extensions": [
+      "swift"
+    ],
+    "filenames": [],
+    "highlightLanguage": "swift"
+  },
+  {
+    "id": "tcsh",
+    "displayName": "TCSH",
+    "extensions": [
+      "tcsh"
+    ],
+    "filenames": [],
+    "highlightLanguage": "tcsh"
+  },
+  {
+    "id": "terraform",
+    "displayName": "Terraform",
+    "extensions": [
+      "terraform"
+    ],
+    "filenames": [],
+    "highlightLanguage": "terraform"
+  },
+  {
+    "id": "toml",
+    "displayName": "TOML",
+    "extensions": [
+      "toml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "toml"
+  },
+  {
+    "id": "tsql",
+    "displayName": "Transact-SQL",
+    "extensions": [
+      "tsql"
+    ],
+    "filenames": [],
+    "highlightLanguage": "tsql"
+  },
+  {
+    "id": "tsx",
+    "displayName": "TSX (TypeScript with React)",
+    "extensions": [
+      "tsx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "tsx"
+  },
+  {
+    "id": "ttcn3",
+    "displayName": "TTCN3",
+    "extensions": [
+      "ttcn3"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ttcn3"
+  },
+  {
+    "id": "typescript",
+    "displayName": "TypeScript",
+    "extensions": [
+      "typescript"
+    ],
+    "filenames": [],
+    "highlightLanguage": "typescript"
+  },
+  {
+    "id": "upc",
+    "displayName": "UPC (and C, technically)",
+    "extensions": [
+      "upc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "upc"
+  },
+  {
+    "id": "vala",
+    "displayName": "Vala",
+    "extensions": [
+      "vala"
+    ],
+    "filenames": [],
+    "highlightLanguage": "vala"
+  },
+  {
+    "id": "vhd",
+    "displayName": "VHDL",
+    "extensions": [
+      "vhd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "vhd"
+  },
+  {
+    "id": "vue",
+    "displayName": "vue.js (beta)",
+    "extensions": [
+      "vue"
+    ],
+    "filenames": [],
+    "highlightLanguage": "vue"
+  },
+  {
+    "id": "wat",
+    "displayName": "Web Assembly Text",
+    "extensions": [
+      "wat"
+    ],
+    "filenames": [],
+    "highlightLanguage": "wat"
+  },
+  {
+    "id": "whiley",
+    "displayName": "Whiley",
+    "extensions": [
+      "whiley"
+    ],
+    "filenames": [],
+    "highlightLanguage": "whiley"
+  },
+  {
+    "id": "wren",
+    "displayName": "Wren",
+    "extensions": [
+      "wren"
+    ],
+    "filenames": [],
+    "highlightLanguage": "wren"
+  },
+  {
+    "id": "xpp",
+    "displayName": "SuperX++",
+    "extensions": [
+      "xpp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xpp"
+  },
+  {
+    "id": "yaiff",
+    "displayName": "Yaiff",
+    "extensions": [
+      "yaiff"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaiff"
+  },
+  {
+    "id": "jam",
+    "displayName": "Jam",
+    "extensions": [
+      "ham"
+    ],
+    "filenames": [],
+    "highlightLanguage": "jam"
+  },
+  {
+    "id": "yang",
+    "displayName": "Yang",
+    "extensions": [
+      "yang"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yang"
+  },
+  {
+    "id": "zig",
+    "displayName": "Zig",
+    "extensions": [
+      "zig"
+    ],
+    "filenames": [],
+    "highlightLanguage": "zig"
+  },
+  {
+    "id": "znn",
+    "displayName": "Zonnon",
+    "extensions": [
+      "znn"
+    ],
+    "filenames": [],
+    "highlightLanguage": "znn"
+  },
+  {
+    "id": "gitignore",
+    "displayName": "Git Ignore",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".gitignore",
+      ".gitexclude"
+    ]
+  },
+  {
+    "id": "gitconfig",
+    "displayName": "Git Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".gitconfig",
+      ".gitattributes",
+      ".gitmodules",
+      ".mailmap",
+      ".gitkeep",
+      ".gitmessage"
+    ]
+  },
+  {
+    "id": "env",
+    "displayName": "Environment",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".env",
+      ".env.local",
+      ".env.development",
+      ".env.production",
+      ".env.staging",
+      ".env.test",
+      ".env.example"
+    ]
+  },
+  {
+    "id": "editorconfig",
+    "displayName": "EditorConfig",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".editorconfig"
+    ]
+  },
+  {
+    "id": "npmrc",
+    "displayName": "Node Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".npmrc",
+      ".nvmrc",
+      ".yarnrc",
+      ".yarnrc.yml",
+      ".pnpmfile.cjs"
+    ]
+  },
+  {
+    "id": "rcfile",
+    "displayName": "Project RC Files",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".prettierrc",
+      ".eslintrc",
+      ".babelrc",
+      ".stylelintrc",
+      ".lintstagedrc",
+      ".commitlintrc",
+      ".npmignore"
+    ]
+  },
+  {
+    "id": "shellrc",
+    "displayName": "Shell Config",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".zshrc",
+      ".zshenv",
+      ".zprofile",
+      ".bashrc",
+      ".bash_profile",
+      ".bash_logout",
+      ".profile",
+      ".zsh_history",
+      ".zsh-theme",
+      ".zsh-update",
+      ".shellcheckrc",
+      ".python_history",
+      ".psql_history"
+    ]
+  },
+  {
+    "id": "vimrc",
+    "displayName": "Vim Config",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".vimrc",
+      ".viminfo"
+    ]
+  },
+  {
+    "id": "dockerignore",
+    "displayName": "Docker Ignore",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".dockerignore"
+    ]
+  }
+]

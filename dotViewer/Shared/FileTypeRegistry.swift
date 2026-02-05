@@ -10,7 +10,7 @@ public final class FileTypeRegistry: @unchecked Sendable {
     private let idToType: [String: SupportedFileType]
 
     private init() {
-        let types = Self.createBuiltInTypes()
+        let types = Self.loadDefaultFileTypes() ?? Self.createLegacyBuiltInTypes()
         builtInTypes = types
 
         var extMap: [String: SupportedFileType] = [:]
@@ -22,7 +22,19 @@ public final class FileTypeRegistry: @unchecked Sendable {
         for type in types {
             idMap[type.id] = type
             for ext in type.extensions {
-                extMap[ext.lowercased()] = type
+                let lowered = ext.lowercased()
+                if extMap[lowered] == nil {
+                    extMap[lowered] = type
+                }
+            }
+            for name in type.filenames {
+                let lowered = name.lowercased()
+                let trimmed = lowered.hasPrefix(".") ? String(lowered.dropFirst()) : lowered
+                if !trimmed.isEmpty {
+                    if extMap[trimmed] == nil {
+                        extMap[trimmed] = type
+                    }
+                }
             }
         }
 
@@ -30,7 +42,141 @@ public final class FileTypeRegistry: @unchecked Sendable {
         idToType = idMap
     }
 
-    private static func createBuiltInTypes() -> [SupportedFileType] {
+    private struct DefaultFileType: Decodable {
+        let id: String
+        let displayName: String
+        let extensions: [String]?
+        let filenames: [String]?
+        let category: String?
+        let highlightLanguage: String?
+    }
+
+    private static func loadDefaultFileTypes() -> [SupportedFileType]? {
+        guard let url = Bundle(for: FileTypeRegistry.self).url(
+            forResource: "DefaultFileTypes",
+            withExtension: "json"
+        ) else {
+            return nil
+        }
+        guard let data = try? Data(contentsOf: url),
+              let decoded = try? JSONDecoder().decode([DefaultFileType].self, from: data)
+        else {
+            return nil
+        }
+
+        return decoded.map { item in
+            let extensions = (item.extensions ?? []).map { $0.lowercased() }
+            let filenames = (item.filenames ?? []).map { $0.lowercased() }
+            let category = resolveCategory(for: item, extensions: extensions, filenames: filenames)
+            let highlight = resolveHighlightLanguage(for: item, extensions: extensions)
+            return SupportedFileType(
+                id: item.id,
+                displayName: item.displayName,
+                extensions: extensions,
+                filenames: filenames,
+                category: category,
+                highlightLanguage: highlight,
+                isSystemUTI: false
+            )
+        }
+    }
+
+    private static func resolveCategory(
+        for item: DefaultFileType,
+        extensions: [String],
+        filenames: [String]
+    ) -> FileTypeCategory {
+        if let raw = item.category?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased(),
+           let match = FileTypeCategory.allCases.first(where: { category in
+               category.rawValue.lowercased() == raw || String(describing: category).lowercased() == raw
+           }) {
+            return match
+        }
+
+        let id = item.id.lowercased()
+        let filenameSet = Set(filenames)
+
+        let dotfileNames: Set<String> = [
+            "gitignore", "gitconfig", "gitattributes", "gitmodules", "gitkeep", "mailmap", "env", "env.local",
+            "env.development", "env.production", "env.staging", "env.test", "editorconfig", "npmrc", "nvmrc",
+            "yarnrc", "dockerignore", "zshrc", "bashrc", "profile", "vimrc", "viminfo", "zshenv"
+        ]
+
+        if filenameSet.contains(where: { $0.hasPrefix(".") }) || dotfileNames.contains(id) {
+            return .dotfiles
+        }
+
+        let shellIds: Set<String> = [
+            "bash", "sh", "zsh", "ksh", "csh", "tcsh", "fish", "shellscript", "powershell", "ps1", "batch", "cmd"
+        ]
+        if shellIds.contains(id) {
+            return .shellAndTerminal
+        }
+
+        let docIds: Set<String> = ["markdown", "rst", "asciidoc", "tex", "latex", "org", "textile"]
+        if docIds.contains(id) {
+            return .documentation
+        }
+
+        let webIds: Set<String> = [
+            "html", "css", "scss", "less", "sass", "vue", "svelte", "astro", "jsx", "tsx", "handlebars", "mustache"
+        ]
+        if webIds.contains(id) {
+            return .webDevelopment
+        }
+
+        let dataIds: Set<String> = [
+            "json", "yaml", "yml", "toml", "xml", "ini", "conf", "properties", "csv", "tsv", "sql", "graphql"
+        ]
+        if dataIds.contains(id) || extensions.contains(where: dataIds.contains) {
+            return .dataFormats
+        }
+
+        let scriptingIds: Set<String> = [
+            "python", "ruby", "perl", "php", "lua", "r", "julia", "elixir", "erlang", "haskell", "clojure"
+        ]
+        if scriptingIds.contains(id) {
+            return .scripting
+        }
+
+        return .systemsLanguages
+    }
+
+    private static func resolveHighlightLanguage(
+        for item: DefaultFileType,
+        extensions: [String]
+    ) -> String {
+        let lower = item.highlightLanguage?.lowercased() ?? item.id.lowercased()
+
+        let aliases: [String: String] = [
+            "sh": "bash",
+            "shell": "bash",
+            "shellscript": "bash",
+            "zsh": "bash",
+            "ksh": "bash",
+            "csh": "bash",
+            "tcsh": "bash",
+            "fish": "bash",
+            "py": "python",
+            "js": "javascript",
+            "jsx": "javascript",
+            "ts": "typescript",
+            "md": "markdown",
+            "yml": "yaml"
+        ]
+
+        if let alias = aliases[lower] {
+            return alias
+        }
+
+        if extensions.contains("mdx") {
+            return "markdown"
+        }
+
+        return lower.isEmpty ? "plaintext" : lower
+    }
+
+    private static func createLegacyBuiltInTypes() -> [SupportedFileType] {
         return [
             // MARK: - Web Development
             SupportedFileType(id: "typescript", displayName: "TypeScript",
@@ -376,6 +522,9 @@ public final class FileTypeRegistry: @unchecked Sendable {
         var grouped: [FileTypeCategory: [SupportedFileType]] = [:]
         for type in builtInTypes {
             grouped[type.category, default: []].append(type)
+        }
+        for key in grouped.keys {
+            grouped[key]?.sort { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
         }
         return grouped
     }

@@ -36,3 +36,18 @@ This file is a lightweight changelog of agent-assisted work in this workspace.
 ## Notes
 - XcodeGen regenerates `dotViewer/App/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, and the `.entitlements` files. Persistent changes for those live in `dotViewer/project.yml`.
 - To keep this file fresh, use the repo-local skill: `.agents/skills/update-agents-md/SKILL.md`.
+
+## 2026-02-05
+
+### Default File Types Expansion
+- Outcome: Added a data-driven default filetypes catalog (SourceCodeSyntaxHighlight mappings + extra dotfiles) and wired the registry to load JSON with filename support.
+- Files: dotViewer/Shared/DefaultFileTypes.json, dotViewer/Shared/FileTypeRegistry.swift, dotViewer/Shared/FileTypeModels.swift, dotViewer/project.yml, scripts/dotviewer-gen-default-filetypes.py, scripts/dotviewer-gen-ql-content-types.sh
+- Verified: (not run) — data file generation only.
+- Follow-ups: Run xcodegen/build to embed the new resource and refresh QL content types if needed.
+
+### Standalone Plan Handoff
+- Outcome: Added a self-contained implementation handoff document for starting a fresh thread without prior chat context.
+- Files: handoff/dotviewer-plan-handoff.md
+- Verified:
+  - test -f handoff/dotviewer-plan-handoff.md && wc -l handoff/dotviewer-plan-handoff.md → pass (185 lines)
+- Follow-ups: Use the starter prompt in the handoff document for new-thread execution.
