@@ -10,22 +10,83 @@ actor ExtensionStatusChecker {
     private init() {}
 
     func checkStatus() async -> ExtensionStatus {
-        do {
-            let output = try await runPluginkit()
-            return parsePluginkitOutput(output)
-        } catch {
-            return .error(error.localizedDescription)
+        // 1. Check if the appex exists on disk — most reliable in a sandboxed app.
+        if checkViaFilesystem() {
+            // Extension is bundled; try pluginkit to confirm it's not explicitly disabled.
+            if let status = try? await checkViaListing() {
+                return status
+            }
+            // pluginkit unavailable in sandbox — assume enabled since appex is present.
+            return .enabled
         }
+
+        // 2. Try pluginkit directly (works outside sandbox / development builds).
+        if let status = try? await checkViaListing() {
+            return status
+        }
+        if let status = try? await checkViaExtensionInfo() {
+            return status
+        }
+
+        return .disabled
     }
 
-    private func runPluginkit() async throws -> String {
+    /// Check if the appex file exists in the app bundle's PlugIns directory.
+    private func checkViaFilesystem() -> Bool {
+        // Try the standard builtInPlugInsURL first
+        if let pluginsURL = Bundle.main.builtInPlugInsURL {
+            let appexURL = pluginsURL.appendingPathComponent("QuickLookExtension.appex")
+            if FileManager.default.fileExists(atPath: appexURL.path) {
+                return true
+            }
+        }
+
+        // Fallback: construct the path manually from the bundle URL
+        let manualURL = Bundle.main.bundleURL
+            .appendingPathComponent("Contents/PlugIns/QuickLookExtension.appex")
+        return FileManager.default.fileExists(atPath: manualURL.path)
+    }
+
+    /// Check via `pluginkit -m` listing all preview extensions.
+    private func checkViaListing() async throws -> ExtensionStatus? {
+        let output = try await runPluginkit(arguments: ["-m", "-p", "com.apple.quicklook.preview"])
+        let lines = output.components(separatedBy: .newlines)
+
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+            guard trimmed.contains(extensionBundleId) else { continue }
+
+            if trimmed.hasPrefix("-") {
+                return .disabled
+            }
+            // "+" means explicitly enabled; no prefix means system-managed (also enabled)
+            return .enabled
+        }
+
+        return nil
+    }
+
+    /// Check via `pluginkit -e info -i <bundleID>` for a targeted query.
+    private func checkViaExtensionInfo() async throws -> ExtensionStatus? {
+        let output = try await runPluginkit(arguments: ["-e", "info", "-i", extensionBundleId])
+        let trimmed = output.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // If the output contains the bundle ID, the extension is registered
+        if trimmed.contains(extensionBundleId) {
+            return .enabled
+        }
+
+        return nil
+    }
+
+    private func runPluginkit(arguments: [String]) async throws -> String {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/pluginkit")
-        process.arguments = ["-m", "-p", "com.apple.quicklook.preview"]
+        process.arguments = arguments
 
         let pipe = Pipe()
         process.standardOutput = pipe
-        process.standardError = pipe
+        process.standardError = Pipe() // Discard stderr separately
 
         try process.run()
         process.waitUntilExit()
@@ -36,23 +97,6 @@ actor ExtensionStatusChecker {
         }
 
         return output
-    }
-
-    private func parsePluginkitOutput(_ output: String) -> ExtensionStatus {
-        let lines = output.components(separatedBy: .newlines)
-
-        for line in lines {
-            let trimmed = line.trimmingCharacters(in: .whitespaces)
-            guard trimmed.contains(extensionBundleId) else { continue }
-
-            if trimmed.hasPrefix("+") {
-                return .enabled
-            } else if trimmed.hasPrefix("-") {
-                return .disabled
-            }
-        }
-
-        return .disabled
     }
 
     enum PluginkitError: LocalizedError {

@@ -2,11 +2,6 @@
 
 (identifier) @variable
 
-((identifier) @constructor
- (#match? @constructor "^[A-Z]"))
-
-((identifier) @constant
- (#match? @constant "^[A-Z][A-Z_]*$"))
 
 ; Function calls
 
@@ -21,16 +16,26 @@
 
 ; Builtin functions
 
-((call
+(call
   function: (identifier) @function.builtin)
- (#match?
-   @function.builtin
-   "^(abs|all|any|ascii|bin|bool|breakpoint|bytearray|bytes|callable|chr|classmethod|compile|complex|delattr|dict|dir|divmod|enumerate|eval|exec|filter|float|format|frozenset|getattr|globals|hasattr|hash|help|hex|id|input|int|isinstance|issubclass|iter|len|list|locals|map|max|memoryview|min|next|object|oct|open|ord|pow|print|property|range|repr|reversed|round|set|setattr|slice|sorted|staticmethod|str|sum|super|tuple|type|vars|zip|__import__)$"))
+
+; Builtin names
+((identifier) @variable.builtin
+  (#any-of? @variable.builtin "self" "cls"))
 
 ; Function definitions
 
 (function_definition
   name: (identifier) @function)
+
+(parameters
+  (identifier) @parameter)
+(default_parameter
+  name: (identifier) @parameter)
+(typed_parameter
+  (identifier) @parameter)
+(typed_default_parameter
+  name: (identifier) @parameter)
 
 (attribute attribute: (identifier) @property)
 (type (identifier) @type)

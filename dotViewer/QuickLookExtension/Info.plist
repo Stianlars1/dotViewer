@@ -95,6 +95,15 @@
 				<string>com.fishshell.script</string>
 				<string>com.stianlars1.dotviewer.typescript</string>
 				<string>com.stianlars1.dotviewer.env</string>
+				<string>com.stianlars1.dotviewer.batch</string>
+				<string>com.stianlars1.dotviewer.jsx</string>
+				<string>com.stianlars1.dotviewer.fsharp</string>
+				<string>com.stianlars1.dotviewer.vb</string>
+				<string>org.dartlang.dart</string>
+				<string>public.patch-file</string>
+				<string>org.lua</string>
+				<string>public.pascal-source</string>
+				<string>com.apple.applescript.script</string>
 			</array>
 		</dict>
 		<key>NSExtensionPointIdentifier</key>

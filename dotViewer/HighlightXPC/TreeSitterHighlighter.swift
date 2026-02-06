@@ -173,6 +173,45 @@ private extension TreeSitterHighlighter {
             ("xml", tree_sitter_xml()),
             ("ini", tree_sitter_ini()),
             ("toml", tree_sitter_toml()),
+            ("c", tree_sitter_c()),
+            ("cpp", tree_sitter_cpp()),
+            ("go", tree_sitter_go()),
+            ("rust", tree_sitter_rust()),
+            ("java", tree_sitter_java()),
+            ("ruby", tree_sitter_ruby()),
+            ("php", tree_sitter_php()),
+            ("lua", tree_sitter_lua()),
+            ("sql", tree_sitter_sql()),
+            ("dockerfile", tree_sitter_dockerfile()),
+            ("r", tree_sitter_r()),
+            ("scala", tree_sitter_scala()),
+            ("kotlin", tree_sitter_kotlin()),
+            ("c_sharp", tree_sitter_c_sharp()),
+            ("perl", tree_sitter_perl()),
+            ("dart", tree_sitter_dart()),
+            ("elixir", tree_sitter_elixir()),
+            ("haskell", tree_sitter_haskell()),
+            ("ocaml", tree_sitter_ocaml()),
+            ("zig", tree_sitter_zig()),
+            ("make", tree_sitter_make()),
+            ("cmake", tree_sitter_cmake()),
+            ("graphql", tree_sitter_graphql()),
+            ("hcl", tree_sitter_hcl()),
+            ("nix", tree_sitter_nix()),
+            ("scss", tree_sitter_scss()),
+            ("regex", tree_sitter_regex()),
+            ("julia", tree_sitter_julia()),
+            ("erlang", tree_sitter_erlang()),
+            ("clojure", tree_sitter_clojure()),
+            ("vim", tree_sitter_vim()),
+            ("fortran", tree_sitter_fortran()),
+            ("pascal", tree_sitter_pascal()),
+            ("d", tree_sitter_d()),
+            ("gleam", tree_sitter_gleam()),
+            ("objc", tree_sitter_objc()),
+            ("wat", tree_sitter_wat()),
+            ("fish", tree_sitter_fish()),
+            ("awk", tree_sitter_awk()),
         ]
 
         for (id, language) in languages {
@@ -408,7 +447,7 @@ private extension TreeSitterHighlighter {
     }
 
     static func loadQuery(named name: String) -> String? {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "scm", subdirectory: "TreeSitterQueries"),
+        guard let url = Bundle.main.url(forResource: name, withExtension: "scm"),
               let data = try? Data(contentsOf: url)
         else { return nil }
         return String(data: data, encoding: .utf8)
@@ -493,30 +532,26 @@ private extension TreeSitterHighlighter {
     static func mapCaptureToClass(_ name: String) -> String {
         let lower = name.lowercased()
 
-        if lower.contains("comment") {
-            return "tok-comment"
-        }
-        if lower.contains("string") || lower.contains("regex") {
-            return "tok-string"
-        }
-        if lower.contains("number") || lower.contains("float") || lower.contains("integer") {
-            return "tok-number"
-        }
-        if lower.contains("keyword") || lower.contains("conditional") || lower.contains("repeat") || lower.contains("operator") {
-            return "tok-keyword"
-        }
-        if lower.contains("type") || lower.contains("class") || lower.contains("struct") {
-            return "tok-type"
-        }
-        if lower.contains("function") || lower.contains("method") || lower.contains("call") {
-            return "tok-function"
-        }
-        if lower.contains("property") || lower.contains("field") || lower.contains("variable") {
-            return "tok-property"
-        }
-        if lower.contains("constant") || lower.contains("boolean") {
-            return "tok-constant"
-        }
+        // Specific matchers first — order matters because broad matchers below
+        // would otherwise swallow compound captures like @variable.builtin.
+        if lower.contains("tag") && !lower.contains("punctuation") { return "tok-tag" }
+        if lower.contains("attribute") || lower.contains("decorator") { return "tok-attribute" }
+        if lower.contains("escape") || lower.contains("character.special") { return "tok-escape" }
+        if lower.contains("builtin") { return "tok-builtin" }
+        if lower.contains("namespace") || lower.contains("module") { return "tok-namespace" }
+        if lower.contains("parameter") { return "tok-parameter" }
+
+        // Broad matchers
+        if lower.contains("comment") { return "tok-comment" }
+        if lower.contains("string") || lower.contains("regex") { return "tok-string" }
+        if lower.contains("number") || lower.contains("float") || lower.contains("integer") { return "tok-number" }
+        if lower.contains("keyword") || lower.contains("conditional") || lower.contains("repeat")
+            || lower.contains("operator") { return "tok-keyword" }
+        if lower.contains("type") || lower.contains("class") || lower.contains("struct") { return "tok-type" }
+        if lower.contains("function") || lower.contains("method") || lower.contains("call") { return "tok-function" }
+        if lower.contains("property") || lower.contains("field") || lower.contains("variable") { return "tok-property" }
+        if lower.contains("constant") || lower.contains("boolean") { return "tok-constant" }
+        if lower.contains("punctuation") { return "tok-punctuation" }
 
         return "tok-identifier"
     }

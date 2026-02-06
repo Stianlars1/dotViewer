@@ -97,9 +97,43 @@ public final class FileTypeRegistry: @unchecked Sendable {
         let filenameSet = Set(filenames)
 
         let dotfileNames: Set<String> = [
-            "gitignore", "gitconfig", "gitattributes", "gitmodules", "gitkeep", "mailmap", "env", "env.local",
-            "env.development", "env.production", "env.staging", "env.test", "editorconfig", "npmrc", "nvmrc",
-            "yarnrc", "dockerignore", "zshrc", "bashrc", "profile", "vimrc", "viminfo", "zshenv"
+            // Git
+            "gitignore", "gitconfig", "gitattributes", "gitmodules", "gitkeep", "mailmap", "git-extra",
+            // Env
+            "env", "env.local", "env.development", "env.production", "env.staging", "env.test", "env-extra",
+            // Editor
+            "editorconfig",
+            // Node/Package managers
+            "npmrc", "nvmrc", "yarnrc",
+            // Docker/Container
+            "dockerignore",
+            // Shell
+            "shellrc", "shell-profile", "zshrc", "bashrc", "profile", "zshenv",
+            // Vim
+            "vimrc", "viminfo",
+            // Terminal
+            "inputrc", "dircolors", "hushlogin", "xresources", "screenrc", "tmux-conf",
+            // Dev tools - ignore files
+            "dev-ignore",
+            // Dev configs
+            "rcfile", "browserslistrc", "flowconfig", "watchmanconfig",
+            "swiftlint", "swiftformat", "clang-config", "rustfmt", "rubocop",
+            "python-lint", "pre-commit",
+            "commitlint-json", "commitlint-yaml", "nojekyll", "version-files", "terraform-lock",
+            // RC file variants
+            "babelrc-js", "babelrc-json", "rc-yaml",
+            // macOS/Network
+            "curlrc", "wgetrc", "netrc", "cfusertextencoding", "gemrc", "irbrc",
+            // SSH
+            "ssh-config",
+            // Markdown/Husky
+            "markdownlint", "husky",
+            // Env extra
+            "env-extra",
+            // Chained RC base names
+            "swcrc", "nycrc", "releaserc",
+            // CI
+            "travis", "circleci"
         ]
 
         if filenameSet.contains(where: { $0.hasPrefix(".") }) || dotfileNames.contains(id) {
@@ -149,6 +183,7 @@ public final class FileTypeRegistry: @unchecked Sendable {
         let lower = item.highlightLanguage?.lowercased() ?? item.id.lowercased()
 
         let aliases: [String: String] = [
+            // Shell variants → bash grammar
             "sh": "bash",
             "shell": "bash",
             "shellscript": "bash",
@@ -156,13 +191,42 @@ public final class FileTypeRegistry: @unchecked Sendable {
             "ksh": "bash",
             "csh": "bash",
             "tcsh": "bash",
-            "fish": "bash",
+            // Common short names
             "py": "python",
             "js": "javascript",
             "jsx": "javascript",
             "ts": "typescript",
             "md": "markdown",
-            "yml": "yaml"
+            "yml": "yaml",
+            // JSON highlightLanguage → tree-sitter grammar key
+            "csharp": "c_sharp",
+            "vimscript": "vim",
+            "docker": "dockerfile",
+            "fortran77": "fortran",
+            "fortran90": "fortran",
+            "makefile": "make",
+            "pas": "pascal",
+            "conf": "ini",
+            // Infrastructure / config
+            "terraform": "hcl",
+            "svg": "xml",
+            "bat": "bash",
+            "delphi": "pascal",
+            "lhs": "haskell",
+            "vue": "html",
+            "haml": "html",
+            "erb": "html",
+            // Cross-language aliases (similar-enough syntax)
+            "less": "css",
+            "sass": "scss",
+            "styl": "css",
+            "mssql": "sql",
+            "tsql": "sql",
+            "crystal": "ruby",
+            "gdscript": "python",
+            "lisp": "clojure",
+            "coffeescript": "javascript",
+            "solidity": "javascript",
         ]
 
         if let alias = aliases[lower] {
@@ -368,6 +432,68 @@ public final class FileTypeRegistry: @unchecked Sendable {
             SupportedFileType(id: "npmrc", displayName: "NPM Config",
                               extensions: ["npmrc", "nvmrc", "yarnrc"],
                               category: .dotfiles, highlightLanguage: "ini", isSystemUTI: false),
+            SupportedFileType(id: "shellrc", displayName: "Shell Config",
+                              extensions: [], filenames: [".zshrc", ".zshenv", ".zprofile", ".bashrc", ".bash_profile", ".bash_logout", ".profile"],
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "shell-profile", displayName: "Shell Profile",
+                              extensions: [], filenames: [".profile", ".login", ".logout"],
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "tmux-conf", displayName: "tmux Config",
+                              extensions: [], filenames: [".tmux.conf"],
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "dockerignore", displayName: "Docker Ignore",
+                              extensions: [], filenames: [".dockerignore", ".containerignore"],
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "dev-ignore", displayName: "Dev Ignore Files",
+                              extensions: [], filenames: [".prettierignore", ".eslintignore", ".stylelintignore"],
+                              category: .dotfiles, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "version-files", displayName: "Version Files",
+                              extensions: [], filenames: [".ruby-version", ".python-version", ".node-version", ".nvmrc", ".tool-versions"],
+                              category: .dotfiles, highlightLanguage: "plaintext", isSystemUTI: false),
+            SupportedFileType(id: "vimrc", displayName: "Vim Config",
+                              extensions: [], filenames: [".vimrc", ".viminfo"],
+                              category: .dotfiles, highlightLanguage: "plaintext", isSystemUTI: false),
+
+            // MARK: - Common Config Filenames
+            SupportedFileType(id: "makefile-file", displayName: "Makefile",
+                              extensions: [], filenames: ["Makefile", "GNUmakefile", "makefile"],
+                              category: .dataFormats, highlightLanguage: "makefile", isSystemUTI: false),
+            SupportedFileType(id: "dockerfile-file", displayName: "Dockerfile",
+                              extensions: [], filenames: ["Dockerfile", "Containerfile"],
+                              category: .dataFormats, highlightLanguage: "dockerfile", isSystemUTI: false),
+            SupportedFileType(id: "gemfile-file", displayName: "Gemfile",
+                              extensions: [], filenames: ["Gemfile", "Rakefile", "Vagrantfile", "Brewfile"],
+                              category: .dataFormats, highlightLanguage: "ruby", isSystemUTI: false),
+            SupportedFileType(id: "procfile-file", displayName: "Procfile",
+                              extensions: [], filenames: ["Procfile"],
+                              category: .dataFormats, highlightLanguage: "bash", isSystemUTI: false),
+            SupportedFileType(id: "license-file", displayName: "License",
+                              extensions: [], filenames: ["LICENSE", "LICENSE.md", "LICENSE.txt", "COPYING"],
+                              category: .documentation, highlightLanguage: "plaintext", isSystemUTI: false),
+            SupportedFileType(id: "changelog-file", displayName: "Changelog",
+                              extensions: [], filenames: ["CHANGELOG", "CHANGELOG.md"],
+                              category: .documentation, highlightLanguage: "markdown", isSystemUTI: false),
+            SupportedFileType(id: "authors-file", displayName: "Authors",
+                              extensions: [], filenames: ["AUTHORS", "CONTRIBUTORS"],
+                              category: .documentation, highlightLanguage: "plaintext", isSystemUTI: false),
+            SupportedFileType(id: "go-mod-file", displayName: "Go Module",
+                              extensions: [], filenames: ["go.mod", "go.sum"],
+                              category: .dataFormats, highlightLanguage: "go", isSystemUTI: false),
+            SupportedFileType(id: "cargo-file", displayName: "Cargo Config",
+                              extensions: [], filenames: ["Cargo.toml", "Cargo.lock"],
+                              category: .dataFormats, highlightLanguage: "toml", isSystemUTI: false),
+            SupportedFileType(id: "package-json-file", displayName: "Package JSON",
+                              extensions: [], filenames: ["package.json", "package-lock.json"],
+                              category: .dataFormats, highlightLanguage: "json", isSystemUTI: false),
+            SupportedFileType(id: "tsconfig-file", displayName: "TypeScript Config",
+                              extensions: [], filenames: ["tsconfig.json", "jsconfig.json"],
+                              category: .dataFormats, highlightLanguage: "json", isSystemUTI: false),
+            SupportedFileType(id: "requirements-file", displayName: "Python Requirements",
+                              extensions: [], filenames: ["requirements.txt"],
+                              category: .dataFormats, highlightLanguage: "plaintext", isSystemUTI: false),
+            SupportedFileType(id: "codeowners", displayName: "CODEOWNERS",
+                              extensions: [], filenames: ["CODEOWNERS"],
+                              category: .dataFormats, highlightLanguage: "plaintext", isSystemUTI: false),
 
             // MARK: - Backup & Temp Files
             SupportedFileType(id: "backup", displayName: "Backup File",

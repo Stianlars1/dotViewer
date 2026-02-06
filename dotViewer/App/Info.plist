@@ -35,6 +35,7 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cts</string>
+					<string>ts</string>
 				</array>
 			</dict>
 		</dict>
@@ -52,6 +53,81 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>env</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+				<string>public.script</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Windows Batch Script</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.batch</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bat</string>
+					<string>cmd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JavaScript JSX Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.jsx</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>jsx</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>F# Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.fsharp</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fs</string>
+					<string>fsx</string>
+					<string>fsi</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Visual Basic Source</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vb</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vb</string>
 				</array>
 			</dict>
 		</dict>

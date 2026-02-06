@@ -52,6 +52,11 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "showLineNumbers") } }
     }
 
+    public var wordWrap: Bool {
+        get { lock.withLock { defaults.object(forKey: "wordWrap") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "wordWrap") } }
+    }
+
     // MARK: - Preview Limits
 
     public var maxFileSizeBytes: Int {

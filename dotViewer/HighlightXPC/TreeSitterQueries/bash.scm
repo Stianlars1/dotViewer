@@ -50,7 +50,4 @@
   "|"
 ] @operator
 
-(
-  (command (_) @constant)
-  (#match? @constant "^-")
-)
+(command (_) @constant)

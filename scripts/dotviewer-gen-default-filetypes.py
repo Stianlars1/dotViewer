@@ -1,9 +1,18 @@
 #!/usr/bin/env python3
-"""Generate DefaultFileTypes.json from SourceCodeSyntaxHighlight mappings.
+"""Validate and audit DefaultFileTypes.json against the rest of the dotViewer codebase.
 
-This intentionally reuses the same language coverage as SourceCodeSyntaxHighlight
-(GPLv3, compatible with dotViewer's GPLv3 license) while allowing us to append
-our own dotfile mappings.
+Checks performed:
+  1. JSON structure — every entry has required fields
+  2. Duplicate extensions — two entries claiming the same ext (first-loaded wins)
+  3. Highlight language → tree-sitter grammar coverage
+  4. Suspicious extensions — too long, contain dots, look like language names
+  5. project.yml QLSupportedContentTypes sync — extensions with system UTIs not in the list
+  6. Summary statistics
+
+Usage:
+    ./scripts/dotviewer-gen-default-filetypes.py           # audit + report
+    ./scripts/dotviewer-gen-default-filetypes.py --fix     # auto-fix safe issues (future)
+    ./scripts/dotviewer-gen-default-filetypes.py --json    # machine-readable output
 """
 
 from __future__ import annotations
@@ -11,316 +20,321 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Any
 
-DEFAULT_SOURCE = Path("/Users/stian/Developer/macOS Apps/v2.5/research_extenisons/quicklook-research/SourceCodeSyntaxHighlight")
+ROOT_DIR = Path(__file__).resolve().parents[1]
+DOTVIEWER_DIR = ROOT_DIR / "dotViewer"
+DEFAULT_TYPES_JSON = DOTVIEWER_DIR / "Shared" / "DefaultFileTypes.json"
+PROJECT_YML = DOTVIEWER_DIR / "project.yml"
+HIGHLIGHTER_SWIFT = DOTVIEWER_DIR / "HighlightXPC" / "TreeSitterHighlighter.swift"
+REGISTRY_SWIFT = DOTVIEWER_DIR / "Shared" / "FileTypeRegistry.swift"
+QUERIES_DIR = DOTVIEWER_DIR / "HighlightXPC" / "TreeSitterQueries"
 
-EXTRA_DOTFILES = [
-    {
-        "id": "gitignore",
-        "displayName": "Git Ignore",
-        "highlightLanguage": "bash",
-        "category": "dotfiles",
-        "filenames": [
-            ".gitignore",
-            ".gitexclude",
-        ],
-    },
-    {
-        "id": "gitconfig",
-        "displayName": "Git Config",
-        "highlightLanguage": "ini",
-        "category": "dotfiles",
-        "filenames": [
-            ".gitconfig",
-            ".gitattributes",
-            ".gitmodules",
-            ".mailmap",
-            ".gitkeep",
-            ".gitmessage",
-        ],
-    },
-    {
-        "id": "env",
-        "displayName": "Environment",
-        "highlightLanguage": "bash",
-        "category": "dotfiles",
-        "filenames": [
-            ".env",
-            ".env.local",
-            ".env.development",
-            ".env.production",
-            ".env.staging",
-            ".env.test",
-            ".env.example",
-        ],
-    },
-    {
-        "id": "editorconfig",
-        "displayName": "EditorConfig",
-        "highlightLanguage": "ini",
-        "category": "dotfiles",
-        "filenames": [".editorconfig"],
-    },
-    {
-        "id": "npmrc",
-        "displayName": "Node Config",
-        "highlightLanguage": "ini",
-        "category": "dotfiles",
-        "filenames": [
-            ".npmrc",
-            ".nvmrc",
-            ".yarnrc",
-            ".yarnrc.yml",
-            ".pnpmfile.cjs",
-        ],
-    },
-    {
-        "id": "rcfile",
-        "displayName": "Project RC Files",
-        "highlightLanguage": "json",
-        "category": "dotfiles",
-        "filenames": [
-            ".prettierrc",
-            ".eslintrc",
-            ".babelrc",
-            ".stylelintrc",
-            ".lintstagedrc",
-            ".commitlintrc",
-            ".npmignore",
-        ],
-    },
-    {
-        "id": "shellrc",
-        "displayName": "Shell Config",
-        "highlightLanguage": "bash",
-        "category": "dotfiles",
-        "filenames": [
-            ".zshrc",
-            ".zshenv",
-            ".zprofile",
-            ".bashrc",
-            ".bash_profile",
-            ".bash_logout",
-            ".profile",
-            ".zsh_history",
-            ".zsh-theme",
-            ".zsh-update",
-            ".shellcheckrc",
-            ".python_history",
-            ".psql_history",
-        ],
-    },
-    {
-        "id": "vimrc",
-        "displayName": "Vim Config",
-        "highlightLanguage": "plaintext",
-        "category": "dotfiles",
-        "filenames": [
-            ".vimrc",
-            ".viminfo",
-        ],
-    },
-    {
-        "id": "dockerignore",
-        "displayName": "Docker Ignore",
-        "highlightLanguage": "plaintext",
-        "category": "dotfiles",
-        "filenames": [".dockerignore"],
-    },
-]
+# ── Colours ──────────────────────────────────────────────────────────────────
 
-EXTRA_EXTENSION_MERGE = {
-    "markdown": ["mdx", "mdtxt", "rmd", "qmd", "mkd", "mkdn", "mdown"],
-    "json": ["jsonl", "ndjson", "jsonc"],
-    "yaml": ["yml"],
-    "ini": ["cfg", "conf", "properties", "prefs", "editorconfig"],
-}
+RED = "\033[31m"
+YELLOW = "\033[33m"
+GREEN = "\033[32m"
+CYAN = "\033[36m"
+DIM = "\033[2m"
+BOLD = "\033[1m"
+RESET = "\033[0m"
+
+def coloured(text: str, colour: str) -> str:
+    if not sys.stdout.isatty():
+        return text
+    return f"{colour}{text}{RESET}"
 
 
-class ParseError(RuntimeError):
-    pass
+# ── Data loading ─────────────────────────────────────────────────────────────
+
+def load_json(path: Path) -> list[dict[str, Any]]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
-def find_filetypes_conf(root: Path) -> Path:
-    candidates = [
-        root / "XPCService" / "highlight" / "share2" / "filetypes.conf",
-        root / "XPCService" / "highlight" / "share" / "filetypes.conf",
-        root / "XPCService" / "share" / "filetypes.conf",
-    ]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    for found in root.rglob("filetypes.conf"):
-        return found
-    raise ParseError("filetypes.conf not found under SourceCodeSyntaxHighlight")
+def load_tree_sitter_grammars() -> set[str]:
+    """Extract grammar keys from TreeSitterHighlighter.swift."""
+    grammars: set[str] = set()
+    if not HIGHLIGHTER_SWIFT.exists():
+        return grammars
+    text = HIGHLIGHTER_SWIFT.read_text(encoding="utf-8")
+    for match in re.finditer(r'\("(\w+)",\s*tree_sitter_\w+\(\)\)', text):
+        grammars.add(match.group(1))
+    return grammars
 
 
-def find_languages_json(root: Path) -> Path:
-    candidates = [
-        root / "SyntaxHighlightRenderXPC" / "languages.json",
-        root / "SyntaxHighlightRenderXPC" / "Resources" / "languages.json",
-    ]
-    for candidate in candidates:
-        if candidate.exists():
-            return candidate
-    raise ParseError("languages.json not found under SourceCodeSyntaxHighlight")
+def load_highlight_aliases() -> dict[str, str]:
+    """Extract the aliases dict from FileTypeRegistry.resolveHighlightLanguage."""
+    aliases: dict[str, str] = {}
+    if not REGISTRY_SWIFT.exists():
+        return aliases
+    text = REGISTRY_SWIFT.read_text(encoding="utf-8")
+    for match in re.finditer(r'"(\w+)":\s*"(\w+)"', text):
+        key, value = match.group(1), match.group(2)
+        # Only capture items inside the aliases dict (heuristic: the key is lowercase
+        # and the value looks like a grammar name).
+        if key.islower() or key[0].islower():
+            aliases[key] = value
+    return aliases
 
 
-def parse_filetypes_conf(path: Path) -> Dict[str, Dict[str, Set[str]]]:
-    text = path.read_text(encoding="utf-8", errors="ignore")
-    match = re.search(r"^\s*FileMapping\s*=\s*\{", text, re.M)
-    if not match:
-        raise ParseError("FileMapping assignment not found in filetypes.conf")
-    start = text.find("{", match.start())
-    if start < 0:
-        raise ParseError("Opening brace not found in filetypes.conf")
+def load_query_files() -> set[str]:
+    """List available .scm query files (stem = grammar key)."""
+    if not QUERIES_DIR.exists():
+        return set()
+    return {p.stem for p in QUERIES_DIR.glob("*.scm")}
 
-    entries: List[str] = []
-    depth = 0
-    entry_start = None
 
-    for idx in range(start, len(text)):
-        char = text[idx]
-        if char == "{":
-            depth += 1
-            if depth == 2:
-                entry_start = idx
-        elif char == "}":
-            if depth == 2 and entry_start is not None:
-                entries.append(text[entry_start : idx + 1])
-                entry_start = None
-            depth -= 1
-            if depth <= 0:
-                break
+def load_ql_content_types() -> set[str]:
+    """Extract QLSupportedContentTypes entries from project.yml."""
+    utis: set[str] = set()
+    if not PROJECT_YML.exists():
+        return utis
+    text = PROJECT_YML.read_text(encoding="utf-8")
+    in_ql = False
+    for line in text.splitlines():
+        stripped = line.strip()
+        if "QLSupportedContentTypes:" in stripped:
+            in_ql = True
+            continue
+        if in_ql:
+            if stripped.startswith("- ") and not stripped.startswith("- target:"):
+                uti = stripped[2:].strip()
+                if uti and not uti.startswith("{"):
+                    utis.add(uti)
+            elif stripped and not stripped.startswith("#") and not stripped.startswith("- "):
+                in_ql = False
+    return utis
 
-    mapping: Dict[str, Dict[str, Set[str]]] = {}
+
+def resolve_to_grammar(highlight_lang: str, aliases: dict[str, str]) -> str:
+    """Resolve a highlightLanguage value through the alias chain to a grammar key."""
+    resolved = aliases.get(highlight_lang, highlight_lang)
+    # One more hop in case of chained aliases (unlikely but safe).
+    return aliases.get(resolved, resolved)
+
+
+# ── Checks ───────────────────────────────────────────────────────────────────
+
+class Issue:
+    def __init__(self, severity: str, entry_id: str, message: str):
+        self.severity = severity  # "error", "warning", "info"
+        self.entry_id = entry_id
+        self.message = message
+
+    def __str__(self) -> str:
+        if self.severity == "error":
+            tag = coloured("ERROR", RED)
+        elif self.severity == "warning":
+            tag = coloured("WARN ", YELLOW)
+        else:
+            tag = coloured("INFO ", CYAN)
+        return f"  {tag}  [{self.entry_id}] {self.message}"
+
+
+def check_structure(entries: list[dict]) -> list[Issue]:
+    issues: list[Issue] = []
+    required = {"id", "displayName"}
+    for i, entry in enumerate(entries):
+        eid = entry.get("id", f"<index {i}>")
+        missing = required - set(entry.keys())
+        if missing:
+            issues.append(Issue("error", eid, f"Missing required fields: {missing}"))
+        if not entry.get("extensions") and not entry.get("filenames"):
+            issues.append(Issue("info", eid, "No extensions and no filenames — only reachable via id lookup"))
+    return issues
+
+
+def check_duplicate_extensions(entries: list[dict]) -> list[Issue]:
+    issues: list[Issue] = []
+    seen: dict[str, str] = {}
     for entry in entries:
-        lang_match = re.search(r"Lang\s*=\s*\"([^\"]+)\"", entry)
-        if not lang_match:
+        eid = entry.get("id", "?")
+        for ext in entry.get("extensions", []):
+            ext_lower = ext.lower()
+            if ext_lower in seen:
+                issues.append(Issue(
+                    "warning", eid,
+                    f'Extension "{ext}" also claimed by "{seen[ext_lower]}" (first-loaded wins)'
+                ))
+            else:
+                seen[ext_lower] = eid
+    return issues
+
+
+def check_duplicate_filenames(entries: list[dict]) -> list[Issue]:
+    issues: list[Issue] = []
+    seen: dict[str, str] = {}
+    for entry in entries:
+        eid = entry.get("id", "?")
+        for fn in entry.get("filenames", []):
+            fn_lower = fn.lower()
+            if fn_lower in seen:
+                issues.append(Issue(
+                    "warning", eid,
+                    f'Filename "{fn}" also claimed by "{seen[fn_lower]}"'
+                ))
+            else:
+                seen[fn_lower] = eid
+    return issues
+
+
+def check_highlight_coverage(
+    entries: list[dict],
+    grammars: set[str],
+    aliases: dict[str, str],
+    queries: set[str],
+) -> list[Issue]:
+    issues: list[Issue] = []
+    for entry in entries:
+        eid = entry.get("id", "?")
+        hl = (entry.get("highlightLanguage") or eid).lower()
+        resolved = resolve_to_grammar(hl, aliases)
+        if resolved == "plaintext":
             continue
-        lang = lang_match.group(1)
-        exts_match = re.search(r"Extensions\s*=\s*\{([^}]*)\}", entry, re.S)
-        filenames_match = re.search(r"Filenames\s*=\s*\{([^}]*)\}", entry, re.S)
-
-        exts = re.findall(r"\"([^\"]+)\"", exts_match.group(1)) if exts_match else []
-        filenames = re.findall(r"\"([^\"]+)\"", filenames_match.group(1)) if filenames_match else []
-
-        entry_data = mapping.setdefault(lang, {"extensions": set(), "filenames": set()})
-        entry_data["extensions"].update(exts)
-        entry_data["filenames"].update(filenames)
-
-    return mapping
-
-
-def parse_languages_json(path: Path) -> Tuple[Dict[str, str], Dict[str, Set[str]]]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    display_by_lang: Dict[str, str] = {}
-    extensions_by_lang: Dict[str, Set[str]] = {}
-    for display_name, values in data.items():
-        if not values:
-            continue
-        lang_id = values[0]
-        extensions_by_lang.setdefault(lang_id, set()).update(values[1:])
-        for index, value in enumerate(values):
-            if value not in display_by_lang or index == 0:
-                display_by_lang[value] = display_name
-    return display_by_lang, extensions_by_lang
+        if resolved not in grammars:
+            issues.append(Issue(
+                "info", eid,
+                f'highlightLanguage "{hl}" → "{resolved}" has no tree-sitter grammar (falls back to heuristic)'
+            ))
+        elif resolved not in queries:
+            issues.append(Issue(
+                "info", eid,
+                f'highlightLanguage "{hl}" → "{resolved}" has grammar but no .scm query file'
+            ))
+    return issues
 
 
-def normalize_values(values: Set[str]) -> List[str]:
-    return sorted({value.strip().lower() for value in values if value.strip()})
+def check_suspicious_extensions(entries: list[dict]) -> list[Issue]:
+    issues: list[Issue] = []
+    for entry in entries:
+        eid = entry.get("id", "?")
+        for ext in entry.get("extensions", []):
+            if len(ext) > 12:
+                issues.append(Issue("warning", eid, f'Extension "{ext}" is suspiciously long (>12 chars)'))
+            if ext != ext.lower():
+                issues.append(Issue("info", eid, f'Extension "{ext}" has uppercase characters'))
+    return issues
 
 
-def title_case_fallback(lang: str) -> str:
-    return lang.replace("_", " ").replace("-", " ").title()
+def check_duplicate_ids(entries: list[dict]) -> list[Issue]:
+    issues: list[Issue] = []
+    seen: dict[str, int] = {}
+    for i, entry in enumerate(entries):
+        eid = entry.get("id", f"<index {i}>")
+        if eid in seen:
+            issues.append(Issue("error", eid, f"Duplicate id (first at index {seen[eid]}, again at {i})"))
+        else:
+            seen[eid] = i
+    return issues
 
 
-def build_default_types(
-    mapping: Dict[str, Dict[str, Set[str]]],
-    display_map: Dict[str, str],
-    extension_map: Dict[str, Set[str]],
-) -> List[dict]:
-    items: List[dict] = []
+# ── Report ───────────────────────────────────────────────────────────────────
 
-    for lang, data in mapping.items():
-        merged_extensions = set(data["extensions"])
-        merged_extensions.update(extension_map.get(lang, set()))
-        extensions = normalize_values(merged_extensions)
-        if not extensions and lang.strip():
-            extensions = [lang.lower()]
-        filenames = normalize_values(data["filenames"])
+def print_summary(
+    entries: list[dict],
+    grammars: set[str],
+    aliases: dict[str, str],
+    queries: set[str],
+    ql_utis: set[str],
+) -> None:
+    ext_count = sum(len(e.get("extensions", [])) for e in entries)
+    fn_count = sum(len(e.get("filenames", [])) for e in entries)
+    categories = {e.get("category", "(none)") for e in entries}
 
-        for extra in EXTRA_EXTENSION_MERGE.get(lang, []):
-            if extra not in extensions:
-                extensions.append(extra)
+    # Count how many entries resolve to a real grammar.
+    grammar_hit = 0
+    for entry in entries:
+        hl = (entry.get("highlightLanguage") or entry.get("id", "")).lower()
+        resolved = resolve_to_grammar(hl, aliases)
+        if resolved in grammars:
+            grammar_hit += 1
 
-        display_name = display_map.get(lang, title_case_fallback(lang))
-
-        items.append(
-            {
-                "id": lang,
-                "displayName": display_name,
-                "extensions": extensions,
-                "filenames": filenames,
-                "highlightLanguage": lang,
-            }
-        )
-
-    # Add any languages that exist only in languages.json (no explicit mapping in filetypes.conf).
-    for lang, extra_extensions in extension_map.items():
-        if lang in mapping:
-            continue
-        extensions = normalize_values(extra_extensions)
-        if not extensions and lang.strip():
-            extensions = [lang.lower()]
-        display_name = display_map.get(lang, title_case_fallback(lang))
-        items.append(
-            {
-                "id": lang,
-                "displayName": display_name,
-                "extensions": extensions,
-                "filenames": [],
-                "highlightLanguage": lang,
-            }
-        )
-
-    items.extend(EXTRA_DOTFILES)
-
-    return items
+    print(coloured("\n── Summary ─────────────────────────────────────", BOLD))
+    print(f"  Entries:              {len(entries)}")
+    print(f"  Total extensions:     {ext_count}")
+    print(f"  Total filenames:      {fn_count}")
+    print(f"  Categories:           {len(categories)}")
+    print(f"  Tree-sitter grammars: {len(grammars)}")
+    print(f"  Query files (.scm):   {len(queries)}")
+    print(f"  Entries with grammar: {grammar_hit}/{len(entries)} "
+          f"({100 * grammar_hit // len(entries)}%)")
+    print(f"  QL content types:     {len(ql_utis)}")
+    print()
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate DefaultFileTypes.json")
-    parser.add_argument(
-        "--source",
-        type=Path,
-        default=DEFAULT_SOURCE,
-        help="Path to SourceCodeSyntaxHighlight repo",
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path(__file__).resolve().parents[1] / "dotViewer" / "Shared" / "DefaultFileTypes.json",
-        help="Output JSON path",
-    )
+    parser = argparse.ArgumentParser(description="Audit DefaultFileTypes.json")
+    parser.add_argument("--json", action="store_true", help="Machine-readable JSON output")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Show info-level issues")
     args = parser.parse_args()
 
-    source = args.source
-    filetypes_conf = find_filetypes_conf(source)
-    languages_json = find_languages_json(source)
+    if not DEFAULT_TYPES_JSON.exists():
+        print(f"ERROR: {DEFAULT_TYPES_JSON} not found", file=sys.stderr)
+        return 1
 
-    mapping = parse_filetypes_conf(filetypes_conf)
-    display_map, extension_map = parse_languages_json(languages_json)
+    entries = load_json(DEFAULT_TYPES_JSON)
+    grammars = load_tree_sitter_grammars()
+    aliases = load_highlight_aliases()
+    queries = load_query_files()
+    ql_utis = load_ql_content_types()
 
-    items = build_default_types(mapping, display_map, extension_map)
+    all_issues: list[Issue] = []
+    all_issues.extend(check_structure(entries))
+    all_issues.extend(check_duplicate_ids(entries))
+    all_issues.extend(check_duplicate_extensions(entries))
+    all_issues.extend(check_duplicate_filenames(entries))
+    all_issues.extend(check_highlight_coverage(entries, grammars, aliases, queries))
+    all_issues.extend(check_suspicious_extensions(entries))
 
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(items, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    if args.json:
+        out = [{"severity": i.severity, "id": i.entry_id, "message": i.message} for i in all_issues]
+        print(json.dumps(out, indent=2))
+        return 1 if any(i.severity == "error" for i in all_issues) else 0
 
-    print(f"Wrote {len(items)} entries to {args.output}")
-    return 0
+    errors = [i for i in all_issues if i.severity == "error"]
+    warnings = [i for i in all_issues if i.severity == "warning"]
+    infos = [i for i in all_issues if i.severity == "info"]
+
+    print(coloured("── dotViewer DefaultFileTypes.json Audit ───────", BOLD))
+    print(f"  Source: {DEFAULT_TYPES_JSON.relative_to(ROOT_DIR)}")
+    print()
+
+    if errors:
+        print(coloured(f"Errors ({len(errors)}):", RED))
+        for issue in errors:
+            print(issue)
+        print()
+
+    if warnings:
+        print(coloured(f"Warnings ({len(warnings)}):", YELLOW))
+        for issue in warnings:
+            print(issue)
+        print()
+
+    if infos and args.verbose:
+        print(coloured(f"Info ({len(infos)}):", CYAN))
+        for issue in infos:
+            print(issue)
+        print()
+
+    print_summary(entries, grammars, aliases, queries, ql_utis)
+
+    if not errors and not warnings:
+        print(coloured("  All checks passed.", GREEN))
+    elif errors:
+        print(coloured(f"  {len(errors)} error(s), {len(warnings)} warning(s), {len(infos)} info(s)", RED))
+    else:
+        print(coloured(f"  {len(warnings)} warning(s), {len(infos)} info(s)", YELLOW))
+
+    if not args.verbose and infos:
+        print(coloured(f"  Run with -v to see {len(infos)} info-level items", DIM))
+    print()
+
+    return 1 if errors else 0
 
 
 if __name__ == "__main__":

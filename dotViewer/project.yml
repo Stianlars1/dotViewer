@@ -43,6 +43,7 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - cts
+                - ts
           - UTTypeIdentifier: com.stianlars1.dotviewer.env
             UTTypeDescription: Environment Variables
             UTTypeConformsTo:
@@ -50,6 +51,41 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - env
+          - UTTypeIdentifier: com.stianlars1.dotviewer.batch
+            UTTypeDescription: Windows Batch Script
+            UTTypeConformsTo:
+              - public.plain-text
+              - public.script
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bat
+                - cmd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsx
+            UTTypeDescription: JavaScript JSX Source
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fsharp
+            UTTypeDescription: F# Source
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fs
+                - fsx
+                - fsi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vb
+            UTTypeDescription: Visual Basic Source
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vb
     entitlements:
       path: App/dotViewer.entitlements
       properties:
@@ -151,6 +187,15 @@ targets:
               - com.fishshell.script
               - com.stianlars1.dotviewer.typescript
               - com.stianlars1.dotviewer.env
+              - com.stianlars1.dotviewer.batch
+              - com.stianlars1.dotviewer.jsx
+              - com.stianlars1.dotviewer.fsharp
+              - com.stianlars1.dotviewer.vb
+              - org.dartlang.dart
+              - public.patch-file
+              - org.lua
+              - public.pascal-source
+              - com.apple.applescript.script
     entitlements:
       path: QuickLookExtension/QuickLookPreview.entitlements
       properties:
@@ -249,6 +294,15 @@ targets:
               - com.fishshell.script
               - com.stianlars1.dotviewer.typescript
               - com.stianlars1.dotviewer.env
+              - com.stianlars1.dotviewer.batch
+              - com.stianlars1.dotviewer.jsx
+              - com.stianlars1.dotviewer.fsharp
+              - com.stianlars1.dotviewer.vb
+              - org.dartlang.dart
+              - public.patch-file
+              - org.lua
+              - public.pascal-source
+              - com.apple.applescript.script
     entitlements:
       path: QuickLookThumbnailExtension/QuickLookThumbnail.entitlements
       properties:
@@ -329,8 +383,206 @@ targets:
         group: TreeSitterVendor/Grammars/TOML
         excludes:
           - "*.json"
+      - path: TreeSitterVendor/tree-sitter-c/src
+        group: TreeSitterVendor/Grammars/C
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-cpp/src
+        group: TreeSitterVendor/Grammars/CPP
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-go/src
+        group: TreeSitterVendor/Grammars/Go
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-rust/src
+        group: TreeSitterVendor/Grammars/Rust
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-java/src
+        group: TreeSitterVendor/Grammars/Java
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-ruby/src
+        group: TreeSitterVendor/Grammars/Ruby
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-php/php/src
+        group: TreeSitterVendor/Grammars/PHP
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-lua/src
+        group: TreeSitterVendor/Grammars/Lua
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-sql/src
+        group: TreeSitterVendor/Grammars/SQL
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-dockerfile/src
+        group: TreeSitterVendor/Grammars/Dockerfile
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-r/src
+        group: TreeSitterVendor/Grammars/R
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-scala/src
+        group: TreeSitterVendor/Grammars/Scala
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-kotlin/src
+        group: TreeSitterVendor/Grammars/Kotlin
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-c-sharp/src
+        group: TreeSitterVendor/Grammars/CSharp
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-perl/src
+        group: TreeSitterVendor/Grammars/Perl
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-dart/src
+        group: TreeSitterVendor/Grammars/Dart
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-elixir/src
+        group: TreeSitterVendor/Grammars/Elixir
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-haskell/src
+        group: TreeSitterVendor/Grammars/Haskell
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-ocaml/grammars/ocaml/src
+        group: TreeSitterVendor/Grammars/OCaml
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-zig/src
+        group: TreeSitterVendor/Grammars/Zig
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-make/src
+        group: TreeSitterVendor/Grammars/Make
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-cmake/src
+        group: TreeSitterVendor/Grammars/CMake
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-graphql/src
+        group: TreeSitterVendor/Grammars/GraphQL
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-hcl/src
+        group: TreeSitterVendor/Grammars/HCL
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-nix/src
+        group: TreeSitterVendor/Grammars/Nix
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-scss/src
+        group: TreeSitterVendor/Grammars/SCSS
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-regex/src
+        group: TreeSitterVendor/Grammars/Regex
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-julia/src
+        group: TreeSitterVendor/Grammars/Julia
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-erlang/src
+        group: TreeSitterVendor/Grammars/Erlang
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-clojure/src
+        group: TreeSitterVendor/Grammars/Clojure
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-vim/src
+        group: TreeSitterVendor/Grammars/Vim
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-fortran/src
+        group: TreeSitterVendor/Grammars/Fortran
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-pascal/src
+        group: TreeSitterVendor/Grammars/Pascal
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-d/src
+        group: TreeSitterVendor/Grammars/D
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-gleam/src
+        group: TreeSitterVendor/Grammars/Gleam
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-objc/src
+        group: TreeSitterVendor/Grammars/ObjC
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-wasm/wat/src
+        group: TreeSitterVendor/Grammars/WAT
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-fish/src
+        group: TreeSitterVendor/Grammars/Fish
+        excludes:
+          - "*.json"
+          - "binding.cc"
+      - path: TreeSitterVendor/tree-sitter-awk/src
+        group: TreeSitterVendor/Grammars/AWK
+        excludes:
+          - "*.json"
+          - "binding.cc"
     info:
       path: HighlightXPC/Info.plist
+      properties:
+        XPCService:
+          ServiceType: Application
     entitlements:
       path: HighlightXPC/HighlightXPC.entitlements
       properties:
@@ -348,6 +600,7 @@ targets:
         CLANG_CXX_LIBRARY: "libc++"
         DEAD_CODE_STRIPPING: YES
         CLANG_ENABLE_MODULE_VERIFIER: YES
+        USE_HEADERMAP: NO
         OTHER_CFLAGS:
           - "$(inherited)"
           - "-Wno-strict-prototypes"
@@ -360,8 +613,10 @@ targets:
           - "-Wno-macro-redefined"
         HEADER_SEARCH_PATHS:
           - "$(SRCROOT)/TreeSitterVendor/tree-sitter/lib/include"
+          - "$(SRCROOT)/TreeSitterVendor/tree-sitter-compat"
     dependencies:
       - target: Shared
+        embed: true
   Shared:
     type: framework
     platform: macOS

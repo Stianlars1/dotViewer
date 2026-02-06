@@ -14,6 +14,12 @@ public struct ThemePalette: Equatable, Sendable {
     public let property: String
     public let punctuation: String
     public let accent: String
+    public let tag: String
+    public let attribute: String
+    public let escape: String
+    public let builtin: String
+    public let namespace: String
+    public let parameter: String
 
     public static func palette(for theme: String, systemIsDark: Bool) -> ThemePalette {
         switch theme {
@@ -57,7 +63,13 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#4078F2",
         property: "#0184BC",
         punctuation: "#383A42",
-        accent: "#007AFF"
+        accent: "#007AFF",
+        tag: "#E45649",
+        attribute: "#986801",
+        escape: "#0184BC",
+        builtin: "#0184BC",
+        namespace: "#E45649",
+        parameter: "#383A42"
     )
 
     public static let atomOneDark = ThemePalette(
@@ -73,7 +85,13 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#61AFEF",
         property: "#56B6C2",
         punctuation: "#ABB2BF",
-        accent: "#007AFF"
+        accent: "#007AFF",
+        tag: "#E06C75",
+        attribute: "#D19A66",
+        escape: "#56B6C2",
+        builtin: "#56B6C2",
+        namespace: "#E06C75",
+        parameter: "#ABB2BF"
     )
 
     public static let githubLight = ThemePalette(
@@ -85,11 +103,17 @@ public struct ThemePalette: Equatable, Sendable {
         keyword: "#D73A49",
         string: "#032F62",
         number: "#005CC5",
-        type: "#6F42C1",
+        type: "#E36209",
         function: "#6F42C1",
         property: "#005CC5",
         punctuation: "#24292E",
-        accent: "#0969DA"
+        accent: "#0969DA",
+        tag: "#22863A",
+        attribute: "#E36209",
+        escape: "#E36209",
+        builtin: "#005CC5",
+        namespace: "#005CC5",
+        parameter: "#E36209"
     )
 
     public static let githubDark = ThemePalette(
@@ -101,11 +125,17 @@ public struct ThemePalette: Equatable, Sendable {
         keyword: "#FF7B72",
         string: "#A5D6FF",
         number: "#79C0FF",
-        type: "#D2A8FF",
+        type: "#FFA657",
         function: "#D2A8FF",
-        property: "#A5D6FF",
+        property: "#79C0FF",
         punctuation: "#C9D1D9",
-        accent: "#2F81F7"
+        accent: "#2F81F7",
+        tag: "#7EE787",
+        attribute: "#FFA657",
+        escape: "#FFA657",
+        builtin: "#FFA198",
+        namespace: "#FFA198",
+        parameter: "#FFA198"
     )
 
     public static let xcodeLight = ThemePalette(
@@ -118,10 +148,16 @@ public struct ThemePalette: Equatable, Sendable {
         string: "#C41A16",
         number: "#1C00CF",
         type: "#0B4F79",
-        function: "#0B4F79",
+        function: "#326D74",
         property: "#0B4F79",
         punctuation: "#000000",
-        accent: "#007AFF"
+        accent: "#007AFF",
+        tag: "#326D74",
+        attribute: "#AD3DA4",
+        escape: "#C41A16",
+        builtin: "#AD3DA4",
+        namespace: "#0B4F79",
+        parameter: "#000000"
     )
 
     public static let xcodeDark = ThemePalette(
@@ -133,11 +169,17 @@ public struct ThemePalette: Equatable, Sendable {
         keyword: "#C586C0",
         string: "#CE9178",
         number: "#B5CEA8",
-        type: "#4EC9B0",
-        function: "#DCDCAA",
+        type: "#DABAFF",
+        function: "#67B7A4",
         property: "#9CDCFE",
         punctuation: "#E6E6E6",
-        accent: "#0A84FF"
+        accent: "#0A84FF",
+        tag: "#67B7A4",
+        attribute: "#B281EB",
+        escape: "#CE9178",
+        builtin: "#B281EB",
+        namespace: "#4EC9B0",
+        parameter: "#E6E6E6"
     )
 
     public static let solarizedLight = ThemePalette(
@@ -153,7 +195,13 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#268BD2",
         property: "#268BD2",
         punctuation: "#657B83",
-        accent: "#268BD2"
+        accent: "#268BD2",
+        tag: "#268BD2",
+        attribute: "#B58900",
+        escape: "#DC322F",
+        builtin: "#D33682",
+        namespace: "#D33682",
+        parameter: "#657B83"
     )
 
     public static let solarizedDark = ThemePalette(
@@ -169,7 +217,13 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#268BD2",
         property: "#268BD2",
         punctuation: "#839496",
-        accent: "#268BD2"
+        accent: "#268BD2",
+        tag: "#268BD2",
+        attribute: "#B58900",
+        escape: "#DC322F",
+        builtin: "#D33682",
+        namespace: "#D33682",
+        parameter: "#839496"
     )
 
     public static let tokyoNight = ThemePalette(
@@ -185,7 +239,13 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#7AA2F7",
         property: "#7DCFFF",
         punctuation: "#A9B1D6",
-        accent: "#7AA2F7"
+        accent: "#7AA2F7",
+        tag: "#F7768E",
+        attribute: "#FF9E64",
+        escape: "#89DDFF",
+        builtin: "#E0AF68",
+        namespace: "#F7768E",
+        parameter: "#E0AF68"
     )
 
     public static let blackout = ThemePalette(
@@ -201,6 +261,12 @@ public struct ThemePalette: Equatable, Sendable {
         function: "#61AFEF",
         property: "#56B6C2",
         punctuation: "#E0E0E0",
-        accent: "#007AFF"
+        accent: "#007AFF",
+        tag: "#E06C75",
+        attribute: "#D19A66",
+        escape: "#56B6C2",
+        builtin: "#56B6C2",
+        namespace: "#E06C75",
+        parameter: "#E0E0E0"
     )
 }

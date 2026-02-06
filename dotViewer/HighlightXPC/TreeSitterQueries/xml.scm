@@ -91,9 +91,7 @@
 
 (EntityRef) @constant
 
-((EntityRef) @constant.builtin
- (#any-of? @constant.builtin
-   "&amp;" "&lt;" "&gt;" "&quot;" "&apos;"))
+(EntityRef) @constant.builtin
 
 (CharRef) @constant
 

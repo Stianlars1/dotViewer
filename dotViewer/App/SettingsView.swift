@@ -7,6 +7,7 @@ struct SettingsView: View {
     @State private var selectedTheme: String = SharedSettings.shared.selectedTheme
     @State private var fontSize: Double = SharedSettings.shared.fontSize
     @State private var showLineNumbers: Bool = SharedSettings.shared.showLineNumbers
+    @State private var wordWrap: Bool = SharedSettings.shared.wordWrap
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSizeBytes) / 1000.0
     @State private var showTruncationWarning: Bool = SharedSettings.shared.showTruncationWarning
     @State private var showPreviewHeader: Bool = SharedSettings.shared.showFileInfoHeader
@@ -70,6 +71,15 @@ struct SettingsView: View {
                             .onChange(of: showLineNumbers) { _, newValue in
                                 SharedSettings.shared.showLineNumbers = newValue
                             }
+
+                        Toggle("Word Wrap", isOn: $wordWrap)
+                            .onChange(of: wordWrap) { _, newValue in
+                                SharedSettings.shared.wordWrap = newValue
+                            }
+
+                        Text("Wrap long lines instead of horizontal scrolling")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))

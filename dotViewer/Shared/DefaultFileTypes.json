@@ -120,6 +120,7 @@
     "id": "bat",
     "displayName": "MS DOS Batch",
     "extensions": [
+      "bat",
       "cmd"
     ],
     "filenames": [],
@@ -129,6 +130,7 @@
     "id": "c",
     "displayName": "C and C++",
     "extensions": [
+      "c",
       "c++",
       "cc",
       "cpp",
@@ -207,7 +209,6 @@
     "displayName": "delphi",
     "extensions": [
       "dpr",
-      "dpr pas",
       "pas"
     ],
     "filenames": [],
@@ -217,6 +218,7 @@
     "id": "diff",
     "displayName": "Diff",
     "extensions": [
+      "diff",
       "patch"
     ],
     "filenames": [],
@@ -229,7 +231,7 @@
       "dockerfile"
     ],
     "filenames": [],
-    "highlightLanguage": "docker"
+    "highlightLanguage": "dockerfile"
   },
   {
     "id": "dts",
@@ -362,6 +364,7 @@
     "id": "java",
     "displayName": "Java",
     "extensions": [
+      "java",
       "gradle",
       "groovy",
       "grv",
@@ -499,6 +502,7 @@
     "id": "php",
     "displayName": "PHP",
     "extensions": [
+      "php",
       "php3",
       "php4",
       "php5",
@@ -652,10 +656,14 @@
     "id": "sh",
     "displayName": "Sh",
     "extensions": [
+      "sh",
       "bash",
       "ebuild",
       "eclass",
-      "zsh"
+      "zsh",
+      "ksh",
+      "csh",
+      "tcsh"
     ],
     "filenames": [
       ".bashrc",
@@ -687,6 +695,8 @@
     "id": "tcl",
     "displayName": "Tcl/Tk",
     "extensions": [
+      "tk",
+      "tcl",
       "itcl",
       "wish"
     ],
@@ -697,6 +707,8 @@
     "id": "tex",
     "displayName": "TeX and LaTeX",
     "extensions": [
+      "latex",
+      "tex",
       "cls",
       "sty"
     ],
@@ -707,6 +719,7 @@
     "id": "vb",
     "displayName": "Visual Basic",
     "extensions": [
+      "vb",
       "bas",
       "basic",
       "bi",
@@ -728,6 +741,7 @@
     "id": "html",
     "displayName": "HTML",
     "extensions": [
+      "html",
       "htm",
       "jinja",
       "twig",
@@ -895,7 +909,8 @@
     "id": "matlab",
     "displayName": "Matlab",
     "extensions": [
-      "m"
+      "mat",
+      "mlx"
     ],
     "filenames": [],
     "highlightLanguage": "matlab"
@@ -1028,15 +1043,6 @@
     "highlightLanguage": "autohotkey"
   },
   {
-    "id": "fame",
-    "displayName": "FAME",
-    "extensions": [
-      "fame"
-    ],
-    "filenames": [],
-    "highlightLanguage": "fame"
-  },
-  {
     "id": "modelica",
     "displayName": "Modelica",
     "extensions": [
@@ -1163,6 +1169,7 @@
     "id": "txt",
     "displayName": "Plain text",
     "extensions": [
+      "txt",
       "text"
     ],
     "filenames": [],
@@ -1208,8 +1215,9 @@
   },
   {
     "id": "yaml",
-    "displayName": "Ansible YAML",
+    "displayName": "YAML",
     "extensions": [
+      "yaml",
       "yml"
     ],
     "filenames": [],
@@ -1217,14 +1225,14 @@
   },
   {
     "id": "vimscript",
-    "displayName": "vimscript",
+    "displayName": "Vim Script",
     "extensions": [
       "gvimrc",
       "vim",
       "vimrc"
     ],
     "filenames": [],
-    "highlightLanguage": "vimscript"
+    "highlightLanguage": "vim"
   },
   {
     "id": "purebasic",
@@ -1239,7 +1247,7 @@
   },
   {
     "id": "markdown",
-    "displayName": "GitHub Flavored Markdown",
+    "displayName": "Markdown",
     "extensions": [
       "markdown",
       "md",
@@ -1276,16 +1284,6 @@
     "highlightLanguage": "solidity"
   },
   {
-    "id": "ps1",
-    "displayName": "Ps1",
-    "extensions": [
-      "psd1",
-      "psm1"
-    ],
-    "filenames": [],
-    "highlightLanguage": "ps1"
-  },
-  {
     "id": "exapunks",
     "displayName": "EXAPUNKS",
     "extensions": [
@@ -1303,15 +1301,6 @@
     ],
     "filenames": [],
     "highlightLanguage": "awk"
-  },
-  {
-    "id": "js",
-    "displayName": "Js",
-    "extensions": [
-      "js"
-    ],
-    "filenames": [],
-    "highlightLanguage": "js"
   },
   {
     "id": "abap",
@@ -1353,6 +1342,7 @@
     "id": "applescript",
     "displayName": "AppleScript",
     "extensions": [
+      "scpt",
       "applescript"
     ],
     "filenames": [],
@@ -1389,6 +1379,7 @@
     "id": "asciidoc",
     "displayName": "AsciiDoc",
     "extensions": [
+      "adoc",
       "asciidoc"
     ],
     "filenames": [],
@@ -1488,7 +1479,7 @@
     "id": "coffeescript",
     "displayName": "Coffeescript",
     "extensions": [
-      "coffeescript"
+      "coffee"
     ],
     "filenames": [],
     "highlightLanguage": "coffeescript"
@@ -1501,15 +1492,6 @@
     ],
     "filenames": [],
     "highlightLanguage": "crk"
-  },
-  {
-    "id": "cs_block_regex",
-    "displayName": "Coffeescript Block Regex",
-    "extensions": [
-      "cs_block_regex"
-    ],
-    "filenames": [],
-    "highlightLanguage": "cs_block_regex"
   },
   {
     "id": "critic",
@@ -1548,15 +1530,6 @@
     "highlightLanguage": "dart"
   },
   {
-    "id": "dockerfile",
-    "displayName": "Dockerfile",
-    "extensions": [
-      "dockerfile"
-    ],
-    "filenames": [],
-    "highlightLanguage": "dockerfile"
-  },
-  {
     "id": "dylan",
     "displayName": "Dylan",
     "extensions": [
@@ -1575,19 +1548,11 @@
     "highlightLanguage": "ebnf"
   },
   {
-    "id": "ebnf2",
-    "displayName": "EBNF2",
-    "extensions": [
-      "ebnf2"
-    ],
-    "filenames": [],
-    "highlightLanguage": "ebnf2"
-  },
-  {
     "id": "email",
     "displayName": "E-Mail treated as Markup",
     "extensions": [
-      "email"
+      "eml",
+      "mbox"
     ],
     "filenames": [],
     "highlightLanguage": "email"
@@ -1600,15 +1565,6 @@
     ],
     "filenames": [],
     "highlightLanguage": "erb"
-  },
-  {
-    "id": "excel",
-    "displayName": "Excel Formulas",
-    "extensions": [
-      "excel"
-    ],
-    "filenames": [],
-    "highlightLanguage": "excel"
   },
   {
     "id": "fea",
@@ -1686,7 +1642,7 @@
     "id": "hare",
     "displayName": "Hare",
     "extensions": [
-      "hare"
+      "ha"
     ],
     "filenames": [],
     "highlightLanguage": "hare"
@@ -1728,15 +1684,6 @@
     "highlightLanguage": "idlang"
   },
   {
-    "id": "inc_luatex",
-    "displayName": "Lua (for LuaTeX)",
-    "extensions": [
-      "inc_luatex"
-    ],
-    "filenames": [],
-    "highlightLanguage": "inc_luatex"
-  },
-  {
     "id": "io",
     "displayName": "IO",
     "extensions": [
@@ -1749,7 +1696,9 @@
     "id": "javascript",
     "displayName": "Javascript",
     "extensions": [
-      "javascript"
+      "js",
+      "mjs",
+      "cjs"
     ],
     "filenames": [],
     "highlightLanguage": "javascript"
@@ -1836,15 +1785,6 @@
     "highlightLanguage": "lua"
   },
   {
-    "id": "makefile",
-    "displayName": "Make",
-    "extensions": [
-      "makefile"
-    ],
-    "filenames": [],
-    "highlightLanguage": "makefile"
-  },
-  {
     "id": "mercury",
     "displayName": "Mercury",
     "extensions": [
@@ -1897,15 +1837,6 @@
     ],
     "filenames": [],
     "highlightLanguage": "mxml"
-  },
-  {
-    "id": "nt",
-    "displayName": "N-Triples, Turtle, SPARQL",
-    "extensions": [
-      "ttl"
-    ],
-    "filenames": [],
-    "highlightLanguage": "nt"
   },
   {
     "id": "nbc",
@@ -1965,7 +1896,8 @@
     "id": "objc",
     "displayName": "Objective C",
     "extensions": [
-      "objc"
+      "m",
+      "mm"
     ],
     "filenames": [],
     "highlightLanguage": "objc"
@@ -2025,15 +1957,6 @@
     "highlightLanguage": "pas"
   },
   {
-    "id": "pdf",
-    "displayName": "Portable Document Format",
-    "extensions": [
-      "pdf"
-    ],
-    "filenames": [],
-    "highlightLanguage": "pdf"
-  },
-  {
     "id": "plperl",
     "displayName": "PL/Perl",
     "extensions": [
@@ -2091,16 +2014,18 @@
     "id": "powershell",
     "displayName": "Microsoft PowerShell",
     "extensions": [
-      "powershell"
+      "ps1",
+      "psm1",
+      "psd1"
     ],
     "filenames": [],
     "highlightLanguage": "powershell"
   },
   {
     "id": "purs",
-    "displayName": "purescript",
+    "displayName": "PureScript",
     "extensions": [
-      "purescript"
+      "purs"
     ],
     "filenames": [],
     "highlightLanguage": "purs"
@@ -2226,7 +2151,7 @@
     "id": "rust",
     "displayName": "Rust",
     "extensions": [
-      "rust"
+      "rs"
     ],
     "filenames": [],
     "highlightLanguage": "rust"
@@ -2284,15 +2209,6 @@
     ],
     "filenames": [],
     "highlightLanguage": "scss"
-  },
-  {
-    "id": "shellscript",
-    "displayName": "Bash",
-    "extensions": [
-      "shellscript"
-    ],
-    "filenames": [],
-    "highlightLanguage": "shellscript"
   },
   {
     "id": "slim",
@@ -2355,7 +2271,7 @@
       "svg"
     ],
     "filenames": [],
-    "highlightLanguage": "svg"
+    "highlightLanguage": "xml"
   },
   {
     "id": "swift",
@@ -2367,22 +2283,14 @@
     "highlightLanguage": "swift"
   },
   {
-    "id": "tcsh",
-    "displayName": "TCSH",
-    "extensions": [
-      "tcsh"
-    ],
-    "filenames": [],
-    "highlightLanguage": "tcsh"
-  },
-  {
     "id": "terraform",
     "displayName": "Terraform",
     "extensions": [
-      "terraform"
+      "tf",
+      "tfvars"
     ],
     "filenames": [],
-    "highlightLanguage": "terraform"
+    "highlightLanguage": "hcl"
   },
   {
     "id": "toml",
@@ -2424,7 +2332,9 @@
     "id": "typescript",
     "displayName": "TypeScript",
     "extensions": [
-      "typescript"
+      "ts",
+      "cts",
+      "mts"
     ],
     "filenames": [],
     "highlightLanguage": "typescript"
@@ -2451,6 +2361,7 @@
     "id": "vhd",
     "displayName": "VHDL",
     "extensions": [
+      "vhdl",
       "vhd"
     ],
     "filenames": [],
@@ -2656,10 +2567,797 @@
   {
     "id": "dockerignore",
     "displayName": "Docker Ignore",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".dockerignore",
+      ".containerignore"
+    ]
+  },
+  {
+    "id": "shell-profile",
+    "displayName": "Shell Profile",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".login",
+      ".logout",
+      ".bash_login"
+    ]
+  },
+  {
+    "id": "inputrc",
+    "displayName": "Readline Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".inputrc"
+    ]
+  },
+  {
+    "id": "dircolors",
+    "displayName": "Dir Colors",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".dircolors",
+      ".dir_colors"
+    ]
+  },
+  {
+    "id": "hushlogin",
+    "displayName": "Hush Login",
     "highlightLanguage": "plaintext",
     "category": "dotfiles",
     "filenames": [
-      ".dockerignore"
+      ".hushlogin"
+    ]
+  },
+  {
+    "id": "xresources",
+    "displayName": "X Resources",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".Xresources",
+      ".Xdefaults",
+      ".xprofile",
+      ".xinitrc",
+      ".xsession"
+    ]
+  },
+  {
+    "id": "screenrc",
+    "displayName": "GNU Screen Config",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".screenrc"
+    ]
+  },
+  {
+    "id": "tmux-conf",
+    "displayName": "tmux Config",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".tmux.conf"
+    ]
+  },
+  {
+    "id": "dev-ignore",
+    "displayName": "Dev Ignore Files",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".prettierignore",
+      ".eslintignore",
+      ".stylelintignore",
+      ".vscodeignore",
+      ".helmignore",
+      ".gitignore_global",
+      ".gcloudignore",
+      ".cfignore",
+      ".slugignore",
+      ".vercelignore",
+      ".nowignore"
+    ]
+  },
+  {
+    "id": "browserslistrc",
+    "displayName": "Browserslist Config",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".browserslistrc"
+    ]
+  },
+  {
+    "id": "flowconfig",
+    "displayName": "Flow Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".flowconfig"
+    ]
+  },
+  {
+    "id": "watchmanconfig",
+    "displayName": "Watchman Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".watchmanconfig"
+    ]
+  },
+  {
+    "id": "swiftlint",
+    "displayName": "SwiftLint Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".swiftlint.yml",
+      ".swiftlint.yaml"
+    ]
+  },
+  {
+    "id": "swiftformat",
+    "displayName": "SwiftFormat Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".swiftformat"
+    ]
+  },
+  {
+    "id": "clang-config",
+    "displayName": "Clang Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".clang-format",
+      ".clang-tidy"
+    ]
+  },
+  {
+    "id": "rustfmt",
+    "displayName": "Rust Format Config",
+    "highlightLanguage": "toml",
+    "category": "dotfiles",
+    "filenames": [
+      ".rustfmt.toml"
+    ]
+  },
+  {
+    "id": "rubocop",
+    "displayName": "RuboCop Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".rubocop.yml",
+      ".rubocop_todo.yml"
+    ]
+  },
+  {
+    "id": "python-lint",
+    "displayName": "Python Lint Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".pylintrc",
+      ".flake8",
+      ".pep8",
+      ".mypy.ini",
+      ".isort.cfg",
+      ".coveragerc",
+      ".bandit"
+    ]
+  },
+  {
+    "id": "pre-commit",
+    "displayName": "Pre-Commit Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".pre-commit-config.yaml",
+      ".pre-commit-hooks.yaml"
+    ]
+  },
+  {
+    "id": "commitlint-json",
+    "displayName": "CommitLint JSON Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".commitlintrc.json",
+      ".releaserc.json",
+      ".lintstagedrc.json"
+    ]
+  },
+  {
+    "id": "commitlint-yaml",
+    "displayName": "CommitLint YAML Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".commitlintrc.yml",
+      ".releaserc.yml"
+    ]
+  },
+  {
+    "id": "nojekyll",
+    "displayName": "No Jekyll",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".nojekyll"
+    ]
+  },
+  {
+    "id": "version-files",
+    "displayName": "Version Manager Files",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".ruby-version",
+      ".ruby-gemset",
+      ".python-version",
+      ".node-version",
+      ".nvmrc",
+      ".java-version",
+      ".go-version",
+      ".tool-versions"
+    ]
+  },
+  {
+    "id": "terraform-lock",
+    "displayName": "Terraform Lock",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".terraform.lock.hcl"
+    ]
+  },
+  {
+    "id": "curlrc",
+    "displayName": "cURL Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".curlrc"
+    ]
+  },
+  {
+    "id": "wgetrc",
+    "displayName": "Wget Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      ".wgetrc"
+    ]
+  },
+  {
+    "id": "netrc",
+    "displayName": "Netrc",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".netrc"
+    ]
+  },
+  {
+    "id": "cfusertextencoding",
+    "displayName": "CF User Text Encoding",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".CFUserTextEncoding"
+    ]
+  },
+  {
+    "id": "gemrc",
+    "displayName": "Gem Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".gemrc"
+    ]
+  },
+  {
+    "id": "irbrc",
+    "displayName": "IRB/Pry Config",
+    "highlightLanguage": "ruby",
+    "category": "dotfiles",
+    "filenames": [
+      ".irbrc",
+      ".pryrc"
+    ]
+  },
+  {
+    "id": "git-extra",
+    "displayName": "Git Extra Files",
+    "highlightLanguage": "plaintext",
+    "category": "dotfiles",
+    "filenames": [
+      ".gitblame-ignore-revs"
+    ]
+  },
+  {
+    "id": "ssh-config",
+    "displayName": "SSH Config",
+    "highlightLanguage": "ini",
+    "category": "dotfiles",
+    "filenames": [
+      "known_hosts",
+      "authorized_keys",
+      "config"
+    ]
+  },
+  {
+    "id": "babelrc-js",
+    "displayName": "Babel JS Config",
+    "highlightLanguage": "javascript",
+    "category": "dotfiles",
+    "filenames": [
+      ".babelrc.js",
+      ".eslintrc.js",
+      ".prettierrc.js",
+      ".stylelintrc.js",
+      ".lintstagedrc.js"
+    ]
+  },
+  {
+    "id": "babelrc-json",
+    "displayName": "Babel JSON Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".babelrc.json",
+      ".eslintrc.json",
+      ".prettierrc.json",
+      ".stylelintrc.json"
+    ]
+  },
+  {
+    "id": "rc-yaml",
+    "displayName": "RC YAML Config Files",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".eslintrc.yml",
+      ".eslintrc.yaml",
+      ".prettierrc.yml",
+      ".prettierrc.yaml",
+      ".stylelintrc.yml",
+      ".stylelintrc.yaml",
+      ".markdownlint.yml",
+      ".markdownlint.yaml",
+      ".yamllint",
+      ".yamllint.yml",
+      ".yamllint.yaml"
+    ]
+  },
+  {
+    "id": "makefile-file",
+    "displayName": "Makefile",
+    "highlightLanguage": "make",
+    "category": "dataFormats",
+    "filenames": [
+      "Makefile",
+      "GNUmakefile",
+      "makefile"
+    ]
+  },
+  {
+    "id": "dockerfile-file",
+    "displayName": "Dockerfile",
+    "highlightLanguage": "dockerfile",
+    "category": "dataFormats",
+    "filenames": [
+      "Dockerfile",
+      "Containerfile",
+      "Dockerfile.dev",
+      "Dockerfile.prod",
+      "Dockerfile.test"
+    ]
+  },
+  {
+    "id": "vagrantfile",
+    "displayName": "Vagrantfile",
+    "highlightLanguage": "ruby",
+    "category": "dataFormats",
+    "filenames": [
+      "Vagrantfile"
+    ]
+  },
+  {
+    "id": "gemfile-file",
+    "displayName": "Gemfile",
+    "highlightLanguage": "ruby",
+    "category": "dataFormats",
+    "filenames": [
+      "Gemfile",
+      "Rakefile",
+      "Guardfile",
+      "Capfile",
+      "Thorfile",
+      "Podfile",
+      "Fastfile",
+      "Appfile",
+      "Matchfile",
+      "Snapfile",
+      "Deliverfile",
+      "Scanfile"
+    ]
+  },
+  {
+    "id": "brewfile-file",
+    "displayName": "Brewfile",
+    "highlightLanguage": "ruby",
+    "category": "dataFormats",
+    "filenames": [
+      "Brewfile"
+    ]
+  },
+  {
+    "id": "procfile-file",
+    "displayName": "Procfile",
+    "highlightLanguage": "bash",
+    "category": "dataFormats",
+    "filenames": [
+      "Procfile",
+      "Procfile.dev"
+    ]
+  },
+  {
+    "id": "justfile-file",
+    "displayName": "Justfile",
+    "highlightLanguage": "make",
+    "category": "dataFormats",
+    "filenames": [
+      "Justfile",
+      "justfile"
+    ]
+  },
+  {
+    "id": "configure-file",
+    "displayName": "Configure Scripts",
+    "highlightLanguage": "bash",
+    "category": "dataFormats",
+    "filenames": [
+      "configure",
+      "configure.ac"
+    ]
+  },
+  {
+    "id": "codeowners",
+    "displayName": "CODEOWNERS",
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats",
+    "filenames": [
+      "CODEOWNERS"
+    ]
+  },
+  {
+    "id": "funding-yml",
+    "displayName": "Funding",
+    "highlightLanguage": "yaml",
+    "category": "dataFormats",
+    "filenames": [
+      "FUNDING.yml"
+    ]
+  },
+  {
+    "id": "license-file",
+    "displayName": "License",
+    "highlightLanguage": "plaintext",
+    "category": "documentation",
+    "filenames": [
+      "LICENSE",
+      "LICENSE.md",
+      "LICENSE.txt",
+      "LICENCE",
+      "LICENCE.md",
+      "LICENCE.txt",
+      "COPYING",
+      "COPYING.md",
+      "COPYING.txt"
+    ]
+  },
+  {
+    "id": "changelog-file",
+    "displayName": "Changelog",
+    "highlightLanguage": "markdown",
+    "category": "documentation",
+    "filenames": [
+      "CHANGELOG",
+      "CHANGELOG.md",
+      "CHANGELOG.txt",
+      "CHANGES",
+      "CHANGES.md",
+      "HISTORY",
+      "HISTORY.md",
+      "NEWS",
+      "NEWS.md",
+      "RELEASES",
+      "RELEASES.md"
+    ]
+  },
+  {
+    "id": "authors-file",
+    "displayName": "Authors",
+    "highlightLanguage": "plaintext",
+    "category": "documentation",
+    "filenames": [
+      "AUTHORS",
+      "AUTHORS.md",
+      "AUTHORS.txt",
+      "CONTRIBUTORS",
+      "CONTRIBUTORS.md",
+      "CONTRIBUTORS.txt",
+      "MAINTAINERS",
+      "MAINTAINERS.md"
+    ]
+  },
+  {
+    "id": "readme-file",
+    "displayName": "README",
+    "highlightLanguage": "markdown",
+    "category": "documentation",
+    "filenames": [
+      "README",
+      "README.md",
+      "README.txt",
+      "README.rst"
+    ]
+  },
+  {
+    "id": "requirements-file",
+    "displayName": "Python Requirements",
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats",
+    "filenames": [
+      "requirements.txt",
+      "requirements-dev.txt",
+      "requirements-test.txt",
+      "constraints.txt"
+    ]
+  },
+  {
+    "id": "pipfile-file",
+    "displayName": "Pipfile",
+    "highlightLanguage": "toml",
+    "category": "dataFormats",
+    "filenames": [
+      "Pipfile"
+    ]
+  },
+  {
+    "id": "pyproject-file",
+    "displayName": "Python Project Config",
+    "highlightLanguage": "toml",
+    "category": "dataFormats",
+    "filenames": [
+      "pyproject.toml"
+    ]
+  },
+  {
+    "id": "setup-cfg",
+    "displayName": "Python Setup Config",
+    "highlightLanguage": "ini",
+    "category": "dataFormats",
+    "filenames": [
+      "setup.cfg",
+      "tox.ini",
+      "pytest.ini",
+      "mypy.ini"
+    ]
+  },
+  {
+    "id": "go-mod-file",
+    "displayName": "Go Module",
+    "highlightLanguage": "go",
+    "category": "dataFormats",
+    "filenames": [
+      "go.mod",
+      "go.sum",
+      "go.work",
+      "go.work.sum"
+    ]
+  },
+  {
+    "id": "cargo-file",
+    "displayName": "Cargo Config",
+    "highlightLanguage": "toml",
+    "category": "dataFormats",
+    "filenames": [
+      "Cargo.toml",
+      "Cargo.lock"
+    ]
+  },
+  {
+    "id": "package-json-file",
+    "displayName": "Package JSON",
+    "highlightLanguage": "json",
+    "category": "dataFormats",
+    "filenames": [
+      "package.json",
+      "package-lock.json",
+      "bower.json",
+      "lerna.json"
+    ]
+  },
+  {
+    "id": "composer-file",
+    "displayName": "Composer Config",
+    "highlightLanguage": "json",
+    "category": "dataFormats",
+    "filenames": [
+      "composer.json",
+      "composer.lock"
+    ]
+  },
+  {
+    "id": "tsconfig-file",
+    "displayName": "TypeScript Config",
+    "highlightLanguage": "json",
+    "category": "dataFormats",
+    "filenames": [
+      "tsconfig.json",
+      "jsconfig.json",
+      "tsconfig.build.json",
+      "tsconfig.app.json"
+    ]
+  },
+  {
+    "id": "taskfile-yml",
+    "displayName": "Taskfile",
+    "highlightLanguage": "yaml",
+    "category": "dataFormats",
+    "filenames": [
+      "Taskfile.yml",
+      "Taskfile.yaml"
+    ]
+  },
+  {
+    "id": "github-ci",
+    "displayName": "GitHub Config",
+    "highlightLanguage": "yaml",
+    "category": "dataFormats",
+    "filenames": [
+      "dependabot.yml",
+      "dependabot.yaml"
+    ]
+  },
+  {
+    "id": "babel-config-js",
+    "displayName": "Babel Config JS",
+    "highlightLanguage": "javascript",
+    "category": "dataFormats",
+    "filenames": [
+      "babel.config.js",
+      "babel.config.cjs",
+      "webpack.config.js",
+      "rollup.config.js",
+      "vite.config.js",
+      "vite.config.ts",
+      "next.config.js",
+      "next.config.mjs",
+      "nuxt.config.js",
+      "nuxt.config.ts",
+      "jest.config.js",
+      "jest.config.ts",
+      "vitest.config.js",
+      "vitest.config.ts",
+      "postcss.config.js",
+      "tailwind.config.js",
+      "tailwind.config.ts",
+      "eslint.config.js",
+      "eslint.config.mjs",
+      "prettier.config.js",
+      ".eslintrc.cjs",
+      ".prettierrc.cjs"
+    ]
+  },
+  {
+    "id": "babel-config-json",
+    "displayName": "Babel Config JSON",
+    "highlightLanguage": "json",
+    "category": "dataFormats",
+    "filenames": [
+      "babel.config.json",
+      ".babel.json"
+    ]
+  },
+  {
+    "id": "markdownlint",
+    "displayName": "Markdown Lint Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".markdownlint.json",
+      ".markdownlintrc"
+    ]
+  },
+  {
+    "id": "husky",
+    "displayName": "Husky Git Hooks",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".huskyrc",
+      ".huskyrc.json",
+      ".huskyrc.js"
+    ]
+  },
+  {
+    "id": "env-extra",
+    "displayName": "Extra Env Files",
+    "highlightLanguage": "bash",
+    "category": "dotfiles",
+    "filenames": [
+      ".env.template",
+      ".env.sample",
+      ".env.defaults",
+      ".env.ci"
+    ]
+  },
+  {
+    "id": "swcrc",
+    "displayName": "SWC Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".swcrc"
+    ]
+  },
+  {
+    "id": "nycrc",
+    "displayName": "NYC Coverage Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".nycrc"
+    ]
+  },
+  {
+    "id": "releaserc",
+    "displayName": "semantic-release Config",
+    "highlightLanguage": "json",
+    "category": "dotfiles",
+    "filenames": [
+      ".releaserc"
+    ]
+  },
+  {
+    "id": "travis",
+    "displayName": "Travis CI",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".travis.yml"
+    ]
+  },
+  {
+    "id": "circleci",
+    "displayName": "CircleCI Config",
+    "highlightLanguage": "yaml",
+    "category": "dotfiles",
+    "filenames": [
+      ".circleci"
+    ]
+  },
+  {
+    "id": "docker-compose",
+    "displayName": "Docker Compose",
+    "highlightLanguage": "yaml",
+    "category": "dataFormats",
+    "filenames": [
+      "docker-compose.yml",
+      "docker-compose.yaml",
+      "docker-compose.override.yml",
+      "compose.yml",
+      "compose.yaml"
     ]
   }
 ]

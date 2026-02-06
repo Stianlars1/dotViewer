@@ -1,7 +1,2 @@
 #include <stdio.h>
-
-int main(void) {
-  // Hello
-  printf("hi %d\n", 42);
-  return 0;
-}
+int main() { printf("hello"); return 0; }

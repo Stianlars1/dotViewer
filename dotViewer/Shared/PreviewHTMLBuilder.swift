@@ -21,6 +21,8 @@ public struct PreviewInfo {
     public let themeName: String
     public let showUnknownTextWarning: Bool
     public let showBinaryWarning: Bool
+    public let systemIsDark: Bool
+    public let wordWrap: Bool
 
     public init(
         title: String,
@@ -42,7 +44,9 @@ public struct PreviewInfo {
         markdownCustomCSSOverride: Bool,
         themeName: String,
         showUnknownTextWarning: Bool,
-        showBinaryWarning: Bool
+        showBinaryWarning: Bool,
+        systemIsDark: Bool = false,
+        wordWrap: Bool = false
     ) {
         self.title = title
         self.language = language
@@ -64,6 +68,8 @@ public struct PreviewInfo {
         self.themeName = themeName
         self.showUnknownTextWarning = showUnknownTextWarning
         self.showBinaryWarning = showBinaryWarning
+        self.systemIsDark = systemIsDark
+        self.wordWrap = wordWrap
     }
 }
 
@@ -186,6 +192,12 @@ public enum PreviewHTMLBuilder {
               --property: \(palette.property);
               --punctuation: \(palette.punctuation);
               --accent: \(palette.accent);
+              --tag: \(palette.tag);
+              --attribute: \(palette.attribute);
+              --escape: \(palette.escape);
+              --builtin: \(palette.builtin);
+              --namespace: \(palette.namespace);
+              --parameter: \(palette.parameter);
               --gutter: \(palette.isDark ? "#3B3F51" : "#C0C4CC");
               --header: \(palette.isDark ? "#1F232B" : "#F2F3F5");
               --surface: \(palette.isDark ? "#1E222A" : "#F5F7FA");
@@ -195,7 +207,9 @@ public enum PreviewHTMLBuilder {
             """
         }
 
-        let basePalette = info.themeName == "auto" ? ThemePalette.atomOneLight : palette
+        let basePalette = info.themeName == "auto"
+            ? (info.systemIsDark ? ThemePalette.atomOneDark : ThemePalette.atomOneLight)
+            : palette
         var baseCSS = """
         :root {
         \(cssVariables(for: basePalette))
@@ -352,12 +366,14 @@ public enum PreviewHTMLBuilder {
         }
 
         .code-line {
-          white-space: pre;
+          white-space: \(info.wordWrap ? "pre-wrap" : "pre");
+          \(info.wordWrap ? "word-break: break-word; overflow-wrap: break-word;" : "")
           flex: 1;
         }
 
         pre.code {
-          white-space: pre;
+          white-space: \(info.wordWrap ? "pre-wrap" : "pre");
+          \(info.wordWrap ? "word-break: break-word; overflow-wrap: break-word;" : "")
           margin: 0;
         }
 
@@ -371,6 +387,12 @@ public enum PreviewHTMLBuilder {
         .tok-constant { color: var(--number); }
         .tok-identifier { color: var(--text); }
         .tok-punctuation { color: var(--punctuation); }
+        .tok-tag { color: var(--tag); }
+        .tok-attribute { color: var(--attribute); }
+        .tok-escape { color: var(--escape); }
+        .tok-builtin { color: var(--builtin); font-style: italic; }
+        .tok-namespace { color: var(--namespace); }
+        .tok-parameter { color: var(--parameter); font-style: italic; }
 
         .rendered-view {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -450,6 +472,18 @@ public enum PreviewHTMLBuilder {
           max-width: 100%;
           height: auto;
         }
+
+        .rendered-view p { margin: 1em 0; line-height: 1.6; }
+        .rendered-view ul, .rendered-view ol { margin: 1em 0; padding-left: 2em; }
+        .rendered-view li { margin: 0.3em 0; }
+        .rendered-view li > p { margin: 0.5em 0; }
+        .rendered-view hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
+        .rendered-view details { margin: 1em 0; }
+        .rendered-view summary { cursor: pointer; font-weight: 600; }
+        .rendered-view strong { font-weight: 700; }
+        .rendered-view em { font-style: italic; }
+        .rendered-view del { text-decoration: line-through; }
+        .rendered-view mark { background: rgba(255, 200, 0, 0.3); color: inherit; }
 
         .hidden {
           display: none;

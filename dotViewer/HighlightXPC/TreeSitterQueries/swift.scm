@@ -149,9 +149,8 @@
   (prefix_expression
     (simple_identifier) @function.call)) ; .foo()
 
-((navigation_expression
+(navigation_expression
   (simple_identifier) @type) ; SomeType.method(): highlight SomeType as a type
-  (#lua-match? @type "^[A-Z]"))
 
 (directive) @keyword.directive
 
@@ -222,14 +221,9 @@
   (multiline_comment)
 ] @comment @spell
 
-((comment) @comment.documentation
-  (#lua-match? @comment.documentation "^///[^/]"))
+(comment) @comment.documentation
 
-((comment) @comment.documentation
-  (#lua-match? @comment.documentation "^///$"))
-
-((multiline_comment) @comment.documentation
-  (#lua-match? @comment.documentation "^/[*][*][^*].*[*]/$"))
+(multiline_comment) @comment.documentation
 
 ; String literals
 (line_str_text) @string

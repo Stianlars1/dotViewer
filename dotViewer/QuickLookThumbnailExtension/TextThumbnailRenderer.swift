@@ -48,10 +48,10 @@ enum TextThumbnailRenderer {
         showLineNumbers: Bool,
         fontSize: CGFloat
     ) -> QLThumbnailReply {
-        let reply = QLThumbnailReply(contextSize: size) { context in
-            let rect = CGRect(origin: .zero, size: size)
+        let image = NSImage(size: size, flipped: true) { rect in
             let headerHeight: CGFloat = showHeader ? 20 : 0
             let padding: CGFloat = 8
+            let cornerRadius: CGFloat = 4
 
             let backgroundColor = NSColor(hex: palette.background) ?? .windowBackgroundColor
             let textColor = NSColor(hex: palette.text) ?? .labelColor
@@ -59,13 +59,13 @@ enum TextThumbnailRenderer {
             let headerColor = NSColor(hex: palette.isDark ? "#1F232B" : "#F2F3F5") ?? backgroundColor
             let accentColor = NSColor(hex: palette.accent) ?? .systemBlue
             let metaColor = NSColor(hex: palette.comment) ?? textColor.withAlphaComponent(0.6)
+            let borderColor = (NSColor(hex: palette.comment) ?? textColor).withAlphaComponent(0.15)
 
-            context.setFillColor(backgroundColor.cgColor)
-            context.fill(rect)
+            let clipPath = NSBezierPath(roundedRect: rect, xRadius: cornerRadius, yRadius: cornerRadius)
+            clipPath.addClip()
 
-            let graphicsContext = NSGraphicsContext(cgContext: context, flipped: true)
-            NSGraphicsContext.saveGraphicsState()
-            NSGraphicsContext.current = graphicsContext
+            backgroundColor.setFill()
+            rect.fill()
 
             if showHeader {
                 let headerRect = CGRect(x: 0, y: 0, width: rect.width, height: headerHeight)
@@ -116,21 +116,40 @@ enum TextThumbnailRenderer {
                 height: rect.height - contentTop - padding
             )
             if contentRect.width > 0, contentRect.height > 0 {
-                context.saveGState()
-                context.clip(to: contentRect)
+                NSGraphicsContext.current?.cgContext.saveGState()
+                NSGraphicsContext.current?.cgContext.clip(to: contentRect)
 
                 let lineFont = NSFont.monospacedSystemFont(ofSize: max(9, min(fontSize, 12)), weight: .regular)
                 let numberFont = NSFont.monospacedSystemFont(ofSize: max(8, min(fontSize - 1, 11)), weight: .regular)
-                let lineHeight = lineFont.ascender - lineFont.descender + lineFont.leading
+                let singleLineHeight = lineFont.ascender - lineFont.descender + lineFont.leading
 
                 let digitWidth = "0".size(withAttributes: [.font: numberFont]).width
                 let lineDigits = max(2, String(snippet.lineCount).count)
                 let gutterWidth = showLineNumbers ? max(24, digitWidth * CGFloat(lineDigits) + 6) : 0
                 let textOriginX = contentRect.minX + gutterWidth
+                let textAvailableWidth = contentRect.width - gutterWidth
+
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineBreakMode = .byWordWrapping
+
+                var currentY = contentRect.minY
 
                 for (index, line) in snippet.lines.enumerated() {
-                    let lineY = contentRect.minY + CGFloat(index) * lineHeight
-                    if lineY + lineHeight > contentRect.maxY { break }
+                    if currentY >= contentRect.maxY { break }
+
+                    let displayLine = line.isEmpty ? " " : line
+                    let textAttributes: [NSAttributedString.Key: Any] = [
+                        .font: lineFont,
+                        .foregroundColor: textColor,
+                        .paragraphStyle: paragraphStyle
+                    ]
+                    let attrString = NSAttributedString(string: displayLine, attributes: textAttributes)
+                    let textBoundingSize = CGSize(width: max(1, textAvailableWidth), height: contentRect.maxY - currentY)
+                    let textBounds = attrString.boundingRect(
+                        with: textBoundingSize,
+                        options: [.usesLineFragmentOrigin, .usesFontLeading]
+                    )
+                    let drawnHeight = max(singleLineHeight, ceil(textBounds.height))
 
                     if showLineNumbers {
                         let number = "\(index + 1)"
@@ -139,23 +158,48 @@ enum TextThumbnailRenderer {
                             .foregroundColor: gutterColor
                         ]
                         let numberX = contentRect.minX + gutterWidth - 4 - number.size(withAttributes: numberAttributes).width
-                        number.draw(at: CGPoint(x: numberX, y: lineY), withAttributes: numberAttributes)
+                        number.draw(at: CGPoint(x: numberX, y: currentY), withAttributes: numberAttributes)
                     }
 
-                    let textAttributes: [NSAttributedString.Key: Any] = [
-                        .font: lineFont,
-                        .foregroundColor: textColor
-                    ]
-                    line.draw(at: CGPoint(x: textOriginX, y: lineY), withAttributes: textAttributes)
+                    let drawRect = CGRect(
+                        x: textOriginX,
+                        y: currentY,
+                        width: textAvailableWidth,
+                        height: contentRect.maxY - currentY
+                    )
+                    attrString.draw(with: drawRect, options: [.usesLineFragmentOrigin, .usesFontLeading])
+
+                    currentY += drawnHeight
                 }
 
-                context.restoreGState()
+                NSGraphicsContext.current?.cgContext.restoreGState()
             }
 
-            NSGraphicsContext.restoreGraphicsState()
+            borderColor.setStroke()
+            let borderPath = NSBezierPath(roundedRect: rect.insetBy(dx: 0.5, dy: 0.5), xRadius: cornerRadius, yRadius: cornerRadius)
+            borderPath.lineWidth = 1
+            borderPath.stroke()
+
             return true
         }
 
+        guard let tiffData = image.tiffRepresentation,
+              let bitmap = NSBitmapImageRep(data: tiffData),
+              let pngData = bitmap.representation(using: .png, properties: [:]) else {
+            // Fallback to contextSize if PNG conversion fails
+            return QLThumbnailReply(contextSize: size) { _ in true }
+        }
+
+        let tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
+            .appendingPathComponent(UUID().uuidString)
+            .appendingPathExtension("png")
+        do {
+            try pngData.write(to: tempURL)
+        } catch {
+            return QLThumbnailReply(contextSize: size) { _ in true }
+        }
+
+        let reply = QLThumbnailReply(imageFileURL: tempURL)
         if !badgeText.isEmpty {
             reply.extensionBadge = badgeText
         }

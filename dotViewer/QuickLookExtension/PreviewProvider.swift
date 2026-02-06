@@ -30,15 +30,16 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
 #if DEBUG
         if url.deletingPathExtension().lastPathComponent == "dotviewer_heartbeat" {
+            let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
             let heartbeatHTML = """
             <!doctype html>
-            <html><body style="font-family:-apple-system;padding:20px;">
+            <html><body style="font-family:-apple-system;padding:20px;background:\(palette.background);color:\(palette.text);">
             <h2>dotViewer preview active</h2>
             <p>Heartbeat OK for \(url.lastPathComponent)</p>
             </body></html>
             """
             logger.log("Heartbeat preview returned for \(url.lastPathComponent, privacy: .public)")
-            return makeHTMLReply(html: heartbeatHTML)
+            return makeHTMLReply(html: heartbeatHTML, lineCount: 3, fontSize: 14, showHeader: false)
         }
 #endif
 
@@ -72,7 +73,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         let isTextual = typeIsTextual || isBinaryPlist || (forceTextForUnknown && looksTextualSample)
         let isExtensionEnabled = registry.isExtensionEnabled(key)
-        let isKnownType = registry.fileType(for: key) != nil
+        let isKnownType = registry.fileType(for: key) != nil || registry.highlightLanguage(for: key) != nil
         let allowUnknown = SharedSettings.shared.previewAllFileTypes
 
         routeLogger.log(
@@ -86,7 +87,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         if !isExtensionEnabled || (!isKnownType && !allowUnknown) {
             routeLogger.log("Fallback: extension disabled or unsupported type for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
+            return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
         }
 
         let fileMeta = FileInspector.fileMetadata(for: url)
@@ -130,7 +131,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
             markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
             markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
-            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride
+            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+            wordWrap: SharedSettings.shared.wordWrap
         )
 
         if cacheEnabled, let cached = await PreviewCache.shared.load(key: cacheKey, ttlSeconds: cacheTTL) {
@@ -154,13 +156,20 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
                 themeName: SharedSettings.shared.selectedTheme,
                 showUnknownTextWarning: showUnknownTextWarning,
-                showBinaryWarning: showBinaryWarning
+                showBinaryWarning: showBinaryWarning,
+                systemIsDark: systemIsDark,
+                wordWrap: SharedSettings.shared.wordWrap
             )
 
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
             let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
             routeLogger.log("HTML built (cache) for \(url.lastPathComponent, privacy: .public)")
-            return makeHTMLReply(html: html)
+            return makeHTMLReply(
+                html: html,
+                lineCount: cached.lineCount,
+                fontSize: SharedSettings.shared.fontSize,
+                showHeader: SharedSettings.shared.showFileInfoHeader
+            )
         }
 
         let cancelledBeforeRead = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
@@ -173,7 +182,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         if isBinaryPlist {
             guard let conversion = PlistConverter.convertBinaryPlistToXML(at: url, maxBytes: maxBytes) else {
                 routeLogger.log("Fallback: plist conversion failed for \(url.lastPathComponent, privacy: .public)")
-                return QLPreviewReply(fileURL: url)
+                return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
             }
             let convertedTruncated = conversion.isTruncated || fileSize > maxBytes
             fileInfo = FileInspector.fileInfo(
@@ -186,7 +195,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 fileInfo = try FileInspector.loadFile(url: url, maxBytes: maxBytes, encoding: encoding)
             } catch {
                 routeLogger.error("Read failed for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
-                return QLPreviewReply(fileURL: url)
+                return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
             }
         }
 
@@ -260,7 +269,9 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
             themeName: SharedSettings.shared.selectedTheme,
             showUnknownTextWarning: showUnknownTextWarning,
-            showBinaryWarning: showBinaryWarning
+            showBinaryWarning: showBinaryWarning,
+            systemIsDark: systemIsDark,
+            wordWrap: SharedSettings.shared.wordWrap
         )
 
         let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
@@ -287,7 +298,12 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             )
         }
 
-        return makeHTMLReply(html: html)
+        return makeHTMLReply(
+            html: html,
+            lineCount: fileInfo.lineCount,
+            fontSize: SharedSettings.shared.fontSize,
+            showHeader: SharedSettings.shared.showFileInfoHeader
+        )
     }
 
     @MainActor
@@ -299,11 +315,73 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         return false
     }
 
-    private static func makeHTMLReply(html: String) -> QLPreviewReply {
-        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: 700, height: 800)) { _ in
+    private static func makeHTMLReply(
+        html: String,
+        lineCount: Int = 40,
+        fontSize: Double = 14,
+        showHeader: Bool = true
+    ) -> QLPreviewReply {
+        let lineHeight = fontSize * 1.45
+        let headerHeight: CGFloat = showHeader ? 48 : 0
+        let padding: CGFloat = 32
+        let contentHeight = CGFloat(lineCount) * lineHeight
+        let estimatedHeight = contentHeight + headerHeight + padding
+
+        let height = min(max(estimatedHeight, 160), 1000)
+        let width: CGFloat = lineCount <= 5 ? 420 : 700
+
+        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: width, height: height)) { _ in
             html.data(using: .utf8) ?? Data()
         }
         reply.stringEncoding = .utf8
         return reply
+    }
+
+    private static func makePlainTextFallback(url: URL, systemIsDark: Bool) -> QLPreviewReply {
+        let text: String
+        if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
+            text = utf8
+        } else if let latin1 = try? String(contentsOf: url, encoding: .isoLatin1) {
+            text = latin1
+        } else {
+            text = ""
+        }
+
+        let lineCount = text.components(separatedBy: "\n").count
+
+        let escaped = text
+            .replacingOccurrences(of: "&", with: "&amp;")
+            .replacingOccurrences(of: "<", with: "&lt;")
+            .replacingOccurrences(of: ">", with: "&gt;")
+            .replacingOccurrences(of: "\"", with: "&quot;")
+
+        let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
+        let html = """
+        <!doctype html>
+        <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            body {
+              margin: 0; padding: 12px;
+              background: \(palette.background);
+              color: \(palette.text);
+              font-family: "SF Mono", Menlo, Monaco, monospace;
+              font-size: \(Int(SharedSettings.shared.fontSize))px;
+              line-height: 1.45;
+            }
+            pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
+          </style>
+        </head>
+        <body><pre>\(escaped)</pre></body>
+        </html>
+        """
+        routeLogger.log("Plain text fallback built for \(url.lastPathComponent, privacy: .public)")
+        return makeHTMLReply(
+            html: html,
+            lineCount: lineCount,
+            fontSize: SharedSettings.shared.fontSize,
+            showHeader: false
+        )
     }
 }

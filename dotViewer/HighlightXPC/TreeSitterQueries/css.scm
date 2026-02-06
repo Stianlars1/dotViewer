@@ -24,10 +24,8 @@
 
 (attribute_selector (plain_value) @string)
 
-((property_name) @variable
- (#match? @variable "^--"))
-((plain_value) @variable
- (#match? @variable "^--"))
+(property_name) @variable
+(plain_value) @variable
 
 (class_name) @property
 (id_name) @property

@@ -21,7 +21,8 @@ public struct PreviewCacheKey: Hashable, Sendable {
         markdownRenderFontSize: Double,
         markdownShowInlineImages: Bool,
         markdownCustomCSS: String,
-        markdownCustomCSSOverride: Bool
+        markdownCustomCSSOverride: Bool,
+        wordWrap: Bool = false
     ) {
         rawKey = [
             url.path,
@@ -39,7 +40,8 @@ public struct PreviewCacheKey: Hashable, Sendable {
             String(format: "%.2f", markdownRenderFontSize),
             markdownShowInlineImages ? "mdimg1" : "mdimg0",
             markdownCustomCSSOverride ? "mdcss1" : "mdcss0",
-            markdownCustomCSS
+            markdownCustomCSS,
+            wordWrap ? "ww1" : "ww0"
         ].joined(separator: "|")
     }
 

@@ -48,23 +48,7 @@
 ; Special identifiers
 ;--------------------
 
-((identifier) @constructor
- (#match? @constructor "^[A-Z]"))
-
-([
-    (identifier)
-    (shorthand_property_identifier)
-    (shorthand_property_identifier_pattern)
- ] @constant
- (#match? @constant "^[A-Z_][A-Z\\d_]+$"))
-
-((identifier) @variable.builtin
- (#match? @variable.builtin "^(arguments|module|console|window|document)$")
- (#is-not? local))
-
-((identifier) @function.builtin
- (#eq? @function.builtin "require")
- (#is-not? local))
+(identifier) @variable.builtin
 
 ; Literals
 ;---------
@@ -86,6 +70,7 @@
   (template_string)
 ] @string
 
+(escape_sequence) @escape
 (regex) @string.special
 (number) @number
 
