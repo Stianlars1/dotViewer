@@ -16,7 +16,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
         let maximumSize = request.maximumSize
         logger.info("Thumbnail request: \(url.lastPathComponent, privacy: .public)")
 
-        Task.detached(priority: .userInitiated) { [handlerBox, settings, url, maximumSize] in
+        Task.detached(priority: .userInitiated) { [handlerBox, settings, url, maximumSize, logger] in
             if Task.isCancelled {
                 await MainActor.run {
                     handlerBox.handler(nil, nil)

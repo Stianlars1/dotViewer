@@ -267,7 +267,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
         routeLogger.log("HTML built for \(url.lastPathComponent, privacy: .public)")
 
-        let shouldCache = cacheEnabled && !info.isSensitive && (await PreviewRequestCoordinator.shared.isCurrent(requestId))
+        let isCurrentRequest = await PreviewRequestCoordinator.shared.isCurrent(requestId)
+        let shouldCache = cacheEnabled && !info.isSensitive && isCurrentRequest
         if shouldCache {
             let entry = PreviewCacheEntry(
                 createdAt: Date(),
