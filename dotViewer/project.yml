@@ -367,6 +367,8 @@ targets:
     platform: macOS
     sources:
       - Shared
+    resources:
+      - path: Shared/DefaultFileTypes.json
     info:
       path: Shared/Info.plist
     settings:

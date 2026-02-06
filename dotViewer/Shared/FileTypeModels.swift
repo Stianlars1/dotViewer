@@ -45,6 +45,7 @@ public struct SupportedFileType: Identifiable, Codable, Hashable {
     public let id: String
     public let displayName: String
     public let extensions: [String]
+    public let filenames: [String]
     public let category: FileTypeCategory
     public let highlightLanguage: String
     public let isSystemUTI: Bool
@@ -53,6 +54,7 @@ public struct SupportedFileType: Identifiable, Codable, Hashable {
         id: String,
         displayName: String,
         extensions: [String],
+        filenames: [String] = [],
         category: FileTypeCategory,
         highlightLanguage: String,
         isSystemUTI: Bool
@@ -60,13 +62,21 @@ public struct SupportedFileType: Identifiable, Codable, Hashable {
         self.id = id
         self.displayName = displayName
         self.extensions = extensions
+        self.filenames = filenames
         self.category = category
         self.highlightLanguage = highlightLanguage
         self.isSystemUTI = isSystemUTI
     }
 
     public var extensionDisplay: String {
-        extensions.map { ".\($0)" }.joined(separator: ", ")
+        let extensionItems = extensions.map { ".\($0)" }
+        if !extensionItems.isEmpty {
+            return extensionItems.joined(separator: ", ")
+        }
+        if filenames.isEmpty {
+            return "—"
+        }
+        return filenames.joined(separator: ", ")
     }
 }
 

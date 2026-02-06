@@ -17,37 +17,28 @@ IFS=$'\n\t'
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-readonly REGISTRY_PATH="$ROOT_DIR/dotViewer/Shared/FileTypeRegistry.swift"
+readonly DEFAULT_TYPES_JSON="$ROOT_DIR/dotViewer/Shared/DefaultFileTypes.json"
 
-if [[ ! -f "$REGISTRY_PATH" ]]; then
-  echo "ERROR: registry not found: $REGISTRY_PATH" >&2
+if [[ ! -f "$DEFAULT_TYPES_JSON" ]]; then
+  echo "ERROR: default filetypes not found: $DEFAULT_TYPES_JSON" >&2
   exit 1
 fi
 
 tmp_json="$(mktemp -t dotviewer-ql-exts.XXXXXX.json)"
 trap 'rm -f "$tmp_json"' EXIT
 
-python3 - "$REGISTRY_PATH" "$tmp_json" <<'PY'
+python3 - "$DEFAULT_TYPES_JSON" "$tmp_json" <<'PY'
 import json
-import re
 import sys
 from pathlib import Path
 
 registry_path = Path(sys.argv[1])
 out_path = Path(sys.argv[2])
 
-text = registry_path.read_text(encoding="utf-8")
-blocks = re.findall(r'extensions:\s*\[([^\]]*)\]', text, flags=re.S)
-
-print(" ")
-print(f"\nText: ${text}")
-print(f"\n\nBlocks: ${text}")
-
+data = json.loads(registry_path.read_text(encoding="utf-8"))
 exts = []
-for block in blocks:
-    print(" ")
-    print(block)
-    exts.extend(re.findall(r'"([^"]+)"', block))
+for item in data:
+    exts.extend(item.get("extensions", []))
 
 seen = set()
 ordered = []
