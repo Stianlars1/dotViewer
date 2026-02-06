@@ -25,6 +25,7 @@
 			<key>QLSupportedContentTypes</key>
 			<array>
 				<string>public.data</string>
+				<string>public.mpeg-2-transport-stream</string>
 				<string>public.plain-text</string>
 				<string>public.text</string>
 				<string>public.source-code</string>
