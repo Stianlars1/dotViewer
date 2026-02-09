@@ -158,13 +158,15 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Open |
+| **Status** | Fixed (workaround) |
 
 **Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Copy button and right-click "Copy" work, but the keyboard shortcut does not.
 
 **Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` and `copy` events never fire in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
 
-**What works now**: Copy button (click events always reach JS), right-click context menu "Copy" (WKWebView native), selection-aware copy button with dynamic tooltip.
+**Fix (2026-02-10)**: Auto-copy on selection — a debounced `mouseup` listener detects text selections and automatically copies them to the clipboard using `navigator.clipboard.writeText()`. Mouse events reach WebKit's DOM (unlike keyboard events), and `mouseup` counts as a trusted user gesture for the Clipboard API. A 150ms debounce ensures triple-click (select line) only triggers one copy. A "Copied selection" toast confirms the action. Works in both code previews and markdown (raw + rendered).
+
+**What still works**: Copy button (copies full file or selection), right-click context menu "Copy" (WKWebView native), selection-aware copy button with dynamic tooltip.
 
 ### Approaches Tried (2026-02-09/10)
 

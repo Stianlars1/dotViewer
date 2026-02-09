@@ -857,6 +857,7 @@ public enum PreviewHTMLBuilder {
             const copyButton = document.getElementById('copy-button');
             const toast = document.getElementById('toast');
             let toastTimer = null;
+            let copyTimer = null;
 
             function showToast(message) {
               if (!toast) return;
@@ -909,6 +910,16 @@ public enum PreviewHTMLBuilder {
                 copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
               }
             });
+
+            document.addEventListener('mouseup', () => {
+              if (copyTimer) clearTimeout(copyTimer);
+              copyTimer = setTimeout(() => {
+                const sel = window.getSelection().toString();
+                if (sel.length > 0) {
+                  writeClipboard(sel).then(() => showToast('Copied selection'));
+                }
+              }, 150);
+            });
             """
         }
 
@@ -919,6 +930,7 @@ public enum PreviewHTMLBuilder {
         const copyButton = document.getElementById('copy-button');
         const toast = document.getElementById('toast');
         let toastTimer = null;
+        let copyTimer = null;
         let currentMode = '\(defaultMode == "rendered" ? "rendered" : "raw")';
 
         function showToast(message) {
@@ -1030,6 +1042,16 @@ public enum PreviewHTMLBuilder {
           if (copyButton) {
             copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
           }
+        });
+
+        document.addEventListener('mouseup', () => {
+          if (copyTimer) clearTimeout(copyTimer);
+          copyTimer = setTimeout(() => {
+            const sel = window.getSelection().toString();
+            if (sel.length > 0) {
+              writeClipboard(sel).then(() => showToast('Copied selection'));
+            }
+          }, 150);
         });
         """
     }
