@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 63;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -30,7 +30,6 @@
 		14CABC697CCF00403C2A0116 /* AddCustomExtensionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0951EE51E03E8716B50F3FF /* AddCustomExtensionSheet.swift */; };
 		1537BBF649750F0228CCB0F7 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = B7AAAA55D4ADD9363669F976 /* parser.c */; };
 		1803A6CC4D735EC0BF354CC9 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D390C88776FE4EFACB2D36 /* main.swift */; };
-		19A6677B2B6356564B57DAC4 /* dotIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC0BC8B7FB7470A5D6AC43EF /* dotIcon.xcassets */; };
 		1A172786D040E991FC361C07 /* c.scm in Resources */ = {isa = PBXBuildFile; fileRef = FD46C0828DF0E6C1ECFFF27D /* c.scm */; };
 		1C227E8D59410C479E87B106 /* ExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243CB0C0AE3E36D3B19AC47 /* ExtensionHelper.swift */; };
 		1C90BAC7EE79EED7A73EF1B3 /* QuickLookExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 39C43B42FC3031D968EBD84C /* QuickLookExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -66,7 +65,6 @@
 		3ECCC95DCD7C342B9C93AE95 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6A049F876EAB9C930BA9E9F9 /* parser.c */; };
 		40D5688C01C45AE89CA62264 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = EF4F67BBBF772569C203FC64 /* parser.c */; };
 		4290EB3123B7D8A63F07F3CE /* dockerfile.scm in Resources */ = {isa = PBXBuildFile; fileRef = 596DA735F1E8C1FFBF5926A3 /* dockerfile.scm */; };
-		4291D393AEFFF02876EBA10E /* CopyHelperManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57605D63D4244215A603CFBD /* CopyHelperManager.swift */; };
 		4328199D4E958E69DEA6F43B /* dart.scm in Resources */ = {isa = PBXBuildFile; fileRef = 3A13629DB5B4DEF2861DDC9E /* dart.scm */; };
 		451F959964A9148B37CA71A2 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 2BC26F8885CFAA214474E28B /* scanner.c */; };
 		4624C08B1E3C8C789036BBCF /* MarkdownRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8AC4278B5C23D4F3100777 /* MarkdownRenderer.swift */; };
@@ -96,7 +94,6 @@
 		63AB0D8B51CBA756A4E25268 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = AB412906FB4026E7BEE4459B /* parser.c */; };
 		643BB683175A9440CA505A7E /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 20C92EDF310CD4E589420923 /* scanner.c */; };
 		68A57A827F63430F4E336D91 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 836CFB168237C21283719580 /* parser.c */; };
-		697D648A4C332D25C5BD4C06 /* CopyHelper in Embed Dependencies */ = {isa = PBXBuildFile; fileRef = 8BAAF5792E505345AABC3909 /* CopyHelper */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6B12BEC9C1473AAC77121C28 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F0F9B57446BBF270B6838217 /* scanner.c */; };
 		6B8BE4ADF082A46EF569CA0B /* regex.scm in Resources */ = {isa = PBXBuildFile; fileRef = D7E359E21E48F94E1FACE881 /* regex.scm */; };
 		6BFAD180BB692038E8895BBB /* json.scm in Resources */ = {isa = PBXBuildFile; fileRef = FC060A4B8651EABB4D49D720 /* json.scm */; };
@@ -125,7 +122,6 @@
 		8B4188B8C9DBF5FEB975E188 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 06101ED02408AE303E4D3B78 /* parser.c */; };
 		8BA2F25ABBCA89A944419169 /* scanner.cc in Sources */ = {isa = PBXBuildFile; fileRef = 199575E18F7C69E28F3F1D21 /* scanner.cc */; };
 		8F29A01EE16A70DB4DD96436 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 24C90148C42508A686CFE674 /* parser.c */; };
-		8F54CD85621239E281C3CDE0 /* QuickLookDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D0BDEC6E0ACFEA967D1BA21 /* QuickLookDetector.swift */; };
 		8FD1A4C43BDB23E469C66F8F /* LanguageDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29ED58A7304FDD511052C1EB /* LanguageDetector.swift */; };
 		91F767E7942703EFBC47A07D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 1F99D189C4C30AB6CCFF9F90 /* scanner.c */; };
 		925CC7654091096EB2C8B39B /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = CD2A168767046C9DD8937BF5 /* scanner.c */; };
@@ -142,7 +138,6 @@
 		9E34C2A1521F05F36EADE786 /* DefaultFileTypes.json in Resources */ = {isa = PBXBuildFile; fileRef = 0849D4910BAD0567EB22B7B1 /* DefaultFileTypes.json */; };
 		A0D39C36DD0F10D772BB9F84 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 06A3208D305C34B9FDEEC0DB /* parser.c */; };
 		A5277C2629A3DA14F16A3A5D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 86F5D9BA48BB8C5131C336B9 /* scanner.c */; };
-		A52D06C7284BC78CF7A08FF8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7E6F6EA84F10AC8D589EEB45 /* Assets.xcassets */; };
 		A622F518D5280C2483821FA0 /* awk.scm in Resources */ = {isa = PBXBuildFile; fileRef = 47345794DB0D5A2F2D88C367 /* awk.scm */; };
 		A626E86E9804E380DE4F1517 /* julia.scm in Resources */ = {isa = PBXBuildFile; fileRef = 43100DF81AA53AD10D3DACC9 /* julia.scm */; };
 		A7043956A90521923983779C /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 985689D39F3CF1F4AC3C1D69 /* scanner.c */; };
@@ -162,7 +157,6 @@
 		B510503B1E837AE43DF2C19A /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 19A2E3609BFE3F5DD153C9DF /* scanner.c */; };
 		B548223D6098650689040422 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6588BD94C8B3E8E981E09054 /* parser.c */; };
 		B81283C71BD5B54F5B33FE1B /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = CBBBCAEBB0EDCD475E164C9F /* parser.c */; };
-		B8A695F50E39EB4AF7D853F1 /* KeyboardSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F4B3F00FCC442D4FB1BEA05 /* KeyboardSettingsView.swift */; };
 		BA4C701A06F027A0BA6B6C73 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F610A9071AF41AA633F263C1 /* scanner.c */; };
 		BAB6A7F67AABA0F69223F8D1 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 3341525A97ECB634C877F9AC /* parser.c */; };
 		BAE8F201DAD91F654AE3134B /* yaml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 782445C0DE57BC5CC590D29E /* yaml.scm */; };
@@ -192,7 +186,6 @@
 		CCF5A17AD7B1A147E9BAA62D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AF2082FCB7D64A2C0B7347FE /* scanner.c */; };
 		CF919BE0373885B6808F7738 /* erlang.scm in Resources */ = {isa = PBXBuildFile; fileRef = 3034EF16D0BF92F41E82A65D /* erlang.scm */; };
 		CFFA4BC7EF0B8823170C65EB /* FileInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F48AC0109F62736D7C201A8 /* FileInspector.swift */; };
-		D0E57001C52B074E2E8B6F5C /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA69F225F0E93620647CFC1 /* main.swift */; };
 		D34CCB40C73BFAD2F64AA491 /* fortran.scm in Resources */ = {isa = PBXBuildFile; fileRef = CCC6C644FF04F54BD8591755 /* fortran.scm */; };
 		D368F84ACE21250685E1DBBC /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8878AE41D8B76892DD01197 /* Shared.framework */; };
 		D37BAA4A4E7DFE18D37A39FC /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = FEF585B7725113BA4D96BEB5 /* scanner.c */; };
@@ -206,7 +199,6 @@
 		DC7EF39A950D458319869348 /* objc.scm in Resources */ = {isa = PBXBuildFile; fileRef = EABBCC567DC71BF7792BB13E /* objc.scm */; };
 		DD067EFE8A2B0DBF62432AF2 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 55AA29F06870F298DB2C6964 /* parser.c */; };
 		DE3C6FB2588D40C9F91D08F2 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 374E87DFA67CE549C7ED22E4 /* parser.c */; };
-		DF3E4D5A97E2EC82DE613FE1 /* KeyboardMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DF1161642FB4B91C7B65AD9 /* KeyboardMonitor.swift */; };
 		E0893A56310320F2090BEDD1 /* FileTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */; };
 		E10F6AA8E42CBB9822713EB1 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C74B9D80268562A529F34ED /* parser.c */; };
 		E12AC9EC174DB042AE4C51D8 /* PreviewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2600D325717411A861AF988C /* PreviewCache.swift */; };
@@ -214,7 +206,6 @@
 		E3FDEBF28457DCDC5FE445E4 /* kotlin.scm in Resources */ = {isa = PBXBuildFile; fileRef = 0B0D0CD5596EBDCC278F9952 /* kotlin.scm */; };
 		E4194384CCDEFDF57B096F87 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C6E80C50DA50ABD2C6B8C169 /* parser.c */; };
 		E475EA069BB1C64D967116EB /* graphql.scm in Resources */ = {isa = PBXBuildFile; fileRef = DAD85F88D667FAE2B68BBDF6 /* graphql.scm */; };
-		E5A0E195F57FFCDB4740469C /* AccessibilityCopier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A462D1A3D52C335C93957C44 /* AccessibilityCopier.swift */; };
 		E70997370B4707A8B314017E /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6940AFE74BA00A6F1216F5CC /* SharedSettings.swift */; };
 		E723708AAF58D7450CD63D34 /* swift.scm in Resources */ = {isa = PBXBuildFile; fileRef = 413291EF5C62EB4DE26807F8 /* swift.scm */; };
 		E8295032E939A1485852A3C6 /* cmake.scm in Resources */ = {isa = PBXBuildFile; fileRef = 8CB0C35EBAB2AD819C1CE909 /* cmake.scm */; };
@@ -262,13 +253,6 @@
 			remoteGlobalIDString = E1AB1EEAC0A1F5EAC7F4FDB8;
 			remoteInfo = Shared;
 		};
-		76F2C334A10F779333FB8A53 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 30B04C625492380F80BC9C0D /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3F8BEC7AA708F756B0D287C6;
-			remoteInfo = CopyHelper;
-		};
 		A1BBD6FDECD4A159FFF5D725 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 30B04C625492380F80BC9C0D /* Project object */;
@@ -315,17 +299,6 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		56F60DB70753E8797F4EA57D /* Embed Dependencies */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 6;
-			files = (
-				697D648A4C332D25C5BD4C06 /* CopyHelper in Embed Dependencies */,
-			);
-			name = "Embed Dependencies";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A9A4CD268FA4D93B210825A2 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -354,7 +327,7 @@
 		0062E680606ED1A30AE63D73 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		009BB63C7C8A81C97FEB54E3 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		01D81D9C209AE01E95F1D8B6 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		026BDE49AFA15CFA40F6C257 /* ruby.scm */ = {isa = PBXFileReference; path = ruby.scm; sourceTree = "<group>"; };
+		026BDE49AFA15CFA40F6C257 /* ruby.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = ruby.scm; sourceTree = "<group>"; };
 		03823D49B613FC38A81E10DB /* alloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = alloc.c; sourceTree = "<group>"; };
 		03A4F0E1C88DFB2551380AB2 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		0439C1CC0EC1E5813C32F2AD /* QuickLookThumbnailExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookThumbnailExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -373,7 +346,7 @@
 		09D405424DA6AD7E25FFD4E7 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		09F26B2C6544012B75082740 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0AE8D5E15F9E1FD5D49799FC /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		0B0D0CD5596EBDCC278F9952 /* kotlin.scm */ = {isa = PBXFileReference; path = kotlin.scm; sourceTree = "<group>"; };
+		0B0D0CD5596EBDCC278F9952 /* kotlin.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = kotlin.scm; sourceTree = "<group>"; };
 		0B84E38C3D5A01EF95F90E0F /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		0BA96BDBC4F62077C0777329 /* node.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = node.c; sourceTree = "<group>"; };
 		0BBD802270E958AC7BD71987 /* length.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = length.h; sourceTree = "<group>"; };
@@ -387,20 +360,19 @@
 		0FB3B09C4630A15D6850C411 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		11309544A32AE53E3CCBDBA9 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		11F1675999FA3A415D7C867A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		128FAC0C7DB06541B038C442 /* clojure.scm */ = {isa = PBXFileReference; path = clojure.scm; sourceTree = "<group>"; };
-		13DEC267888D3D9ACCF7FB81 /* fish.scm */ = {isa = PBXFileReference; path = fish.scm; sourceTree = "<group>"; };
+		128FAC0C7DB06541B038C442 /* clojure.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = clojure.scm; sourceTree = "<group>"; };
+		13DEC267888D3D9ACCF7FB81 /* fish.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = fish.scm; sourceTree = "<group>"; };
 		14619558D20AA956A456A5DD /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		1517C3620E99E84DDD625CA9 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		15F7B9F7B830EA6C6424E715 /* ocaml.scm */ = {isa = PBXFileReference; path = ocaml.scm; sourceTree = "<group>"; };
+		15F7B9F7B830EA6C6424E715 /* ocaml.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = ocaml.scm; sourceTree = "<group>"; };
 		16EDA7A31B078D4F98C0C0F8 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		1860A4CA8AC8B2BEA5677E32 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		199575E18F7C69E28F3F1D21 /* scanner.cc */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scanner.cc; sourceTree = "<group>"; };
 		19A2E3609BFE3F5DD153C9DF /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		19AC45AE0EE45E366B048E13 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		19D8D0F84CE4DB43CBE10ECC /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		1B415F313262369109B5D6F1 /* wat.scm */ = {isa = PBXFileReference; path = wat.scm; sourceTree = "<group>"; };
-		1BBACD7D2F23D3EF8261FC6E /* ICU_SHA */ = {isa = PBXFileReference; path = ICU_SHA; sourceTree = "<group>"; };
-		1D0BDEC6E0ACFEA967D1BA21 /* QuickLookDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickLookDetector.swift; sourceTree = "<group>"; };
+		1B415F313262369109B5D6F1 /* wat.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = wat.scm; sourceTree = "<group>"; };
+		1BBACD7D2F23D3EF8261FC6E /* ICU_SHA */ = {isa = PBXFileReference; lastKnownFileType = text; path = ICU_SHA; sourceTree = "<group>"; };
 		1DACAF893B7DE7039E39A764 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		1DF3DDE50996422FA6A746DF /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		1E2C791F666CCAF1377B0272 /* ExtensionStatusChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionStatusChecker.swift; sourceTree = "<group>"; };
@@ -408,7 +380,7 @@
 		1ED8B9C41283EF81287A5116 /* HighlightXPC.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HighlightXPC.entitlements; sourceTree = "<group>"; };
 		1F00943F36F0A741842EFD99 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		1F66A23421984421986E46D8 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		1F66F9F9B894F449666DE46F /* hcl.scm */ = {isa = PBXFileReference; path = hcl.scm; sourceTree = "<group>"; };
+		1F66F9F9B894F449666DE46F /* hcl.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = hcl.scm; sourceTree = "<group>"; };
 		1F6F7B15B6884A3FBA104E3A /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		1F99D189C4C30AB6CCFF9F90 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		20C92EDF310CD4E589420923 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
@@ -425,8 +397,8 @@
 		2989E2B0490AA28AF13BA48E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		29ED58A7304FDD511052C1EB /* LanguageDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageDetector.swift; sourceTree = "<group>"; };
 		2BC26F8885CFAA214474E28B /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
-		2BE2962EFFAE49F1E0DFB2BD /* nix.scm */ = {isa = PBXFileReference; path = nix.scm; sourceTree = "<group>"; };
-		2C5ADE3264929DA54AF3FA1C /* java.scm */ = {isa = PBXFileReference; path = java.scm; sourceTree = "<group>"; };
+		2BE2962EFFAE49F1E0DFB2BD /* nix.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = nix.scm; sourceTree = "<group>"; };
+		2C5ADE3264929DA54AF3FA1C /* java.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = java.scm; sourceTree = "<group>"; };
 		2C74B9D80268562A529F34ED /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */ = {isa = PBXFileReference; explicitFileType = "wrapper.xpc-service"; includeInIndex = 0; path = HighlightXPC.xpc; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CB6EC19A6B26491A5AC3170 /* ThemePalette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemePalette.swift; sourceTree = "<group>"; };
@@ -437,7 +409,7 @@
 		2DE5E848F2A20903C8D1C29D /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		2F28A738C9558D8B2E66CECC /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		2F3850F61D4DE001496A9B86 /* QuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookPreview.entitlements; sourceTree = "<group>"; };
-		3034EF16D0BF92F41E82A65D /* erlang.scm */ = {isa = PBXFileReference; path = erlang.scm; sourceTree = "<group>"; };
+		3034EF16D0BF92F41E82A65D /* erlang.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = erlang.scm; sourceTree = "<group>"; };
 		30D49A4FC2B9C47AD978DEFC /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypesView.swift; sourceTree = "<group>"; };
 		3341525A97ECB634C877F9AC /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -448,9 +420,9 @@
 		374120E4A8E35785F275C027 /* utf8.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utf8.h; sourceTree = "<group>"; };
 		374E87DFA67CE549C7ED22E4 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		3836906BCBA249BFA0A18E0E /* dotViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = dotViewerApp.swift; sourceTree = "<group>"; };
-		386A263E551C480B8D3F6F39 /* perl.scm */ = {isa = PBXFileReference; path = perl.scm; sourceTree = "<group>"; };
+		386A263E551C480B8D3F6F39 /* perl.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = perl.scm; sourceTree = "<group>"; };
 		39C43B42FC3031D968EBD84C /* QuickLookExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = QuickLookExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A13629DB5B4DEF2861DDC9E /* dart.scm */ = {isa = PBXFileReference; path = dart.scm; sourceTree = "<group>"; };
+		3A13629DB5B4DEF2861DDC9E /* dart.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = dart.scm; sourceTree = "<group>"; };
 		3A79E28EA2B5F17FBB2A1125 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		3ACFB46A7D6208FC4538E6B9 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3B293E1793798244B7D4A1D4 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -459,21 +431,21 @@
 		3E42E29B8C12EE9E33F4A64E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		3FCDBC544C8ADC7517390F58 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		407CB6BA9071979EBCDEF257 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		413291EF5C62EB4DE26807F8 /* swift.scm */ = {isa = PBXFileReference; path = swift.scm; sourceTree = "<group>"; };
+		413291EF5C62EB4DE26807F8 /* swift.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = swift.scm; sourceTree = "<group>"; };
 		423C73D3B421422B908D31F6 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		43100DF81AA53AD10D3DACC9 /* julia.scm */ = {isa = PBXFileReference; path = julia.scm; sourceTree = "<group>"; };
+		43100DF81AA53AD10D3DACC9 /* julia.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = julia.scm; sourceTree = "<group>"; };
 		431F8D8AAB869C90A5936DB3 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		431FA0AD1A85B076C5513EDB /* xml.scm */ = {isa = PBXFileReference; path = xml.scm; sourceTree = "<group>"; };
+		431FA0AD1A85B076C5513EDB /* xml.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = xml.scm; sourceTree = "<group>"; };
 		44990FF975DD30251C33B1F6 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		44FC4E8F74643B61D4453119 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		46EFF0A37F2C13A2E8B9CE92 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		47345794DB0D5A2F2D88C367 /* awk.scm */ = {isa = PBXFileReference; path = awk.scm; sourceTree = "<group>"; };
+		47345794DB0D5A2F2D88C367 /* awk.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = awk.scm; sourceTree = "<group>"; };
 		47B853C15155633DF5E6D13D /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		489E918C8F94C24767A76DE0 /* r.scm */ = {isa = PBXFileReference; path = r.scm; sourceTree = "<group>"; };
+		489E918C8F94C24767A76DE0 /* r.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = r.scm; sourceTree = "<group>"; };
 		48CB5E092EE69E1F7731E467 /* MarkdownSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownSettingsView.swift; sourceTree = "<group>"; };
-		48E275897CAC520C94CBD5DA /* zig.scm */ = {isa = PBXFileReference; path = zig.scm; sourceTree = "<group>"; };
-		495F272442ACE57172676182 /* python.scm */ = {isa = PBXFileReference; path = python.scm; sourceTree = "<group>"; };
-		49BE5B206C10EA9419D2AF5F /* markdown.scm */ = {isa = PBXFileReference; path = markdown.scm; sourceTree = "<group>"; };
+		48E275897CAC520C94CBD5DA /* zig.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = zig.scm; sourceTree = "<group>"; };
+		495F272442ACE57172676182 /* python.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = python.scm; sourceTree = "<group>"; };
+		49BE5B206C10EA9419D2AF5F /* markdown.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = markdown.scm; sourceTree = "<group>"; };
 		4A652354FAA97CF3B3A0A2DF /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		4B10868ECF14E8B1EAE46752 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		4B2CADDB06B93AB4816EA4E8 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
@@ -491,21 +463,19 @@
 		52DB814512E9A3AE43D66FAF /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		5319F43D8CFD469AA65FF86C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		53892AE14CF97ABDB7DDF21F /* wasm_store.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = wasm_store.h; sourceTree = "<group>"; };
-		55291594EA761209AE8195BD /* haskell.scm */ = {isa = PBXFileReference; path = haskell.scm; sourceTree = "<group>"; };
+		55291594EA761209AE8195BD /* haskell.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = haskell.scm; sourceTree = "<group>"; };
 		55AA29F06870F298DB2C6964 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		57605D63D4244215A603CFBD /* CopyHelperManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyHelperManager.swift; sourceTree = "<group>"; };
 		57840763F5A1B18E5F706351 /* keywords.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = keywords.h; sourceTree = "<group>"; };
 		57C05811002E92447B7011F8 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		57D647D517D3BF585104577E /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		596DA735F1E8C1FFBF5926A3 /* dockerfile.scm */ = {isa = PBXFileReference; path = dockerfile.scm; sourceTree = "<group>"; };
+		596DA735F1E8C1FFBF5926A3 /* dockerfile.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = dockerfile.scm; sourceTree = "<group>"; };
 		59B1E53284C8D2E89061B24E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		5A5FD8541E287C169C8663D1 /* HighlightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightProtocol.swift; sourceTree = "<group>"; };
 		5B07C6F227F2932A336CE9E6 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		5C1D02AAB5FFDF3745129BA7 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		5C683E94C18AC3CDF1A81579 /* HighlightXPCClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightXPCClient.swift; sourceTree = "<group>"; };
 		5CCA7B433C072919D107EB7B /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		5DF1161642FB4B91C7B65AD9 /* KeyboardMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardMonitor.swift; sourceTree = "<group>"; };
-		5E95A549156B0EA740A62F05 /* c_sharp.scm */ = {isa = PBXFileReference; path = c_sharp.scm; sourceTree = "<group>"; };
+		5E95A549156B0EA740A62F05 /* c_sharp.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = c_sharp.scm; sourceTree = "<group>"; };
 		5EAF9989E40E74125D5B54F0 /* FileTypeResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeResolution.swift; sourceTree = "<group>"; };
 		5EBC9A6040D59B71CE46DFF7 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		5EC7B20DE0FAC4737FB7E095 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
@@ -513,7 +483,7 @@
 		5FF2AC074E8A16E661099C6D /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		6166CA298808E248832C57DD /* endian.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = endian.h; sourceTree = "<group>"; };
 		61D92CA337F8203BA4B5A0EF /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		62099FF81D4B61117BEB4950 /* lua.scm */ = {isa = PBXFileReference; path = lua.scm; sourceTree = "<group>"; };
+		62099FF81D4B61117BEB4950 /* lua.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = lua.scm; sourceTree = "<group>"; };
 		628FF1D65D974FBC3DBDEC3A /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		62ECF313A25FC7A5AA9AF688 /* PlainTextRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainTextRenderer.swift; sourceTree = "<group>"; };
 		64805DAC958207FD83FAFE86 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -533,15 +503,14 @@
 		6A049F876EAB9C930BA9E9F9 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		6A72F3FCE25E49B26597628E /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		6A91F867EFD4D88A90DAEDFD /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		6AF17FA0077F8E7DC6FFD84D /* LICENSE */ = {isa = PBXFileReference; path = LICENSE; sourceTree = "<group>"; };
+		6AF17FA0077F8E7DC6FFD84D /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		6C161D29CB36FE4980CDD76E /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		6CA69F225F0E93620647CFC1 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		6D5952297DC3E4D2120AF205 /* PlistConverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConverter.swift; sourceTree = "<group>"; };
 		6D73899241EBD4E7F03D3FA1 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		6EDCC3140522DA2FAF647238 /* ini.scm */ = {isa = PBXFileReference; path = ini.scm; sourceTree = "<group>"; };
+		6EDCC3140522DA2FAF647238 /* ini.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = ini.scm; sourceTree = "<group>"; };
 		6F48AC0109F62736D7C201A8 /* FileInspector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileInspector.swift; sourceTree = "<group>"; };
 		6F9077EFF915EC26969F08A8 /* icon.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = icon.json; sourceTree = "<group>"; };
-		6F97C1B1A34FF52AE6A75951 /* scss.scm */ = {isa = PBXFileReference; path = scss.scm; sourceTree = "<group>"; };
+		6F97C1B1A34FF52AE6A75951 /* scss.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = scss.scm; sourceTree = "<group>"; };
 		6F9D477EC70A370746052246 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		702885C55933CE2DF39B87BC /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		7036607DDB6BB500108628E3 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -551,23 +520,21 @@
 		723F14A6280DB3372DFE6A93 /* TreeSitterHighlighter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeSitterHighlighter.swift; sourceTree = "<group>"; };
 		73A97E53DA31D86F7F8CA748 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		750F6D8D435534DC2D3796B5 /* unicode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unicode.h; sourceTree = "<group>"; };
-		754B4F38A9F27043171CCB18 /* javascript.scm */ = {isa = PBXFileReference; path = javascript.scm; sourceTree = "<group>"; };
+		754B4F38A9F27043171CCB18 /* javascript.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = javascript.scm; sourceTree = "<group>"; };
 		75EE02511E5E33044140FC15 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		76D657259F99AC5BAFE2E407 /* schema.core.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = schema.core.c; sourceTree = "<group>"; };
 		770B62115BC6C955904DF34C /* tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tree.h; sourceTree = "<group>"; };
-		782445C0DE57BC5CC590D29E /* yaml.scm */ = {isa = PBXFileReference; path = yaml.scm; sourceTree = "<group>"; };
-		78EA0E23E5889581D4698B98 /* node-types.json.rej */ = {isa = PBXFileReference; path = "node-types.json.rej"; sourceTree = "<group>"; };
+		782445C0DE57BC5CC590D29E /* yaml.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = yaml.scm; sourceTree = "<group>"; };
+		78EA0E23E5889581D4698B98 /* node-types.json.rej */ = {isa = PBXFileReference; lastKnownFileType = text; path = "node-types.json.rej"; sourceTree = "<group>"; };
 		79C7579B08A306AD3DB4FAC4 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		79C850FA85AB900DF38D0181 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		79D444F84594125A6FE486B5 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		7AD81394CDE8A0A16E052B98 /* css.scm */ = {isa = PBXFileReference; path = css.scm; sourceTree = "<group>"; };
+		7AD81394CDE8A0A16E052B98 /* css.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = css.scm; sourceTree = "<group>"; };
 		7B8AE043A1B3EA0E7E78DEBE /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		7C261705A9780EF7E3E2318D /* umachine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = umachine.h; sourceTree = "<group>"; };
 		7E4311C90440961FF488EF55 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		7E6F6EA84F10AC8D589EEB45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7EB0601B5F2F6C26217E897E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		7EFADF28FF84D2E8965181EA /* ptypes.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ptypes.h; sourceTree = "<group>"; };
-		7F4B3F00FCC442D4FB1BEA05 /* KeyboardSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardSettingsView.swift; sourceTree = "<group>"; };
 		7FC1599EB7A4D43ED77D4FEC /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		809007882E8A33BFD529FD1F /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81CD5D92885F535F277D5CD1 /* TransportStreamDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportStreamDetector.swift; sourceTree = "<group>"; };
@@ -581,9 +548,8 @@
 		87E3922E260DBA9159F739EE /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		8839A88B87E75183E45978FD /* HighlightXPC-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HighlightXPC-Bridging-Header.h"; sourceTree = "<group>"; };
 		8BA9956E6F3B9588BA202568 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		8BAAF5792E505345AABC3909 /* CopyHelper */ = {isa = PBXFileReference; includeInIndex = 0; path = CopyHelper; sourceTree = BUILT_PRODUCTS_DIR; };
-		8BC70D59C38219CD20BD0EE9 /* toml.scm */ = {isa = PBXFileReference; path = toml.scm; sourceTree = "<group>"; };
-		8CB0C35EBAB2AD819C1CE909 /* cmake.scm */ = {isa = PBXFileReference; path = cmake.scm; sourceTree = "<group>"; };
+		8BC70D59C38219CD20BD0EE9 /* toml.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = toml.scm; sourceTree = "<group>"; };
+		8CB0C35EBAB2AD819C1CE909 /* cmake.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = cmake.scm; sourceTree = "<group>"; };
 		8DD8841D2305C2E3BFA80041 /* tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tree.c; sourceTree = "<group>"; };
 		8FDA9390099304FC192BABF6 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		913660CA2DAB7C73A823F989 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
@@ -592,7 +558,7 @@
 		92D920625F2F6D6629846068 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		92E05B3CBF1B83F9A14DD59A /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		9302F1AD54F7EED1E1FCD30B /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		93FAF2FE5D188454E650D2C0 /* scala.scm */ = {isa = PBXFileReference; path = scala.scm; sourceTree = "<group>"; };
+		93FAF2FE5D188454E650D2C0 /* scala.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = scala.scm; sourceTree = "<group>"; };
 		9468FD13624DE7DC91D54F3A /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		94799DD326B5C3DB66078B00 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		954C608F0C4C8DAB0ACBBF6B /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
@@ -604,8 +570,8 @@
 		985689D39F3CF1F4AC3C1D69 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		9928F783E485443D8815D23A /* FileTypeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeModels.swift; sourceTree = "<group>"; };
 		9995575A5132A2B94EE4B001 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
-		9A7E425846D6D10AEEFB6B51 /* gleam.scm */ = {isa = PBXFileReference; path = gleam.scm; sourceTree = "<group>"; };
-		9A8992140F8565C921B1A0D6 /* pascal.scm */ = {isa = PBXFileReference; path = pascal.scm; sourceTree = "<group>"; };
+		9A7E425846D6D10AEEFB6B51 /* gleam.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = gleam.scm; sourceTree = "<group>"; };
+		9A8992140F8565C921B1A0D6 /* pascal.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = pascal.scm; sourceTree = "<group>"; };
 		9AAC6D0ADC3CA56675E288E4 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		9B04D210489C14EE8FB11C67 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		9BAA37AE8128279A61303FF9 /* reusable_node.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = reusable_node.h; sourceTree = "<group>"; };
@@ -615,30 +581,28 @@
 		A05C85FCC252B3A37BFB8D44 /* FileTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistry.swift; sourceTree = "<group>"; };
 		A0F02435AA4DD508314E68A8 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		A243CB0C0AE3E36D3B19AC47 /* ExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionHelper.swift; sourceTree = "<group>"; };
-		A462D1A3D52C335C93957C44 /* AccessibilityCopier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccessibilityCopier.swift; sourceTree = "<group>"; };
 		A4AFFDC210FC64E76CC16547 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		A4C9131A0F7ED7186D00AF8F /* html.scm */ = {isa = PBXFileReference; path = html.scm; sourceTree = "<group>"; };
+		A4C9131A0F7ED7186D00AF8F /* html.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = html.scm; sourceTree = "<group>"; };
 		A6A8C066C86565DFE1990369 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		A736FAC9CBADB8D7635DBB58 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		A73888DB5E6619A8D4C3F0EA /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		A778D7D476187F718D43A87E /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		A7BC2375A0C7FC3BED095ED8 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		A8ED8FB528C431A42B8E915C /* cpp.scm */ = {isa = PBXFileReference; path = cpp.scm; sourceTree = "<group>"; };
-		A9B1E22FA1766E7280D35A34 /* parser.c.rej */ = {isa = PBXFileReference; path = parser.c.rej; sourceTree = "<group>"; };
+		A8ED8FB528C431A42B8E915C /* cpp.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = cpp.scm; sourceTree = "<group>"; };
+		A9B1E22FA1766E7280D35A34 /* parser.c.rej */ = {isa = PBXFileReference; lastKnownFileType = text; path = parser.c.rej; sourceTree = "<group>"; };
 		A9F19FFD8C12A8D49E9B0866 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		AA2A6A38C7AADB5C70666DC1 /* sql.scm */ = {isa = PBXFileReference; path = sql.scm; sourceTree = "<group>"; };
+		AA2A6A38C7AADB5C70666DC1 /* sql.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = sql.scm; sourceTree = "<group>"; };
 		AA93BBCB02CCDD2AA9EE2F23 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		AB412906FB4026E7BEE4459B /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		AB71645B85912BBE2F98F259 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		AB9DA4527BDA2BFE04548E85 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		AC0BC8B7FB7470A5D6AC43EF /* dotIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = dotIcon.xcassets; sourceTree = "<group>"; };
 		AC2A1B1C8E4F1BF7028836F4 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		AC6C5AF5824DE36A10CC0676 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		ACDF5474DBCFA508AF648712 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		AD212F778B6F2CFBA122ED36 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		AD67E2EAF12A2944D247A31A /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		AF2082FCB7D64A2C0B7347FE /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
-		AF3984CBF85E85A7BAE9404E /* make.scm */ = {isa = PBXFileReference; path = make.scm; sourceTree = "<group>"; };
+		AF3984CBF85E85A7BAE9404E /* make.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = make.scm; sourceTree = "<group>"; };
 		B00F188327DD4CDE03DA10DE /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B0920FE1442FF13C4F313458 /* QuickLookUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = QuickLookUI.framework; sourceTree = "<group>"; };
 		B14BF7B618A889E45F1BE9D8 /* tree_cursor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tree_cursor.h; sourceTree = "<group>"; };
@@ -646,8 +610,8 @@
 		B493FA298DF5B4F092E93D53 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B4CE0B3F397EC48B4C4C506C /* urename.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = urename.h; sourceTree = "<group>"; };
 		B4FF44F4002C6B1316D80781 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		B5451F56D8EC17B2B4B90B13 /* elixir.scm */ = {isa = PBXFileReference; path = elixir.scm; sourceTree = "<group>"; };
-		B6B238E625F9D018F934EE12 /* typescript.scm */ = {isa = PBXFileReference; path = typescript.scm; sourceTree = "<group>"; };
+		B5451F56D8EC17B2B4B90B13 /* elixir.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = elixir.scm; sourceTree = "<group>"; };
+		B6B238E625F9D018F934EE12 /* typescript.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = typescript.scm; sourceTree = "<group>"; };
 		B7AAAA55D4ADD9363669F976 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B91262659161E3199C818280 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B9BFF42F641DCC5FCF5DC68E /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -668,7 +632,7 @@
 		C2C84360C2D043159D835D9C /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		C30C14D3BCA470BF35CD9DE2 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		C3CAE504A8CF875AC92980CD /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		C409A6A6F71B06A5DEE80742 /* d.scm */ = {isa = PBXFileReference; path = d.scm; sourceTree = "<group>"; };
+		C409A6A6F71B06A5DEE80742 /* d.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = d.scm; sourceTree = "<group>"; };
 		C4A9A03A755DE6457A147B38 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		C4FCE33CD25B72239D819B2B /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		C5674B9E0B9E4C97F61A127B /* PreviewHTMLBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewHTMLBuilder.swift; sourceTree = "<group>"; };
@@ -686,30 +650,30 @@
 		CC52F5A0FAEB939B4CA9685D /* TreeSitterLanguages.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TreeSitterLanguages.h; sourceTree = "<group>"; };
 		CC943593ADA7924AE0EE049F /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		CCB16BBD909F158DADC1F9DE /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		CCC6C644FF04F54BD8591755 /* fortran.scm */ = {isa = PBXFileReference; path = fortran.scm; sourceTree = "<group>"; };
+		CCC6C644FF04F54BD8591755 /* fortran.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = fortran.scm; sourceTree = "<group>"; };
 		CD2A168767046C9DD8937BF5 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		CE0D146733C7326CA936E053 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		CF374F60CFE4CA0F8791A40A /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		D026A4C21C57C2BCCD6D45F1 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		D1C78368E91D4E3D142CCC94 /* go.scm */ = {isa = PBXFileReference; path = go.scm; sourceTree = "<group>"; };
+		D1C78368E91D4E3D142CCC94 /* go.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = go.scm; sourceTree = "<group>"; };
 		D29B841CCB867432A8B8C896 /* get_changed_ranges.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = get_changed_ranges.h; sourceTree = "<group>"; };
 		D3ECA0599AF1AA56322FCF9E /* lexer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = lexer.c; sourceTree = "<group>"; };
 		D4D318A2E807EC2CB082E5CF /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		D4EC52BC8CABC0EEA47CCBAA /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		D5074165CC30196671109C59 /* vim.scm */ = {isa = PBXFileReference; path = vim.scm; sourceTree = "<group>"; };
-		D52DB8B3AFC553ED96B80407 /* tsx.scm */ = {isa = PBXFileReference; path = tsx.scm; sourceTree = "<group>"; };
+		D5074165CC30196671109C59 /* vim.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = vim.scm; sourceTree = "<group>"; };
+		D52DB8B3AFC553ED96B80407 /* tsx.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = tsx.scm; sourceTree = "<group>"; };
 		D714ADFE225929B9171F93B7 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		D7441AB1CF99C42926F1CA8B /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		D7E359E21E48F94E1FACE881 /* regex.scm */ = {isa = PBXFileReference; path = regex.scm; sourceTree = "<group>"; };
+		D7E359E21E48F94E1FACE881 /* regex.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = regex.scm; sourceTree = "<group>"; };
 		D807FADD70AC918536A2A185 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		D8878AE41D8B76892DD01197 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DAAC02E68D492DEBC39C89A3 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		DAAD63CAC413887C4AFCAC31 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		DAD85F88D667FAE2B68BBDF6 /* graphql.scm */ = {isa = PBXFileReference; path = graphql.scm; sourceTree = "<group>"; };
+		DAD85F88D667FAE2B68BBDF6 /* graphql.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = graphql.scm; sourceTree = "<group>"; };
 		DAE96D46386846D3E909A78C /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		DBCAB78BBC6ACA108529B62E /* stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
 		DC3FE34EADE1CE63ED60B8DA /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		DE53571252E57053F8C6B11D /* bash.scm */ = {isa = PBXFileReference; path = bash.scm; sourceTree = "<group>"; };
+		DE53571252E57053F8C6B11D /* bash.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = bash.scm; sourceTree = "<group>"; };
 		DF380AC23E492584E4DD108E /* ts_assert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ts_assert.h; sourceTree = "<group>"; };
 		DFBCEEE697E46EC382484903 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		E03091B085411A8CF75AFDF4 /* get_changed_ranges.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = get_changed_ranges.c; sourceTree = "<group>"; };
@@ -725,19 +689,19 @@
 		E634232DFEBB66FE0FE005D4 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		E76777D7124DC2A676BDA2DD /* language.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = language.h; sourceTree = "<group>"; };
 		E79511A5E22B82FDEBC6367F /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
-		E7BCFBCD1CD4FDEC33241F61 /* SVG Image.svg */ = {isa = PBXFileReference; path = "SVG Image.svg"; sourceTree = "<group>"; };
+		E7BCFBCD1CD4FDEC33241F61 /* SVG Image.svg */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SVG Image.svg"; sourceTree = "<group>"; };
 		E7FBDDB7FD6DD64F0C171C0E /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		E8332DEF18E8165ECBC6A5DE /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
-		E8E32B1DDB8A74130CF231CB /* rust.scm */ = {isa = PBXFileReference; path = rust.scm; sourceTree = "<group>"; };
-		E992ABA023798DA5379414BD /* php.scm */ = {isa = PBXFileReference; path = php.scm; sourceTree = "<group>"; };
+		E8E32B1DDB8A74130CF231CB /* rust.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = rust.scm; sourceTree = "<group>"; };
+		E992ABA023798DA5379414BD /* php.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = php.scm; sourceTree = "<group>"; };
 		EA20289FA76882B885FC7A9F /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
-		EABBCC567DC71BF7792BB13E /* objc.scm */ = {isa = PBXFileReference; path = objc.scm; sourceTree = "<group>"; };
+		EABBCC567DC71BF7792BB13E /* objc.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = objc.scm; sourceTree = "<group>"; };
 		EAD8F1E0CB199DB08147075B /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		EB9940A7D28B8F2ED3CEEDFC /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		EC0C3734603E88A6A10E7FF8 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		EEF8DF1B43A1A16BC47AAC8B /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		EF4F67BBBF772569C203FC64 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
-		EF90FCDD908246BFA64FB74E /* grammar.json.rej */ = {isa = PBXFileReference; path = grammar.json.rej; sourceTree = "<group>"; };
+		EF90FCDD908246BFA64FB74E /* grammar.json.rej */ = {isa = PBXFileReference; lastKnownFileType = text; path = grammar.json.rej; sourceTree = "<group>"; };
 		F0F9B57446BBF270B6838217 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		F1E2B0567DB18AA5EEF5A31D /* schema.json.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = schema.json.c; sourceTree = "<group>"; };
 		F2CC76F8041E37818FF3B3D4 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
@@ -751,9 +715,9 @@
 		F8CCCD6D3CA22F483A807E20 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		F9E6BB95BE4BF92E2B1B064D /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		FA7BE0DF9C81A63B8ADBB5D4 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		FC060A4B8651EABB4D49D720 /* json.scm */ = {isa = PBXFileReference; path = json.scm; sourceTree = "<group>"; };
+		FC060A4B8651EABB4D49D720 /* json.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = json.scm; sourceTree = "<group>"; };
 		FCB109C1E8B424E0097A5E9C /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
-		FD46C0828DF0E6C1ECFFF27D /* c.scm */ = {isa = PBXFileReference; path = c.scm; sourceTree = "<group>"; };
+		FD46C0828DF0E6C1ECFFF27D /* c.scm */ = {isa = PBXFileReference; lastKnownFileType = text; path = c.scm; sourceTree = "<group>"; };
 		FD86F5AA127DCFCB7153C5BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FEF585B7725113BA4D96BEB5 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		FFE9E0D0781E48C5E2534C02 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -1496,22 +1460,10 @@
 			path = "tree-sitter-r/src";
 			sourceTree = "<group>";
 		};
-		57E16B60B248A67E4CD57C18 /* CopyHelper */ = {
-			isa = PBXGroup;
-			children = (
-				A462D1A3D52C335C93957C44 /* AccessibilityCopier.swift */,
-				5DF1161642FB4B91C7B65AD9 /* KeyboardMonitor.swift */,
-				6CA69F225F0E93620647CFC1 /* main.swift */,
-				1D0BDEC6E0ACFEA967D1BA21 /* QuickLookDetector.swift */,
-			);
-			path = CopyHelper;
-			sourceTree = "<group>";
-		};
 		5C148D507B2341E1069053ED = {
 			isa = PBXGroup;
 			children = (
 				F30BB955A9E11169BE0FE4F5 /* App */,
-				57E16B60B248A67E4CD57C18 /* CopyHelper */,
 				527CBFBDD37EE2AC90548E40 /* HighlightXPC */,
 				D1A83EDBC1496010FC858962 /* QuickLookExtension */,
 				33FE6754F98576CB41E0C8F6 /* QuickLookThumbnailExtension */,
@@ -1664,7 +1616,6 @@
 		6C2C1A6543148F976535209E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8BAAF5792E505345AABC3909 /* CopyHelper */,
 				809007882E8A33BFD529FD1F /* dotViewer.app */,
 				2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */,
 				39C43B42FC3031D968EBD84C /* QuickLookExtension.appex */,
@@ -2640,17 +2591,13 @@
 			isa = PBXGroup;
 			children = (
 				C0951EE51E03E8716B50F3FF /* AddCustomExtensionSheet.swift */,
-				7E6F6EA84F10AC8D589EEB45 /* Assets.xcassets */,
 				E06C6DEF843AABF7499524CF /* Color+Hex.swift */,
 				09F26B2C6544012B75082740 /* ContentView.swift */,
-				57605D63D4244215A603CFBD /* CopyHelperManager.swift */,
-				AC0BC8B7FB7470A5D6AC43EF /* dotIcon.xcassets */,
 				71FFB0B07D2A05351DA72EDB /* dotViewer.entitlements */,
 				3836906BCBA249BFA0A18E0E /* dotViewerApp.swift */,
 				E382F929CE2E0E9C5930A970 /* dotViewerIcon.xcassets */,
 				318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */,
 				66850074DD53D516403094B4 /* Info.plist */,
-				7F4B3F00FCC442D4FB1BEA05 /* KeyboardSettingsView.swift */,
 				48CB5E092EE69E1F7731E467 /* MarkdownSettingsView.swift */,
 				1F00943F36F0A741842EFD99 /* SettingsView.swift */,
 				92E05B3CBF1B83F9A14DD59A /* StatusView.swift */,
@@ -2711,23 +2658,6 @@
 			productReference = 2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */;
 			productType = "com.apple.product-type.xpc-service";
 		};
-		3F8BEC7AA708F756B0D287C6 /* CopyHelper */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 7E23CEA068EBAA45D35C2149 /* Build configuration list for PBXNativeTarget "CopyHelper" */;
-			buildPhases = (
-				3D0E6F904493474EB78CA2B3 /* Sources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = CopyHelper;
-			packageProductDependencies = (
-			);
-			productName = CopyHelper;
-			productReference = 8BAAF5792E505345AABC3909 /* CopyHelper */;
-			productType = "com.apple.product-type.tool";
-		};
 		6759EB5DF891CDF004BBEF67 /* dotViewer */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A52885724E85A64430BA0C7 /* Build configuration list for PBXNativeTarget "dotViewer" */;
@@ -2737,7 +2667,6 @@
 				4650B82B690EE69750FE58C7 /* Frameworks */,
 				ADFA4CAB64D9156631BC268D /* Embed Foundation Extensions */,
 				16C14580F35E192412F478EF /* Embed Frameworks */,
-				56F60DB70753E8797F4EA57D /* Embed Dependencies */,
 			);
 			buildRules = (
 			);
@@ -2745,7 +2674,6 @@
 				1C764FFB863A4D7BAEEEDE5A /* PBXTargetDependency */,
 				3F97D159F9EA4E1B8F97B27E /* PBXTargetDependency */,
 				19F05740468D92BE388583E0 /* PBXTargetDependency */,
-				2ABCBB345E732F251C157C1A /* PBXTargetDependency */,
 			);
 			name = dotViewer;
 			packageProductDependencies = (
@@ -2825,10 +2753,6 @@
 						DevelopmentTeam = 7F5ZSQFCQ4;
 						ProvisioningStyle = Automatic;
 					};
-					3F8BEC7AA708F756B0D287C6 = {
-						DevelopmentTeam = 7F5ZSQFCQ4;
-						ProvisioningStyle = Automatic;
-					};
 					6759EB5DF891CDF004BBEF67 = {
 						DevelopmentTeam = 7F5ZSQFCQ4;
 						ProvisioningStyle = Automatic;
@@ -2857,11 +2781,9 @@
 			);
 			mainGroup = 5C148D507B2341E1069053ED;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3F8BEC7AA708F756B0D287C6 /* CopyHelper */,
 				2BDBB65ABCA256D2E3B86C29 /* HighlightXPC */,
 				BC3D253727D1EC3DD275A3F8 /* QuickLookExtension */,
 				F6DC384C6D64FAA4B5D85B62 /* QuickLookThumbnailExtension */,
@@ -2876,9 +2798,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A52D06C7284BC78CF7A08FF8 /* Assets.xcassets in Resources */,
 				56BEA86A090F9B16F7864359 /* SVG Image.svg in Resources */,
-				19A6677B2B6356564B57DAC4 /* dotIcon.xcassets in Resources */,
 				54A7B575F78A9D5449C21642 /* dotViewerIcon.xcassets in Resources */,
 				261A36DF54E12305042A5734 /* icon.json in Resources */,
 			);
@@ -2966,17 +2886,6 @@
 			files = (
 				3D46D0776D59D969DDB72F5F /* TextThumbnailRenderer.swift in Sources */,
 				C764C2FCEB2A092090041E42 /* ThumbnailProvider.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3D0E6F904493474EB78CA2B3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				E5A0E195F57FFCDB4740469C /* AccessibilityCopier.swift in Sources */,
-				DF3E4D5A97E2EC82DE613FE1 /* KeyboardMonitor.swift in Sources */,
-				8F54CD85621239E281C3CDE0 /* QuickLookDetector.swift in Sources */,
-				D0E57001C52B074E2E8B6F5C /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3114,11 +3023,9 @@
 				14CABC697CCF00403C2A0116 /* AddCustomExtensionSheet.swift in Sources */,
 				7A3C491AB1715D870A7E6FA2 /* Color+Hex.swift in Sources */,
 				1CEA6AA39DAC6F95D7541230 /* ContentView.swift in Sources */,
-				4291D393AEFFF02876EBA10E /* CopyHelperManager.swift in Sources */,
 				1C227E8D59410C479E87B106 /* ExtensionHelper.swift in Sources */,
 				230D1FB76C264D84009A205B /* ExtensionStatusChecker.swift in Sources */,
 				E0893A56310320F2090BEDD1 /* FileTypesView.swift in Sources */,
-				B8A695F50E39EB4AF7D853F1 /* KeyboardSettingsView.swift in Sources */,
 				03CD44494D7EAA65BEDA6401 /* MarkdownSettingsView.swift in Sources */,
 				08D65E4506DA242667AFE60F /* SettingsView.swift in Sources */,
 				3418E8FD801565C1528BDD3D /* StatusView.swift in Sources */,
@@ -3162,11 +3069,6 @@
 			isa = PBXTargetDependency;
 			target = E1AB1EEAC0A1F5EAC7F4FDB8 /* Shared */;
 			targetProxy = 39284ADF941EC010803A6AF5 /* PBXContainerItemProxy */;
-		};
-		2ABCBB345E732F251C157C1A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3F8BEC7AA708F756B0D287C6 /* CopyHelper */;
-			targetProxy = 76F2C334A10F779333FB8A53 /* PBXContainerItemProxy */;
 		};
 		3F97D159F9EA4E1B8F97B27E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3407,20 +3309,6 @@
 			};
 			name = Debug;
 		};
-		7A98EE420BD086DAE767562A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.CopyHelper;
-				SDKROOT = macosx;
-			};
-			name = Debug;
-		};
 		A9FFF38F61D5A80E5FD428A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3558,20 +3446,6 @@
 			};
 			name = Debug;
 		};
-		DF809999A455069835567A2E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				DEAD_CODE_STRIPPING = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.stianlars1.dotViewer.CopyHelper;
-				SDKROOT = macosx;
-			};
-			name = Release;
-		};
 		ECCA40F4A99657C937CD9CEB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3650,15 +3524,6 @@
 			buildConfigurations = (
 				C830A3911E4893FD53D1F5D9 /* Debug */,
 				59A9E46C80F8226271CA62CE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
-		7E23CEA068EBAA45D35C2149 /* Build configuration list for PBXNativeTarget "CopyHelper" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				7A98EE420BD086DAE767562A /* Debug */,
-				DF809999A455069835567A2E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

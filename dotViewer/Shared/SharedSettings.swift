@@ -247,13 +247,6 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "previewForceTextForUnknown") } }
     }
 
-    // MARK: - Keyboard / Copy Helper
-
-    public var copyHelperEnabled: Bool {
-        get { lock.withLock { defaults.object(forKey: "copyHelperEnabled") as? Bool ?? false } }
-        set { lock.withLock { defaults.set(newValue, forKey: "copyHelperEnabled") } }
-    }
-
     // MARK: - File Types
 
     public var disabledFileTypes: Set<String> {

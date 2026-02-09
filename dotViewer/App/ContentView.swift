@@ -4,7 +4,6 @@ private enum NavigationItem: String, CaseIterable, Identifiable {
     case status = "Status"
     case fileTypes = "File Types"
     case markdown = "Markdown"
-    case keyboard = "Keyboard"
     case settings = "Settings"
 
     var id: String { rawValue }
@@ -14,7 +13,6 @@ private enum NavigationItem: String, CaseIterable, Identifiable {
         case .status: return "checkmark.circle"
         case .fileTypes: return "doc.text"
         case .markdown: return "text.alignleft"
-        case .keyboard: return "command"
         case .settings: return "gearshape"
         }
     }
@@ -39,8 +37,6 @@ struct ContentView: View {
                 FileTypesView()
             case .markdown:
                 MarkdownSettingsView()
-            case .keyboard:
-                KeyboardSettingsView()
             case .settings:
                 SettingsView()
             }

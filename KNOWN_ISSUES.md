@@ -158,18 +158,41 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Fixed |
+| **Status** | Open |
 
-**Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C.
+**Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Copy button and right-click "Copy" work, but the keyboard shortcut does not.
 
-**Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` event for Cmd+C never fires in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
+**Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` and `copy` events never fire in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
 
-**Fix (2026-02-09)**: Two-layer approach:
+**What works now**: Copy button (click events always reach JS), right-click context menu "Copy" (WKWebView native), selection-aware copy button with dynamic tooltip.
 
-1. **JavaScript layer**: Replaced `keydown` listener with `copy` DOM event listener. Copy button is selection-aware with dynamic tooltip.
+### Approaches Tried (2026-02-09/10)
 
-2. **CopyHelper (CGEventTap)**: Unsandboxed command-line tool embedded in `Contents/MacOS/`. When enabled in Settings → Keyboard, it creates a `CGEventTap` that monitors Cmd+C. When Quick Look is visible, it reads selected text via the Accessibility API (`AXUIElement`) and writes to `NSPasteboard.general`, then swallows the event. Requires Accessibility permission (System Settings → Privacy & Security → Accessibility). Auto-terminates when dotViewer quits via `DispatchSource` parent PID monitoring.
+**1. JavaScript `copy` event listener** — Replaced `keydown` with `copy` DOM event. Result: `copy` event also does not fire because Quick Look intercepts Cmd+C before it reaches the WebKit layer at all.
 
-**What works**: Cmd+C (with CopyHelper enabled + Accessibility granted), copy button, right-click context menu "Copy".
+**2. CGEventTap helper (CopyHelper)** — Built an unsandboxed background app embedded in `Contents/Helpers/` that creates a `CGEventTap` to intercept Cmd+C globally, detect Quick Look via `CGWindowListCopyWindowInfo`, and read selected text via `AXUIElement` Accessibility API. Result: **TCC blocks it**. Detailed findings:
 
-**Remaining**: Users must manually grant Accessibility permission and enable the feature in Settings → Keyboard.
+- **Sandbox inheritance**: When a sandboxed app (dotViewer) launches a child process via `Process()` (fork/exec), the child inherits the parent's sandbox. The helper cannot get Accessibility permission.
+- **TCC "responsible process" attribution**: Even when launched via `NSWorkspace.openApplication()` (LaunchServices), TCC attributes embedded helpers to the host app. Since dotViewer is sandboxed, the accessibility request is denied.
+- **Hardened Runtime required**: TCC requires `flags=0x10000(runtime)` for `AXIsProcessTrustedWithOptions` to show the system prompt. Debug builds default to `flags=0x0`.
+- **Bare executables invisible to TCC**: Command-line tools (`type: tool`) without `.app` bundle + Info.plist don't appear in the Accessibility preferences list at all.
+- Even after addressing all above (proper `.app` bundle, Hardened Runtime, LaunchServices launch, DistributedNotificationCenter for IPC), the helper still does not appear in the Accessibility list — likely because TCC traces back to the sandboxed parent as the responsible code.
+
+### Approaches NOT Yet Tried
+
+| Approach | Description | Complexity |
+|----------|-------------|------------|
+| **Independently-installed helper** | Ship CopyHelper.app as a separate app (not embedded), installed to `~/Library/Application Support/` or `/Applications/`. Avoids TCC parent attribution. This is how Peek (commercial QL extension) does it. | Medium |
+| **Remove sandbox from host app** | dotViewer is not on the App Store. Removing sandbox lets the host app itself call `CGEventTap`/`AXUIElement` directly — no helper needed. Extensions keep their own sandbox. | Low (but changes security posture) |
+| **Unsandboxed XPC service for clipboard** | Add a clipboard-write method to an unsandboxed XPC service. May avoid the keyboard interception problem if the QL extension can detect selections and push to clipboard server-side. | Medium |
+| **NSPasteboard from QL extension directly** | Test whether `NSPasteboard.general.setString()` works from the sandboxed Quick Look extension process. If it does, we could write a selection-to-clipboard mechanism without Accessibility at all. | Low |
+| **`responsibility_spawnattrs_setdisclaim`** | Undocumented Apple API that lets a parent process disclaim TCC responsibility for a child. Used by Qt Creator and LLDB. Fragile — may break in future macOS versions. | High risk |
+
+### Key Research Sources
+
+- Apple Developer Forums: sandbox inheritance ([thread 123873](https://developer.apple.com/forums/thread/123873)), responsible code attribution ([thread 718728](https://developer.apple.com/forums/thread/718728))
+- Apps like Rectangle, Hammerspoon, Raycast all request Accessibility from **unsandboxed** main apps — none use embedded sandboxed helpers
+- Peek (BigZLabs) uses a separate independently-installed helper app for Accessibility
+- Qt Blog: ["The Curious Case of the Responsible Process"](https://www.qt.io/blog/the-curious-case-of-the-responsible-process) documents `responsibility_spawnattrs_setdisclaim`
+
+**Acceptance criteria**: Cmd+C copies selected text from Quick Look preview without requiring the user to use the copy button or right-click menu.

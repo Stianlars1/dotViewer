@@ -66,6 +66,7 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 | 2026-02-09 | Markdown RAW | Added text-semantic tree-sitter capture mappings in TreeSitterHighlighter; fixed markdown.scm fenced_code_block overlap |
 | 2026-02-09 | Markdown routing | Fixed toggle not appearing for README.md/CHANGELOG.md — changed `isMarkdown` from key-based to `languageId == "markdown"` |
 | 2026-02-09 | Docs | Updated KNOWN_ISSUES (KI-003, KI-004), CHANGELOG, BACKLOG, AGENTS to reflect current state |
+| 2026-02-10 | Cmd+C research | Built CGEventTap helper (CopyHelper.app): unsandboxed background app with AXUIElement + CGEventTap, embedded in Contents/Helpers/, launched via NSWorkspace.openApplication(), status via DistributedNotificationCenter. Failed: TCC sandbox inheritance, responsible process attribution, Accessibility list registration. Reverted. Comprehensive research documented in KI-009 with untried alternatives. |
 
 ## Notes
 

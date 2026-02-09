@@ -105,11 +105,6 @@ targets:
         embed: true
       - target: QuickLookThumbnailExtension
         embed: true
-      - target: CopyHelper
-        embed: true
-        codeSign: true
-        copy:
-          destination: executables
   QuickLookExtension:
     type: app-extension
     platform: macOS
@@ -625,15 +620,6 @@ targets:
     dependencies:
       - target: Shared
         embed: true
-  CopyHelper:
-    type: tool
-    platform: macOS
-    sources:
-      - CopyHelper
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.CopyHelper
-        DEAD_CODE_STRIPPING: YES
   Shared:
     type: framework
     platform: macOS

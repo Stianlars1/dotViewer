@@ -11,7 +11,7 @@ Derived from known issues — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for full de
 | B-003 | ~~Thumbnail/preview visual parity~~ | ~~Done~~ | Completed 2026-02-09 — ThumbnailSyntaxColorizer adds per-token coloring (KI-002, KI-006 partially fixed) |
 | B-004 | ~~Catch-all UTI for unknown text extensions~~ | ~~Done~~ | Already fixed — public.data in QLSupportedContentTypes (KI-005) |
 | B-005 | ~~Resolve 14 duplicate extension warnings~~ | ~~Done~~ | Completed 2026-02-09 — canonical owners chosen for all duplicates (KI-008) |
-| B-006 | ~~Cmd+C text copy in Quick Look preview~~ | ~~Done~~ | Completed 2026-02-09 — JS keyboard handler + clipboard API (KI-009) |
+| B-006 | Cmd+C text copy in Quick Look preview | High | CGEventTap helper approach failed due to TCC sandbox attribution. See KI-009 for detailed research and untried approaches. Next step: research team to evaluate alternatives (remove sandbox, independent helper, NSPasteboard from QL extension). |
 
 ## Feature Ideas
 
