@@ -158,7 +158,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 showUnknownTextWarning: showUnknownTextWarning,
                 showBinaryWarning: showBinaryWarning,
                 systemIsDark: systemIsDark,
-                wordWrap: SharedSettings.shared.wordWrap
+                wordWrap: SharedSettings.shared.wordWrap,
+                markdownShowTOC: SharedSettings.shared.markdownShowTOC
             )
 
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
@@ -271,7 +272,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             showUnknownTextWarning: showUnknownTextWarning,
             showBinaryWarning: showBinaryWarning,
             systemIsDark: systemIsDark,
-            wordWrap: SharedSettings.shared.wordWrap
+            wordWrap: SharedSettings.shared.wordWrap,
+            markdownShowTOC: SharedSettings.shared.markdownShowTOC
         )
 
         let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)

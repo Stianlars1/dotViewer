@@ -6,12 +6,12 @@ Derived from known issues — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for full de
 
 | ID | Title | Priority | Related |
 |----|-------|----------|---------|
-| B-001 | Markdown rendered mode — Typora-quality polish | High | KI-004 — Parser rewritten, CSS overhauled; spacing/typography refinements remain |
+| B-001 | Markdown rendered mode — Typora-quality polish | Low | KI-004 — Parser rewritten, CSS polished, TOC sidebar added; minor typography refinements remain |
 | B-002 | Markdown raw mode — structural readability | Medium | KI-003 — Color-differentiated via tree-sitter mappings; size/weight differentiation remains |
-| B-003 | Thumbnail/preview visual parity | Critical | KI-002, KI-006 |
-| B-004 | Catch-all UTI for unknown text extensions | High | KI-005 |
-| B-005 | Resolve 14 duplicate extension warnings | Low | KI-008 |
-| B-006 | Cmd+C text copy in Quick Look preview | High | KI-009 — selected text can't be copied via keyboard shortcut |
+| B-003 | ~~Thumbnail/preview visual parity~~ | ~~Done~~ | Completed 2026-02-09 — ThumbnailSyntaxColorizer adds per-token coloring (KI-002, KI-006 partially fixed) |
+| B-004 | ~~Catch-all UTI for unknown text extensions~~ | ~~Done~~ | Already fixed — public.data in QLSupportedContentTypes (KI-005) |
+| B-005 | ~~Resolve 14 duplicate extension warnings~~ | ~~Done~~ | Completed 2026-02-09 — canonical owners chosen for all duplicates (KI-008) |
+| B-006 | ~~Cmd+C text copy in Quick Look preview~~ | ~~Done~~ | Completed 2026-02-09 — JS keyboard handler + clipboard API (KI-009) |
 
 ## Feature Ideas
 
@@ -20,6 +20,7 @@ From v1 requirements and future direction.
 | ID | Title | Priority | Notes |
 |----|-------|----------|-------|
 | B-010 | ~~Markdown rendered/raw toggle in preview header~~ | ~~Done~~ | Completed 2026-02-09 — toggle works for all markdown files including named files (README, CHANGELOG) |
+| B-019 | ~~Table of Contents for rendered markdown~~ | ~~Done~~ | Completed 2026-02-09 — sidebar TOC with heading navigation, toggle in header + settings, code-block-aware scanner |
 | B-011 | Automated test suite | High | Unit tests for FileTypeRegistry, integration tests for XPC, snapshot tests for thumbnails |
 | B-012 | App Store distribution | Medium | Requires sandboxing review, notarization, screenshots, listing |
 | B-013 | Print / export to PDF | Medium | From v1 PROJECT.md requirements |

@@ -177,6 +177,11 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "markdownCustomCSSOverride") } }
     }
 
+    public var markdownShowTOC: Bool {
+        get { lock.withLock { defaults.object(forKey: "markdownShowTOC") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "markdownShowTOC") } }
+    }
+
     public var previewAllFileTypes: Bool {
         get { lock.withLock { defaults.object(forKey: "previewAllFileTypes") as? Bool ?? true } }
         set { lock.withLock { defaults.set(newValue, forKey: "previewAllFileTypes") } }
@@ -240,6 +245,13 @@ public final class SharedSettings: @unchecked Sendable {
     public var previewForceTextForUnknown: Bool {
         get { lock.withLock { defaults.object(forKey: "previewForceTextForUnknown") as? Bool ?? true } }
         set { lock.withLock { defaults.set(newValue, forKey: "previewForceTextForUnknown") } }
+    }
+
+    // MARK: - Keyboard / Copy Helper
+
+    public var copyHelperEnabled: Bool {
+        get { lock.withLock { defaults.object(forKey: "copyHelperEnabled") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "copyHelperEnabled") } }
     }
 
     // MARK: - File Types

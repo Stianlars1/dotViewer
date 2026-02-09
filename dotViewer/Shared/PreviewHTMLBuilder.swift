@@ -23,6 +23,7 @@ public struct PreviewInfo {
     public let showBinaryWarning: Bool
     public let systemIsDark: Bool
     public let wordWrap: Bool
+    public let markdownShowTOC: Bool
 
     public init(
         title: String,
@@ -46,7 +47,8 @@ public struct PreviewInfo {
         showUnknownTextWarning: Bool,
         showBinaryWarning: Bool,
         systemIsDark: Bool = false,
-        wordWrap: Bool = false
+        wordWrap: Bool = false,
+        markdownShowTOC: Bool = false
     ) {
         self.title = title
         self.language = language
@@ -70,6 +72,7 @@ public struct PreviewInfo {
         self.showBinaryWarning = showBinaryWarning
         self.systemIsDark = systemIsDark
         self.wordWrap = wordWrap
+        self.markdownShowTOC = markdownShowTOC
     }
 }
 
@@ -85,6 +88,21 @@ public enum PreviewHTMLBuilder {
             ? "<div id=\"rendered-view\" class=\"rendered-view\"\(renderedStyle)>\(info.renderedHTML!)</div>"
             : ""
 
+        let tocHTML: String
+        if info.renderedHTML != nil && info.markdownShowTOC {
+            tocHTML = MarkdownRenderer.generateTOC(from: info.rawText) ?? ""
+        } else {
+            tocHTML = ""
+        }
+        let tocSection = tocHTML.isEmpty ? "" : """
+        <aside id="toc-panel" class="toc-sidebar" style="display:none;">
+          <div class="toc-header">
+            <span class="toc-title">Contents</span>
+          </div>
+          <div class="toc-content">\(tocHTML)</div>
+        </aside>
+        """
+
         return """
         <!doctype html>
         <html>
@@ -98,9 +116,12 @@ public enum PreviewHTMLBuilder {
         <body>
           \(header)
           \(warnings)
-          <div class="content">
-            \(rawSection)
-            \(renderedSection)
+          <div class="main-layout">
+            \(tocSection)
+            <div class="content">
+              \(rawSection)
+              \(renderedSection)
+            </div>
           </div>
           <div id="toast" class="toast">Copied</div>
           <textarea id="raw-source" class="hidden">\(escapeHTML(info.rawText))</textarea>
@@ -116,6 +137,7 @@ public enum PreviewHTMLBuilder {
         let sizeText = ByteCountFormatter.string(fromByteCount: Int64(info.fileSizeBytes), countStyle: .file)
         let lineText = "\(info.lineCount) lines"
         let markdownToggle = info.renderedHTML != nil ? buildMarkdownToggle(defaultMode: info.defaultMarkdownMode) : ""
+        let tocToggle = info.renderedHTML != nil ? buildTOCToggle(showTOC: info.markdownShowTOC) : ""
         return """
         <div class="header">
           <div class="header-left">
@@ -124,6 +146,7 @@ public enum PreviewHTMLBuilder {
           </div>
           <div class="header-right">
             \(markdownToggle)
+            \(tocToggle)
             <button class="icon-button" id="copy-button" title="Copy to clipboard" aria-label="Copy to clipboard">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M16 4a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7zm0 1.5H9a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V6a.5.5 0 0 0-.5-.5z"/>
@@ -165,6 +188,16 @@ public enum PreviewHTMLBuilder {
           <button class="toggle-button \(rawActive)" data-mode="raw">RAW</button>
           <button class="toggle-button \(renderedActive)" data-mode="rendered">RENDERED</button>
         </div>
+        """
+    }
+
+    private static func buildTOCToggle(showTOC: Bool) -> String {
+        return """
+        <button class="icon-button toc-toggle active" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2zm14-7h4v2h-4v-2z"/>
+          </svg>
+        </button>
         """
     }
 
@@ -232,6 +265,16 @@ public enum PreviewHTMLBuilder {
           color: var(--text);
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+
+        .main-layout {
+          display: flex;
+          flex: 1;
+          min-height: 0;
+          overflow: hidden;
         }
 
         .header {
@@ -320,10 +363,11 @@ public enum PreviewHTMLBuilder {
         }
 
         .content {
+          flex: 1;
+          min-width: 0;
           padding: 12px;
           background: var(--bg);
-          border: none;
-          box-shadow: none;
+          overflow-y: auto;
         }
 
         .toggle-bar {
@@ -403,7 +447,7 @@ public enum PreviewHTMLBuilder {
 
         .rendered-view {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-          line-height: 1.6;
+          line-height: 1.7;
           font-size: \(renderFontSize)px;
           color: var(--text);
           background: transparent;
@@ -425,14 +469,14 @@ public enum PreviewHTMLBuilder {
           font-weight: 600;
           line-height: 1.25;
           margin-top: 24px;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
           letter-spacing: -0.02em;
         }
 
         .rendered-view h1 {
           font-size: 2em;
           font-weight: 700;
-          margin-top: 0.5em;
+          margin-top: 0.67em;
           padding-bottom: 0.3em;
           border-bottom: 1px solid var(--border);
         }
@@ -440,12 +484,14 @@ public enum PreviewHTMLBuilder {
         .rendered-view h2 {
           font-size: 1.5em;
           font-weight: 700;
+          margin-top: 1.5em;
           padding-bottom: 0.3em;
           border-bottom: 1px solid var(--border);
         }
 
         .rendered-view h3 {
           font-size: 1.25em;
+          margin-top: 1.25em;
         }
 
         .rendered-view h4 {
@@ -465,7 +511,7 @@ public enum PreviewHTMLBuilder {
 
         .rendered-view p {
           margin-top: 0;
-          margin-bottom: 16px;
+          margin-bottom: 12px;
         }
 
         .rendered-view a {
@@ -492,6 +538,7 @@ public enum PreviewHTMLBuilder {
           background: var(--surface);
           padding: 16px;
           border-radius: 6px;
+          border-left: 3px solid var(--accent);
           overflow-x: auto;
           margin: 16px 0;
           line-height: 1.45;
@@ -522,10 +569,12 @@ public enum PreviewHTMLBuilder {
 
         /* Blockquotes */
         .rendered-view blockquote {
-          border-left: 4px solid var(--border);
+          border-left: 4px solid var(--accent);
           margin: 16px 0;
-          padding: 0 16px;
+          padding: 4px 16px;
           color: var(--comment);
+          background: var(--surface);
+          border-radius: 0 4px 4px 0;
         }
 
         .rendered-view blockquote > :first-child {
@@ -545,11 +594,11 @@ public enum PreviewHTMLBuilder {
         }
 
         .rendered-view li {
-          margin-bottom: 4px;
+          margin-bottom: 2px;
         }
 
         .rendered-view li + li {
-          margin-top: 4px;
+          margin-top: 2px;
         }
 
         .rendered-view li > p {
@@ -612,7 +661,7 @@ public enum PreviewHTMLBuilder {
         /* Horizontal rule */
         .rendered-view hr {
           border: none;
-          border-top: 2px solid var(--border);
+          border-top: 1px solid var(--border);
           margin: 24px 0;
         }
 
@@ -715,6 +764,72 @@ public enum PreviewHTMLBuilder {
           opacity: 1;
           transform: translateY(0);
         }
+
+        .toc-sidebar {
+          width: 220px;
+          flex-shrink: 0;
+          background: var(--surface);
+          border-right: 1px solid var(--border);
+          overflow-y: auto;
+          font-size: 13px;
+        }
+
+        .toc-header {
+          padding: 10px 12px;
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--comment);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border-bottom: 1px solid var(--border);
+          position: sticky;
+          top: 0;
+          background: var(--surface);
+        }
+
+        .toc-content {
+          padding: 6px 0;
+        }
+
+        .toc-content ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .toc-content li {
+          margin: 0;
+        }
+
+        .toc-content a {
+          display: block;
+          padding: 3px 10px 3px 12px;
+          color: var(--text);
+          text-decoration: none;
+          font-size: 12px;
+          line-height: 1.4;
+          transition: background 0.15s ease, color 0.15s ease;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .toc-content a:hover {
+          background: var(--surface-strong);
+          color: var(--accent);
+        }
+
+        .toc-content .toc-h1 a { font-weight: 600; }
+        .toc-content .toc-h2 a { padding-left: 22px; }
+        .toc-content .toc-h3 a { padding-left: 34px; font-size: 11px; }
+        .toc-content .toc-h4 a { padding-left: 44px; font-size: 11px; opacity: 0.8; }
+        .toc-content .toc-h5 a { padding-left: 54px; font-size: 11px; opacity: 0.7; }
+        .toc-content .toc-h6 a { padding-left: 64px; font-size: 11px; opacity: 0.6; }
+
+        .toc-toggle.active {
+          background: var(--surface-strong);
+          border-color: var(--border);
+        }
         """
         if info.themeName == "auto" {
             let darkPalette = ThemePalette.atomOneDark
@@ -770,8 +885,29 @@ public enum PreviewHTMLBuilder {
             }
 
             copyButton?.addEventListener('click', () => {
-              const text = document.getElementById('raw-source')?.value || '';
-              writeClipboard(text).then(() => showToast('Copied'));
+              const sel = window.getSelection().toString();
+              if (sel.length > 0) {
+                writeClipboard(sel).then(() => showToast('Copied selection'));
+              } else {
+                const text = document.getElementById('raw-source')?.value || '';
+                writeClipboard(text).then(() => showToast('Copied'));
+              }
+            });
+
+            document.addEventListener('copy', function(e) {
+              const sel = window.getSelection().toString();
+              if (sel.length > 0) {
+                e.clipboardData.setData('text/plain', sel);
+                e.preventDefault();
+                showToast('Copied selection');
+              }
+            });
+
+            document.addEventListener('selectionchange', () => {
+              const sel = window.getSelection().toString();
+              if (copyButton) {
+                copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
+              }
             });
             """
         }
@@ -812,8 +948,6 @@ public enum PreviewHTMLBuilder {
         }
 
         function setMode(mode) {
-          // Header (and toggle) can be disabled via user settings. In that case, we must still
-          // switch the visible view without assuming buttons exist.
           currentMode = mode;
           buttons.forEach(btn => {
             const isActive = btn.dataset.mode === mode;
@@ -827,6 +961,15 @@ public enum PreviewHTMLBuilder {
             if (rawView) rawView.style.display = 'block';
             if (renderedView) renderedView.style.display = 'none';
           }
+
+          const tocPanel = document.getElementById('toc-panel');
+          const tocToggle = document.getElementById('toc-toggle');
+          if (tocToggle) {
+            tocToggle.style.display = mode === 'rendered' ? '' : 'none';
+          }
+          if (tocPanel) {
+            tocPanel.style.display = mode === 'rendered' && tocToggle?.classList.contains('active') ? 'block' : 'none';
+          }
         }
 
         buttons.forEach(btn => {
@@ -835,14 +978,58 @@ public enum PreviewHTMLBuilder {
 
         setMode(currentMode);
 
+        const tocToggle = document.getElementById('toc-toggle');
+        const tocPanel = document.getElementById('toc-panel');
+
+        if (tocToggle && tocPanel) {
+          tocToggle.addEventListener('click', function() {
+            if (currentMode !== 'rendered') return;
+            const isVisible = tocPanel.style.display !== 'none';
+            tocPanel.style.display = isVisible ? 'none' : 'block';
+            tocToggle.classList.toggle('active', !isVisible);
+          });
+
+          tocPanel.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+              e.preventDefault();
+              const targetId = e.target.getAttribute('href').substring(1);
+              const target = document.getElementById(targetId);
+              if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          });
+        }
+
         copyButton?.addEventListener('click', () => {
-          let text = '';
-          if (currentMode === 'rendered' && renderedView) {
-            text = renderedView.innerText || '';
+          const sel = window.getSelection().toString();
+          if (sel.length > 0) {
+            writeClipboard(sel).then(() => showToast('Copied selection'));
           } else {
-            text = document.getElementById('raw-source')?.value || '';
+            let text = '';
+            if (currentMode === 'rendered' && renderedView) {
+              text = renderedView.innerText || '';
+            } else {
+              text = document.getElementById('raw-source')?.value || '';
+            }
+            writeClipboard(text).then(() => showToast('Copied'));
           }
-          writeClipboard(text).then(() => showToast('Copied'));
+        });
+
+        document.addEventListener('copy', function(e) {
+          const sel = window.getSelection().toString();
+          if (sel.length > 0) {
+            e.clipboardData.setData('text/plain', sel);
+            e.preventDefault();
+            showToast('Copied selection');
+          }
+        });
+
+        document.addEventListener('selectionchange', () => {
+          const sel = window.getSelection().toString();
+          if (copyButton) {
+            copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
+          }
         });
         """
     }

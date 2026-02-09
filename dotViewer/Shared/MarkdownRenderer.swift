@@ -6,6 +6,58 @@ public enum MarkdownRenderer {
         convertMarkdownToHTML(markdown)
     }
 
+    public static func generateTOC(from markdown: String) -> String? {
+        let lines = markdown.components(separatedBy: "\n")
+        var headings: [(level: Int, text: String, slug: String)] = []
+        var inFencedBlock = false
+        var currentFence = ""
+
+        for line in lines {
+            let trimmed = line.trimmingCharacters(in: .whitespaces)
+
+            // Track fenced code blocks — must match convertMarkdownToHTML logic
+            if trimmed.hasPrefix("```") || trimmed.hasPrefix("~~~") {
+                let fence = trimmed.hasPrefix("```") ? "```" : "~~~"
+                if inFencedBlock && currentFence == fence {
+                    inFencedBlock = false
+                    currentFence = ""
+                } else if !inFencedBlock {
+                    inFencedBlock = true
+                    currentFence = fence
+                }
+                continue
+            }
+
+            if inFencedBlock { continue }
+
+            guard trimmed.hasPrefix("#") else { continue }
+            let level = min(trimmed.prefix(while: { $0 == "#" }).count, 6)
+            let afterHashes = trimmed.dropFirst(level)
+            guard afterHashes.isEmpty || afterHashes.hasPrefix(" ") else { continue }
+            let text = afterHashes.trimmingCharacters(in: .whitespaces)
+                .replacingOccurrences(of: #"\s+#+\s*$"#, with: "", options: .regularExpression)
+            let slug = generateSlug(text)
+            headings.append((level, text, slug))
+        }
+
+        guard headings.count >= 2 else { return nil }
+
+        var html = "<ul>"
+        for heading in headings {
+            let cssClass = "toc-h\(heading.level)"
+            html += "<li class=\"\(cssClass)\"><a href=\"#\(heading.slug)\">\(escapeHTML(heading.text))</a></li>"
+        }
+        html += "</ul>"
+        return html
+    }
+
+    private static func generateSlug(_ text: String) -> String {
+        let stripped = text.replacingOccurrences(of: "<[^>]+>", with: "", options: .regularExpression)
+        return stripped.lowercased()
+            .replacingOccurrences(of: " ", with: "-")
+            .replacingOccurrences(of: "[^a-z0-9\\-]", with: "", options: .regularExpression)
+    }
+
     // MARK: - Block-level parsing
 
     private static func convertMarkdownToHTML(_ markdown: String) -> String {
@@ -59,7 +111,8 @@ public enum MarkdownRenderer {
                     let cleaned = text.replacingOccurrences(
                         of: #"\s+#+\s*$"#, with: "", options: .regularExpression
                     )
-                    html += "<h\(level)>\(processInline(cleaned))</h\(level)>\n"
+                    let slug = generateSlug(cleaned)
+                    html += "<h\(level) id=\"\(slug)\">\(processInline(cleaned))</h\(level)>\n"
                     i += 1
                     continue
                 }

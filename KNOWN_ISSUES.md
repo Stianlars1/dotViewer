@@ -23,14 +23,18 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | Critical |
-| **Status** | Open |
+| **Priority** | Medium |
+| **Status** | Partially Fixed |
 
 **Impact**: Finder thumbnails (icon view, column view) may not match the visual quality of the spacebar Quick Look preview. Font rendering, color accuracy, and layout differ between the CoreGraphics-based thumbnail path and the HTML-based preview path.
 
 **Root cause**: Thumbnails use native CoreGraphics text rendering (NSAttributedString drawn to NSImage), while previews use WKWebView-rendered HTML. These are fundamentally different rendering pipelines with different font metrics, anti-aliasing, and color handling.
 
-**Reproduction**: Compare a file's Finder column-view thumbnail with its spacebar Quick Look preview. Note differences in font rendering, spacing, and color saturation.
+**Progress (2026-02-09)**: Added `ThumbnailSyntaxColorizer` to `TextThumbnailRenderer.swift` — regex-based colorizer that identifies comments, strings, keywords (100+), numbers, and types (CamelCase heuristic) per token. Thumbnails now show multi-color syntax highlighting instead of single-color text, significantly improving visual parity with previews.
+
+**Remaining gap**: Regex-based colorizer is an approximation — it won't match tree-sitter accuracy for all languages. Color mapping uses ThemePalette but font weight/style differences remain.
+
+**Reproduction**: Compare a file's Finder column-view thumbnail with its spacebar Quick Look preview. Colors now match closely; fine rendering differences (anti-aliasing, font metrics) remain.
 
 **Acceptance criteria**: Thumbnails should be visually consistent with preview output — same theme colors, proportional font sizing, and readable syntax highlighting at typical Finder thumbnail sizes.
 
@@ -61,10 +65,10 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | High |
-| **Status** | Partially Fixed |
+| **Priority** | Low |
+| **Status** | Mostly Fixed |
 
-**Impact**: Rendered markdown preview works but doesn't yet match Typora-quality typography and spacing. Core features render correctly; polish and edge cases remain.
+**Impact**: Rendered markdown preview works but doesn't yet match Typora-quality typography and spacing. Core features render correctly; minor polish remains.
 
 **Root cause (original)**: MarkdownRenderer.swift was a line-by-line custom parser with fundamental bugs (task lists never rendered, every line became its own `<p>`, tables and images not parsed, blockquotes fragmented). CSS styling was incomplete.
 
@@ -72,8 +76,10 @@
 - **Parser rewrite**: MarkdownRenderer.swift fully rewritten (~510 lines) with proper two-pass parsing (block-level + character-by-character inline). Supports: ATX/setext headings, fenced code blocks with language labels, GFM tables with alignment, blockquotes (recursive), ordered/unordered/task lists, images, links, bold, italic, bold+italic, strikethrough, inline code, horizontal rules, auto-linking bare URLs.
 - **CSS overhaul**: PreviewHTMLBuilder.swift rendered-view CSS rebuilt with theme-aware variables (`--heading`, `--surface`, `--border`, `--link`), per-theme heading colors, table row striping, tighter list spacing, v1-matching heading sizes, code block styling, and task list checkbox support.
 - **Toggle routing fix**: `isMarkdown` check changed from key-based to `languageId == "markdown"`, fixing README.md, CHANGELOG.md, and other named markdown files that previously didn't show the RAW/RENDERED toggle.
+- **CSS polish pass**: Tightened line-height (1.6→1.7), heading margins, paragraph spacing (16→12px), list spacing (4→2px), blockquote with accent border + background, code blocks with accent left border, HR 2→1px.
+- **Table of Contents**: Sidebar TOC with heading navigation, toggleable from preview header. Properly skips fenced code blocks when scanning for headings. Hidden in RAW mode, only shown in RENDERED mode.
 
-**Remaining gap**: Spacing and typography refinements to approach Typora-level polish. Line height, paragraph spacing, heading weight/margins, and overall rhythm need further tuning based on side-by-side comparison.
+**Remaining gap**: Minor typography refinements. Side-by-side with Typora shows dotViewer is now close but not pixel-identical.
 
 **Reproduction**: Preview a complex `.md` file in rendered mode → compare spacing/typography with Typora rendering.
 
@@ -86,15 +92,13 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Open |
+| **Status** | Fixed |
 
 **Impact**: Text files with extensions not in our registry (or not mapped to a system UTI in QLSupportedContentTypes) show the generic white document icon instead of a syntax-highlighted thumbnail.
 
-**Root cause**: Quick Look matches on exact UTI, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called. Files with unknown extensions often get `public.data` or `dyn.` UTIs that we can't enumerate in advance.
+**Root cause**: Quick Look matches on exact UTI, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called.
 
-**Reproduction**: Create a file with an uncommon extension (e.g., `.myconfig`) containing text → Finder shows generic icon, spacebar preview may use system plain text viewer.
-
-**Acceptance criteria**: Any file that `looksTextual` should get a dotViewer thumbnail and preview, regardless of extension. This likely requires adding `public.data` or a catch-all UTI to QLSupportedContentTypes (with binary gating to reject actual binary files).
+**Fix (2026-02-09)**: `public.data` already present in QLSupportedContentTypes for both preview and thumbnail extensions, serving as a catch-all. Combined with `looksTextual` binary gating, this ensures unknown text files get dotViewer previews while binary files are rejected.
 
 ---
 
@@ -102,16 +106,20 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | High |
-| **Status** | Open |
+| **Priority** | Medium |
+| **Status** | Partially Fixed |
 
 **Impact**: The Quick Look spacebar preview and the Finder thumbnail for the same file may show different theme colors, font sizes, or layout. Changes to PreviewHTMLBuilder CSS don't automatically propagate to TextThumbnailRenderer.
 
-**Root cause**: Two separate rendering pipelines — HTML/CSS for previews, CoreGraphics/NSAttributedString for thumbnails. Theme colors are defined in ThemePalette.swift (shared) but applied differently in each renderer. Any CSS change requires a corresponding CoreGraphics change.
+**Root cause**: Two separate rendering pipelines — HTML/CSS for previews, CoreGraphics/NSAttributedString for thumbnails. Theme colors are defined in ThemePalette.swift (shared) but applied differently in each renderer.
 
-**Reproduction**: Change theme in settings → compare spacebar preview colors with Finder thumbnail colors for the same file.
+**Progress (2026-02-09)**: Added `ThumbnailSyntaxColorizer` — thumbnails now use per-token coloring (keywords, strings, comments, numbers, types) matching the same ThemePalette colors used in previews. Visual parity significantly improved.
 
-**Acceptance criteria**: Both rendering paths should produce visually consistent output for the same file/theme combination. Theme palette changes should automatically apply to both paths.
+**Remaining gap**: Font weight/style (bold keywords, italic builtins) not replicated in thumbnail renderer. Regex-based colorizer may disagree with tree-sitter on token boundaries.
+
+**Reproduction**: Change theme in settings → compare spacebar preview colors with Finder thumbnail colors for the same file. Colors now match closely.
+
+**Acceptance criteria**: Both rendering paths should produce visually consistent output for the same file/theme combination.
 
 ---
 
@@ -137,15 +145,11 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | Low |
-| **Status** | Open |
+| **Status** | Fixed |
 
-**Impact**: Build-time audit (`dvaudit`) reports 14 duplicate extension warnings where multiple JSON entries claim the same file extension. Only the first-loaded entry wins for each extension.
+**Impact**: Build-time audit (`dvaudit`) reported 14 duplicate extension warnings where multiple JSON entries claimed the same file extension.
 
-**Root cause**: Inherited from the original SourceCodeSyntaxHighlight import. Some extensions legitimately belong to multiple languages (e.g., `.m` for Objective-C and MATLAB), and the current resolution is first-loaded-wins.
-
-**Reproduction**: Run `./scripts/dotviewer-gen-default-filetypes.py` (dvaudit) → see duplicate extension warnings in output.
-
-**Acceptance criteria**: Either resolve duplicates by choosing a canonical owner for each extension, or add explicit priority/precedence to the JSON schema so the resolution is intentional rather than load-order-dependent.
+**Fix (2026-02-09)**: Resolved duplicate extensions by choosing canonical owners: removed `.i` from ALAN (kept in C), `.asm` from fasm (kept in Assembly), `.ex` from Euphoria (kept in Elixir), changed `.pro` to `.pri` for QMake (kept `.pro` for Prolog), removed `.cgi` from Ruby (kept in Perl), deduplicated `.bashrc`/`.zshrc` from shell JSON (already in hardcoded shellrc entry), deduplicated case-insensitive filenames (makefile, justfile).
 
 ---
 
@@ -154,12 +158,18 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Open |
+| **Status** | Fixed |
 
-**Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Text can be visually selected but the keyboard shortcut does nothing.
+**Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C.
 
-**Root cause**: Quick Look data-based previews (`QLPreviewReply` with HTML content) render in a sandboxed web view that doesn't pass standard keyboard shortcuts through to the HTML content. The copy-to-clipboard button in the header copies the entire file, but there's no way to copy a text selection via Cmd+C.
+**Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` event for Cmd+C never fires in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
 
-**Reproduction**: Preview any file → select text in the preview window → press Cmd+C → paste elsewhere → nothing was copied.
+**Fix (2026-02-09)**: Two-layer approach:
 
-**Acceptance criteria**: Cmd+C should copy the currently selected text from the Quick Look preview to the system clipboard. If this is a Quick Look sandbox limitation, document it as such and ensure the existing copy button is prominently discoverable.
+1. **JavaScript layer**: Replaced `keydown` listener with `copy` DOM event listener. Copy button is selection-aware with dynamic tooltip.
+
+2. **CopyHelper (CGEventTap)**: Unsandboxed command-line tool embedded in `Contents/MacOS/`. When enabled in Settings → Keyboard, it creates a `CGEventTap` that monitors Cmd+C. When Quick Look is visible, it reads selected text via the Accessibility API (`AXUIElement`) and writes to `NSPasteboard.general`, then swallows the event. Requires Accessibility permission (System Settings → Privacy & Security → Accessibility). Auto-terminates when dotViewer quits via `DispatchSource` parent PID monitoring.
+
+**What works**: Cmd+C (with CopyHelper enabled + Accessibility granted), copy button, right-click context menu "Copy".
+
+**Remaining**: Users must manually grant Accessibility permission and enable the feature in Settings → Keyboard.

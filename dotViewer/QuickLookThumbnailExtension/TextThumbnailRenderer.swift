@@ -9,6 +9,146 @@ struct TextThumbnailSnippet {
     let lineCount: Int
 }
 
+struct ColoredToken {
+    let text: String
+    let color: NSColor
+}
+
+enum ThumbnailSyntaxColorizer {
+    private static let keywords: Set<String> = [
+        "func", "def", "class", "import", "return", "if", "else", "for",
+        "while", "let", "var", "const", "function", "public", "private",
+        "static", "struct", "enum", "switch", "case", "guard", "throw",
+        "try", "catch", "async", "await", "override", "final", "protocol",
+        "extension", "self", "super", "nil", "true", "false", "in", "do",
+        "break", "continue", "where", "as", "is", "new", "void", "int",
+        "float", "double", "bool", "string", "from", "export", "default",
+        "interface", "type", "namespace", "module", "package", "abstract",
+        "implements", "extends", "throws", "yield", "lambda", "elif",
+        "except", "finally", "raise", "with", "pass", "del", "not",
+        "and", "or", "fn", "mut", "pub", "use", "mod", "crate", "impl",
+        "trait", "match", "ref", "move", "unsafe", "extern", "dyn",
+        "go", "chan", "defer", "select", "range", "map", "make",
+        "val", "fun", "object", "sealed", "data", "when",
+        "then", "end", "begin", "elsif", "unless", "until", "puts",
+        "print", "println", "echo", "require", "include"
+    ]
+
+    static func colorize(line: String, palette: ThemePalette) -> [ColoredToken] {
+        let commentColor = NSColor(hex: palette.comment) ?? .gray
+        let stringColor = NSColor(hex: palette.string) ?? .green
+        let keywordColor = NSColor(hex: palette.keyword) ?? .purple
+        let numberColor = NSColor(hex: palette.number) ?? .orange
+        let typeColor = NSColor(hex: palette.type) ?? .yellow
+        let textColor = NSColor(hex: palette.text) ?? .labelColor
+
+        let trimmed = line.drop(while: { $0 == " " || $0 == "\t" })
+
+        // Whole-line comment detection
+        if trimmed.hasPrefix("//") || trimmed.hasPrefix("#") ||
+           trimmed.hasPrefix("--") || trimmed.hasPrefix("%") ||
+           trimmed.hasPrefix("/*") || trimmed.hasPrefix("*") ||
+           trimmed.hasPrefix(";") || trimmed.hasPrefix("rem ") ||
+           trimmed.hasPrefix("REM ") {
+            return [ColoredToken(text: line, color: commentColor)]
+        }
+
+        var tokens: [ColoredToken] = []
+        let chars = Array(line.unicodeScalars)
+        let count = chars.count
+        var i = 0
+
+        while i < count {
+            let ch = chars[i]
+
+            // Strings: "..." or '...' or `...`
+            if ch == "\"" || ch == "'" || ch == "`" {
+                let quote = ch
+                var end = i + 1
+                while end < count {
+                    if chars[end] == "\\" {
+                        end += 2
+                        continue
+                    }
+                    if chars[end] == quote {
+                        end += 1
+                        break
+                    }
+                    end += 1
+                }
+                let start = line.index(line.startIndex, offsetBy: i)
+                let finish = line.index(line.startIndex, offsetBy: min(end, count))
+                tokens.append(ColoredToken(text: String(line[start..<finish]), color: stringColor))
+                i = min(end, count)
+                continue
+            }
+
+            // Inline comment: //
+            if ch == "/" && i + 1 < count && chars[i + 1] == "/" {
+                let start = line.index(line.startIndex, offsetBy: i)
+                tokens.append(ColoredToken(text: String(line[start...]), color: commentColor))
+                i = count
+                continue
+            }
+
+            // Words: identifiers, keywords, types, numbers
+            if ch.properties.isAlphabetic || ch == "_" {
+                var end = i + 1
+                while end < count && (chars[end].properties.isAlphabetic || chars[end] == "_" || chars[end].properties.numericType != nil) {
+                    end += 1
+                }
+                let start = line.index(line.startIndex, offsetBy: i)
+                let finish = line.index(line.startIndex, offsetBy: end)
+                let word = String(line[start..<finish])
+
+                if keywords.contains(word) {
+                    tokens.append(ColoredToken(text: word, color: keywordColor))
+                } else if word.first?.isUppercase == true && word.count > 1 && word.dropFirst().contains(where: { $0.isLowercase }) {
+                    tokens.append(ColoredToken(text: word, color: typeColor))
+                } else {
+                    tokens.append(ColoredToken(text: word, color: textColor))
+                }
+                i = end
+                continue
+            }
+
+            // Numbers
+            if ch.properties.numericType != nil || (ch == "." && i + 1 < count && chars[i + 1].properties.numericType != nil) {
+                var end = i + 1
+                while end < count && (chars[end].properties.numericType != nil || chars[end] == "." || chars[end] == "x" || chars[end] == "X" ||
+                                      (chars[end] >= "a" && chars[end] <= "f") || (chars[end] >= "A" && chars[end] <= "F") || chars[end] == "_") {
+                    end += 1
+                }
+                let start = line.index(line.startIndex, offsetBy: i)
+                let finish = line.index(line.startIndex, offsetBy: end)
+                tokens.append(ColoredToken(text: String(line[start..<finish]), color: numberColor))
+                i = end
+                continue
+            }
+
+            // Default: punctuation, whitespace, operators
+            var end = i + 1
+            while end < count {
+                let next = chars[end]
+                if next.properties.isAlphabetic || next == "_" || next == "\"" || next == "'" || next == "`" ||
+                   next.properties.numericType != nil || (next == "/" && end + 1 < count && chars[end + 1] == "/") {
+                    break
+                }
+                end += 1
+            }
+            let start = line.index(line.startIndex, offsetBy: i)
+            let finish = line.index(line.startIndex, offsetBy: end)
+            tokens.append(ColoredToken(text: String(line[start..<finish]), color: textColor))
+            i = end
+        }
+
+        if tokens.isEmpty {
+            return [ColoredToken(text: line, color: textColor)]
+        }
+        return tokens
+    }
+}
+
 enum TextThumbnailRenderer {
     static func loadSnippet(
         url: URL,
@@ -138,17 +278,20 @@ enum TextThumbnailRenderer {
                     if currentY >= contentRect.maxY { break }
 
                     let displayLine = line.isEmpty ? " " : line
-                    let textAttributes: [NSAttributedString.Key: Any] = [
+
+                    // Measure line height using full text for accurate word-wrap sizing
+                    let measureAttributes: [NSAttributedString.Key: Any] = [
                         .font: lineFont,
                         .foregroundColor: textColor,
                         .paragraphStyle: paragraphStyle
                     ]
-                    let attrString = NSAttributedString(string: displayLine, attributes: textAttributes)
+                    let measureString = NSAttributedString(string: displayLine, attributes: measureAttributes)
                     let textBoundingSize = CGSize(width: max(1, textAvailableWidth), height: contentRect.maxY - currentY)
-                    let textBounds = attrString.boundingRect(
+                    let textBounds = measureString.boundingRect(
                         with: textBoundingSize,
                         options: [.usesLineFragmentOrigin, .usesFontLeading]
                     )
+                    let lineWraps = ceil(textBounds.height) > singleLineHeight * 1.5
                     let drawnHeight = max(singleLineHeight, ceil(textBounds.height))
 
                     if showLineNumbers {
@@ -161,13 +304,41 @@ enum TextThumbnailRenderer {
                         number.draw(at: CGPoint(x: numberX, y: currentY), withAttributes: numberAttributes)
                     }
 
-                    let drawRect = CGRect(
-                        x: textOriginX,
-                        y: currentY,
-                        width: textAvailableWidth,
-                        height: contentRect.maxY - currentY
-                    )
-                    attrString.draw(with: drawRect, options: [.usesLineFragmentOrigin, .usesFontLeading])
+                    if lineWraps {
+                        // For wrapped lines, build an NSAttributedString with per-token colors
+                        let tokens = ThumbnailSyntaxColorizer.colorize(line: displayLine, palette: palette)
+                        let attributed = NSMutableAttributedString()
+                        for token in tokens {
+                            let attrs: [NSAttributedString.Key: Any] = [
+                                .font: lineFont,
+                                .foregroundColor: token.color,
+                                .paragraphStyle: paragraphStyle
+                            ]
+                            attributed.append(NSAttributedString(string: token.text, attributes: attrs))
+                        }
+                        let drawRect = CGRect(
+                            x: textOriginX,
+                            y: currentY,
+                            width: textAvailableWidth,
+                            height: contentRect.maxY - currentY
+                        )
+                        attributed.draw(with: drawRect, options: [.usesLineFragmentOrigin, .usesFontLeading])
+                    } else {
+                        // Single-line: draw tokens sequentially for precise positioning
+                        let tokens = ThumbnailSyntaxColorizer.colorize(line: displayLine, palette: palette)
+                        var tokenX = textOriginX
+                        for token in tokens {
+                            let tokenAttrs: [NSAttributedString.Key: Any] = [
+                                .font: lineFont,
+                                .foregroundColor: token.color
+                            ]
+                            let tokenStr = NSAttributedString(string: token.text, attributes: tokenAttrs)
+                            let tokenWidth = tokenStr.size().width
+                            if tokenX + tokenWidth > textOriginX + textAvailableWidth { break }
+                            tokenStr.draw(at: CGPoint(x: tokenX, y: currentY))
+                            tokenX += tokenWidth
+                        }
+                    }
 
                     currentY += drawnHeight
                 }

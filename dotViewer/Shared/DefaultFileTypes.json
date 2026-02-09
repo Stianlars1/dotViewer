@@ -15,8 +15,7 @@
     "id": "alan",
     "displayName": "ALAN Interactive Fiction Language",
     "extensions": [
-      "alan",
-      "i"
+      "alan"
     ],
     "filenames": [],
     "highlightLanguage": "alan"
@@ -71,7 +70,6 @@
     "id": "fasm",
     "displayName": "fasm",
     "extensions": [
-      "asm",
       "inc"
     ],
     "filenames": [],
@@ -278,7 +276,6 @@
     "extensions": [
       "eu",
       "ew",
-      "ex",
       "exw",
       "wxu"
     ],
@@ -431,7 +428,6 @@
     "extensions": [
       "gnumakefile",
       "mak",
-      "makefile",
       "mk"
     ],
     "filenames": [],
@@ -537,7 +533,6 @@
       "spb",
       "spe",
       "spp",
-      "sps",
       "wf",
       "wp",
       "wpb",
@@ -583,7 +578,7 @@
     "id": "qmake",
     "displayName": "QMake Project",
     "extensions": [
-      "pro"
+      "pri"
     ],
     "filenames": [],
     "highlightLanguage": "qmake"
@@ -608,7 +603,6 @@
       "berksfile",
       "brewfile",
       "capfile",
-      "cgi",
       "cheffile",
       "config.ru",
       "deliverfile",
@@ -665,10 +659,7 @@
       "csh",
       "tcsh"
     ],
-    "filenames": [
-      ".bashrc",
-      ".zshrc"
-    ],
+    "filenames": [],
     "highlightLanguage": "sh"
   },
   {
@@ -685,9 +676,7 @@
   {
     "id": "sybase",
     "displayName": "Sybase SQL",
-    "extensions": [
-      "sp"
-    ],
+    "extensions": [],
     "filenames": [],
     "highlightLanguage": "sybase"
   },
@@ -863,9 +852,7 @@
   {
     "id": "pyrex",
     "displayName": "Pyrex",
-    "extensions": [
-      "pyx"
-    ],
+    "extensions": [],
     "filenames": [],
     "highlightLanguage": "pyrex"
   },
@@ -1950,9 +1937,7 @@
   {
     "id": "pas",
     "displayName": "Pascal",
-    "extensions": [
-      "pas"
-    ],
+    "extensions": [],
     "filenames": [],
     "highlightLanguage": "pas"
   },
@@ -2512,7 +2497,6 @@
     "category": "dotfiles",
     "filenames": [
       ".npmrc",
-      ".nvmrc",
       ".yarnrc",
       ".yarnrc.yml",
       ".pnpmfile.cjs"
@@ -2944,8 +2928,7 @@
     "category": "dataFormats",
     "filenames": [
       "Makefile",
-      "GNUmakefile",
-      "makefile"
+      "GNUmakefile"
     ]
   },
   {
@@ -3015,8 +2998,7 @@
     "highlightLanguage": "make",
     "category": "dataFormats",
     "filenames": [
-      "Justfile",
-      "justfile"
+      "Justfile"
     ]
   },
   {

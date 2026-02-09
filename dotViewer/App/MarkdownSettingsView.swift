@@ -5,6 +5,7 @@ struct MarkdownSettingsView: View {
     @State private var defaultMode: String = SharedSettings.shared.markdownDefaultMode
     @State private var showInlineImages: Bool = SharedSettings.shared.markdownShowInlineImages
     @State private var useSyntaxHighlightInRaw: Bool = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
+    @State private var showTOC: Bool = SharedSettings.shared.markdownShowTOC
     @State private var renderFontSize: Double = SharedSettings.shared.markdownRenderFontSize
     @State private var customCSS: String = SharedSettings.shared.markdownCustomCSS
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
@@ -35,6 +36,15 @@ struct MarkdownSettingsView: View {
                             .onChange(of: useSyntaxHighlightInRaw) { _, newValue in
                                 SharedSettings.shared.markdownUseSyntaxHighlightInRaw = newValue
                             }
+
+                        Toggle("Show Table of Contents", isOn: $showTOC)
+                            .onChange(of: showTOC) { _, newValue in
+                                SharedSettings.shared.markdownShowTOC = newValue
+                            }
+
+                        Text("Show a collapsible table of contents in rendered previews")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
