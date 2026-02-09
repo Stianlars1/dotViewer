@@ -541,6 +541,12 @@ private extension TreeSitterHighlighter {
         if lower.contains("namespace") || lower.contains("module") { return "tok-namespace" }
         if lower.contains("parameter") { return "tok-parameter" }
 
+        // Text-semantic captures (nvim-treesitter @text.* conventions)
+        if lower.contains("title") || lower.contains("heading") { return "tok-keyword" }
+        if lower.contains("literal") { return "tok-string" }
+        if lower.contains("uri") || lower.contains("url") { return "tok-string" }
+        if lower.contains("reference") { return "tok-property" }
+
         // Broad matchers
         if lower.contains("comment") { return "tok-comment" }
         if lower.contains("string") || lower.contains("regex") { return "tok-string" }

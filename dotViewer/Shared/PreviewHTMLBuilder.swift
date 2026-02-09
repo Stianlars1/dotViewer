@@ -198,6 +198,7 @@ public enum PreviewHTMLBuilder {
               --builtin: \(palette.builtin);
               --namespace: \(palette.namespace);
               --parameter: \(palette.parameter);
+              --heading: \(palette.isDark ? palette.type : palette.text);
               --gutter: \(palette.isDark ? "#3B3F51" : "#C0C4CC");
               --header: \(palette.isDark ? "#1F232B" : "#F2F3F5");
               --surface: \(palette.isDark ? "#1E222A" : "#F5F7FA");
@@ -215,6 +216,10 @@ public enum PreviewHTMLBuilder {
         \(cssVariables(for: basePalette))
         }
 
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+
         html, body {
           width: 100%;
           height: 100%;
@@ -225,6 +230,8 @@ public enum PreviewHTMLBuilder {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           background: var(--bg);
           color: var(--text);
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
         }
 
         .header {
@@ -395,30 +402,70 @@ public enum PreviewHTMLBuilder {
         .tok-parameter { color: var(--parameter); font-style: italic; }
 
         .rendered-view {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
           line-height: 1.6;
           font-size: \(renderFontSize)px;
           color: var(--text);
           background: transparent;
           border: none;
           box-shadow: none;
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 24px 32px;
         }
 
+        /* Typora-inspired Typography */
         .rendered-view h1,
         .rendered-view h2,
         .rendered-view h3,
         .rendered-view h4,
         .rendered-view h5,
         .rendered-view h6 {
-          color: var(--text);
-          margin-top: 1.2em;
-          margin-bottom: 0.5em;
+          color: var(--heading);
+          font-weight: 600;
+          line-height: 1.25;
+          margin-top: 24px;
+          margin-bottom: 16px;
+          letter-spacing: -0.02em;
         }
 
-        .rendered-view h1,
-        .rendered-view h2 {
+        .rendered-view h1 {
+          font-size: 2em;
+          font-weight: 700;
+          margin-top: 0.5em;
+          padding-bottom: 0.3em;
           border-bottom: 1px solid var(--border);
-          padding-bottom: 6px;
+        }
+
+        .rendered-view h2 {
+          font-size: 1.5em;
+          font-weight: 700;
+          padding-bottom: 0.3em;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .rendered-view h3 {
+          font-size: 1.25em;
+        }
+
+        .rendered-view h4 {
+          font-size: 1em;
+        }
+
+        .rendered-view h5 {
+          font-size: 0.875em;
+          font-weight: 600;
+        }
+
+        .rendered-view h6 {
+          font-size: 0.85em;
+          font-weight: 600;
+          opacity: 0.8;
+        }
+
+        .rendered-view p {
+          margin-top: 0;
+          margin-bottom: 16px;
         }
 
         .rendered-view a {
@@ -430,60 +477,219 @@ public enum PreviewHTMLBuilder {
           text-decoration: underline;
         }
 
+        /* Inline code */
         .rendered-view code {
-          font-family: "SF Mono", Menlo, Monaco, monospace;
+          font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+          font-size: 0.9em;
           background: var(--surface);
-          color: var(--text);
-          padding: 2px 6px;
-          border-radius: 6px;
+          color: var(--accent);
+          padding: 0.2em 0.4em;
+          border-radius: 4px;
         }
 
+        /* Code blocks */
         .rendered-view pre {
           background: var(--surface);
-          padding: 12px;
-          border-radius: 8px;
+          padding: 16px;
+          border-radius: 6px;
           overflow-x: auto;
-          border: 1px solid var(--border);
+          margin: 16px 0;
+          line-height: 1.45;
+          position: relative;
         }
 
         .rendered-view pre code {
-          background: transparent;
+          background: none;
+          border: none;
           padding: 0;
+          border-radius: 0;
+          color: var(--text);
+          font-size: 0.875em;
         }
 
+        .rendered-view pre .code-lang {
+          position: absolute;
+          top: 6px;
+          right: 10px;
+          font-size: 0.75em;
+          color: var(--comment);
+          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          user-select: none;
+          opacity: 0.7;
+        }
+
+        /* Blockquotes */
         .rendered-view blockquote {
-          border-left: 3px solid var(--border);
-          margin: 1em 0;
-          padding: 0.25em 0.75em;
+          border-left: 4px solid var(--border);
+          margin: 16px 0;
+          padding: 0 16px;
           color: var(--comment);
         }
 
+        .rendered-view blockquote > :first-child {
+          margin-top: 0;
+        }
+
+        .rendered-view blockquote > :last-child {
+          margin-bottom: 0;
+        }
+
+        /* Lists */
+        .rendered-view ul,
+        .rendered-view ol {
+          padding-left: 2em;
+          margin-top: 0;
+          margin-bottom: 16px;
+        }
+
+        .rendered-view li {
+          margin-bottom: 4px;
+        }
+
+        .rendered-view li + li {
+          margin-top: 4px;
+        }
+
+        .rendered-view li > p {
+          margin-top: 16px;
+        }
+
+        .rendered-view ul ul,
+        .rendered-view ol ol,
+        .rendered-view ul ol,
+        .rendered-view ol ul {
+          margin-top: 4px;
+          margin-bottom: 4px;
+        }
+
+        /* Task list items */
+        .rendered-view .task-item {
+          list-style: none;
+          margin-left: -1.4em;
+        }
+
+        .rendered-view .task-item input[type="checkbox"] {
+          margin-right: 0.4em;
+          vertical-align: middle;
+          accent-color: var(--accent);
+        }
+
+        /* Tables */
         .rendered-view table {
           border-collapse: collapse;
+          width: 100%;
+          margin: 16px 0;
+          overflow: auto;
         }
 
         .rendered-view th,
         .rendered-view td {
           border: 1px solid var(--border);
-          padding: 6px 10px;
+          padding: 8px 12px;
+          text-align: left;
         }
 
+        .rendered-view th {
+          font-weight: 600;
+          background: var(--surface);
+        }
+
+        .rendered-view tr:nth-child(even) {
+          background: var(--surface);
+        }
+
+        /* Images */
         .rendered-view img {
           max-width: 100%;
           height: auto;
+          display: block;
+          margin: 16px auto;
+          border-radius: 4px;
         }
 
-        .rendered-view p { margin: 1em 0; line-height: 1.6; }
-        .rendered-view ul, .rendered-view ol { margin: 1em 0; padding-left: 2em; }
-        .rendered-view li { margin: 0.3em 0; }
-        .rendered-view li > p { margin: 0.5em 0; }
-        .rendered-view hr { border: none; border-top: 1px solid var(--border); margin: 1.5em 0; }
-        .rendered-view details { margin: 1em 0; }
-        .rendered-view summary { cursor: pointer; font-weight: 600; }
-        .rendered-view strong { font-weight: 700; }
-        .rendered-view em { font-style: italic; }
-        .rendered-view del { text-decoration: line-through; }
-        .rendered-view mark { background: rgba(255, 200, 0, 0.3); color: inherit; }
+        /* Horizontal rule */
+        .rendered-view hr {
+          border: none;
+          border-top: 2px solid var(--border);
+          margin: 24px 0;
+        }
+
+        /* Details/Summary */
+        .rendered-view details {
+          margin: 16px 0;
+        }
+
+        .rendered-view summary {
+          cursor: pointer;
+          font-weight: 600;
+        }
+
+        /* Text formatting */
+        .rendered-view strong {
+          font-weight: 700;
+          color: var(--text);
+        }
+
+        .rendered-view em {
+          font-style: italic;
+        }
+
+        .rendered-view del {
+          text-decoration: line-through;
+          opacity: 0.7;
+        }
+
+        .rendered-view mark {
+          background: rgba(255, 200, 0, 0.3);
+          color: inherit;
+          padding: 0.1em 0.2em;
+          border-radius: 2px;
+        }
+
+        /* Keyboard shortcuts */
+        .rendered-view kbd {
+          font-family: "SF Mono", Menlo, monospace;
+          font-size: 0.85em;
+          padding: 2px 6px;
+          border: 1px solid var(--border);
+          border-bottom-width: 2px;
+          border-radius: 4px;
+          background: var(--surface);
+          color: var(--text);
+          white-space: nowrap;
+        }
+
+        /* Definition lists */
+        .rendered-view dl {
+          margin: 1em 0;
+        }
+
+        .rendered-view dt {
+          font-weight: 600;
+          margin-top: 0.8em;
+        }
+
+        .rendered-view dd {
+          margin-left: 1.5em;
+          margin-bottom: 0.5em;
+        }
+
+        /* Abbreviations */
+        .rendered-view abbr[title] {
+          text-decoration: underline dotted;
+          cursor: help;
+        }
+
+        /* Align support */
+        .rendered-view [align="center"] {
+          text-align: center;
+        }
+
+        .rendered-view [align="right"] {
+          text-align: right;
+        }
 
         .hidden {
           display: none;

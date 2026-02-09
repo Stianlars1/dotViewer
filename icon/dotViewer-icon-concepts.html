@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotViewer Icon Design Concepts</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+    padding: 40px;
+  }
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #7c5cfc, #00c6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .subtitle {
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 40px;
+  }
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .concept-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 32px;
+    text-align: center;
+  }
+  .concept-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #fff;
+  }
+  .concept-card .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .tag.recommended { background: rgba(52, 199, 89, 0.2); color: #34c759; }
+  .tag.alternative { background: rgba(0, 122, 255, 0.2); color: #64b5f6; }
+  .tag.minimal { background: rgba(255, 159, 10, 0.2); color: #ff9f0a; }
+  .icon-wrapper {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .description {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.6;
+    text-align: left;
+  }
+  .description strong { color: #ccc; }
+
+  /* ========== CONCEPT A: The Lens ========== */
+  .icon-a {
+    width: 200px; height: 200px;
+    background: linear-gradient(145deg, #4a3fb8, #6c5ce7);
+    border-radius: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow:
+      0 8px 32px rgba(108, 92, 231, 0.3),
+      inset 0 2px 4px rgba(255,255,255,0.15),
+      inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+  .icon-a::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
+    border-radius: 38px 38px 50% 50%;
+  }
+  .lens-circle {
+    width: 110px; height: 110px;
+    border: 6px solid rgba(255,255,255,0.85);
+    border-radius: 50%;
+    position: relative;
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.08), rgba(0,0,0,0.15));
+    box-shadow:
+      0 4px 20px rgba(0,0,0,0.3),
+      inset 0 2px 8px rgba(255,255,255,0.1);
+  }
+  .lens-circle::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 12px;
+    width: 30px; height: 16px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: rotate(-30deg);
+  }
+  .dot-char {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 52px;
+    font-weight: 800;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .code-lines-a {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+    opacity: 0.5;
+  }
+  .code-lines-a span {
+    display: block;
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.6);
+  }
+  .handle-a {
+    position: absolute;
+    bottom: -8px; right: -8px;
+    width: 36px; height: 12px;
+    background: rgba(255,255,255,0.75);
+    border-radius: 6px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ========== CONCEPT B: The Document Eye ========== */
+  .icon-b {
+    width: 200px; height: 200px;
+    background: linear-gradient(145deg, #2d3a8c, #4f46e5);
+    border-radius: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow:
+      0 8px 32px rgba(79, 70, 229, 0.3),
+      inset 0 2px 4px rgba(255,255,255,0.12),
+      inset 0 -2px 4px rgba(0,0,0,0.2);
+  }
+  .icon-b::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.10), transparent);
+    border-radius: 38px 38px 50% 50%;
+  }
+  .doc-shape {
+    width: 100px; height: 124px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(240,240,245,0.9));
+    border-radius: 8px 16px 8px 8px;
+    position: relative;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+    gap: 5px;
+  }
+  .doc-shape::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 16px; height: 16px;
+    background: linear-gradient(135deg, rgba(200,200,210,0.8) 50%, transparent 50%);
+    border-radius: 0 16px 0 0;
+  }
+  .doc-line {
+    height: 3px;
+    border-radius: 2px;
+    background: rgba(79, 70, 229, 0.25);
+  }
+  .doc-line:nth-child(1) { width: 65%; }
+  .doc-line:nth-child(2) { width: 80%; }
+  .doc-line:nth-child(3) { width: 50%; }
+  .eye-overlay {
+    position: absolute;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    width: 44px; height: 22px;
+  }
+  .eye-shape {
+    width: 44px; height: 22px;
+    border: 3px solid #4f46e5;
+    border-radius: 50%;
+    position: relative;
+    background: rgba(255,255,255,0.9);
+  }
+  .eye-pupil {
+    width: 12px; height: 12px;
+    background: radial-gradient(circle at 40% 40%, #6c5ce7, #2d3a8c);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .eye-pupil::after {
+    content: '';
+    width: 4px; height: 4px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px; left: 2px;
+  }
+
+  /* ========== CONCEPT C: Minimal Brackets ========== */
+  .icon-c {
+    width: 200px; height: 200px;
+    background: linear-gradient(145deg, #1e1b4b, #312e81);
+    border-radius: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow:
+      0 8px 32px rgba(49, 46, 129, 0.4),
+      inset 0 2px 4px rgba(255,255,255,0.08),
+      inset 0 -2px 4px rgba(0,0,0,0.3);
+  }
+  .icon-c::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), transparent);
+    border-radius: 38px 38px 50% 50%;
+  }
+  .bracket-pair {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    position: relative;
+  }
+  .bracket {
+    font-size: 72px;
+    font-weight: 200;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    color: rgba(255,255,255,0.7);
+    line-height: 1;
+  }
+  .center-dot {
+    width: 18px; height: 18px;
+    background: radial-gradient(circle, #a78bfa, #7c3aed);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.5), 0 0 40px rgba(124, 58, 237, 0.2);
+  }
+
+  /* ========== CONCEPT D: Refined Magnifier (Recommended) ========== */
+  .icon-d {
+    width: 200px; height: 200px;
+    background: linear-gradient(145deg, #3730a3, #6366f1);
+    border-radius: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow:
+      0 8px 32px rgba(99, 102, 241, 0.35),
+      inset 0 2px 4px rgba(255,255,255,0.15),
+      inset 0 -2px 4px rgba(0,0,0,0.2);
+    overflow: hidden;
+  }
+  .icon-d::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: 8px; right: 8px; bottom: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.12), transparent);
+    border-radius: 38px 38px 50% 50%;
+    z-index: 2;
+  }
+  .bg-code-lines {
+    position: absolute;
+    top: 28px; left: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    z-index: 0;
+  }
+  .bg-code-lines span {
+    display: block;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+  }
+  .mag-glass {
+    position: relative;
+    z-index: 1;
+  }
+  .mag-ring {
+    width: 100px; height: 100px;
+    border: 7px solid rgba(255,255,255,0.9);
+    border-radius: 50%;
+    position: relative;
+    background: radial-gradient(circle at 35% 35%, rgba(255,255,255,0.12), rgba(0,0,0,0.1));
+    box-shadow:
+      0 4px 16px rgba(0,0,0,0.25),
+      inset 0 2px 6px rgba(255,255,255,0.08);
+  }
+  .mag-ring::after {
+    content: '';
+    position: absolute;
+    top: 8px; left: 10px;
+    width: 24px; height: 12px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+  }
+  .mag-content {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .mag-line {
+    height: 3.5px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.65);
+  }
+  .mag-line:nth-child(1) { width: 28px; margin-left: 8px; }
+  .mag-line:nth-child(2) { width: 40px; margin-left: 14px; }
+  .mag-line:nth-child(3) { width: 32px; margin-left: 14px; }
+  .mag-line:nth-child(4) { width: 22px; margin-left: 8px; }
+  .mag-line.highlight {
+    background: rgba(167, 139, 250, 0.8);
+    box-shadow: 0 0 8px rgba(167, 139, 250, 0.3);
+  }
+  .mag-handle {
+    position: absolute;
+    bottom: -14px; right: -14px;
+    width: 32px; height: 10px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.85), rgba(255,255,255,0.65));
+    border-radius: 5px;
+    transform: rotate(45deg);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  /* ========== Design Principles Section ========== */
+  .principles {
+    max-width: 1200px;
+    margin: 60px auto 0;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .principles h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .principle {
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .principle h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #a78bfa;
+    margin-bottom: 8px;
+  }
+  .principle p {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  /* Size preview */
+  .size-preview {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .size-preview h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .sizes-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .size-item {
+    text-align: center;
+  }
+  .size-item .mini-icon {
+    background: linear-gradient(145deg, #3730a3, #6366f1);
+    border-radius: 22%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  }
+  .size-label {
+    font-size: 11px;
+    color: #666;
+  }
+
+  .color-palette {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 32px;
+  }
+  .color-palette h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  .colors-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .color-swatch {
+    text-align: center;
+  }
+  .swatch {
+    width: 60px; height: 60px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .color-swatch .label { font-size: 11px; color: #888; }
+  .color-swatch .hex { font-size: 10px; color: #555; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<h1>dotViewer Icon Design Reference</h1>
+<p class="subtitle">Apple-style macOS icon concepts &mdash; 2025 design trends</p>
+
+<div class="concepts-grid">
+
+  <!-- Concept D: Recommended -->
+  <div class="concept-card">
+    <h2>Concept A: Code Inspector</h2>
+    <span class="tag recommended">Recommended</span>
+    <div class="icon-wrapper">
+      <div class="icon-d">
+        <div class="bg-code-lines">
+          <span style="width:50px"></span>
+          <span style="width:70px"></span>
+          <span style="width:55px"></span>
+          <span style="width:80px"></span>
+          <span style="width:45px"></span>
+          <span style="width:65px"></span>
+          <span style="width:75px"></span>
+          <span style="width:40px"></span>
+          <span style="width:60px"></span>
+          <span style="width:50px"></span>
+          <span style="width:70px"></span>
+          <span style="width:55px"></span>
+          <span style="width:45px"></span>
+          <span style="width:65px"></span>
+        </div>
+        <div class="mag-glass">
+          <div class="mag-ring">
+            <div class="mag-content">
+              <div class="mag-line" style="width:28px; margin-left:8px"></div>
+              <div class="mag-line highlight" style="width:40px; margin-left:14px"></div>
+              <div class="mag-line" style="width:32px; margin-left:14px"></div>
+              <div class="mag-line" style="width:22px; margin-left:8px"></div>
+            </div>
+          </div>
+          <div class="mag-handle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <strong>Single metaphor:</strong> A magnifying glass inspecting code lines on an indigo background. The highlighted line inside the lens draws focus. Faint code lines in the background add context without clutter. This is the most "Apple" of all concepts &mdash; clean, recognizable at any size, and tells the story of "viewing code" instantly.
+    </div>
+  </div>
+
+  <!-- Concept A: The Lens -->
+  <div class="concept-card">
+    <h2>Concept B: The Dot Lens</h2>
+    <span class="tag alternative">Alternative</span>
+    <div class="icon-wrapper">
+      <div class="icon-a">
+        <div class="lens-circle">
+          <div class="dot-char">.</div>
+        </div>
+        <div class="handle-a"></div>
+      </div>
+    </div>
+    <div class="description">
+      <strong>Playful and bold:</strong> A magnifying glass with a prominent "dot" (period character) at its center. This literally spells out "dotViewer" &mdash; a lens viewing a dot. The simplicity is striking but may not immediately communicate "code viewer" to new users.
+    </div>
+  </div>
+
+  <!-- Concept C: Minimal Brackets -->
+  <div class="concept-card">
+    <h2>Concept C: Code Brackets</h2>
+    <span class="tag minimal">Minimal</span>
+    <div class="icon-wrapper">
+      <div class="icon-c">
+        <div class="bracket-pair">
+          <span class="bracket">{</span>
+          <div class="center-dot"></div>
+          <span class="bracket">}</span>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <strong>Ultra-minimal:</strong> Curly braces framing a glowing dot on a deep indigo background. This is the most typography-driven approach. Inspired by how Terminal and code editors use simple symbols. Works beautifully at all sizes due to its simplicity.
+    </div>
+  </div>
+
+  <!-- Concept B: Document Eye -->
+  <div class="concept-card">
+    <h2>Concept D: Document Eye</h2>
+    <span class="tag alternative">Alternative</span>
+    <div class="icon-wrapper">
+      <div class="icon-b">
+        <div class="doc-shape">
+          <div class="doc-line"></div>
+          <div class="doc-line"></div>
+          <div class="doc-line"></div>
+          <div class="eye-overlay">
+            <div class="eye-shape">
+              <div class="eye-pupil"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="description">
+      <strong>Metaphor blend:</strong> A document page with an eye symbol embedded at the bottom, suggesting "watching" or "viewing" the document contents. The eye adds personality while the document shape grounds the concept in file viewing.
+    </div>
+  </div>
+
+</div>
+
+<!-- Design Principles -->
+<div class="principles">
+  <h2>Apple Icon Design Principles Applied</h2>
+  <div class="principles-grid">
+    <div class="principle">
+      <h3>Single Metaphor</h3>
+      <p>Each concept uses ONE clear visual idea. No competing symbols. Your current icon has eye + magnifier + brackets + code bars &mdash; that's 4 metaphors. Pick one.</p>
+    </div>
+    <div class="principle">
+      <h3>Squircle Shape</h3>
+      <p>Icon Composer automatically applies the macOS squircle mask. Design your content within this boundary. Leave ~12% padding from edges.</p>
+    </div>
+    <div class="principle">
+      <h3>Limited Palette</h3>
+      <p>Use 1-2 primary colors maximum. The indigo-to-violet gradient is distinctive and associates well with developer tools (see Xcode, Instruments).</p>
+    </div>
+    <div class="principle">
+      <h3>Scale Gracefully</h3>
+      <p>The icon must read clearly from 1024px down to 16px. Test at dock size (48-64px). If details vanish, simplify.</p>
+    </div>
+    <div class="principle">
+      <h3>Subtle Depth</h3>
+      <p>Use gentle inner highlights (top-left) and shadows (bottom-right) to suggest materiality. Avoid heavy 3D effects &mdash; Apple uses "refined realism."</p>
+    </div>
+    <div class="principle">
+      <h3>Liquid Glass Ready</h3>
+      <p>macOS 26 Tahoe introduces Liquid Glass. Design with clear foreground/background separation. Icon Composer lets you create layers for this.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Color Palette -->
+<div class="color-palette">
+  <h2>Recommended Color Palette</h2>
+  <div class="colors-row">
+    <div class="color-swatch">
+      <div class="swatch" style="background: linear-gradient(145deg, #3730a3, #4f46e5)"></div>
+      <div class="label">Background Dark</div>
+      <div class="hex">#3730a3</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background: linear-gradient(145deg, #4f46e5, #6366f1)"></div>
+      <div class="label">Background Light</div>
+      <div class="hex">#6366f1</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background: rgba(255,255,255,0.9)"></div>
+      <div class="label">Icon Element</div>
+      <div class="hex">#FFFFFF @ 90%</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background: #a78bfa"></div>
+      <div class="label">Accent/Highlight</div>
+      <div class="hex">#a78bfa</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15)"></div>
+      <div class="label">Subtle Lines</div>
+      <div class="hex">#FFF @ 8%</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background: linear-gradient(145deg, #1e1b4b, #312e81)"></div>
+      <div class="label">Deep Variant</div>
+      <div class="hex">#1e1b4b</div>
+    </div>
+  </div>
+</div>
+
+<!-- Size Preview -->
+<div class="size-preview">
+  <h2>Size Preview (Concept A at Dock Sizes)</h2>
+  <div class="sizes-row">
+    <div class="size-item">
+      <div class="mini-icon" style="width:128px;height:128px;border-radius:28px">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="34" cy="34" r="22" stroke="rgba(255,255,255,0.9)" stroke-width="5" fill="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="50" x2="64" y2="64" stroke="rgba(255,255,255,0.8)" stroke-width="5" stroke-linecap="round"/>
+          <rect x="20" y="26" width="20" height="2.5" rx="1" fill="rgba(255,255,255,0.5)"/>
+          <rect x="22" y="32" width="26" height="2.5" rx="1" fill="rgba(167,139,250,0.8)"/>
+          <rect x="22" y="38" width="18" height="2.5" rx="1" fill="rgba(255,255,255,0.5)"/>
+        </svg>
+      </div>
+      <div class="size-label">128px</div>
+    </div>
+    <div class="size-item">
+      <div class="mini-icon" style="width:64px;height:64px;border-radius:14px">
+        <svg width="40" height="40" viewBox="0 0 80 80" fill="none">
+          <circle cx="34" cy="34" r="22" stroke="rgba(255,255,255,0.9)" stroke-width="6" fill="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="50" x2="64" y2="64" stroke="rgba(255,255,255,0.8)" stroke-width="6" stroke-linecap="round"/>
+          <rect x="22" y="30" width="22" height="3" rx="1.5" fill="rgba(167,139,250,0.8)"/>
+        </svg>
+      </div>
+      <div class="size-label">64px (Dock)</div>
+    </div>
+    <div class="size-item">
+      <div class="mini-icon" style="width:48px;height:48px;border-radius:10px">
+        <svg width="28" height="28" viewBox="0 0 80 80" fill="none">
+          <circle cx="34" cy="34" r="22" stroke="rgba(255,255,255,0.9)" stroke-width="7" fill="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="50" x2="64" y2="64" stroke="rgba(255,255,255,0.8)" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="size-label">48px</div>
+    </div>
+    <div class="size-item">
+      <div class="mini-icon" style="width:32px;height:32px;border-radius:7px">
+        <svg width="18" height="18" viewBox="0 0 80 80" fill="none">
+          <circle cx="34" cy="34" r="22" stroke="rgba(255,255,255,0.9)" stroke-width="9" fill="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="50" x2="64" y2="64" stroke="rgba(255,255,255,0.8)" stroke-width="9" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="size-label">32px</div>
+    </div>
+    <div class="size-item">
+      <div class="mini-icon" style="width:16px;height:16px;border-radius:4px">
+        <svg width="10" height="10" viewBox="0 0 80 80" fill="none">
+          <circle cx="34" cy="34" r="22" stroke="rgba(255,255,255,0.9)" stroke-width="12" fill="rgba(255,255,255,0.05)"/>
+          <line x1="50" y1="50" x2="64" y2="64" stroke="rgba(255,255,255,0.8)" stroke-width="12" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="size-label">16px</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

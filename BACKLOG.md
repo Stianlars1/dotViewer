@@ -11,6 +11,7 @@ Derived from known issues — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for full de
 | B-003 | Thumbnail/preview visual parity | Critical | KI-002, KI-006 |
 | B-004 | Catch-all UTI for unknown text extensions | High | KI-005 |
 | B-005 | Resolve 14 duplicate extension warnings | Low | KI-008 |
+| B-006 | Cmd+C text copy in Quick Look preview | High | KI-009 — selected text can't be copied via keyboard shortcut |
 
 ## Feature Ideas
 

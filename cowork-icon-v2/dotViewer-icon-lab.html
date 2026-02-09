@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotViewer Icon Lab — Liquid Glass</title>
+<style>
+  :root {
+    --bg-0: #0a0a0f;
+    --bg-1: #12121a;
+    --bg-2: #1a1a26;
+    --bg-3: #222233;
+    --border: rgba(255,255,255,0.06);
+    --text-0: #f0f0f5;
+    --text-1: #a0a0b8;
+    --text-2: #66667a;
+    --accent: #6366f1;
+    --accent-soft: rgba(99,102,241,0.15);
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(255,255,255,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background: var(--bg-0);
+    color: var(--text-0);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: var(--bg-1);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header h1 {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .header h1 span { color: var(--accent); }
+  .header-badge {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .header-right { display: flex; gap: 8px; }
+  .btn {
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+    color: var(--text-1);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .btn:hover { background: rgba(255,255,255,0.08); color: var(--text-0); }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .btn-primary:hover { background: #5558e6; }
+
+  /* ── Main Layout ── */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Left Panel: Assets ── */
+  .panel-left {
+    width: 280px;
+    background: var(--bg-1);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .panel-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+  }
+  .filter-tabs {
+    display: flex;
+    gap: 4px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .filter-tab {
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text-2);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .filter-tab:hover { color: var(--text-1); background: var(--glass); }
+  .filter-tab.active { color: var(--accent); background: var(--accent-soft); }
+  .filter-count {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-left: 3px;
+  }
+  .asset-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .asset-card {
+    aspect-ratio: 1;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: grab;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+  .asset-card:hover {
+    border-color: var(--accent);
+    background: var(--bg-3);
+    transform: scale(1.02);
+  }
+  .asset-card.selected {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  .asset-card svg { width: 52px; height: 52px; }
+  .asset-label {
+    font-size: 8px;
+    color: var(--text-2);
+    margin-top: 3px;
+    text-align: center;
+    line-height: 1.1;
+    padding: 0 2px;
+  }
+  .asset-cat-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  /* ── Center: Canvas ── */
+  .panel-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .canvas-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-1);
+    flex-shrink: 0;
+  }
+  .canvas-toolbar label {
+    font-size: 11px;
+    color: var(--text-2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .canvas-toolbar input[type="color"] {
+    width: 28px;
+    height: 22px;
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    background: var(--bg-2);
+    cursor: pointer;
+    padding: 1px;
+  }
+  .canvas-toolbar input[type="range"] {
+    width: 80px;
+    accent-color: var(--accent);
+  }
+  .canvas-toolbar input[type="number"] {
+    width: 48px;
+    background: var(--bg-2);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: var(--text-0);
+    font-size: 11px;
+    padding: 2px 6px;
+    font-family: inherit;
+  }
+  .canvas-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-0);
+    background-image:
+      radial-gradient(circle at 50% 50%, rgba(99,102,241,0.03) 0%, transparent 70%);
+    position: relative;
+    overflow: hidden;
+  }
+  .canvas-frame {
+    position: relative;
+    width: 512px;
+    height: 512px;
+    flex-shrink: 0;
+  }
+  .canvas-svg {
+    width: 100%;
+    height: 100%;
+    border-radius: 22.37%;
+    overflow: hidden;
+    box-shadow:
+      0 2px 8px rgba(0,0,0,0.3),
+      0 12px 40px rgba(0,0,0,0.4);
+  }
+  /* Drag overlay for elements on canvas */
+  .canvas-el {
+    position: absolute;
+    cursor: move;
+    transition: outline 0.1s;
+    outline: 2px solid transparent;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+  .canvas-el:hover, .canvas-el.selected {
+    outline-color: var(--accent);
+  }
+
+  /* ── Right Panel: Properties + Presets ── */
+  .panel-right {
+    width: 280px;
+    background: var(--bg-1);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .right-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .right-tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+    transition: all 0.15s;
+  }
+  .right-tab:hover { color: var(--text-1); }
+  .right-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .right-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+  }
+  .prop-group {
+    margin-bottom: 16px;
+  }
+  .prop-group-title {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-2);
+    margin-bottom: 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+  }
+  .prop-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .prop-label {
+    font-size: 11px;
+    color: var(--text-1);
+  }
+  .prop-input {
+    width: 80px;
+    background: var(--bg-2);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: var(--text-0);
+    font-size: 11px;
+    padding: 3px 6px;
+    font-family: inherit;
+    text-align: right;
+  }
+  .prop-input-color {
+    width: 32px;
+    height: 24px;
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    padding: 1px;
+    background: var(--bg-2);
+    cursor: pointer;
+  }
+
+  /* ── Layer List ── */
+  .layer-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .layer-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.1s;
+    font-size: 11px;
+    color: var(--text-1);
+  }
+  .layer-item:hover { background: var(--bg-3); }
+  .layer-item.selected { border-color: var(--accent); color: var(--text-0); }
+  .layer-thumb {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: var(--bg-3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .layer-thumb svg { width: 20px; height: 20px; }
+  .layer-name { flex: 1; }
+  .layer-vis {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--glass-border);
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-family: inherit;
+  }
+  .layer-del {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--text-2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-family: inherit;
+  }
+  .layer-del:hover { color: #f44; border-color: rgba(255,68,68,0.3); }
+
+  /* ── Preset Gallery ── */
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .preset-card {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: var(--bg-2);
+    cursor: pointer;
+    transition: all 0.15s;
+    overflow: hidden;
+  }
+  .preset-card:hover {
+    border-color: var(--accent);
+    transform: scale(1.02);
+  }
+  .preset-thumb {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .preset-thumb svg { width: 100%; height: 100%; border-radius: 22.37%; overflow: hidden; }
+  .preset-info {
+    padding: 4px 6px 6px;
+  }
+  .preset-name {
+    font-size: 9px;
+    font-weight: 500;
+    color: var(--text-1);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .preset-badge {
+    display: inline-block;
+    font-size: 8px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+    margin-right: 3px;
+  }
+  .preset-badge.liquid { background: rgba(99,102,241,0.15); color: #818cf8; }
+  .preset-badge.hig { background: rgba(52,211,153,0.15); color: #34d399; }
+  .preset-badge.concept { background: rgba(251,191,36,0.15); color: #fbbf24; }
+  .preset-badge.dotviewer { background: rgba(129,140,248,0.18); color: #818cf8; }
+
+  /* ── Preview Row ── */
+  .preview-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+    padding: 12px 20px;
+    border-top: 1px solid var(--border);
+    background: var(--bg-1);
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+  .preview-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .preview-icon {
+    border-radius: 22.37%;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .preview-label {
+    font-size: 9px;
+    color: var(--text-2);
+    font-weight: 500;
+  }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+  /* ── Empty State ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    color: var(--text-2);
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  .empty-state-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    opacity: 0.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>dotViewer <span>Icon Lab</span></h1>
+    <span class="header-badge">LIQUID GLASS</span>
+  </div>
+  <div class="header-right">
+    <button class="btn" onclick="resetCanvas()">Reset</button>
+    <button class="btn" onclick="exportSVG()">Export SVG</button>
+    <button class="btn btn-primary" onclick="exportPNG()">Export 1024px PNG</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MAIN -->
+<div class="main">
+
+  <!-- ── Left Panel ── -->
+  <div class="panel-left">
+    <div class="panel-header">
+      <span class="panel-title">Assets</span>
+      <span style="font-size:11px;color:var(--text-2)" id="assetCount"></span>
+    </div>
+    <div class="filter-tabs" id="filterTabs"></div>
+    <div class="asset-grid" id="assetGrid"></div>
+  </div>
+
+  <!-- ── Center Panel ── -->
+  <div class="panel-center">
+    <div class="canvas-toolbar">
+      <label>BG 1 <input type="color" id="bgC1" value="#3730a3" onchange="updateBG()"></label>
+      <label>BG 2 <input type="color" id="bgC2" value="#6366f1" onchange="updateBG()"></label>
+      <label>Angle <input type="range" id="bgAngle" min="0" max="360" value="150" oninput="updateBG()"><span id="bgAngleVal" style="font-size:10px;color:var(--text-2);min-width:26px">150°</span></label>
+      <div style="flex:1"></div>
+      <label style="gap:4px">
+        <span style="font-size:10px;color:var(--text-2)">Grid</span>
+        <input type="checkbox" id="showGrid" onchange="renderCanvas()">
+      </label>
+    </div>
+    <div class="canvas-area" id="canvasArea">
+      <div class="canvas-frame" id="canvasFrame">
+        <svg class="canvas-svg" id="canvasSVG" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="squircle">
+              <rect width="512" height="512" rx="114" ry="114"/>
+            </clipPath>
+            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3730a3"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <g clip-path="url(#squircle)">
+            <rect id="bgRect" width="512" height="512" fill="url(#bgGrad)"/>
+            <!-- top highlight -->
+            <ellipse cx="256" cy="80" rx="300" ry="130" fill="white" opacity="0.06"/>
+            <g id="elementsGroup"></g>
+            <!-- grid overlay -->
+            <g id="gridOverlay" opacity="0"></g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Preview Row -->
+    <div class="preview-row" id="previewRow"></div>
+  </div>
+
+  <!-- ── Right Panel ── -->
+  <div class="panel-right">
+    <div class="right-tabs">
+      <button class="right-tab active" onclick="switchRightTab('layers')" id="tabLayers">Layers</button>
+      <button class="right-tab" onclick="switchRightTab('props')" id="tabProps">Properties</button>
+      <button class="right-tab" onclick="switchRightTab('presets')" id="tabPresets">Presets</button>
+    </div>
+    <div class="right-content" id="rightContent"></div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════
+const S = {
+  bg: { c1: '#3730a3', c2: '#6366f1', angle: 150 },
+  elements: [],
+  selectedId: null,
+  assetFilter: 'all',
+  rightTab: 'layers',
+  dragInfo: null,
+  nextId: 1
+};
+
+// ═══════════════════════════════════════════════════════════════════
+// ASSETS — Liquid Glass SVG icon elements
+// Each uses the 7-Layer Glass Formula from the HIG guide
+// ═══════════════════════════════════════════════════════════════════
+const ASSETS = [
+
+  // ─── Eye / Lens Category ───
+  { id:'liq_eye', name:'Glass Eye', cat:'Eye / Lens',
+    catColor:'#60a5fa',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="30" ry="3.5" fill="${c}" opacity="0.06"/>
+      <ellipse cx="40" cy="40" rx="36" ry="22" fill="${c}"/>
+      <ellipse cx="40" cy="40" rx="33" ry="19" fill="white" fill-opacity="0.08"/>
+      <circle cx="40" cy="40" r="14" fill="white" opacity="0.85"/>
+      <circle cx="40" cy="40" r="8" fill="${c}" opacity="0.7"/>
+      <circle cx="40" cy="40" r="4" fill="white" opacity="0.2"/>
+      <ellipse cx="30" cy="30" rx="14" ry="7" fill="white" opacity="0.38" transform="rotate(-14,30,30)"/>
+      <ellipse cx="44" cy="34" rx="6" ry="3.5" fill="white" opacity="0.16"/>
+      <ellipse cx="26" cy="27" rx="3.5" ry="2" fill="white" opacity="0.11"/>
+      <ellipse cx="40" cy="52" rx="22" ry="5" fill="black" opacity="0.04"/>
+      <ellipse cx="40" cy="40" rx="36" ry="22" stroke="white" stroke-width="0.7" fill="none" opacity="0.13"/>
+    ` },
+
+  { id:'liq_mag', name:'Magnifier', cat:'Eye / Lens',
+    catColor:'#60a5fa',
+    w:80, h:86,
+    svg: c => `
+      <ellipse cx="34" cy="80" rx="24" ry="3" fill="${c}" opacity="0.06"/>
+      <circle cx="32" cy="34" r="26" fill="${c}"/>
+      <circle cx="32" cy="34" r="23" fill="white" fill-opacity="0.08"/>
+      <line x1="50" y1="52" x2="72" y2="74" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
+      <line x1="50" y1="52" x2="72" y2="74" stroke="white" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="32" cy="34" r="16" fill="white" opacity="0.12"/>
+      <ellipse cx="24" cy="24" rx="12" ry="8" fill="white" opacity="0.4" transform="rotate(-16,24,24)"/>
+      <ellipse cx="38" cy="28" rx="5" ry="3" fill="white" opacity="0.16"/>
+      <ellipse cx="20" cy="20" rx="3" ry="2" fill="white" opacity="0.1"/>
+      <ellipse cx="32" cy="48" rx="16" ry="5" fill="black" opacity="0.04"/>
+      <circle cx="32" cy="34" r="26" stroke="white" stroke-width="0.7" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_lens', name:'Camera Lens', cat:'Eye / Lens',
+    catColor:'#60a5fa',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="28" ry="3.5" fill="${c}" opacity="0.06"/>
+      <circle cx="40" cy="40" r="36" fill="${c}"/>
+      <circle cx="40" cy="40" r="32" fill="white" fill-opacity="0.06"/>
+      <circle cx="40" cy="40" r="26" fill="${c}" opacity="0.6"/>
+      <circle cx="40" cy="40" r="22" fill="white" fill-opacity="0.06"/>
+      <circle cx="40" cy="40" r="14" fill="${c}" opacity="0.4"/>
+      <circle cx="40" cy="40" r="8" fill="white" opacity="0.15"/>
+      <ellipse cx="30" cy="26" rx="14" ry="9" fill="white" opacity="0.38" transform="rotate(-16,30,26)"/>
+      <ellipse cx="46" cy="32" rx="6" ry="3.5" fill="white" opacity="0.15"/>
+      <ellipse cx="26" cy="22" rx="3.5" ry="2" fill="white" opacity="0.1"/>
+      <ellipse cx="40" cy="58" rx="22" ry="5" fill="black" opacity="0.04"/>
+      <circle cx="40" cy="40" r="36" stroke="white" stroke-width="0.7" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Dot Category ───
+  { id:'liq_dot', name:'Glass Dot', cat:'Dot',
+    catColor:'#a78bfa',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="24" ry="3.5" fill="${c}" opacity="0.06"/>
+      <circle cx="40" cy="40" r="32" fill="${c}"/>
+      <circle cx="40" cy="40" r="28" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="30" cy="26" rx="16" ry="10" fill="white" opacity="0.4" transform="rotate(-15,30,26)"/>
+      <ellipse cx="46" cy="32" rx="7" ry="4.5" fill="white" opacity="0.16"/>
+      <ellipse cx="26" cy="22" rx="4" ry="2.5" fill="white" opacity="0.11"/>
+      <ellipse cx="40" cy="58" rx="20" ry="6" fill="black" opacity="0.04"/>
+      <circle cx="40" cy="40" r="32" stroke="white" stroke-width="0.7" fill="none" opacity="0.13"/>
+    ` },
+
+  { id:'liq_dot_sm', name:'Small Dot', cat:'Dot',
+    catColor:'#a78bfa',
+    w:60, h:64,
+    svg: c => `
+      <ellipse cx="30" cy="58" rx="16" ry="2.5" fill="${c}" opacity="0.06"/>
+      <circle cx="30" cy="30" r="22" fill="${c}"/>
+      <circle cx="30" cy="30" r="19" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="22" cy="20" rx="10" ry="7" fill="white" opacity="0.38" transform="rotate(-14,22,20)"/>
+      <ellipse cx="34" cy="24" rx="5" ry="3" fill="white" opacity="0.15"/>
+      <ellipse cx="30" cy="42" rx="14" ry="4" fill="black" opacity="0.04"/>
+      <circle cx="30" cy="30" r="22" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_dot_glow', name:'Glow Dot', cat:'Dot',
+    catColor:'#a78bfa',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="28" ry="4" fill="${c}" opacity="0.08"/>
+      <circle cx="40" cy="40" r="36" fill="${c}" opacity="0.15"/>
+      <circle cx="40" cy="40" r="28" fill="${c}" opacity="0.3"/>
+      <circle cx="40" cy="40" r="20" fill="${c}"/>
+      <circle cx="40" cy="40" r="17" fill="white" fill-opacity="0.1"/>
+      <ellipse cx="32" cy="30" rx="10" ry="7" fill="white" opacity="0.4" transform="rotate(-14,32,30)"/>
+      <ellipse cx="44" cy="34" rx="5" ry="3" fill="white" opacity="0.16"/>
+      <ellipse cx="40" cy="50" rx="12" ry="4" fill="black" opacity="0.04"/>
+      <circle cx="40" cy="40" r="20" stroke="white" stroke-width="0.7" fill="none" opacity="0.15"/>
+    ` },
+
+  // ─── Glass Pane Category ───
+  { id:'liq_pane', name:'Glass Pane', cat:'Glass Pane',
+    catColor:'#34d399',
+    w:72, h:90,
+    svg: c => `
+      <ellipse cx="36" cy="84" rx="28" ry="3" fill="${c}" opacity="0.06"/>
+      <rect x="6" y="6" width="60" height="72" rx="8" fill="${c}"/>
+      <rect x="9" y="9" width="54" height="66" rx="6" fill="white" fill-opacity="0.07"/>
+      <rect x="14" y="20" width="38" height="3" rx="1.5" fill="white" opacity="0.25"/>
+      <rect x="14" y="28" width="28" height="3" rx="1.5" fill="white" opacity="0.18"/>
+      <rect x="14" y="36" width="34" height="3" rx="1.5" fill="white" opacity="0.18"/>
+      <rect x="14" y="44" width="20" height="3" rx="1.5" fill="white" opacity="0.12"/>
+      <ellipse cx="24" cy="16" rx="18" ry="10" fill="white" opacity="0.35" transform="rotate(-10,24,16)"/>
+      <ellipse cx="40" cy="20" rx="8" ry="5" fill="white" opacity="0.14"/>
+      <ellipse cx="36" cy="62" rx="22" ry="5" fill="black" opacity="0.04"/>
+      <rect x="6" y="6" width="60" height="72" rx="8" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_page', name:'Document', cat:'Glass Pane',
+    catColor:'#34d399',
+    w:68, h:88,
+    svg: c => `
+      <ellipse cx="34" cy="82" rx="26" ry="3" fill="${c}" opacity="0.06"/>
+      <path d="M8,8 L48,8 L60,20 L60,76 Q60,80 56,80 L12,80 Q8,80 8,76 Z" fill="${c}"/>
+      <path d="M48,8 L48,20 L60,20" fill="white" opacity="0.15"/>
+      <rect x="12" y="12" width="44" height="64" rx="3" fill="white" fill-opacity="0.06"/>
+      <rect x="16" y="30" width="30" height="2.5" rx="1.25" fill="white" opacity="0.22"/>
+      <rect x="16" y="37" width="22" height="2.5" rx="1.25" fill="white" opacity="0.16"/>
+      <rect x="16" y="44" width="26" height="2.5" rx="1.25" fill="white" opacity="0.16"/>
+      <rect x="16" y="51" width="18" height="2.5" rx="1.25" fill="white" opacity="0.12"/>
+      <ellipse cx="24" cy="18" rx="16" ry="9" fill="white" opacity="0.35" transform="rotate(-12,24,18)"/>
+      <ellipse cx="40" cy="22" rx="7" ry="4" fill="white" opacity="0.14"/>
+      <ellipse cx="34" cy="66" rx="20" ry="5" fill="black" opacity="0.04"/>
+      <path d="M8,8 L48,8 L60,20 L60,76 Q60,80 56,80 L12,80 Q8,80 8,76 Z" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Overlap / Quick Look Category ───
+  { id:'liq_overlap', name:'Overlap Panes', cat:'Overlap',
+    catColor:'#f472b6',
+    w:80, h:88,
+    svg: c => `
+      <ellipse cx="40" cy="82" rx="30" ry="3.5" fill="${c}" opacity="0.06"/>
+      <rect x="4" y="12" width="48" height="58" rx="7" fill="${c}" opacity="0.6"/>
+      <rect x="7" y="15" width="42" height="52" rx="5" fill="white" fill-opacity="0.05"/>
+      <rect x="28" y="4" width="48" height="58" rx="7" fill="${c}"/>
+      <rect x="31" y="7" width="42" height="52" rx="5" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="44" cy="16" rx="16" ry="9" fill="white" opacity="0.38" transform="rotate(-14,44,16)"/>
+      <ellipse cx="56" cy="22" rx="6" ry="4" fill="white" opacity="0.15"/>
+      <ellipse cx="52" cy="48" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <rect x="28" y="4" width="48" height="58" rx="7" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+      <rect x="4" y="12" width="48" height="58" rx="7" stroke="white" stroke-width="0.5" fill="none" opacity="0.08"/>
+    ` },
+
+  { id:'liq_stack2', name:'Two Stack', cat:'Overlap',
+    catColor:'#f472b6',
+    w:76, h:88,
+    svg: c => `
+      <ellipse cx="38" cy="82" rx="28" ry="3" fill="${c}" opacity="0.06"/>
+      <rect x="8" y="14" width="50" height="56" rx="6" fill="${c}" opacity="0.4"/>
+      <rect x="14" y="6" width="50" height="56" rx="6" fill="${c}"/>
+      <rect x="17" y="9" width="44" height="50" rx="4" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="30" cy="16" rx="14" ry="8" fill="white" opacity="0.38" transform="rotate(-14,30,16)"/>
+      <ellipse cx="44" cy="22" rx="6" ry="3.5" fill="white" opacity="0.15"/>
+      <ellipse cx="39" cy="48" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <rect x="14" y="6" width="50" height="56" rx="6" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Lines / Syntax Category ───
+  { id:'liq_lines3', name:'3 Code Lines', cat:'Lines',
+    catColor:'#fbbf24',
+    w:80, h:50,
+    svg: c => `
+      <rect x="4" y="6" width="48" height="4.5" rx="2.25" fill="${c}" opacity="0.7"/>
+      <rect x="4" y="18" width="36" height="4.5" rx="2.25" fill="${c}" opacity="0.5"/>
+      <rect x="4" y="30" width="54" height="4.5" rx="2.25" fill="${c}" opacity="0.35"/>
+      <rect x="4" y="6" width="48" height="4.5" rx="2.25" stroke="white" stroke-width="0.4" fill="none" opacity="0.08"/>
+      <rect x="4" y="18" width="36" height="4.5" rx="2.25" stroke="white" stroke-width="0.4" fill="none" opacity="0.06"/>
+      <rect x="4" y="30" width="54" height="4.5" rx="2.25" stroke="white" stroke-width="0.4" fill="none" opacity="0.06"/>
+    ` },
+
+  { id:'liq_lines5', name:'5 Code Lines', cat:'Lines',
+    catColor:'#fbbf24',
+    w:80, h:68,
+    svg: c => `
+      <rect x="4" y="4" width="48" height="3.5" rx="1.75" fill="${c}" opacity="0.65"/>
+      <rect x="12" y="13" width="36" height="3.5" rx="1.75" fill="${c}" opacity="0.5"/>
+      <rect x="4" y="22" width="54" height="3.5" rx="1.75" fill="${c}" opacity="0.45"/>
+      <rect x="12" y="31" width="28" height="3.5" rx="1.75" fill="${c}" opacity="0.35"/>
+      <rect x="4" y="40" width="42" height="3.5" rx="1.75" fill="${c}" opacity="0.25"/>
+    ` },
+
+  { id:'liq_highlight', name:'Highlight Line', cat:'Lines',
+    catColor:'#fbbf24',
+    w:80, h:30,
+    svg: c => `
+      <rect x="2" y="4" width="76" height="20" rx="4" fill="${c}" opacity="0.15"/>
+      <rect x="8" y="10" width="44" height="4" rx="2" fill="${c}" opacity="0.8"/>
+      <rect x="8" y="10" width="44" height="4" rx="2" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+    ` },
+
+  // ─── Fold Category ───
+  { id:'liq_fold', name:'Folded Corner', cat:'Fold',
+    catColor:'#fb923c',
+    w:68, h:86,
+    svg: c => `
+      <ellipse cx="34" cy="80" rx="26" ry="3" fill="${c}" opacity="0.06"/>
+      <path d="M8,4 L46,4 L60,18 L60,72 Q60,76 56,76 L12,76 Q8,76 8,72 Z" fill="${c}"/>
+      <path d="M46,4 L46,18 L60,18" fill="white" opacity="0.2"/>
+      <path d="M46,4 L46,18 L60,18 Z" fill="${c}" opacity="0.3"/>
+      <rect x="11" y="7" width="45" height="65" rx="3" fill="white" fill-opacity="0.06"/>
+      <ellipse cx="24" cy="14" rx="16" ry="9" fill="white" opacity="0.36" transform="rotate(-12,24,14)"/>
+      <ellipse cx="38" cy="18" rx="6" ry="4" fill="white" opacity="0.14"/>
+      <ellipse cx="34" cy="62" rx="20" ry="5" fill="black" opacity="0.04"/>
+      <path d="M8,4 L46,4 L60,18 L60,72 Q60,76 56,76 L12,76 Q8,76 8,72 Z" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Ring / Focus Category ───
+  { id:'liq_ring', name:'Focus Ring', cat:'Ring',
+    catColor:'#38bdf8',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="28" ry="3.5" fill="${c}" opacity="0.06"/>
+      <circle cx="40" cy="40" r="34" fill="none" stroke="${c}" stroke-width="8"/>
+      <circle cx="40" cy="40" r="34" fill="none" stroke="white" stroke-width="0.7" opacity="0.12"/>
+      <circle cx="40" cy="40" r="30" fill="none" stroke="white" stroke-width="0.5" opacity="0.06"/>
+      <circle cx="40" cy="40" r="38" fill="none" stroke="white" stroke-width="0.5" opacity="0.06"/>
+      <ellipse cx="28" cy="22" rx="14" ry="6" fill="white" opacity="0.3" transform="rotate(-20,28,22)"/>
+      <ellipse cx="40" cy="56" rx="20" ry="5" fill="black" opacity="0.04"/>
+    ` },
+
+  { id:'liq_target', name:'Target', cat:'Ring',
+    catColor:'#38bdf8',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="26" ry="3" fill="${c}" opacity="0.06"/>
+      <circle cx="40" cy="40" r="34" fill="${c}" opacity="0.25"/>
+      <circle cx="40" cy="40" r="24" fill="${c}" opacity="0.4"/>
+      <circle cx="40" cy="40" r="12" fill="${c}"/>
+      <circle cx="40" cy="40" r="10" fill="white" fill-opacity="0.1"/>
+      <ellipse cx="30" cy="26" rx="12" ry="8" fill="white" opacity="0.35" transform="rotate(-15,30,26)"/>
+      <ellipse cx="44" cy="32" rx="5" ry="3" fill="white" opacity="0.14"/>
+      <ellipse cx="40" cy="56" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <circle cx="40" cy="40" r="12" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Stack Category ───
+  { id:'liq_stack3', name:'Triple Stack', cat:'Stack',
+    catColor:'#c084fc',
+    w:76, h:90,
+    svg: c => `
+      <ellipse cx="38" cy="84" rx="28" ry="3" fill="${c}" opacity="0.06"/>
+      <rect x="6" y="24" width="48" height="44" rx="5" fill="${c}" opacity="0.3"/>
+      <rect x="12" y="16" width="48" height="44" rx="5" fill="${c}" opacity="0.55"/>
+      <rect x="18" y="8" width="48" height="44" rx="5" fill="${c}"/>
+      <rect x="21" y="11" width="42" height="38" rx="3" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="34" cy="18" rx="14" ry="8" fill="white" opacity="0.38" transform="rotate(-14,34,18)"/>
+      <ellipse cx="48" cy="24" rx="6" ry="3.5" fill="white" opacity="0.15"/>
+      <ellipse cx="42" cy="42" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <rect x="18" y="8" width="48" height="44" rx="5" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Mask / Reveal Category ───
+  { id:'liq_mask', name:'Mask Circle', cat:'Mask',
+    catColor:'#f87171',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="28" ry="3.5" fill="${c}" opacity="0.06"/>
+      <circle cx="40" cy="40" r="36" fill="${c}"/>
+      <circle cx="40" cy="40" r="33" fill="white" fill-opacity="0.06"/>
+      <circle cx="48" cy="36" r="18" fill="white" opacity="0.12"/>
+      <circle cx="48" cy="36" r="14" fill="white" opacity="0.08"/>
+      <ellipse cx="28" cy="26" rx="14" ry="9" fill="white" opacity="0.38" transform="rotate(-16,28,26)"/>
+      <ellipse cx="42" cy="30" rx="6" ry="4" fill="white" opacity="0.15"/>
+      <ellipse cx="24" cy="22" rx="3.5" ry="2" fill="white" opacity="0.1"/>
+      <ellipse cx="40" cy="58" rx="22" ry="5" fill="black" opacity="0.04"/>
+      <circle cx="40" cy="40" r="36" stroke="white" stroke-width="0.7" fill="none" opacity="0.13"/>
+    ` },
+
+  // ─── Window Category ───
+  { id:'liq_window', name:'Window', cat:'Window',
+    catColor:'#4ade80',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="30" ry="3.5" fill="${c}" opacity="0.06"/>
+      <rect x="4" y="4" width="72" height="68" rx="8" fill="${c}"/>
+      <rect x="7" y="7" width="66" height="62" rx="6" fill="white" fill-opacity="0.07"/>
+      <rect x="4" y="4" width="72" height="16" rx="8" fill="white" opacity="0.08"/>
+      <circle cx="16" cy="12" r="3" fill="#ff5f57" opacity="0.7"/>
+      <circle cx="26" cy="12" r="3" fill="#febc2e" opacity="0.7"/>
+      <circle cx="36" cy="12" r="3" fill="#28c840" opacity="0.7"/>
+      <rect x="12" y="28" width="40" height="3" rx="1.5" fill="white" opacity="0.2"/>
+      <rect x="12" y="36" width="30" height="3" rx="1.5" fill="white" opacity="0.15"/>
+      <rect x="12" y="44" width="36" height="3" rx="1.5" fill="white" opacity="0.12"/>
+      <ellipse cx="26" cy="10" rx="20" ry="8" fill="white" opacity="0.3" transform="rotate(-8,26,10)"/>
+      <ellipse cx="40" cy="58" rx="24" ry="5" fill="black" opacity="0.04"/>
+      <rect x="4" y="4" width="72" height="68" rx="8" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_miniwindow', name:'Mini Window', cat:'Window',
+    catColor:'#4ade80',
+    w:56, h:60,
+    svg: c => `
+      <ellipse cx="28" cy="56" rx="20" ry="2.5" fill="${c}" opacity="0.06"/>
+      <rect x="4" y="4" width="48" height="44" rx="5" fill="${c}"/>
+      <rect x="6" y="6" width="44" height="40" rx="4" fill="white" fill-opacity="0.07"/>
+      <rect x="4" y="4" width="48" height="11" rx="5" fill="white" opacity="0.08"/>
+      <ellipse cx="18" cy="10" rx="12" ry="5" fill="white" opacity="0.28" transform="rotate(-6,18,10)"/>
+      <rect x="4" y="4" width="48" height="44" rx="5" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+    ` },
+
+  // ─── Decorative / Accent ───
+  { id:'liq_sparkle', name:'Sparkle', cat:'Accent',
+    catColor:'#e2e8f0',
+    w:60, h:64,
+    svg: c => `
+      <ellipse cx="30" cy="58" rx="14" ry="2.5" fill="${c}" opacity="0.06"/>
+      <path d="M30,2 L34,22 L54,26 L34,30 L30,50 L26,30 L6,26 L26,22 Z" fill="${c}"/>
+      <path d="M30,6 L33,22 L50,26 L33,30 L30,46 L27,30 L10,26 L27,22 Z" fill="white" fill-opacity="0.08"/>
+      <ellipse cx="24" cy="16" rx="8" ry="5" fill="white" opacity="0.35" transform="rotate(-18,24,16)"/>
+      <ellipse cx="34" cy="20" rx="4" ry="2.5" fill="white" opacity="0.15"/>
+      <path d="M30,2 L34,22 L54,26 L34,30 L30,50 L26,30 L6,26 L26,22 Z" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+    ` },
+
+  { id:'liq_diamond', name:'Diamond', cat:'Accent',
+    catColor:'#e2e8f0',
+    w:64, h:78,
+    svg: c => `
+      <ellipse cx="32" cy="72" rx="20" ry="3" fill="${c}" opacity="0.06"/>
+      <path d="M32,4 L60,36 L32,68 L4,36 Z" fill="${c}"/>
+      <path d="M32,8 L56,36 L32,64 L8,36 Z" fill="white" fill-opacity="0.07"/>
+      <ellipse cx="24" cy="24" rx="12" ry="8" fill="white" opacity="0.38" transform="rotate(-20,24,24)"/>
+      <ellipse cx="36" cy="28" rx="5" ry="3.5" fill="white" opacity="0.15"/>
+      <ellipse cx="32" cy="52" rx="16" ry="5" fill="black" opacity="0.04"/>
+      <path d="M32,4 L60,36 L32,68 L4,36 Z" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_shield', name:'Shield', cat:'Accent',
+    catColor:'#e2e8f0',
+    w:68, h:84,
+    svg: c => `
+      <ellipse cx="34" cy="78" rx="24" ry="3" fill="${c}" opacity="0.06"/>
+      <path d="M34,4 L62,16 L62,42 Q62,68 34,76 Q6,68 6,42 L6,16 Z" fill="${c}"/>
+      <path d="M34,8 L58,18 L58,40 Q58,64 34,72 Q10,64 10,40 L10,18 Z" fill="white" fill-opacity="0.07"/>
+      <ellipse cx="24" cy="20" rx="14" ry="9" fill="white" opacity="0.38" transform="rotate(-14,24,20)"/>
+      <ellipse cx="38" cy="24" rx="6" ry="4" fill="white" opacity="0.15"/>
+      <ellipse cx="34" cy="56" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <path d="M34,4 L62,16 L62,42 Q62,68 34,76 Q6,68 6,42 L6,16 Z" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  { id:'liq_hex', name:'Hexagon', cat:'Accent',
+    catColor:'#e2e8f0',
+    w:76, h:84,
+    svg: c => `
+      <ellipse cx="38" cy="78" rx="26" ry="3" fill="${c}" opacity="0.06"/>
+      <polygon points="38,4 70,22 70,56 38,74 6,56 6,22" fill="${c}"/>
+      <polygon points="38,8 66,24 66,54 38,70 10,54 10,24" fill="white" fill-opacity="0.07"/>
+      <ellipse cx="28" cy="22" rx="14" ry="9" fill="white" opacity="0.38" transform="rotate(-16,28,22)"/>
+      <ellipse cx="42" cy="28" rx="6" ry="4" fill="white" opacity="0.15"/>
+      <ellipse cx="38" cy="56" rx="20" ry="5" fill="black" opacity="0.04"/>
+      <polygon points="38,4 70,22 70,56 38,74 6,56 6,22" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ═══════════════════════════════════════════════════════════════
+  // dotViewer-Specific Assets — Code preview, syntax, Quick Look
+  // ═══════════════════════════════════════════════════════════════
+
+  // ─── Syntax-Colored Lines (multi-color, like real syntax highlighting) ───
+  { id:'dv_syntax', name:'Syntax Lines', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:68,
+    svg: c => `
+      <rect x="4" y="4" width="42" height="4" rx="2" fill="#60a5fa" opacity="0.8"/>
+      <rect x="12" y="14" width="54" height="4" rx="2" fill="#f59e0b" opacity="0.7"/>
+      <rect x="4" y="24" width="36" height="4" rx="2" fill="#a78bfa" opacity="0.75"/>
+      <rect x="12" y="34" width="48" height="4" rx="2" fill="#34d399" opacity="0.65"/>
+      <rect x="4" y="44" width="28" height="4" rx="2" fill="#f472b6" opacity="0.55"/>
+      <rect x="12" y="54" width="40" height="4" rx="2" fill="${c}" opacity="0.4"/>
+    ` },
+
+  // ─── Preview Page (document with syntax-colored content inside) ───
+  { id:'dv_preview', name:'Preview Page', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:68, h:88,
+    svg: c => `
+      <ellipse cx="34" cy="82" rx="26" ry="3" fill="${c}" opacity="0.06"/>
+      <rect x="6" y="4" width="56" height="72" rx="6" fill="${c}"/>
+      <rect x="9" y="7" width="50" height="66" rx="4" fill="white" fill-opacity="0.07"/>
+      <rect x="14" y="16" width="30" height="3" rx="1.5" fill="#60a5fa" opacity="0.7"/>
+      <rect x="14" y="24" width="38" height="3" rx="1.5" fill="#f59e0b" opacity="0.6"/>
+      <rect x="20" y="32" width="26" height="3" rx="1.5" fill="#a78bfa" opacity="0.65"/>
+      <rect x="14" y="40" width="34" height="3" rx="1.5" fill="#34d399" opacity="0.55"/>
+      <rect x="20" y="48" width="22" height="3" rx="1.5" fill="#f472b6" opacity="0.45"/>
+      <rect x="14" y="56" width="30" height="3" rx="1.5" fill="white" opacity="0.2"/>
+      <ellipse cx="22" cy="10" rx="16" ry="8" fill="white" opacity="0.32" transform="rotate(-10,22,10)"/>
+      <ellipse cx="40" cy="14" rx="7" ry="4" fill="white" opacity="0.14"/>
+      <ellipse cx="34" cy="64" rx="20" ry="5" fill="black" opacity="0.04"/>
+      <rect x="6" y="4" width="56" height="72" rx="6" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Spacebar Key (the Quick Look trigger) ───
+  { id:'dv_spacebar', name:'Spacebar', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:40,
+    svg: c => `
+      <ellipse cx="40" cy="36" rx="34" ry="2.5" fill="${c}" opacity="0.06"/>
+      <rect x="4" y="4" width="72" height="26" rx="6" fill="${c}"/>
+      <rect x="6" y="6" width="68" height="22" rx="5" fill="white" fill-opacity="0.07"/>
+      <rect x="6" y="4" width="68" height="14" rx="5" fill="white" fill-opacity="0.06"/>
+      <ellipse cx="28" cy="10" rx="20" ry="6" fill="white" opacity="0.28" transform="rotate(-4,28,10)"/>
+      <ellipse cx="50" cy="12" rx="8" ry="4" fill="white" opacity="0.12"/>
+      <rect x="4" y="4" width="72" height="26" rx="6" stroke="white" stroke-width="0.5" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Curly Brackets { } ───
+  { id:'dv_brackets', name:'Brackets { }', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:72, h:80,
+    svg: c => `
+      <path d="M24,6 Q16,6 16,14 L16,30 Q16,38 8,40 Q16,42 16,50 L16,66 Q16,74 24,74" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M48,6 Q56,6 56,14 L56,30 Q56,38 64,40 Q56,42 56,50 L56,66 Q56,74 48,74" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M24,6 Q16,6 16,14 L16,30 Q16,38 8,40 Q16,42 16,50 L16,66 Q16,74 24,74" fill="none" stroke="white" stroke-width="0.7" stroke-linecap="round" opacity="0.12"/>
+      <path d="M48,6 Q56,6 56,14 L56,30 Q56,38 64,40 Q56,42 56,50 L56,66 Q56,74 48,74" fill="none" stroke="white" stroke-width="0.7" stroke-linecap="round" opacity="0.12"/>
+      <ellipse cx="18" cy="14" rx="6" ry="4" fill="white" opacity="0.2" transform="rotate(-10,18,14)"/>
+    ` },
+
+  // ─── The Dot (dotfiles — a prominent period with reveal effect) ───
+  { id:'dv_thedot', name:'The Dot', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:84,
+    svg: c => `
+      <ellipse cx="40" cy="78" rx="24" ry="3.5" fill="${c}" opacity="0.08"/>
+      <circle cx="40" cy="40" r="22" fill="${c}" opacity="0.12"/>
+      <circle cx="40" cy="40" r="16" fill="${c}" opacity="0.25"/>
+      <circle cx="40" cy="40" r="10" fill="${c}"/>
+      <circle cx="40" cy="40" r="8" fill="white" fill-opacity="0.1"/>
+      <ellipse cx="35" cy="34" rx="5" ry="4" fill="white" opacity="0.4" transform="rotate(-14,35,34)"/>
+      <ellipse cx="43" cy="36" rx="3" ry="2" fill="white" opacity="0.16"/>
+      <circle cx="40" cy="40" r="10" stroke="white" stroke-width="0.6" fill="none" opacity="0.15"/>
+    ` },
+
+  // ─── Quick Look Eye (stylized eye for preview/inspect) ───
+  { id:'dv_qleye', name:'QL Eye', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:60,
+    svg: c => `
+      <ellipse cx="40" cy="54" rx="30" ry="3" fill="${c}" opacity="0.06"/>
+      <path d="M4,30 Q20,8 40,8 Q60,8 76,30 Q60,52 40,52 Q20,52 4,30 Z" fill="${c}"/>
+      <path d="M8,30 Q22,12 40,12 Q58,12 72,30 Q58,48 40,48 Q22,48 8,30 Z" fill="white" fill-opacity="0.06"/>
+      <circle cx="40" cy="30" r="14" fill="white" opacity="0.85"/>
+      <circle cx="40" cy="30" r="8" fill="${c}" opacity="0.7"/>
+      <circle cx="40" cy="30" r="3.5" fill="white" opacity="0.2"/>
+      <ellipse cx="30" cy="18" rx="14" ry="6" fill="white" opacity="0.3" transform="rotate(-10,30,18)"/>
+      <ellipse cx="46" cy="22" rx="6" ry="3.5" fill="white" opacity="0.15"/>
+      <ellipse cx="40" cy="42" rx="18" ry="5" fill="black" opacity="0.04"/>
+      <path d="M4,30 Q20,8 40,8 Q60,8 76,30 Q60,52 40,52 Q20,52 4,30 Z" stroke="white" stroke-width="0.6" fill="none" opacity="0.12"/>
+    ` },
+
+  // ─── Tree Branch (tree-sitter grammar) ───
+  { id:'dv_tree', name:'Tree Branch', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:72, h:80,
+    svg: c => `
+      <line x1="16" y1="8" x2="16" y2="72" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <line x1="16" y1="20" x2="40" y2="20" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+      <line x1="16" y1="40" x2="40" y2="40" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+      <line x1="16" y1="60" x2="40" y2="60" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+      <line x1="40" y1="20" x2="60" y2="28" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+      <line x1="40" y1="20" x2="60" y2="14" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+      <line x1="40" y1="40" x2="60" y2="40" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+      <circle cx="60" cy="14" r="3.5" fill="${c}" opacity="0.6"/>
+      <circle cx="60" cy="28" r="3.5" fill="${c}" opacity="0.6"/>
+      <circle cx="60" cy="40" r="3.5" fill="${c}" opacity="0.6"/>
+      <circle cx="40" cy="60" r="3.5" fill="${c}" opacity="0.5"/>
+      <line x1="16" y1="8" x2="16" y2="72" stroke="white" stroke-width="0.5" opacity="0.08"/>
+    ` },
+
+  // ─── File Badge (file extension label like ".swift") ───
+  { id:'dv_badge', name:'File Badge', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:56, h:32,
+    svg: c => `
+      <rect x="2" y="2" width="52" height="26" rx="6" fill="${c}"/>
+      <rect x="4" y="4" width="48" height="22" rx="5" fill="white" fill-opacity="0.07"/>
+      <circle cx="14" cy="15" r="5" fill="white" opacity="0.6"/>
+      <rect x="24" y="11" width="22" height="3.5" rx="1.75" fill="white" opacity="0.5"/>
+      <rect x="24" y="17" width="14" height="3.5" rx="1.75" fill="white" opacity="0.3"/>
+      <ellipse cx="16" cy="8" rx="14" ry="5" fill="white" opacity="0.25" transform="rotate(-6,16,8)"/>
+      <rect x="2" y="2" width="52" height="26" rx="6" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+    ` },
+
+  // ─── Theme Gradient Bar (represents theme selection) ───
+  { id:'dv_themebar', name:'Theme Bar', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:24,
+    svg: c => `
+      <rect x="2" y="4" width="76" height="16" rx="8" fill="${c}"/>
+      <rect x="2" y="4" width="15" height="16" rx="8" fill="#6366f1" opacity="0.9"/>
+      <rect x="14" y="4" width="14" height="16" fill="#3b82f6" opacity="0.8"/>
+      <rect x="26" y="4" width="14" height="16" fill="#06b6d4" opacity="0.7"/>
+      <rect x="38" y="4" width="14" height="16" fill="#22c55e" opacity="0.6"/>
+      <rect x="50" y="4" width="14" height="16" fill="#f59e0b" opacity="0.5"/>
+      <rect x="62" y="4" width="16" height="16" rx="8" fill="#ef4444" opacity="0.4"/>
+      <rect x="2" y="4" width="76" height="16" rx="8" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+      <ellipse cx="20" cy="8" rx="18" ry="5" fill="white" opacity="0.2" transform="rotate(-4,20,8)"/>
+    ` },
+
+  // ─── Finder Window (simplified Finder with file icon) ───
+  { id:'dv_finder', name:'Finder Bar', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:60,
+    svg: c => `
+      <ellipse cx="40" cy="56" rx="30" ry="2.5" fill="${c}" opacity="0.05"/>
+      <rect x="4" y="4" width="72" height="48" rx="6" fill="${c}"/>
+      <rect x="6" y="6" width="68" height="44" rx="5" fill="white" fill-opacity="0.06"/>
+      <rect x="4" y="4" width="72" height="12" rx="6" fill="white" opacity="0.08"/>
+      <circle cx="14" cy="10" r="2.5" fill="#ff5f57" opacity="0.65"/>
+      <circle cx="22" cy="10" r="2.5" fill="#febc2e" opacity="0.65"/>
+      <circle cx="30" cy="10" r="2.5" fill="#28c840" opacity="0.65"/>
+      <rect x="4" y="4" width="72" height="48" rx="6" stroke="white" stroke-width="0.5" fill="none" opacity="0.1"/>
+      <ellipse cx="24" cy="8" rx="14" ry="4" fill="white" opacity="0.22" transform="rotate(-4,24,8)"/>
+    ` },
+
+  // ─── Loupe + Syntax (magnifier with colored code visible inside) ───
+  { id:'dv_loupe_syntax', name:'Syntax Loupe', cat:'dotViewer',
+    catColor:'#818cf8',
+    w:80, h:86,
+    svg: c => `
+      <ellipse cx="34" cy="80" rx="24" ry="3" fill="${c}" opacity="0.06"/>
+      <circle cx="32" cy="34" r="26" fill="${c}"/>
+      <circle cx="32" cy="34" r="23" fill="white" fill-opacity="0.08"/>
+      <line x1="50" y1="52" x2="72" y2="74" stroke="${c}" stroke-width="10" stroke-linecap="round"/>
+      <line x1="50" y1="52" x2="72" y2="74" stroke="white" stroke-width="7" stroke-linecap="round" opacity="0.85"/>
+      <rect x="18" y="22" width="20" height="3" rx="1.5" fill="#60a5fa" opacity="0.7"/>
+      <rect x="18" y="29" width="28" height="3" rx="1.5" fill="#f59e0b" opacity="0.6"/>
+      <rect x="22" y="36" width="16" height="3" rx="1.5" fill="#a78bfa" opacity="0.65"/>
+      <rect x="18" y="43" width="22" height="3" rx="1.5" fill="#34d399" opacity="0.5"/>
+      <ellipse cx="24" cy="24" rx="12" ry="8" fill="white" opacity="0.35" transform="rotate(-16,24,24)"/>
+      <ellipse cx="38" cy="28" rx="5" ry="3" fill="white" opacity="0.14"/>
+      <circle cx="32" cy="34" r="26" stroke="white" stroke-width="0.7" fill="none" opacity="0.12"/>
+    ` }
+];
+
+// ═══════════════════════════════════════════════════════════════════
+// PRESETS — Pre-built icon compositions
+// ═══════════════════════════════════════════════════════════════════
+const PRESETS = [
+  { name:'dotViewer Classic', group:'concept',
+    bg:{ c1:'#3730a3', c2:'#6366f1', angle:150 },
+    els:[
+      { type:'liq_lines5', x:80, y:130, scale:3.0, opacity:0.06, color:'#ffffff', rot:0 },
+      { type:'liq_mag', x:100, y:90, scale:3.0, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_dot', x:260, y:250, scale:1.4, opacity:0.9, color:'#a78bfa', rot:0 }
+    ]},
+
+  { name:'dotViewer Eye', group:'concept',
+    bg:{ c1:'#1e1b4b', c2:'#4338ca', angle:155 },
+    els:[
+      { type:'liq_eye', x:90, y:100, scale:3.2, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_dot_sm', x:280, y:260, scale:1.2, opacity:0.85, color:'#818cf8', rot:0 }
+    ]},
+
+  { name:'Quick Look', group:'concept',
+    bg:{ c1:'#312e81', c2:'#6366f1', angle:148 },
+    els:[
+      { type:'liq_overlap', x:90, y:100, scale:3.0, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_sparkle', x:280, y:60, scale:1.0, opacity:0.6, color:'#c4b5fd', rot:0 }
+    ]},
+
+  { name:'Code Inspector', group:'concept',
+    bg:{ c1:'#1e3a5f', c2:'#3b82f6', angle:155 },
+    els:[
+      { type:'liq_lines5', x:60, y:120, scale:3.2, opacity:0.07, color:'#ffffff', rot:0 },
+      { type:'liq_window', x:90, y:80, scale:3.0, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_highlight', x:120, y:240, scale:2.2, opacity:0.7, color:'#60a5fa', rot:0 }
+    ]},
+
+  { name:'Finder Style', group:'liquid',
+    bg:{ c1:'#1e88e5', c2:'#42a5f5', angle:152 },
+    els:[
+      { type:'liq_pane', x:110, y:80, scale:3.2, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Deep Focus', group:'liquid',
+    bg:{ c1:'#0f172a', c2:'#1e3a5f', angle:160 },
+    els:[
+      { type:'liq_ring', x:100, y:95, scale:3.0, opacity:0.8, color:'#60a5fa', rot:0 },
+      { type:'liq_dot', x:170, y:160, scale:1.6, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'File Preview', group:'concept',
+    bg:{ c1:'#4a3fb8', c2:'#7c5ce7', angle:150 },
+    els:[
+      { type:'liq_page', x:110, y:70, scale:3.4, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_dot_glow', x:80, y:280, scale:1.2, opacity:0.8, color:'#c4b5fd', rot:0 }
+    ]},
+
+  { name:'Stack Browser', group:'liquid',
+    bg:{ c1:'#1a1a2e', c2:'#3730a3', angle:158 },
+    els:[
+      { type:'liq_stack3', x:96, y:96, scale:3.0, opacity:1, color:'#818cf8', rot:0 },
+      { type:'liq_sparkle', x:290, y:50, scale:0.8, opacity:0.5, color:'#c4b5fd', rot:0 }
+    ]},
+
+  { name:'Reveal', group:'liquid',
+    bg:{ c1:'#1e1b4b', c2:'#4c1d95', angle:155 },
+    els:[
+      { type:'liq_mask', x:96, y:96, scale:3.2, opacity:1, color:'#a78bfa', rot:0 },
+      { type:'liq_dot_sm', x:226, y:186, scale:1.0, opacity:0.9, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Shield Safe', group:'liquid',
+    bg:{ c1:'#065f46', c2:'#34d399', angle:155 },
+    els:[
+      { type:'liq_shield', x:106, y:76, scale:3.2, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Gem', group:'hig',
+    bg:{ c1:'#6d28d9', c2:'#a78bfa', angle:152 },
+    els:[
+      { type:'liq_diamond', x:118, y:70, scale:3.4, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Terminal Glass', group:'hig',
+    bg:{ c1:'#1a1a2e', c2:'#0f0f1a', angle:165 },
+    els:[
+      { type:'liq_window', x:76, y:80, scale:3.4, opacity:1, color:'#22d3ee', rot:0 },
+      { type:'liq_lines3', x:110, y:220, scale:2.0, opacity:0.5, color:'#22d3ee', rot:0 }
+    ]},
+
+  { name:'Dot Minimal', group:'hig',
+    bg:{ c1:'#f8fafc', c2:'#e2e8f0', angle:170 },
+    els:[
+      { type:'liq_dot', x:130, y:120, scale:3.0, opacity:1, color:'#6366f1', rot:0 }
+    ]},
+
+  { name:'Hex Grid', group:'hig',
+    bg:{ c1:'#f0f9ff', c2:'#bae6fd', angle:165 },
+    els:[
+      { type:'liq_hex', x:100, y:90, scale:3.2, opacity:1, color:'#0ea5e9', rot:0 },
+      { type:'liq_dot_sm', x:200, y:200, scale:0.8, opacity:0.7, color:'#0284c7', rot:0 }
+    ]},
+
+  { name:'Focus Target', group:'liquid',
+    bg:{ c1:'#0c4a6e', c2:'#0ea5e9', angle:150 },
+    els:[
+      { type:'liq_target', x:96, y:96, scale:3.2, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'dotViewer Pro', group:'concept',
+    bg:{ c1:'#1e1b4b', c2:'#312e81', angle:155 },
+    els:[
+      { type:'liq_lines5', x:70, y:120, scale:3.2, opacity:0.05, color:'#ffffff', rot:0 },
+      { type:'liq_lens', x:96, y:86, scale:3.0, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_highlight', x:100, y:260, scale:2.0, opacity:0.5, color:'#a78bfa', rot:0 },
+      { type:'liq_dot_sm', x:270, y:60, scale:0.9, opacity:0.7, color:'#c4b5fd', rot:0 }
+    ]},
+
+  // ═══════════════════════════════════════════════════════════════
+  // dotViewer Feature Icons — Original compositions for the app
+  // ═══════════════════════════════════════════════════════════════
+
+  { name:'Syntax Preview', group:'dotviewer',
+    bg:{ c1:'#3730a3', c2:'#6366f1', angle:145 },
+    els:[
+      { type:'dv_preview', x:106, y:66, scale:3.8, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_sparkle', x:310, y:52, scale:1.2, opacity:0.5, color:'#c4b5fd', rot:0 }
+    ]},
+
+  { name:'Quick Look', group:'dotviewer',
+    bg:{ c1:'#1e1b4b', c2:'#4338ca', angle:150 },
+    els:[
+      { type:'dv_qleye', x:96, y:76, scale:3.6, opacity:1, color:'#ffffff', rot:0 },
+      { type:'dv_spacebar', x:126, y:310, scale:2.6, opacity:0.55, color:'#a5b4fc', rot:0 }
+    ]},
+
+  { name:'Code Loupe', group:'dotviewer',
+    bg:{ c1:'#312e81', c2:'#6366f1', angle:140 },
+    els:[
+      { type:'dv_loupe_syntax', x:76, y:56, scale:4.0, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Dotfile Reveal', group:'dotviewer',
+    bg:{ c1:'#0f0a1e', c2:'#1e1b4b', angle:155 },
+    els:[
+      { type:'dv_thedot', x:136, y:96, scale:4.2, opacity:1, color:'#a78bfa', rot:0 },
+      { type:'dv_brackets', x:120, y:290, scale:2.0, opacity:0.35, color:'#6366f1', rot:0 }
+    ]},
+
+  { name:'Grammar Tree', group:'dotviewer',
+    bg:{ c1:'#065f46', c2:'#10b981', angle:148 },
+    els:[
+      { type:'dv_tree', x:96, y:56, scale:4.0, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_dot_sm', x:80, y:320, scale:1.0, opacity:0.4, color:'#6ee7b7', rot:0 },
+      { type:'liq_dot_sm', x:340, y:80, scale:0.8, opacity:0.3, color:'#a7f3d0', rot:0 }
+    ]},
+
+  { name:'File Badge', group:'dotviewer',
+    bg:{ c1:'#1e3a5f', c2:'#3b82f6', angle:152 },
+    els:[
+      { type:'liq_page', x:116, y:46, scale:3.6, opacity:0.9, color:'#ffffff', rot:0 },
+      { type:'dv_badge', x:220, y:260, scale:2.6, opacity:1, color:'#fbbf24', rot:0 }
+    ]},
+
+  { name:'Theme Colors', group:'dotviewer',
+    bg:{ c1:'#1a1a2e', c2:'#2d2b55', angle:160 },
+    els:[
+      { type:'dv_themebar', x:56, y:180, scale:4.2, opacity:1, color:'#ffffff', rot:0 },
+      { type:'dv_syntax', x:106, y:96, scale:2.4, opacity:0.5, color:'#ffffff', rot:0 },
+      { type:'dv_syntax', x:106, y:280, scale:2.4, opacity:0.5, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Finder Peek', group:'dotviewer',
+    bg:{ c1:'#1e40af', c2:'#3b82f6', angle:150 },
+    els:[
+      { type:'dv_finder', x:76, y:56, scale:3.8, opacity:1, color:'#ffffff', rot:0 },
+      { type:'dv_syntax', x:126, y:200, scale:2.6, opacity:0.8, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Syntax Ring', group:'dotviewer',
+    bg:{ c1:'#4c1d95', c2:'#7c3aed', angle:145 },
+    els:[
+      { type:'liq_ring', x:106, y:86, scale:4.0, opacity:0.8, color:'#ffffff', rot:0 },
+      { type:'dv_syntax', x:146, y:176, scale:2.0, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Code Stack', group:'dotviewer',
+    bg:{ c1:'#1e1b4b', c2:'#4338ca', angle:155 },
+    els:[
+      { type:'liq_stack3', x:86, y:56, scale:3.6, opacity:0.85, color:'#ffffff', rot:0 },
+      { type:'dv_syntax', x:146, y:190, scale:1.8, opacity:0.9, color:'#c4b5fd', rot:0 }
+    ]},
+
+  { name:'Hidden Config', group:'dotviewer',
+    bg:{ c1:'#18181b', c2:'#3f3f46', angle:160 },
+    els:[
+      { type:'liq_dot_glow', x:136, y:106, scale:3.6, opacity:1, color:'#a78bfa', rot:0 },
+      { type:'dv_brackets', x:170, y:174, scale:1.8, opacity:0.7, color:'#e2e8f0', rot:0 }
+    ]},
+
+  { name:'Parse & View', group:'dotviewer',
+    bg:{ c1:'#064e3b', c2:'#059669', angle:148 },
+    els:[
+      { type:'dv_tree', x:46, y:76, scale:2.8, opacity:0.6, color:'#a7f3d0', rot:0 },
+      { type:'dv_loupe_syntax', x:156, y:116, scale:3.2, opacity:1, color:'#ffffff', rot:0 }
+    ]},
+
+  { name:'Bracket Glow', group:'dotviewer',
+    bg:{ c1:'#1e1b4b', c2:'#5b21b6', angle:142 },
+    els:[
+      { type:'dv_brackets', x:96, y:86, scale:4.4, opacity:1, color:'#e0e7ff', rot:0 },
+      { type:'liq_highlight', x:156, y:226, scale:2.4, opacity:0.7, color:'#a78bfa', rot:0 }
+    ]},
+
+  { name:'Full Suite', group:'dotviewer',
+    bg:{ c1:'#3730a3', c2:'#6366f1', angle:145 },
+    els:[
+      { type:'dv_finder', x:76, y:36, scale:3.4, opacity:0.85, color:'#ffffff', rot:0 },
+      { type:'dv_preview', x:116, y:120, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+      { type:'liq_sparkle', x:320, y:46, scale:1.0, opacity:0.5, color:'#c4b5fd', rot:0 },
+      { type:'dv_thedot', x:280, y:300, scale:1.6, opacity:0.7, color:'#818cf8', rot:0 }
+    ]}
+];
+
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════════
+
+function getAsset(id) { return ASSETS.find(a => a.id === id); }
+function getCategories() {
+  const cats = new Set();
+  ASSETS.forEach(a => cats.add(a.cat));
+  return Array.from(cats);
+}
+
+function updateBG() {
+  S.bg.c1 = document.getElementById('bgC1').value;
+  S.bg.c2 = document.getElementById('bgC2').value;
+  S.bg.angle = parseInt(document.getElementById('bgAngle').value);
+  document.getElementById('bgAngleVal').textContent = S.bg.angle + '°';
+  renderCanvas();
+}
+
+function renderCanvas() {
+  const svg = document.getElementById('canvasSVG');
+  const grad = svg.querySelector('#bgGrad');
+
+  // Update gradient
+  const a = S.bg.angle * Math.PI / 180;
+  const x1 = 50 - Math.cos(a) * 50;
+  const y1 = 50 - Math.sin(a) * 50;
+  const x2 = 50 + Math.cos(a) * 50;
+  const y2 = 50 + Math.sin(a) * 50;
+  grad.setAttribute('x1', x1 + '%');
+  grad.setAttribute('y1', y1 + '%');
+  grad.setAttribute('x2', x2 + '%');
+  grad.setAttribute('y2', y2 + '%');
+  grad.querySelector('stop:first-child').setAttribute('stop-color', S.bg.c1);
+  grad.querySelector('stop:last-child').setAttribute('stop-color', S.bg.c2);
+
+  // Render elements
+  const g = document.getElementById('elementsGroup');
+  g.innerHTML = '';
+  S.elements.forEach(el => {
+    if (!el.visible) return;
+    const asset = getAsset(el.type);
+    if (!asset) return;
+    const svgContent = asset.svg(el.color);
+    const transform = `translate(${el.x},${el.y}) scale(${el.scale / (asset.w/80)}) rotate(${el.rot},${asset.w/2},${asset.h/2})`;
+    g.innerHTML += `<g transform="${transform}" opacity="${el.opacity}">${svgContent}</g>`;
+  });
+
+  // Grid overlay
+  const grid = document.getElementById('gridOverlay');
+  const showGrid = document.getElementById('showGrid').checked;
+  grid.setAttribute('opacity', showGrid ? '1' : '0');
+  if (showGrid) {
+    grid.innerHTML = `
+      <line x1="256" y1="0" x2="256" y2="512" stroke="white" stroke-width="0.5" opacity="0.1"/>
+      <line x1="0" y1="256" x2="512" y2="256" stroke="white" stroke-width="0.5" opacity="0.1"/>
+      <circle cx="256" cy="256" r="180" stroke="white" stroke-width="0.5" fill="none" opacity="0.06"/>
+      <rect x="77" y="77" width="358" height="358" rx="10" stroke="white" stroke-width="0.5" stroke-dasharray="4,4" fill="none" opacity="0.08"/>
+    `;
+  }
+
+  renderPreviews();
+}
+
+function renderPreviews() {
+  const sizes = [256, 128, 64, 32, 16];
+  const row = document.getElementById('previewRow');
+  row.innerHTML = '';
+  sizes.forEach(sz => {
+    const div = document.createElement('div');
+    div.className = 'preview-item';
+    const iconDiv = document.createElement('div');
+    iconDiv.className = 'preview-icon';
+    iconDiv.style.width = sz + 'px';
+    iconDiv.style.height = sz + 'px';
+    const svgEl = document.getElementById('canvasSVG');
+    const clone = svgEl.cloneNode(true);
+    clone.style.width = sz + 'px';
+    clone.style.height = sz + 'px';
+    clone.removeAttribute('id');
+    clone.querySelectorAll('[id]').forEach(el => el.removeAttribute('id'));
+    iconDiv.appendChild(clone);
+    const label = document.createElement('div');
+    label.className = 'preview-label';
+    label.textContent = sz + 'px';
+    div.appendChild(iconDiv);
+    div.appendChild(label);
+    row.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LEFT PANEL — Asset Grid
+// ═══════════════════════════════════════════════════════════════════
+
+function renderAssetPanel() {
+  const cats = getCategories();
+  const tabs = document.getElementById('filterTabs');
+  const allCount = ASSETS.length;
+  let tabsHTML = `<button class="filter-tab ${S.assetFilter==='all'?'active':''}" onclick="setAssetFilter('all')">All<span class="filter-count">${allCount}</span></button>`;
+  cats.forEach(cat => {
+    const count = ASSETS.filter(a => a.cat === cat).length;
+    tabsHTML += `<button class="filter-tab ${S.assetFilter===cat?'active':''}" onclick="setAssetFilter('${cat}')">${cat}<span class="filter-count">${count}</span></button>`;
+  });
+  tabs.innerHTML = tabsHTML;
+
+  const grid = document.getElementById('assetGrid');
+  const filtered = S.assetFilter === 'all' ? ASSETS : ASSETS.filter(a => a.cat === S.assetFilter);
+  document.getElementById('assetCount').textContent = filtered.length + ' items';
+
+  grid.innerHTML = filtered.map(a => {
+    const thumbSVG = `<svg viewBox="0 0 ${a.w} ${a.h}" xmlns="http://www.w3.org/2000/svg">${a.svg('#94a3b8')}</svg>`;
+    return `
+      <div class="asset-card" ondblclick="addAssetToCanvas('${a.id}')" title="Double-click to add: ${a.name}">
+        <span class="asset-cat-badge" style="background:${a.catColor}"></span>
+        ${thumbSVG}
+        <div class="asset-label">${a.name}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function setAssetFilter(f) {
+  S.assetFilter = f;
+  renderAssetPanel();
+}
+
+function addAssetToCanvas(assetId) {
+  const a = getAsset(assetId);
+  if (!a) return;
+  const el = {
+    id: S.nextId++,
+    type: assetId,
+    name: a.name,
+    x: 140,
+    y: 120,
+    scale: 2.8,
+    opacity: 1,
+    color: '#ffffff',
+    rot: 0,
+    visible: true
+  };
+  S.elements.push(el);
+  S.selectedId = el.id;
+  renderCanvas();
+  renderRightPanel();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RIGHT PANEL
+// ═══════════════════════════════════════════════════════════════════
+
+function switchRightTab(tab) {
+  S.rightTab = tab;
+  document.querySelectorAll('.right-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.add('active');
+  renderRightPanel();
+}
+
+function renderRightPanel() {
+  const content = document.getElementById('rightContent');
+  if (S.rightTab === 'layers') {
+    renderLayersPanel(content);
+  } else if (S.rightTab === 'props') {
+    renderPropsPanel(content);
+  } else if (S.rightTab === 'presets') {
+    renderPresetsPanel(content);
+  }
+}
+
+function renderLayersPanel(container) {
+  if (S.elements.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">+</div>
+        <div>Double-click an asset<br>to add it to the canvas</div>
+      </div>
+    `;
+    return;
+  }
+
+  let html = '<div class="layer-list">';
+  // Render in reverse (top layer first)
+  for (let i = S.elements.length - 1; i >= 0; i--) {
+    const el = S.elements[i];
+    const asset = getAsset(el.type);
+    const selected = el.id === S.selectedId;
+    const thumbSVG = asset ? `<svg viewBox="0 0 ${asset.w} ${asset.h}" xmlns="http://www.w3.org/2000/svg">${asset.svg(el.color)}</svg>` : '';
+    html += `
+      <div class="layer-item ${selected?'selected':''}" onclick="selectElement(${el.id})">
+        <div class="layer-thumb">${thumbSVG}</div>
+        <span class="layer-name">${el.name}</span>
+        <button class="layer-vis" onclick="event.stopPropagation();toggleVis(${el.id})" title="Toggle visibility">${el.visible ? '●' : '○'}</button>
+        <button class="layer-del" onclick="event.stopPropagation();removeElement(${el.id})" title="Remove">×</button>
+      </div>
+    `;
+  }
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderPropsPanel(container) {
+  const el = S.elements.find(e => e.id === S.selectedId);
+  if (!el) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">⚙</div>
+        <div>Select a layer to<br>edit its properties</div>
+      </div>
+    `;
+    return;
+  }
+  container.innerHTML = `
+    <div class="prop-group">
+      <div class="prop-group-title">Position</div>
+      <div class="prop-row"><span class="prop-label">X</span><input class="prop-input" type="number" value="${el.x}" onchange="setProp(${el.id},'x',+this.value)"></div>
+      <div class="prop-row"><span class="prop-label">Y</span><input class="prop-input" type="number" value="${el.y}" onchange="setProp(${el.id},'y',+this.value)"></div>
+    </div>
+    <div class="prop-group">
+      <div class="prop-group-title">Transform</div>
+      <div class="prop-row"><span class="prop-label">Scale</span><input class="prop-input" type="number" step="0.1" value="${el.scale}" onchange="setProp(${el.id},'scale',+this.value)"></div>
+      <div class="prop-row"><span class="prop-label">Rotation</span><input class="prop-input" type="number" value="${el.rot}" onchange="setProp(${el.id},'rot',+this.value)"></div>
+      <div class="prop-row"><span class="prop-label">Opacity</span><input class="prop-input" type="number" step="0.05" min="0" max="1" value="${el.opacity}" onchange="setProp(${el.id},'opacity',+this.value)"></div>
+    </div>
+    <div class="prop-group">
+      <div class="prop-group-title">Appearance</div>
+      <div class="prop-row"><span class="prop-label">Color</span><input class="prop-input-color" type="color" value="${el.color}" onchange="setProp(${el.id},'color',this.value)"></div>
+    </div>
+    <div class="prop-group">
+      <div class="prop-group-title">Quick Scale</div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        ${[1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0].map(s =>
+          `<button class="btn" style="padding:3px 8px;font-size:10px" onclick="setProp(${el.id},'scale',${s})">${s}×</button>`
+        ).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function renderPresetsPanel(container) {
+  const groups = ['dotviewer', 'concept', 'liquid', 'hig'];
+  let html = '';
+  groups.forEach(group => {
+    const groupPresets = PRESETS.filter(p => p.group === group);
+    const label = group === 'dotviewer' ? 'dotViewer Features' : group === 'concept' ? 'dotViewer Concepts' : group === 'liquid' ? 'Liquid Glass' : 'HIG Style';
+    html += `<div style="margin-bottom:12px"><div class="prop-group-title">${label}</div>`;
+    html += '<div class="preset-grid">';
+    groupPresets.forEach((p, pi) => {
+      const idx = PRESETS.indexOf(p);
+      html += `
+        <div class="preset-card" onclick="loadPreset(${idx})" title="${p.name}">
+          <div class="preset-thumb">${presetThumbSVG(p)}</div>
+          <div class="preset-info">
+            <span class="preset-badge ${p.group}">${p.group.toUpperCase()}</span>
+            <span class="preset-name">${p.name}</span>
+          </div>
+        </div>
+      `;
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function presetThumbSVG(preset) {
+  const a = preset.bg.angle * Math.PI / 180;
+  const x1 = 50 - Math.cos(a)*50;
+  const y1 = 50 - Math.sin(a)*50;
+  const x2 = 50 + Math.cos(a)*50;
+  const y2 = 50 + Math.sin(a)*50;
+
+  let elsSVG = '';
+  preset.els.forEach(el => {
+    const asset = getAsset(el.type);
+    if (!asset) return;
+    const svgContent = asset.svg(el.color);
+    const transform = `translate(${el.x},${el.y}) scale(${el.scale / (asset.w/80)}) rotate(${el.rot||0},${asset.w/2},${asset.h/2})`;
+    elsSVG += `<g transform="${transform}" opacity="${el.opacity}">${svgContent}</g>`;
+  });
+
+  return `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <clipPath id="sq_${preset.name.replace(/\s/g,'')}"><rect width="512" height="512" rx="114"/></clipPath>
+      <linearGradient id="bg_${preset.name.replace(/\s/g,'')}" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
+        <stop offset="0%" stop-color="${preset.bg.c1}"/>
+        <stop offset="100%" stop-color="${preset.bg.c2}"/>
+      </linearGradient>
+    </defs>
+    <g clip-path="url(#sq_${preset.name.replace(/\s/g,'')})">
+      <rect width="512" height="512" fill="url(#bg_${preset.name.replace(/\s/g,'')})"/>
+      <ellipse cx="256" cy="80" rx="300" ry="130" fill="white" opacity="0.06"/>
+      ${elsSVG}
+    </g>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INTERACTIONS
+// ═══════════════════════════════════════════════════════════════════
+
+function selectElement(id) {
+  S.selectedId = id;
+  renderRightPanel();
+}
+
+function setProp(id, key, val) {
+  const el = S.elements.find(e => e.id === id);
+  if (el) {
+    el[key] = val;
+    renderCanvas();
+    // Don't re-render props panel to avoid losing focus
+  }
+}
+
+function toggleVis(id) {
+  const el = S.elements.find(e => e.id === id);
+  if (el) {
+    el.visible = !el.visible;
+    renderCanvas();
+    renderRightPanel();
+  }
+}
+
+function removeElement(id) {
+  S.elements = S.elements.filter(e => e.id !== id);
+  if (S.selectedId === id) S.selectedId = null;
+  renderCanvas();
+  renderRightPanel();
+}
+
+function loadPreset(idx) {
+  const p = PRESETS[idx];
+  S.bg = { ...p.bg };
+  document.getElementById('bgC1').value = p.bg.c1;
+  document.getElementById('bgC2').value = p.bg.c2;
+  document.getElementById('bgAngle').value = p.bg.angle;
+  document.getElementById('bgAngleVal').textContent = p.bg.angle + '°';
+
+  S.elements = p.els.map(el => ({
+    id: S.nextId++,
+    type: el.type,
+    name: getAsset(el.type)?.name || el.type,
+    x: el.x,
+    y: el.y,
+    scale: el.scale,
+    opacity: el.opacity,
+    color: el.color,
+    rot: el.rot || 0,
+    visible: true
+  }));
+  S.selectedId = null;
+  renderCanvas();
+  switchRightTab('layers');
+}
+
+function resetCanvas() {
+  S.elements = [];
+  S.selectedId = null;
+  S.bg = { c1: '#3730a3', c2: '#6366f1', angle: 150 };
+  document.getElementById('bgC1').value = '#3730a3';
+  document.getElementById('bgC2').value = '#6366f1';
+  document.getElementById('bgAngle').value = 150;
+  document.getElementById('bgAngleVal').textContent = '150°';
+  renderCanvas();
+  renderRightPanel();
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// DRAG — Move elements on canvas
+// ═══════════════════════════════════════════════════════════════════
+
+const canvasArea = document.getElementById('canvasArea');
+const canvasFrame = document.getElementById('canvasFrame');
+
+canvasFrame.addEventListener('mousedown', e => {
+  if (!S.selectedId) return;
+  const rect = canvasFrame.getBoundingClientRect();
+  const scaleX = 512 / rect.width;
+  const scaleY = 512 / rect.height;
+  const el = S.elements.find(e2 => e2.id === S.selectedId);
+  if (!el) return;
+
+  const startX = e.clientX;
+  const startY = e.clientY;
+  const origX = el.x;
+  const origY = el.y;
+
+  function onMove(ev) {
+    const dx = (ev.clientX - startX) * scaleX;
+    const dy = (ev.clientY - startY) * scaleY;
+    el.x = Math.round(origX + dx);
+    el.y = Math.round(origY + dy);
+    renderCanvas();
+  }
+  function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    renderRightPanel();
+  }
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════════════════════════════
+
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT') return;
+  const el = S.elements.find(e2 => e2.id === S.selectedId);
+
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (el) { removeElement(el.id); e.preventDefault(); }
+  }
+  if (e.key === 'ArrowUp') { if(el){el.y-=(e.shiftKey?10:1); renderCanvas(); renderRightPanel();} e.preventDefault(); }
+  if (e.key === 'ArrowDown') { if(el){el.y+=(e.shiftKey?10:1); renderCanvas(); renderRightPanel();} e.preventDefault(); }
+  if (e.key === 'ArrowLeft') { if(el){el.x-=(e.shiftKey?10:1); renderCanvas(); renderRightPanel();} e.preventDefault(); }
+  if (e.key === 'ArrowRight') { if(el){el.x+=(e.shiftKey?10:1); renderCanvas(); renderRightPanel();} e.preventDefault(); }
+  if (e.key === '+' || e.key === '=') { if(el){el.scale=Math.round((el.scale+0.1)*10)/10; renderCanvas(); renderRightPanel();} }
+  if (e.key === '-') { if(el){el.scale=Math.max(0.1,Math.round((el.scale-0.1)*10)/10); renderCanvas(); renderRightPanel();} }
+});
+
+// ═══════════════════════════════════════════════════════════════════
+// EXPORT
+// ═══════════════════════════════════════════════════════════════════
+
+function exportPNG() {
+  const svgEl = document.getElementById('canvasSVG');
+  const svgData = new XMLSerializer().serializeToString(svgEl);
+  const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(svgBlob);
+
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, 1024, 1024);
+    URL.revokeObjectURL(url);
+
+    canvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'icon-1024.png';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  };
+  img.src = url;
+}
+
+function exportSVG() {
+  const svgEl = document.getElementById('canvasSVG');
+  const svgData = new XMLSerializer().serializeToString(svgEl);
+  const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'icon.svg';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════════
+
+renderAssetPanel();
+renderCanvas();
+renderRightPanel();
+
+// Load first preset by default
+loadPreset(0);
+switchRightTab('presets');
+setTimeout(() => switchRightTab('layers'), 100);
+</script>
+</body>
+</html>

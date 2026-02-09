@@ -2,6 +2,10 @@
 
 macOS Quick Look extension for syntax-highlighted previews of source code, config files, and dotfiles.
 
+## Product Direction
+
+Best-in-class Quick Look code previewer for macOS. Typora-quality markdown rendering. Seamless Finder integration with consistent thumbnails and previews. Support every text-based file a developer encounters.
+
 ## Build
 
 Requires: Xcode, [XcodeGen](https://github.com/yonaskolb/XcodeGen), macOS 15.0+, Swift 6.
@@ -43,6 +47,7 @@ Common code linked by every target. Key files:
 - `FileAttributes.swift` — metadata + `looksTextual` binary detection heuristic
 - `FileInspector.swift` — combines UTType, MIME, and byte-level analysis
 - `PreviewHTMLBuilder.swift` — generates HTML for Quick Look previews (themes, line numbers, font size)
+- `ThemePalette.swift` — 18-token color palette per theme
 - `HighlightProtocol.swift` — `@objc` XPC protocol: `highlight(code:language:theme:...)` and `cancel(requestId:)`
 - `HighlightXPCClient.swift` — NSXPCConnection wrapper for calling the XPC service
 - `SharedSettings.swift` — App Group (`group.stianlars1.dotViewer.shared`) settings sync
@@ -74,6 +79,21 @@ Settings UI for the extension (font size, theme). Source in `dotViewer/App/`.
 - `StatusView.swift` — shows extension registration status
 - `Utilities/ExtensionHelper.swift`, `ExtensionStatusChecker.swift`
 
+## Required Features
+
+Canonical scope — what this product must support:
+
+- **Syntax highlighting**: tree-sitter grammars + heuristic fallback, 18-token color palette
+- **Markdown**: raw mode (structured/readable), rendered mode (Typora-quality HTML output)
+- **Thumbnails**: full-bleed Finder thumbnails, visually consistent with preview output
+- **Preview header**: file type badge, file size, copy-to-clipboard button, markdown mode toggle
+- **Responsive sizing**: dynamic preview window dimensions based on content
+- **Settings**: font size, theme, word wrap, line numbers (synced via App Group)
+- **Custom file types**: user-defined extension → language mappings
+- **File type coverage**: 325+ definitions, 480+ extensions, 277+ filenames
+- **Binary gating**: reject binary files, detect MPEG-TS transport streams
+- **Sensitive file detection**: warn on .env, credentials, keys
+
 ## Key Concepts
 
 - **UTI routing**: Quick Look matches on exact UTType identifiers (not conformance). The `QLSupportedContentTypes` list in `project.yml` must include every UTI we want to handle. Use `scripts/dotviewer-gen-ql-content-types.sh` to regenerate from `FileTypeRegistry`.
@@ -92,6 +112,7 @@ Source `scripts/dotviewer-aliases.zsh` for shortcuts:
 | `dvql`     | `dotviewer-ql-status.sh`            | Show extension registration status         |
 | `dvsmoke`  | `dotviewer-ql-smoke.sh`             | Smoke test: qlmanage + log capture         |
 | `dvutis`   | `dotviewer-gen-ql-content-types.sh` | Regenerate UTI list from FileTypeRegistry  |
+| `dvaudit`  | `dotviewer-gen-default-filetypes.py`| Audit JSON against codebase                |
 
 Log filtering examples:
 ```bash
@@ -111,6 +132,8 @@ No unit test target. Testing is manual + log-based:
 
 After changes, always run `dvrefresh` (or `./scripts/dotviewer-refresh.sh`) to rebuild + reinstall, then verify with `dvsmoke` or Finder preview.
 
+See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for current bugs and [BACKLOG.md](BACKLOG.md) for planned work.
+
 ## File Conventions
 
 - Source of truth for project config: `dotViewer/project.yml`
@@ -119,3 +142,11 @@ After changes, always run `dvrefresh` (or `./scripts/dotviewer-refresh.sh`) to r
 - Dev team: `7F5ZSQFCQ4`
 - Log subsystem: `com.stianlars1.dotViewer`
 - Adding a new file type: update `FileTypeRegistry.swift`, add UTI to `QLSupportedContentTypes` in `project.yml` (both preview and thumbnail sections), add tree-sitter grammar + `.scm` query if available
+
+## Research
+
+Reference library of 37 Quick Look extension deep-dives, architecture patterns, and performance research compiled during v2: [docs/research/CLAUDE.md](docs/research/CLAUDE.md).
+
+## Version History
+
+See [CHANGELOG.md](CHANGELOG.md).

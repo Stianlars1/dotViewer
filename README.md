@@ -1,0 +1,59 @@
+# dotViewer
+
+A macOS Quick Look extension that adds syntax-highlighted previews for source code, config files, and dotfiles. Select any file in Finder, press Space, and get a beautifully highlighted preview — no app launch needed.
+
+## Features
+
+- **Syntax highlighting** — 53 tree-sitter grammars with heuristic fallback for unknown languages
+- **Markdown preview** — raw source with syntax highlighting (rendered mode in development)
+- **Quick Look integration** — spacebar preview from Finder, Path Finder, or any Quick Look host
+- **Finder thumbnails** — full-bleed syntax-highlighted thumbnails in icon and column views
+- **10+ themes** — with automatic dark/light mode detection
+- **Header UI** — file type badge, file size, copy-to-clipboard button
+- **Configurable** — font size, word wrap, line numbers, theme selection via host app
+- **Custom file types** — register your own extensions and assign highlight languages
+- **Broad coverage** — 325+ file type definitions, 480+ extensions, 277+ filename patterns
+
+## Screenshots
+
+*Coming soon.*
+
+## Requirements
+
+- macOS 15.0+
+- Xcode (with command-line tools)
+- [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+- Swift 6
+
+## Install
+
+Build from source:
+
+```bash
+# Full rebuild, install to /Applications, register extensions
+./scripts/dotviewer-refresh.sh
+
+# Incremental (skip clean + Quick Look cache reset)
+./scripts/dotviewer-refresh.sh --no-clean --no-reset
+
+# Release build
+./scripts/dotviewer-refresh.sh --config Release
+```
+
+After install, select any supported file in Finder and press Space to preview.
+
+## Architecture
+
+```
+dotViewer.app (host app — settings UI)
+├── QuickLookExtension (spacebar preview)
+│   └── HighlightXPC (tree-sitter syntax highlighting, runs out-of-process)
+├── QuickLookThumbnailExtension (Finder thumbnail generation)
+└── Shared.framework (file type registry, HTML builder, settings, utilities)
+```
+
+See [CLAUDE.md](CLAUDE.md) for detailed architecture, key files, and development guide.
+
+## License
+
+GPLv3. See [dotViewer/ATTRIBUTION.md](dotViewer/ATTRIBUTION.md) for third-party acknowledgments.

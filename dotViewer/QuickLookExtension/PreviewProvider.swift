@@ -98,7 +98,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let languageId = registry.highlightLanguage(for: key) ?? "plaintext"
         let languageName = registry.fileType(for: key)?.displayName ?? (key.isEmpty ? "Text" : key.uppercased())
 
-        let isMarkdown = ["md", "markdown", "mdx"].contains(key)
+        let isMarkdown = languageId == "markdown"
         let showLineNumbers = SharedSettings.shared.showLineNumbers
         let useMarkdownHighlight = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
         let showBinaryWarning = (!typeIsTextual && !looksTextual && !isEmptyFile)

@@ -96,6 +96,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer
         DEAD_CODE_STRIPPING: YES
+        ASSETCATALOG_COMPILER_APPICON_NAME: dotIcon
+    resources:
+      - path: App/dotIcon.xcassets
     dependencies:
       - target: Shared
       - target: QuickLookExtension

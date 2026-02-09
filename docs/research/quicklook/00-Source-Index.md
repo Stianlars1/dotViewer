@@ -3,10 +3,10 @@
 This index lists every explicit source from the prompt (plus relevant linked repos), and points to the deep-dive docs in `Repos/`.
 
 ## Quick Navigation
-- Deep-dive repo docs live in: `dotViewer/Docs/QuickLook/Repos/`
-- Architecture synthesis: `dotViewer/Docs/QuickLook/01-Architecture-Patterns.md`
-- Performance & compatibility: `dotViewer/Docs/QuickLook/02-Performance-Sandboxing-Compatibility.md`
-- Feature recipes: `dotViewer/Docs/QuickLook/03-Feature-Recipes.md`
+- Deep-dive repo docs live in: `Repos/`
+- Architecture synthesis: `01-Architecture-Patterns.md`
+- Performance & compatibility: `02-Performance-Sandboxing-Compatibility.md`
+- Feature recipes: `03-Feature-Recipes.md`
 
 ## Summary Lists (Meta)
 - **Mac-QuickLook list** (master index of plugins): https://github.com/haokaiyang/Mac-QuickLook?tab=readme-ov-file

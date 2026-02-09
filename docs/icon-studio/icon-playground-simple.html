@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotViewer Icon Playground v2</title>
+<style>
+  :root {
+    --bg-0: #060910;
+    --bg-1: #0a1322;
+    --bg-2: #12243b;
+    --panel: rgba(10, 17, 29, 0.84);
+    --panel-2: rgba(16, 26, 41, 0.92);
+    --panel-border: rgba(157, 181, 220, 0.2);
+    --text: #ecf3ff;
+    --muted: #9fb3d2;
+    --accent: #61d0dc;
+    --accent-2: #4bb6c4;
+    --success: #6ee1a5;
+    --danger: #ff7f74;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 9px;
+    --squircle: 22.37%;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    min-height: 100%;
+  }
+
+  body {
+    font-family: "SF Pro Display", "Avenir Next", "Helvetica Neue", sans-serif;
+    color: var(--text);
+    background:
+      radial-gradient(1000px 650px at 90% -8%, rgba(80, 108, 170, 0.24), transparent 55%),
+      radial-gradient(900px 560px at -5% 110%, rgba(26, 72, 138, 0.22), transparent 58%),
+      linear-gradient(145deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+    overflow: hidden;
+  }
+
+  .app {
+    height: 100vh;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: minmax(330px, 390px) 1fr;
+    gap: 18px;
+  }
+
+  .panel {
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--panel-border);
+    background: linear-gradient(170deg, rgba(15, 25, 40, 0.94), var(--panel));
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .left-header {
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid rgba(154, 177, 212, 0.15);
+    background: linear-gradient(180deg, rgba(20, 32, 50, 0.95), rgba(10, 18, 29, 0.95));
+  }
+
+  .left-header h1 {
+    margin: 0;
+    font-size: 1.06rem;
+    font-weight: 680;
+    letter-spacing: 0.01em;
+  }
+
+  .left-header p {
+    margin: 7px 0 0;
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+
+  .left-scroll {
+    overflow-y: auto;
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .left-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .left-scroll::-webkit-scrollbar-thumb {
+    background: rgba(153, 177, 215, 0.28);
+    border-radius: 999px;
+  }
+
+  details.group {
+    border: 1px solid rgba(150, 174, 212, 0.2);
+    border-radius: var(--radius-md);
+    background: linear-gradient(180deg, rgba(19, 31, 48, 0.95), rgba(11, 19, 31, 0.95));
+    overflow: hidden;
+  }
+
+  details.group summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 10px 12px;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 660;
+    color: #c0d1ee;
+    background: rgba(9, 16, 26, 0.7);
+    border-bottom: 1px solid rgba(150, 174, 212, 0.15);
+    user-select: none;
+  }
+
+  details.group summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .group-body {
+    padding: 11px;
+    display: grid;
+    gap: 12px;
+  }
+
+  .control {
+    display: grid;
+    gap: 7px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+  }
+
+  label {
+    font-size: 0.82rem;
+    color: #dce7fb;
+    font-weight: 560;
+  }
+
+  .value {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  input[type="color"] {
+    width: 100%;
+    height: 36px;
+    border-radius: 9px;
+    border: 1px solid rgba(150, 174, 212, 0.35);
+    background: #0f1a2a;
+    padding: 3px;
+    cursor: pointer;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 5px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #30486e, #3b5174);
+    outline: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid #6ad8e4;
+    background: #edf5ff;
+    box-shadow: 0 1px 8px rgba(78, 178, 191, 0.5);
+    cursor: pointer;
+  }
+
+  .toggle {
+    display: inline-flex;
+    width: 46px;
+    height: 25px;
+    position: relative;
+  }
+
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .toggle span {
+    position: absolute;
+    inset: 0;
+    border-radius: 999px;
+    border: 1px solid rgba(150, 174, 212, 0.36);
+    background: #273750;
+    transition: 0.2s ease;
+  }
+
+  .toggle span::before {
+    content: "";
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: #eef5ff;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    transition: transform 0.2s ease;
+  }
+
+  .toggle input:checked + span {
+    background: rgba(98, 211, 223, 0.48);
+  }
+
+  .toggle input:checked + span::before {
+    transform: translateX(21px);
+  }
+
+  .color-grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .btn-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  button {
+    border: 1px solid rgba(150, 174, 212, 0.26);
+    border-radius: 10px;
+    background: linear-gradient(180deg, #223a5a, #172d48);
+    color: #ecf4ff;
+    padding: 9px 10px;
+    cursor: pointer;
+    font-size: 0.77rem;
+    font-weight: 630;
+    transition: 0.15s ease;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+    border-color: rgba(117, 216, 230, 0.58);
+    box-shadow: 0 6px 12px rgba(3, 10, 18, 0.45);
+  }
+
+  button.primary {
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    color: #092126;
+    border-color: rgba(171, 239, 248, 0.75);
+    font-weight: 700;
+  }
+
+  .preset-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .preset.active {
+    border-color: rgba(118, 218, 231, 0.76);
+    background: linear-gradient(180deg, #2e486d, #1e3450);
+    box-shadow: inset 0 0 0 1px rgba(118, 218, 231, 0.24);
+  }
+
+  .hint {
+    margin: 0;
+    font-size: 0.74rem;
+    color: #94aacf;
+    line-height: 1.35;
+  }
+
+  .prompt-box {
+    border: 1px solid rgba(146, 171, 211, 0.26);
+    border-radius: var(--radius-sm);
+    background: rgba(8, 15, 26, 0.86);
+    padding: 10px;
+    min-height: 120px;
+    font-size: 0.75rem;
+    line-height: 1.42;
+    white-space: pre-wrap;
+    color: #d5e3ff;
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+  }
+
+  .feedback {
+    min-height: 1.1em;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
+  .right {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .right-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 2px 2px 0;
+  }
+
+  .right-head h2 {
+    margin: 0;
+    font-size: 1.08rem;
+    font-weight: 670;
+  }
+
+  .right-head p {
+    margin: 5px 0 0;
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.35;
+  }
+
+  .preview-wrap {
+    border: 1px solid rgba(153, 177, 215, 0.17);
+    border-radius: var(--radius-md);
+    background:
+      radial-gradient(circle at 18% 8%, rgba(95, 121, 168, 0.2), transparent 45%),
+      linear-gradient(160deg, rgba(12, 21, 34, 0.94), rgba(8, 14, 23, 0.96));
+    padding: 16px;
+    overflow: auto;
+    min-height: 0;
+  }
+
+  .preview-wrap::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  .preview-wrap::-webkit-scrollbar-thumb {
+    background: rgba(151, 176, 215, 0.28);
+    border-radius: 999px;
+  }
+
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 14px;
+    align-items: start;
+  }
+
+  .preview-card {
+    border: 1px solid rgba(146, 171, 212, 0.18);
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(23, 36, 54, 0.92), rgba(11, 18, 30, 0.95));
+    padding: 12px;
+    display: grid;
+    gap: 10px;
+    justify-items: center;
+  }
+
+  .preview-card.main {
+    grid-column: span 2;
+  }
+
+  .size {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: 0.77rem;
+    color: #c7d8f4;
+  }
+
+  .icon-host {
+    width: var(--display);
+    height: var(--display);
+    border-radius: var(--squircle);
+    overflow: hidden;
+    background: #111a2b;
+    box-shadow:
+      0 16px 30px rgba(0, 0, 0, 0.52),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    position: relative;
+    touch-action: none;
+  }
+
+  .icon-host svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .preview-card.main .icon-host {
+    box-shadow:
+      0 22px 38px rgba(0, 0, 0, 0.56),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.065);
+  }
+
+  @media (max-width: 1200px) {
+    .preview-card.main {
+      grid-column: span 1;
+    }
+  }
+
+  @media (max-width: 980px) {
+    body {
+      overflow: auto;
+    }
+
+    .app {
+      grid-template-columns: 1fr;
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .right {
+      min-height: 760px;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="panel left">
+    <header class="left-header">
+      <h1>dotViewer Icon Playground v2</h1>
+      <p>Apple-style icon direction with live SVG previews at all app-icon sizes and a one-click 1024px PNG export.</p>
+    </header>
+
+    <div class="left-scroll">
+      <details class="group" open>
+        <summary>Background</summary>
+        <div class="group-body">
+          <div class="control">
+            <div class="row"><label for="bgStart">Start Color</label></div>
+            <input id="bgStart" type="color" value="#2D1B69">
+          </div>
+          <div class="control">
+            <div class="row"><label for="bgEnd">End Color</label></div>
+            <input id="bgEnd" type="color" value="#1A3A8A">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="bgAngle">Gradient Angle</label>
+              <span class="value" data-value="bgAngle"></span>
+            </div>
+            <input id="bgAngle" type="range" min="0" max="360" value="135">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="bgGlow">Top Glow</label>
+              <span class="value" data-value="bgGlow"></span>
+            </div>
+            <input id="bgGlow" type="range" min="0" max="100" value="48">
+          </div>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Document</summary>
+        <div class="group-body">
+          <div class="control">
+            <div class="row"><label for="docColor">Document Color</label></div>
+            <input id="docColor" type="color" value="#FFFFFF">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="docOpacity">Opacity</label>
+              <span class="value" data-value="docOpacity"></span>
+            </div>
+            <input id="docOpacity" type="range" min="0" max="100" value="100">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="docWidth">Width</label>
+              <span class="value" data-value="docWidth"></span>
+            </div>
+            <input id="docWidth" type="range" min="35" max="78" value="55">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="docHeight">Height</label>
+              <span class="value" data-value="docHeight"></span>
+            </div>
+            <input id="docHeight" type="range" min="45" max="84" value="65">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="docRadius">Corner Radius</label>
+              <span class="value" data-value="docRadius"></span>
+            </div>
+            <input id="docRadius" type="range" min="0" max="80" value="24">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="docShadow">Shadow Intensity</label>
+              <span class="value" data-value="docShadow"></span>
+            </div>
+            <input id="docShadow" type="range" min="0" max="100" value="32">
+          </div>
+          <div class="row">
+            <label for="dogEar">Dog-ear Fold</label>
+            <label class="toggle">
+              <input id="dogEar" type="checkbox" checked>
+              <span></span>
+            </label>
+          </div>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Code Lines</summary>
+        <div class="group-body">
+          <div class="color-grid">
+            <div class="control">
+              <div class="row"><label for="lineColor1">Line 1</label></div>
+              <input id="lineColor1" type="color" value="#4A90D9">
+            </div>
+            <div class="control">
+              <div class="row"><label for="lineColor2">Line 2</label></div>
+              <input id="lineColor2" type="color" value="#50C7C7">
+            </div>
+            <div class="control">
+              <div class="row"><label for="lineColor3">Line 3</label></div>
+              <input id="lineColor3" type="color" value="#E8915A">
+            </div>
+            <div class="control">
+              <div class="row"><label for="lineColor4">Line 4</label></div>
+              <input id="lineColor4" type="color" value="#8B8FA3">
+            </div>
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="lineThickness">Thickness</label>
+              <span class="value" data-value="lineThickness"></span>
+            </div>
+            <input id="lineThickness" type="range" min="8" max="56" value="28">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="lineCount">Line Count</label>
+              <span class="value" data-value="lineCount"></span>
+            </div>
+            <input id="lineCount" type="range" min="1" max="6" value="4">
+          </div>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Dot Mark</summary>
+        <div class="group-body">
+          <div class="row">
+            <label for="dotVisible">Dot Visible</label>
+            <label class="toggle">
+              <input id="dotVisible" type="checkbox" checked>
+              <span></span>
+            </label>
+          </div>
+          <div class="control">
+            <div class="row"><label for="dotColor">Dot Color</label></div>
+            <input id="dotColor" type="color" value="#50C7C7">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="dotSize">Dot Size</label>
+              <span class="value" data-value="dotSize"></span>
+            </div>
+            <input id="dotSize" type="range" min="40" max="220" value="92">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="dotX">Dot X Position</label>
+              <span class="value" data-value="dotX"></span>
+            </div>
+            <input id="dotX" type="range" min="0" max="100" value="28">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="dotY">Dot Y Position</label>
+              <span class="value" data-value="dotY"></span>
+            </div>
+            <input id="dotY" type="range" min="0" max="100" value="72">
+          </div>
+          <p class="hint">Drag directly on the 1024 preview to move the dot.</p>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Apple Finish</summary>
+        <div class="group-body">
+          <div class="control">
+            <div class="row">
+              <label for="gloss">Surface Gloss</label>
+              <span class="value" data-value="gloss"></span>
+            </div>
+            <input id="gloss" type="range" min="0" max="100" value="52">
+          </div>
+          <div class="control">
+            <div class="row">
+              <label for="rim">Rim Light</label>
+              <span class="value" data-value="rim"></span>
+            </div>
+            <input id="rim" type="range" min="0" max="100" value="54">
+          </div>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Presets and Export</summary>
+        <div class="group-body">
+          <div class="preset-grid" id="presets">
+            <button type="button" class="preset active" data-preset="default">Default</button>
+            <button type="button" class="preset" data-preset="frost">Frost</button>
+            <button type="button" class="preset" data-preset="midnight">Midnight</button>
+            <button type="button" class="preset" data-preset="sunrise">Sunrise</button>
+          </div>
+          <div class="btn-grid">
+            <button type="button" id="resetBtn">Reset</button>
+            <button type="button" id="downloadBtn" class="primary">Download 1024px PNG</button>
+          </div>
+        </div>
+      </details>
+
+      <details class="group" open>
+        <summary>Prompt Output</summary>
+        <div class="group-body">
+          <div class="prompt-box" id="prompt"></div>
+          <div class="btn-grid">
+            <button type="button" id="copyBtn">Copy Prompt</button>
+            <span class="feedback" id="feedback" aria-live="polite"></span>
+          </div>
+        </div>
+      </details>
+    </div>
+  </aside>
+
+  <section class="panel right">
+    <div class="right-head">
+      <div>
+        <h2>Live Multi-Size Preview</h2>
+        <p>SVG is the source of truth for all sizes: 1024, 512, 256, 128, 64, 32, 16. Squircle clipping is applied in both CSS and SVG.</p>
+      </div>
+    </div>
+
+    <div class="preview-wrap">
+      <div class="preview-grid" id="previewGrid"></div>
+    </div>
+  </section>
+</div>
+
+<canvas id="exportCanvas" width="1024" height="1024" hidden></canvas>
+
+<script>
+  const DEFAULTS = {
+    bgStart: "#2D1B69",
+    bgEnd: "#1A3A8A",
+    bgAngle: 135,
+    bgGlow: 48,
+
+    docColor: "#FFFFFF",
+    docOpacity: 100,
+    docWidth: 55,
+    docHeight: 65,
+    docRadius: 24,
+    docShadow: 32,
+    dogEar: true,
+
+    lineColor1: "#4A90D9",
+    lineColor2: "#50C7C7",
+    lineColor3: "#E8915A",
+    lineColor4: "#8B8FA3",
+    lineThickness: 28,
+    lineCount: 4,
+
+    dotVisible: true,
+    dotColor: "#50C7C7",
+    dotSize: 92,
+    dotX: 28,
+    dotY: 72,
+
+    gloss: 52,
+    rim: 54
+  };
+
+  const PRESETS = {
+    default: {},
+    frost: {
+      bgStart: "#193B6E",
+      bgEnd: "#2D66A3",
+      bgAngle: 150,
+      bgGlow: 65,
+      docColor: "#F6FBFF",
+      lineColor1: "#66A0DE",
+      lineColor2: "#6FD5D5",
+      lineColor3: "#F0A270",
+      lineColor4: "#96A4BD",
+      dotColor: "#74DCE0",
+      gloss: 62,
+      rim: 62
+    },
+    midnight: {
+      bgStart: "#101932",
+      bgEnd: "#233E74",
+      bgAngle: 128,
+      bgGlow: 40,
+      docColor: "#F3F7FE",
+      lineColor1: "#6994D2",
+      lineColor2: "#5FC7C7",
+      lineColor3: "#D9895B",
+      lineColor4: "#8C93AA",
+      dotColor: "#55C5D0",
+      gloss: 42,
+      rim: 48
+    },
+    sunrise: {
+      bgStart: "#4A296A",
+      bgEnd: "#B34F5D",
+      bgAngle: 118,
+      bgGlow: 58,
+      docColor: "#FFF8F2",
+      lineColor1: "#5E8DD3",
+      lineColor2: "#56CCB6",
+      lineColor3: "#ED9962",
+      lineColor4: "#9E8EA2",
+      dotColor: "#56CCB6",
+      gloss: 55,
+      rim: 56
+    }
+  };
+
+  const PREVIEWS = [
+    { size: 1024, display: 338, main: true },
+    { size: 512, display: 230 },
+    { size: 256, display: 142 },
+    { size: 128, display: 94 },
+    { size: 64, display: 62 },
+    { size: 32, display: 38 },
+    { size: 16, display: 26 }
+  ];
+
+  const LINE_WIDTHS = [0.72, 0.56, 0.43, 0.28, 0.61, 0.35];
+  const LINE_INDENTS = [0.0, 0.05, 0.08, 0.13, 0.04, 0.09];
+  const RANGE_FORMAT = {
+    bgAngle: (v) => `${v} deg`,
+    bgGlow: (v) => `${v}%`,
+    docOpacity: (v) => `${v}%`,
+    docWidth: (v) => `${v}%`,
+    docHeight: (v) => `${v}%`,
+    docRadius: (v) => `${v}px`,
+    docShadow: (v) => `${v}%`,
+    lineThickness: (v) => `${v}px`,
+    lineCount: (v) => `${v}`,
+    dotSize: (v) => `${v}px`,
+    dotX: (v) => `${v}%`,
+    dotY: (v) => `${v}%`,
+    gloss: (v) => `${v}%`,
+    rim: (v) => `${v}%`
+  };
+
+  const state = { ...DEFAULTS };
+  let activePreset = "default";
+  const squirclePath = buildSuperellipsePath(1024, 5.8, 260);
+
+  const previewGrid = document.getElementById("previewGrid");
+  const presets = document.getElementById("presets");
+  const promptEl = document.getElementById("prompt");
+  const feedbackEl = document.getElementById("feedback");
+
+  init();
+
+  function init() {
+    buildPreviewCards();
+    bindControls();
+    bindActions();
+    syncInputs();
+    renderAll();
+    bindDotDrag();
+  }
+
+  function buildPreviewCards() {
+    previewGrid.innerHTML = PREVIEWS.map((item) => {
+      const cls = item.main ? "preview-card main" : "preview-card";
+      return `
+        <article class="${cls}">
+          <div class="size">${item.size}px</div>
+          <div class="icon-host" data-preview="${item.size}" style="--display: ${item.display}px"></div>
+        </article>
+      `;
+    }).join("\n");
+  }
+
+  function bindControls() {
+    const colorKeys = [
+      "bgStart", "bgEnd", "docColor", "lineColor1", "lineColor2", "lineColor3", "lineColor4", "dotColor"
+    ];
+
+    colorKeys.forEach((key) => {
+      const el = document.getElementById(key);
+      el.addEventListener("input", () => {
+        state[key] = normalizeHex(el.value);
+        setCustomPreset();
+        renderAll();
+      });
+    });
+
+    const rangeKeys = [
+      "bgAngle", "bgGlow", "docOpacity", "docWidth", "docHeight", "docRadius", "docShadow",
+      "lineThickness", "lineCount", "dotSize", "dotX", "dotY", "gloss", "rim"
+    ];
+
+    rangeKeys.forEach((key) => {
+      const el = document.getElementById(key);
+      el.addEventListener("input", () => {
+        state[key] = Number(el.value);
+        setCustomPreset();
+        renderAll();
+      });
+    });
+
+    ["dogEar", "dotVisible"].forEach((key) => {
+      const el = document.getElementById(key);
+      el.addEventListener("change", () => {
+        state[key] = el.checked;
+        setCustomPreset();
+        renderAll();
+      });
+    });
+  }
+
+  function bindActions() {
+    presets.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-preset]");
+      if (!button) return;
+      applyPreset(button.dataset.preset);
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      Object.assign(state, DEFAULTS);
+      activePreset = "default";
+      syncInputs();
+      refreshPresetUI();
+      renderAll();
+    });
+
+    document.getElementById("downloadBtn").addEventListener("click", exportPng1024);
+    document.getElementById("copyBtn").addEventListener("click", copyPrompt);
+  }
+
+  function applyPreset(name) {
+    const preset = PRESETS[name];
+    if (!preset) return;
+    Object.assign(state, DEFAULTS, preset);
+    activePreset = name;
+    syncInputs();
+    refreshPresetUI();
+    renderAll();
+  }
+
+  function setCustomPreset() {
+    activePreset = "custom";
+    refreshPresetUI();
+  }
+
+  function refreshPresetUI() {
+    const all = document.querySelectorAll(".preset");
+    all.forEach((btn) => {
+      const active = btn.dataset.preset === activePreset;
+      btn.classList.toggle("active", active);
+    });
+  }
+
+  function syncInputs() {
+    Object.keys(DEFAULTS).forEach((key) => {
+      const input = document.getElementById(key);
+      if (!input) return;
+      if (input.type === "checkbox") {
+        input.checked = Boolean(state[key]);
+      } else {
+        input.value = state[key];
+      }
+    });
+    renderValues();
+  }
+
+  function renderValues() {
+    document.querySelectorAll("[data-value]").forEach((slot) => {
+      const key = slot.dataset.value;
+      const formatter = RANGE_FORMAT[key] || ((v) => String(v));
+      slot.textContent = formatter(state[key]);
+    });
+  }
+
+  function renderAll() {
+    renderValues();
+    renderPreviews();
+    renderPrompt();
+  }
+
+  function renderPreviews() {
+    const hosts = document.querySelectorAll(".icon-host");
+    hosts.forEach((host, index) => {
+      const token = `${host.dataset.preview}-${index}-${Date.now().toString(36).slice(-4)}`;
+      host.innerHTML = buildIconSvg(token);
+    });
+  }
+
+  function buildIconSvg(token) {
+    const angle = (state.bgAngle * Math.PI) / 180;
+    const x1 = (50 - 50 * Math.cos(angle)).toFixed(2);
+    const y1 = (50 - 50 * Math.sin(angle)).toFixed(2);
+    const x2 = (50 + 50 * Math.cos(angle)).toFixed(2);
+    const y2 = (50 + 50 * Math.sin(angle)).toFixed(2);
+
+    const docW = 1024 * (state.docWidth / 100);
+    const docH = 1024 * (state.docHeight / 100);
+    const docX = (1024 - docW) / 2;
+    const docY = (1024 - docH) / 2;
+    const docR = clamp(state.docRadius, 0, 120);
+
+    const docOp = clamp(state.docOpacity / 100, 0, 1);
+    const docShadowPower = clamp(state.docShadow / 100, 0, 1);
+    const docBlur = (2 + docShadowPower * 14).toFixed(2);
+    const docOffset = (1 + docShadowPower * 7).toFixed(2);
+    const docAlpha = (0.03 + docShadowPower * 0.22).toFixed(3);
+
+    const fold = Math.min(docW, docH) * 0.14;
+    const foldX = docX + docW - fold;
+    const foldY = docY;
+
+    const lineCount = clamp(Math.round(state.lineCount), 1, 6);
+    const lineThickness = state.lineThickness;
+    const codeX = docX + docW * 0.15;
+    const codeY = docY + docH * 0.22;
+    const codeW = docW * 0.72;
+    const codeH = docH * 0.58;
+    const idealGap = lineThickness * 1.36;
+    const maxGap = lineCount > 1 ? Math.max((codeH - lineThickness) / (lineCount - 1), 0) : 0;
+    const gap = lineCount > 1 ? Math.min(idealGap, maxGap) : 0;
+
+    const lineColors = [state.lineColor1, state.lineColor2, state.lineColor3, state.lineColor4];
+    const lineRects = [];
+    for (let i = 0; i < lineCount; i += 1) {
+      const w = codeW * LINE_WIDTHS[i];
+      const x = codeX + codeW * LINE_INDENTS[i];
+      const y = codeY + i * gap;
+      lineRects.push(`
+        <rect x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${w.toFixed(2)}" height="${lineThickness.toFixed(2)}" rx="${(lineThickness / 2).toFixed(2)}" fill="${lineColors[i % 4]}" />
+      `);
+    }
+
+    const dotR = state.dotSize / 2;
+    const dotX = (state.dotX / 100) * 1024;
+    const dotY = (state.dotY / 100) * 1024;
+    const dotLight = adjustHex(state.dotColor, 22);
+    const dotDark = adjustHex(state.dotColor, -14);
+    const dotBlur = (2 + dotR * 0.16).toFixed(2);
+    const dotAlpha = (0.16 + dotR / 390).toFixed(3);
+
+    const glossAlpha = (state.gloss / 100 * 0.28).toFixed(3);
+    const rimAlpha = (state.rim / 100 * 0.30).toFixed(3);
+    const glowAlpha = (state.bgGlow / 100 * 0.42).toFixed(3);
+
+    const bgGrad = `${token}-bg`;
+    const bgGlow = `${token}-bgglow`;
+    const vignette = `${token}-vig`;
+    const docGrad = `${token}-doc`;
+    const dotGrad = `${token}-dot`;
+    const squircleClip = `${token}-sq`;
+    const docClip = `${token}-dc`;
+    const docShadow = `${token}-ds`;
+    const dotShadow = `${token}-dots`;
+
+    const foldMarkup = state.dogEar ? `
+      <path d="M ${foldX.toFixed(2)} ${foldY.toFixed(2)} L ${(docX + docW).toFixed(2)} ${(foldY + fold).toFixed(2)} L ${foldX.toFixed(2)} ${(foldY + fold).toFixed(2)} Z"
+            fill="${adjustHex(state.docColor, -12)}"
+            fill-opacity="${Math.max(docOp - 0.12, 0).toFixed(3)}" />
+      <path d="M ${foldX.toFixed(2)} ${foldY.toFixed(2)} L ${(docX + docW).toFixed(2)} ${(foldY + fold).toFixed(2)}"
+            stroke="rgba(0,0,0,0.14)" stroke-width="1.6" />
+    ` : "";
+
+    const dotMarkup = state.dotVisible ? `
+      <circle cx="${dotX.toFixed(2)}" cy="${dotY.toFixed(2)}" r="${dotR.toFixed(2)}" fill="url(#${dotGrad})" filter="url(#${dotShadow})" />
+      <ellipse cx="${(dotX - dotR * 0.28).toFixed(2)}" cy="${(dotY - dotR * 0.32).toFixed(2)}" rx="${(dotR * 0.32).toFixed(2)}" ry="${(dotR * 0.24).toFixed(2)}" fill="rgba(255,255,255,0.28)" />
+    ` : "";
+
+    return `
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="dotViewer icon">
+  <defs>
+    <linearGradient id="${bgGrad}" x1="${x1}%" y1="${y1}%" x2="${x2}%" y2="${y2}%">
+      <stop offset="0%" stop-color="${state.bgStart}" />
+      <stop offset="100%" stop-color="${state.bgEnd}" />
+    </linearGradient>
+
+    <radialGradient id="${bgGlow}" cx="24%" cy="13%" r="78%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="${glowAlpha}" />
+      <stop offset="68%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+
+    <radialGradient id="${vignette}" cx="50%" cy="76%" r="68%">
+      <stop offset="58%" stop-color="#000000" stop-opacity="0" />
+      <stop offset="100%" stop-color="#02070f" stop-opacity="0.26" />
+    </radialGradient>
+
+    <linearGradient id="${docGrad}" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="${adjustHex(state.docColor, 5)}" />
+      <stop offset="100%" stop-color="${adjustHex(state.docColor, -5)}" />
+    </linearGradient>
+
+    <radialGradient id="${dotGrad}" cx="32%" cy="26%" r="84%">
+      <stop offset="0%" stop-color="${dotLight}" />
+      <stop offset="100%" stop-color="${dotDark}" />
+    </radialGradient>
+
+    <filter id="${docShadow}" x="-20%" y="-20%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="${docOffset}" stdDeviation="${docBlur}" flood-color="#051320" flood-opacity="${docAlpha}" />
+    </filter>
+
+    <filter id="${dotShadow}" x="-60%" y="-60%" width="220%" height="220%">
+      <feDropShadow dx="0" dy="6" stdDeviation="${dotBlur}" flood-color="#04121d" flood-opacity="${dotAlpha}" />
+    </filter>
+
+    <clipPath id="${squircleClip}">
+      <path d="${squirclePath}" />
+    </clipPath>
+
+    <clipPath id="${docClip}">
+      <rect x="${docX.toFixed(2)}" y="${docY.toFixed(2)}" width="${docW.toFixed(2)}" height="${docH.toFixed(2)}" rx="${docR.toFixed(2)}" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#${squircleClip})">
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#${bgGrad})" />
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#${bgGlow})" />
+
+    <g filter="url(#${docShadow})">
+      <rect x="${docX.toFixed(2)}" y="${docY.toFixed(2)}" width="${docW.toFixed(2)}" height="${docH.toFixed(2)}" rx="${docR.toFixed(2)}" fill="url(#${docGrad})" fill-opacity="${docOp.toFixed(3)}" />
+      ${foldMarkup}
+    </g>
+
+    <g clip-path="url(#${docClip})">
+      ${lineRects.join("\n")}
+    </g>
+
+    ${dotMarkup}
+
+    <path d="M 0 0 H 1024 V 428 C 800 580, 228 590, 0 450 Z" fill="rgba(255,255,255,${glossAlpha})" />
+    <path d="${squirclePath}" fill="none" stroke="rgba(255,255,255,${rimAlpha})" stroke-width="2.4" />
+    <path d="${squirclePath}" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="2.4" transform="translate(0,1.4)" />
+    <rect x="0" y="0" width="1024" height="1024" fill="url(#${vignette})" />
+  </g>
+</svg>`.trim();
+  }
+
+  function renderPrompt() {
+    const changes = [];
+
+    if (state.bgStart !== DEFAULTS.bgStart || state.bgEnd !== DEFAULTS.bgEnd || state.bgAngle !== DEFAULTS.bgAngle) {
+      changes.push(`set a ${state.bgAngle} degree gradient from ${state.bgStart} to ${state.bgEnd}`);
+    }
+    if (state.bgGlow !== DEFAULTS.bgGlow) {
+      changes.push(`set top glow to ${state.bgGlow}%`);
+    }
+    if (state.docColor !== DEFAULTS.docColor || state.docOpacity !== DEFAULTS.docOpacity) {
+      changes.push(`use a document fill of ${state.docColor} at ${state.docOpacity}% opacity`);
+    }
+    if (state.docWidth !== DEFAULTS.docWidth || state.docHeight !== DEFAULTS.docHeight) {
+      changes.push(`size the document to ${state.docWidth}% x ${state.docHeight}%`);
+    }
+    if (state.docRadius !== DEFAULTS.docRadius) {
+      changes.push(`set document corner radius to ${state.docRadius}px`);
+    }
+    if (state.docShadow !== DEFAULTS.docShadow) {
+      changes.push(`set document shadow intensity to ${state.docShadow}%`);
+    }
+    if (state.dogEar !== DEFAULTS.dogEar) {
+      changes.push(state.dogEar ? "enable the dog-ear fold" : "disable the dog-ear fold");
+    }
+
+    const lineColorsChanged = ["lineColor1", "lineColor2", "lineColor3", "lineColor4"].some((k) => state[k] !== DEFAULTS[k]);
+    if (lineColorsChanged) {
+      changes.push(`set line colors to ${state.lineColor1}, ${state.lineColor2}, ${state.lineColor3}, ${state.lineColor4}`);
+    }
+    if (state.lineThickness !== DEFAULTS.lineThickness) {
+      changes.push(`set code line thickness to ${state.lineThickness}px`);
+    }
+    if (state.lineCount !== DEFAULTS.lineCount) {
+      changes.push(`show ${state.lineCount} code lines`);
+    }
+
+    if (state.dotVisible !== DEFAULTS.dotVisible) {
+      changes.push(state.dotVisible ? "show the brand dot" : "hide the brand dot");
+    }
+    if (state.dotColor !== DEFAULTS.dotColor) {
+      changes.push(`set dot color to ${state.dotColor}`);
+    }
+    if (state.dotSize !== DEFAULTS.dotSize) {
+      changes.push(`set dot size to ${state.dotSize}px`);
+    }
+    if (state.dotX !== DEFAULTS.dotX || state.dotY !== DEFAULTS.dotY) {
+      changes.push(`position the dot at ${state.dotX}% x and ${state.dotY}% y`);
+    }
+
+    if (state.gloss !== DEFAULTS.gloss || state.rim !== DEFAULTS.rim) {
+      changes.push(`apply gloss ${state.gloss}% and rim light ${state.rim}%`);
+    }
+
+    if (!changes.length) {
+      promptEl.textContent = "Design a modern Apple-style macOS app icon for dotViewer with a deep indigo-to-blue gradient, centered white document, four syntax-colored line bars, and a teal dot overlapping the lower-left of the document. Keep a smooth squircle silhouette and crisp readability down to 16px.";
+      return;
+    }
+
+    promptEl.textContent = `Design a modern Apple-style macOS app icon for dotViewer based on the document-and-dot concept, then ${changes.join(", ")}. Keep the icon in a continuous-curvature squircle and ensure legibility from 1024px to 16px.`;
+  }
+
+  async function copyPrompt() {
+    try {
+      await navigator.clipboard.writeText(promptEl.textContent);
+      feedbackEl.textContent = "Prompt copied.";
+      feedbackEl.style.color = "var(--success)";
+    } catch (_err) {
+      feedbackEl.textContent = "Clipboard blocked by browser.";
+      feedbackEl.style.color = "var(--danger)";
+    }
+    setTimeout(() => {
+      feedbackEl.textContent = "";
+    }, 1600);
+  }
+
+  function exportPng1024() {
+    const markup = buildIconSvg(`export-${Date.now()}`);
+    const blob = new Blob([markup], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const img = new Image();
+    const canvas = document.getElementById("exportCanvas");
+    const ctx = canvas.getContext("2d");
+
+    img.onload = () => {
+      ctx.clearRect(0, 0, 1024, 1024);
+      ctx.drawImage(img, 0, 0, 1024, 1024);
+      URL.revokeObjectURL(url);
+      canvas.toBlob((png) => {
+        if (!png) return;
+        const dl = URL.createObjectURL(png);
+        const a = document.createElement("a");
+        a.href = dl;
+        a.download = "dotViewer-icon-1024.png";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(dl);
+      }, "image/png");
+    };
+
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      feedbackEl.textContent = "PNG export failed.";
+      feedbackEl.style.color = "var(--danger)";
+    };
+
+    img.src = url;
+  }
+
+  function bindDotDrag() {
+    const main = document.querySelector('.icon-host[data-preview="1024"]');
+    if (!main) return;
+
+    let dragging = false;
+
+    main.addEventListener("pointerdown", (event) => {
+      if (!state.dotVisible) return;
+      dragging = true;
+      main.setPointerCapture(event.pointerId);
+      updateDotByPointer(event, main);
+    });
+
+    main.addEventListener("pointermove", (event) => {
+      if (!dragging) return;
+      updateDotByPointer(event, main);
+    });
+
+    const stop = () => {
+      dragging = false;
+    };
+
+    main.addEventListener("pointerup", stop);
+    main.addEventListener("pointercancel", stop);
+  }
+
+  function updateDotByPointer(event, host) {
+    const rect = host.getBoundingClientRect();
+    const x = clamp((event.clientX - rect.left) / rect.width, 0, 1);
+    const y = clamp((event.clientY - rect.top) / rect.height, 0, 1);
+
+    state.dotX = Math.round(x * 100);
+    state.dotY = Math.round(y * 100);
+
+    document.getElementById("dotX").value = state.dotX;
+    document.getElementById("dotY").value = state.dotY;
+
+    setCustomPreset();
+    renderAll();
+  }
+
+  function buildSuperellipsePath(size, exponent, points) {
+    const half = size / 2;
+    const segments = [];
+
+    for (let i = 0; i <= points; i += 1) {
+      const t = (i / points) * Math.PI * 2;
+      const cos = Math.cos(t);
+      const sin = Math.sin(t);
+      const x = half + half * Math.sign(cos) * Math.pow(Math.abs(cos), 2 / exponent);
+      const y = half + half * Math.sign(sin) * Math.pow(Math.abs(sin), 2 / exponent);
+      segments.push(`${i === 0 ? "M" : "L"} ${x.toFixed(2)} ${y.toFixed(2)}`);
+    }
+
+    segments.push("Z");
+    return segments.join(" ");
+  }
+
+  function normalizeHex(color) {
+    return color.toUpperCase();
+  }
+
+  function adjustHex(color, amount) {
+    const compact = color.replace("#", "");
+    const full = compact.length === 3
+      ? compact.split("").map((ch) => ch + ch).join("")
+      : compact.padEnd(6, "0").slice(0, 6);
+
+    const r = clamp(parseInt(full.slice(0, 2), 16) + amount, 0, 255);
+    const g = clamp(parseInt(full.slice(2, 4), 16) + amount, 0, 255);
+    const b = clamp(parseInt(full.slice(4, 6), 16) + amount, 0, 255);
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  function toHex(value) {
+    return value.toString(16).padStart(2, "0").toUpperCase();
+  }
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+</script>
+</body>
+</html>

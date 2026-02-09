@@ -146,3 +146,20 @@
 **Reproduction**: Run `./scripts/dotviewer-gen-default-filetypes.py` (dvaudit) → see duplicate extension warnings in output.
 
 **Acceptance criteria**: Either resolve duplicates by choosing a canonical owner for each extension, or add explicit priority/precedence to the JSON schema so the resolution is intentional rather than load-order-dependent.
+
+---
+
+## KI-009 — Cmd+C doesn't copy selected text in Quick Look preview
+
+| Field | Value |
+|-------|-------|
+| **Priority** | High |
+| **Status** | Open |
+
+**Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Text can be visually selected but the keyboard shortcut does nothing.
+
+**Root cause**: Quick Look data-based previews (`QLPreviewReply` with HTML content) render in a sandboxed web view that doesn't pass standard keyboard shortcuts through to the HTML content. The copy-to-clipboard button in the header copies the entire file, but there's no way to copy a text selection via Cmd+C.
+
+**Reproduction**: Preview any file → select text in the preview window → press Cmd+C → paste elsewhere → nothing was copied.
+
+**Acceptance criteria**: Cmd+C should copy the currently selected text from the Quick Look preview to the system clipboard. If this is a Quick Look sandbox limitation, document it as such and ensure the existing copy button is prominently discoverable.

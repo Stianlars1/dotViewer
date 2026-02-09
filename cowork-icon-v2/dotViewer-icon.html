@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>dotViewer App Icon</title>
+<style>
+  :root {
+    --bg: #0a0a12;
+    --surface: #14141f;
+    --border: rgba(255,255,255,0.06);
+    --text: #e0e0f0;
+    --text2: #888899;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px 60px;
+  }
+  h1 { font-size: 20px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.02em; }
+  .subtitle { color: var(--text2); font-size: 13px; margin-bottom: 36px; }
+
+  /* Main icon display */
+  .icon-stage {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .icon-stage svg {
+    display: block;
+    border-radius: 0;
+  }
+
+  /* Size previews */
+  .sizes-row {
+    display: flex;
+    align-items: end;
+    gap: 24px;
+    margin-bottom: 32px;
+    padding: 24px 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+  }
+  .size-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .size-item span {
+    font-size: 11px;
+    color: var(--text2);
+  }
+  .size-item svg {
+    display: block;
+  }
+
+  /* Dock simulation */
+  .dock-sim {
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .dock-sim .placeholder {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.06);
+  }
+  .dock-sim svg { display: block; }
+
+  /* Export buttons */
+  .actions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  button {
+    background: rgba(99,102,241,0.15);
+    color: #a5b4fc;
+    border: 1px solid rgba(99,102,241,0.25);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button:hover {
+    background: rgba(99,102,241,0.25);
+    border-color: rgba(99,102,241,0.4);
+  }
+  .note { color: var(--text2); font-size: 11px; max-width: 480px; text-align: center; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<h1>dotViewer — The Dot Lens</h1>
+<p class="subtitle">A frosted glass dot that reveals syntax-highlighted code within</p>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- THE ICON — 1024 x 1024                                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="icon-stage">
+<svg id="icon1024" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 1024 1024">
+  <defs>
+    <!-- Background gradient: deep indigo → medium indigo, 150° -->
+    <linearGradient id="bgGrad" x1="6%" y1="6%" x2="94%" y2="94%">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#4338ca"/>
+    </linearGradient>
+
+    <!-- Inner frost: white wash over upper portion -->
+    <linearGradient id="frostGrad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.10"/>
+      <stop offset="60%" stop-color="white" stop-opacity="0.03"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Primary specular highlight -->
+    <radialGradient id="specular1" cx="36%" cy="30%" r="32%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Secondary specular -->
+    <radialGradient id="specular2" cx="46%" cy="40%" r="22%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Ambient occlusion at bottom -->
+    <linearGradient id="aoGrad" x1="50%" y1="70%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="black" stop-opacity="0"/>
+      <stop offset="100%" stop-color="black" stop-opacity="0.06"/>
+    </linearGradient>
+
+    <!-- The dot's glass interior gradient -->
+    <radialGradient id="dotGlass" cx="42%" cy="38%" r="58%">
+      <stop offset="0%" stop-color="#312e81" stop-opacity="0.2"/>
+      <stop offset="40%" stop-color="#1e1b4b" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#0f0b2e" stop-opacity="0.85"/>
+    </radialGradient>
+
+    <!-- Dot specular - glass shine on the dot itself -->
+    <radialGradient id="dotSpec" cx="38%" cy="32%" r="40%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.30"/>
+      <stop offset="60%" stop-color="white" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Dot inner glow -->
+    <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="70%" stop-color="#6366f1" stop-opacity="0"/>
+      <stop offset="95%" stop-color="#818cf8" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#a5b4fc" stop-opacity="0.08"/>
+    </radialGradient>
+
+    <!-- Clip mask for syntax lines inside the dot -->
+    <clipPath id="dotClip">
+      <circle cx="512" cy="490" r="235"/>
+    </clipPath>
+
+    <!-- Floor shadow gradient -->
+    <radialGradient id="floorShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4338ca" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#4338ca" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Layer 1: Floor Shadow -->
+  <ellipse cx="512" cy="810" rx="280" ry="18" fill="url(#floorShadow)"/>
+
+  <!-- Layer 2: Background Fill -->
+  <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+
+  <!-- Layer 3: Inner Frost -->
+  <rect width="1024" height="1024" fill="url(#frostGrad)"/>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- THE DOT — Glass sphere with syntax lines inside         -->
+  <!-- ════════════════════════════════════════════════════════ -->
+
+  <!-- Dot shadow (beneath the glass dot) -->
+  <ellipse cx="512" cy="740" rx="200" ry="20" fill="black" opacity="0.12"/>
+
+  <!-- Dot base: dark glass body -->
+  <circle cx="512" cy="490" r="235" fill="#0c0a20" opacity="0.7"/>
+
+  <!-- Dot glass interior -->
+  <circle cx="512" cy="490" r="235" fill="url(#dotGlass)"/>
+
+  <!-- Syntax lines inside the dot (clipped to circle) -->
+  <g clip-path="url(#dotClip)" opacity="0.92">
+    <!-- Line 1: blue keyword — short indent -->
+    <rect x="340" y="380" width="180" height="14" rx="7" fill="#60a5fa"/>
+    <rect x="535" y="380" width="80" height="14" rx="7" fill="#94a3b8" opacity="0.4"/>
+
+    <!-- Line 2: orange string — longer -->
+    <rect x="370" y="414" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.35"/>
+    <rect x="445" y="414" width="200" height="14" rx="7" fill="#fb923c"/>
+
+    <!-- Line 3: purple type — medium -->
+    <rect x="340" y="448" width="120" height="14" rx="7" fill="#a78bfa"/>
+    <rect x="475" y="448" width="140" height="14" rx="7" fill="#e2e8f0" opacity="0.5"/>
+
+    <!-- Line 4: green comment — full width -->
+    <rect x="370" y="482" width="260" height="14" rx="7" fill="#34d399" opacity="0.8"/>
+
+    <!-- Line 5: pink function — short -->
+    <rect x="340" y="516" width="90" height="14" rx="7" fill="#f472b6"/>
+    <rect x="445" y="516" width="50" height="14" rx="7" fill="#fbbf24" opacity="0.6"/>
+    <rect x="510" y="516" width="120" height="14" rx="7" fill="#e2e8f0" opacity="0.35"/>
+
+    <!-- Line 6: blue again — indented deeper -->
+    <rect x="400" y="550" width="150" height="14" rx="7" fill="#60a5fa" opacity="0.7"/>
+    <rect x="565" y="550" width="70" height="14" rx="7" fill="#a78bfa" opacity="0.5"/>
+
+    <!-- Line 7: faint closing line -->
+    <rect x="340" y="584" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.3"/>
+  </g>
+
+  <!-- Dot inner glow (edge luminosity) -->
+  <circle cx="512" cy="490" r="235" fill="url(#dotGlow)"/>
+
+  <!-- Dot glass specular highlight -->
+  <circle cx="512" cy="490" r="235" fill="url(#dotSpec)"/>
+
+  <!-- Dot rim light -->
+  <circle cx="512" cy="490" r="234" fill="none" stroke="white" stroke-width="1.2" opacity="0.14"/>
+
+  <!-- Dot secondary rim - subtle inner ring -->
+  <circle cx="512" cy="490" r="228" fill="none" stroke="white" stroke-width="0.6" opacity="0.06"/>
+
+  <!-- ════════════════════════════════════════════════════════ -->
+  <!-- GLASS EFFECTS over everything                           -->
+  <!-- ════════════════════════════════════════════════════════ -->
+
+  <!-- Layer 4: Primary specular highlight -->
+  <rect width="1024" height="1024" fill="url(#specular1)"/>
+
+  <!-- Layer 5: Secondary specular -->
+  <rect width="1024" height="1024" fill="url(#specular2)"/>
+
+  <!-- Layer 6: Tertiary micro highlight — small bright spot upper-left -->
+  <circle cx="330" cy="260" r="28" fill="white" opacity="0.08"/>
+
+  <!-- Layer 7a: Ambient occlusion -->
+  <rect width="1024" height="1024" fill="url(#aoGrad)"/>
+
+  <!-- Layer 7b: Rim lighting — very thin edge glow -->
+  <rect x="0.5" y="0.5" width="1023" height="1023" rx="0" fill="none" stroke="white" stroke-width="0.8" opacity="0.08"/>
+</svg>
+</div>
+
+<!-- Size preview row -->
+<div class="sizes-row">
+  <div class="size-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 1024 1024"><use href="#icon1024-content"/></svg>
+    <span>256px</span>
+  </div>
+  <div class="size-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 1024 1024"><use href="#icon1024-content"/></svg>
+    <span>128px</span>
+  </div>
+  <div class="size-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 1024 1024"><use href="#icon1024-content"/></svg>
+    <span>64px</span>
+  </div>
+  <div class="size-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 1024 1024"><use href="#icon1024-content"/></svg>
+    <span>32px</span>
+  </div>
+  <div class="size-item">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 1024 1024"><use href="#icon1024-content"/></svg>
+    <span>16px</span>
+  </div>
+</div>
+
+<!-- Dock simulation -->
+<div class="dock-sim">
+  <div class="placeholder"></div>
+  <div class="placeholder"></div>
+  <svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 1024 1024" style="border-radius:12px; overflow:hidden;">
+    <!-- Inline copy for dock preview -->
+    <defs>
+      <linearGradient id="dBg" x1="6%" y1="6%" x2="94%" y2="94%"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+      <linearGradient id="dFr" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.10"/><stop offset="60%" stop-color="white" stop-opacity="0.03"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+      <radialGradient id="dSp" cx="36%" cy="30%" r="32%"><stop offset="0%" stop-color="white" stop-opacity="0.40"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+      <radialGradient id="dDg" cx="42%" cy="38%" r="58%"><stop offset="0%" stop-color="#312e81" stop-opacity="0.2"/><stop offset="40%" stop-color="#1e1b4b" stop-opacity="0.6"/><stop offset="100%" stop-color="#0f0b2e" stop-opacity="0.85"/></radialGradient>
+      <radialGradient id="dDs" cx="38%" cy="32%" r="40%"><stop offset="0%" stop-color="white" stop-opacity="0.30"/><stop offset="60%" stop-color="white" stop-opacity="0.06"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+      <clipPath id="dClip"><circle cx="512" cy="490" r="235"/></clipPath>
+    </defs>
+    <rect width="1024" height="1024" fill="url(#dBg)"/>
+    <rect width="1024" height="1024" fill="url(#dFr)"/>
+    <circle cx="512" cy="490" r="235" fill="#0c0a20" opacity="0.7"/>
+    <circle cx="512" cy="490" r="235" fill="url(#dDg)"/>
+    <g clip-path="url(#dClip)" opacity="0.92">
+      <rect x="340" y="380" width="180" height="14" rx="7" fill="#60a5fa"/>
+      <rect x="535" y="380" width="80" height="14" rx="7" fill="#94a3b8" opacity="0.4"/>
+      <rect x="370" y="414" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.35"/>
+      <rect x="445" y="414" width="200" height="14" rx="7" fill="#fb923c"/>
+      <rect x="340" y="448" width="120" height="14" rx="7" fill="#a78bfa"/>
+      <rect x="475" y="448" width="140" height="14" rx="7" fill="#e2e8f0" opacity="0.5"/>
+      <rect x="370" y="482" width="260" height="14" rx="7" fill="#34d399" opacity="0.8"/>
+      <rect x="340" y="516" width="90" height="14" rx="7" fill="#f472b6"/>
+      <rect x="445" y="516" width="50" height="14" rx="7" fill="#fbbf24" opacity="0.6"/>
+      <rect x="510" y="516" width="120" height="14" rx="7" fill="#e2e8f0" opacity="0.35"/>
+      <rect x="400" y="550" width="150" height="14" rx="7" fill="#60a5fa" opacity="0.7"/>
+      <rect x="565" y="550" width="70" height="14" rx="7" fill="#a78bfa" opacity="0.5"/>
+      <rect x="340" y="584" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.3"/>
+    </g>
+    <circle cx="512" cy="490" r="235" fill="url(#dDs)"/>
+    <circle cx="512" cy="490" r="234" fill="none" stroke="white" stroke-width="1.2" opacity="0.14"/>
+    <rect width="1024" height="1024" fill="url(#dSp)"/>
+  </svg>
+  <div class="placeholder"></div>
+  <div class="placeholder"></div>
+</div>
+
+<!-- Export -->
+<div class="actions">
+  <button onclick="exportPNG(1024)">Export 1024px PNG</button>
+  <button onclick="exportPNG(512)">Export 512px PNG</button>
+  <button onclick="exportSVG()">Export SVG</button>
+</div>
+<p class="note">The exported PNG is a full-bleed square — macOS will apply the squircle mask automatically. For Icon Composer, export the background layer and dot layer separately.</p>
+
+<script>
+function getIconSVGMarkup() {
+  // Build a standalone SVG string for the icon
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <linearGradient id="bgGrad" x1="6%" y1="6%" x2="94%" y2="94%"><stop offset="0%" stop-color="#1e1b4b"/><stop offset="100%" stop-color="#4338ca"/></linearGradient>
+    <linearGradient id="frostGrad" x1="50%" y1="0%" x2="50%" y2="100%"><stop offset="0%" stop-color="white" stop-opacity="0.10"/><stop offset="60%" stop-color="white" stop-opacity="0.03"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+    <radialGradient id="specular1" cx="36%" cy="30%" r="32%"><stop offset="0%" stop-color="white" stop-opacity="0.40"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+    <radialGradient id="specular2" cx="46%" cy="40%" r="22%"><stop offset="0%" stop-color="white" stop-opacity="0.16"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+    <linearGradient id="aoGrad" x1="50%" y1="70%" x2="50%" y2="100%"><stop offset="0%" stop-color="black" stop-opacity="0"/><stop offset="100%" stop-color="black" stop-opacity="0.06"/></linearGradient>
+    <radialGradient id="dotGlass" cx="42%" cy="38%" r="58%"><stop offset="0%" stop-color="#312e81" stop-opacity="0.2"/><stop offset="40%" stop-color="#1e1b4b" stop-opacity="0.6"/><stop offset="100%" stop-color="#0f0b2e" stop-opacity="0.85"/></radialGradient>
+    <radialGradient id="dotSpec" cx="38%" cy="32%" r="40%"><stop offset="0%" stop-color="white" stop-opacity="0.30"/><stop offset="60%" stop-color="white" stop-opacity="0.06"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient>
+    <radialGradient id="dotGlow" cx="50%" cy="50%" r="50%"><stop offset="70%" stop-color="#6366f1" stop-opacity="0"/><stop offset="95%" stop-color="#818cf8" stop-opacity="0.15"/><stop offset="100%" stop-color="#a5b4fc" stop-opacity="0.08"/></radialGradient>
+    <clipPath id="dotClip"><circle cx="512" cy="490" r="235"/></clipPath>
+    <radialGradient id="floorShadow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4338ca" stop-opacity="0.12"/><stop offset="100%" stop-color="#4338ca" stop-opacity="0"/></radialGradient>
+  </defs>
+  <ellipse cx="512" cy="810" rx="280" ry="18" fill="url(#floorShadow)"/>
+  <rect width="1024" height="1024" fill="url(#bgGrad)"/>
+  <rect width="1024" height="1024" fill="url(#frostGrad)"/>
+  <ellipse cx="512" cy="740" rx="200" ry="20" fill="black" opacity="0.12"/>
+  <circle cx="512" cy="490" r="235" fill="#0c0a20" opacity="0.7"/>
+  <circle cx="512" cy="490" r="235" fill="url(#dotGlass)"/>
+  <g clip-path="url(#dotClip)" opacity="0.92">
+    <rect x="340" y="380" width="180" height="14" rx="7" fill="#60a5fa"/><rect x="535" y="380" width="80" height="14" rx="7" fill="#94a3b8" opacity="0.4"/>
+    <rect x="370" y="414" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.35"/><rect x="445" y="414" width="200" height="14" rx="7" fill="#fb923c"/>
+    <rect x="340" y="448" width="120" height="14" rx="7" fill="#a78bfa"/><rect x="475" y="448" width="140" height="14" rx="7" fill="#e2e8f0" opacity="0.5"/>
+    <rect x="370" y="482" width="260" height="14" rx="7" fill="#34d399" opacity="0.8"/>
+    <rect x="340" y="516" width="90" height="14" rx="7" fill="#f472b6"/><rect x="445" y="516" width="50" height="14" rx="7" fill="#fbbf24" opacity="0.6"/><rect x="510" y="516" width="120" height="14" rx="7" fill="#e2e8f0" opacity="0.35"/>
+    <rect x="400" y="550" width="150" height="14" rx="7" fill="#60a5fa" opacity="0.7"/><rect x="565" y="550" width="70" height="14" rx="7" fill="#a78bfa" opacity="0.5"/>
+    <rect x="340" y="584" width="60" height="14" rx="7" fill="#94a3b8" opacity="0.3"/>
+  </g>
+  <circle cx="512" cy="490" r="235" fill="url(#dotGlow)"/>
+  <circle cx="512" cy="490" r="235" fill="url(#dotSpec)"/>
+  <circle cx="512" cy="490" r="234" fill="none" stroke="white" stroke-width="1.2" opacity="0.14"/>
+  <circle cx="512" cy="490" r="228" fill="none" stroke="white" stroke-width="0.6" opacity="0.06"/>
+  <rect width="1024" height="1024" fill="url(#specular1)"/>
+  <rect width="1024" height="1024" fill="url(#specular2)"/>
+  <circle cx="330" cy="260" r="28" fill="white" opacity="0.08"/>
+  <rect width="1024" height="1024" fill="url(#aoGrad)"/>
+  <rect x="0.5" y="0.5" width="1023" height="1023" rx="0" fill="none" stroke="white" stroke-width="0.8" opacity="0.08"/>
+</svg>`;
+}
+
+function exportPNG(size) {
+  const svgStr = getIconSVGMarkup();
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, size, size);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(pngBlob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(pngBlob);
+      a.download = `dotViewer-icon-${size}.png`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  };
+  img.src = url;
+}
+
+function exportSVG() {
+  const svgStr = getIconSVGMarkup();
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dotViewer-icon.svg';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// Render smaller previews by cloning the main SVG
+document.addEventListener('DOMContentLoaded', () => {
+  const svgStr = getIconSVGMarkup();
+  const sizes = [256, 128, 64, 32, 16];
+  const items = document.querySelectorAll('.size-item');
+  items.forEach((item, i) => {
+    const wrapper = item.querySelector('svg');
+    if (wrapper) wrapper.remove();
+    const div = document.createElement('div');
+    div.innerHTML = svgStr;
+    const svg = div.querySelector('svg');
+    svg.setAttribute('width', sizes[i]);
+    svg.setAttribute('height', sizes[i]);
+    item.prepend(svg);
+  });
+});
+</script>
+</body>
+</html>

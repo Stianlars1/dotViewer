@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotViewer Icon Lab (Codex Variant) (Codex Variant)</title>
+<style>
+:root {
+  --bg: #0f0f17;
+  --surface: #1a1a28;
+  --surface2: #22223a;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --text: #e8e8f0;
+  --text2: #888899;
+  --accent: #7c5cfc;
+  --accent2: #a78bfa;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif; background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: column; user-select: none; }
+
+/* Top Bar */
+.topbar { height: 52px; background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; gap: 16px; flex-shrink: 0; z-index: 10; }
+.topbar .logo { font-size: 15px; font-weight: 700; background: linear-gradient(135deg, #7c5cfc, #00c6ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.3px; }
+.topbar .sep { width: 1px; height: 24px; background: var(--border2); }
+.tab-group { display: flex; gap: 2px; background: rgba(255,255,255,0.04); border-radius: 8px; padding: 3px; }
+.tab-btn { padding: 6px 16px; border-radius: 6px; border: none; background: transparent; color: var(--text2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.tab-btn.active { background: var(--accent); color: white; }
+.tab-btn:hover:not(.active) { color: var(--text); background: rgba(255,255,255,0.06); }
+.topbar .spacer { flex: 1; }
+.export-btn { padding: 7px 18px; border-radius: 8px; border: 1px solid var(--accent); background: rgba(124,92,252,0.15); color: var(--accent2); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.export-btn:hover { background: var(--accent); color: white; }
+
+/* Main Layout */
+.main { flex: 1; display: flex; overflow: hidden; }
+.left-panel { width: 280px; border-right: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; background: var(--surface); }
+.center-panel { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; background: var(--bg); overflow: hidden; }
+.right-panel { width: 260px; border-left: 1px solid var(--border); overflow-y: auto; flex-shrink: 0; background: var(--surface); padding: 20px; }
+
+/* Left Panel: Gallery */
+.panel-header { padding: 16px 16px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
+.preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 12px 16px; }
+.preset-card { background: var(--surface2); border: 2px solid transparent; border-radius: 12px; cursor: pointer; transition: all 0.2s; overflow: hidden; position: relative; }
+.preset-card:hover { border-color: rgba(124,92,252,0.3); transform: translateY(-2px); }
+.preset-card.active { border-color: var(--accent); box-shadow: 0 0 20px rgba(124,92,252,0.2); }
+.preset-card svg { width: 100%; aspect-ratio: 1; display: block; }
+.preset-card .preset-name { font-size: 11px; font-weight: 500; text-align: center; padding: 6px 4px 8px; color: var(--text2); }
+.preset-card.active .preset-name { color: var(--accent2); }
+.preset-badge { position: absolute; top: 6px; right: 6px; font-size: 8px; font-weight: 600; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.preset-badge.apple { background: rgba(0,122,255,0.2); color: #5ac8fa; }
+.preset-badge.original { background: rgba(124,92,252,0.2); color: #a78bfa; }
+
+/* Filter Tabs */
+.filter-tabs { display: flex; gap: 4px; padding: 4px 12px 8px; }
+.filter-tab { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border2); background: transparent; color: var(--text2); font-size: 11px; font-weight: 500; cursor: pointer; transition: all 0.15s; font-family: inherit; }
+.filter-tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+.filter-tab:hover:not(.active) { border-color: var(--accent); color: var(--accent2); }
+.filter-count { font-size: 9px; opacity: 0.6; margin-left: 2px; }
+
+/* Left Panel: Assets */
+.asset-category { padding: 6px 16px; font-size: 11px; font-weight: 600; color: var(--accent2); }
+.asset-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; padding: 4px 12px 12px; }
+.asset-item { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; cursor: grab; transition: all 0.15s; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 4px; padding: 6px; }
+.asset-item:hover { border-color: var(--accent); background: rgba(124,92,252,0.08); transform: scale(1.05); }
+.asset-item:active { cursor: grabbing; transform: scale(0.95); }
+.asset-item svg { width: 36px; height: 36px; }
+.asset-item .aname { font-size: 8px; color: var(--text2); text-align: center; line-height: 1.2; }
+
+/* Canvas */
+.canvas-area { position: relative; }
+.canvas-wrap { width: 420px; height: 420px; position: relative; border-radius: 20px; }
+.canvas-bg { position: absolute; inset: -40px; background: radial-gradient(circle at center, rgba(124,92,252,0.06), transparent 70%); pointer-events: none; }
+#icon-canvas { width: 420px; height: 420px; cursor: default; filter: drop-shadow(0 12px 40px rgba(0,0,0,0.5)); }
+.canvas-size-label { position: absolute; bottom: -28px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--text2); }
+
+/* Right Panel */
+.prop-section { margin-bottom: 20px; }
+.prop-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2); margin-bottom: 10px; }
+.prop-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.prop-row label { font-size: 12px; color: var(--text2); width: 64px; flex-shrink: 0; }
+.prop-row input[type="range"] { flex: 1; accent-color: var(--accent); height: 4px; }
+.prop-row input[type="color"] { width: 32px; height: 28px; border: 1px solid var(--border2); border-radius: 6px; cursor: pointer; background: transparent; padding: 2px; }
+.prop-row .val { font-size: 11px; color: var(--text2); width: 36px; text-align: right; font-family: 'SF Mono', monospace; }
+.prop-row input[type="number"] { width: 56px; background: var(--surface2); border: 1px solid var(--border2); border-radius: 6px; color: var(--text); padding: 4px 6px; font-size: 12px; font-family: inherit; text-align: center; }
+.prop-row input[type="number"]:focus { outline: none; border-color: var(--accent); }
+.btn-row { display: flex; gap: 6px; margin-top: 12px; }
+.btn-sm { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border2); background: var(--surface2); color: var(--text2); font-size: 11px; font-weight: 500; cursor: pointer; font-family: inherit; transition: all 0.15s; flex: 1; text-align: center; }
+.btn-sm:hover { border-color: var(--accent); color: var(--accent2); }
+.btn-sm.danger:hover { border-color: #f43f5e; color: #f43f5e; }
+.empty-state { text-align: center; padding: 40px 20px; color: var(--text2); font-size: 13px; line-height: 1.6; }
+.empty-state .icon { font-size: 32px; margin-bottom: 12px; opacity: 0.4; }
+.sel-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-right: 6px; }
+.layer-list { display: flex; flex-direction: column; gap: 4px; }
+.layer-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--surface2); border: 1px solid transparent; border-radius: 6px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all 0.15s; }
+.layer-item:hover { border-color: var(--border2); }
+.layer-item.selected { border-color: var(--accent); color: var(--text); background: rgba(124,92,252,0.1); }
+.layer-item .li-icon { width: 20px; height: 20px; flex-shrink: 0; }
+.layer-item .li-name { flex: 1; }
+.layer-item .li-vis { opacity: 0.4; cursor: pointer; font-size: 14px; }
+.layer-item .li-vis:hover { opacity: 1; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Drag ghost */
+.drag-ghost { position: fixed; pointer-events: none; z-index: 1000; opacity: 0.8; }
+
+/* Minimap sizes */
+.size-strip { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: flex-end; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 20px; }
+.size-item { text-align: center; }
+.size-item svg { display: block; margin: 0 auto 4px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.size-item span { font-size: 9px; color: var(--text2); }
+
+/* Selection handles on canvas */
+.sel-rect { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 4 3; pointer-events: none; }
+.sel-handle { fill: var(--accent); stroke: white; stroke-width: 1.5; cursor: move; }
+
+/* Gradient angle vis */
+.angle-vis { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--border2); position: relative; margin: 8px auto; cursor: pointer; }
+.angle-line { position: absolute; top: 50%; left: 50%; width: 50%; height: 2px; background: var(--accent); transform-origin: left center; border-radius: 1px; }
+.angle-dot { position: absolute; width: 8px; height: 8px; background: white; border-radius: 50%; transform: translate(-50%, -50%); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">dotViewer Icon Lab</div>
+  <div class="sep"></div>
+  <div class="tab-group">
+    <button class="tab-btn active" onclick="setMode('gallery')">Gallery</button>
+    <button class="tab-btn" onclick="setMode('studio')">Studio</button>
+  </div>
+  <div class="spacer"></div>
+  <button class="export-btn" onclick="exportPNG()">Export PNG 1024px</button>
+  <button class="export-btn" onclick="exportSVG()" style="margin-left:4px">Export SVG</button>
+</div>
+
+<div class="main">
+  <div class="left-panel" id="leftPanel"></div>
+  <div class="center-panel">
+    <div class="canvas-bg"></div>
+    <div class="canvas-area">
+      <div class="canvas-wrap">
+        <svg id="icon-canvas" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <clipPath id="squircle-clip">
+              <path d="M256 0C354 0 400 0 434 18C462 33 480 50 494 78C512 112 512 158 512 256C512 354 512 400 494 434C480 462 462 480 434 494C400 512 354 512 256 512C158 512 112 512 78 494C50 480 33 462 18 434C0 400 0 354 0 256C0 158 0 112 18 78C33 50 50 33 78 18C112 0 158 0 256 0Z"/>
+            </clipPath>
+            <linearGradient id="bg-grad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3730a3"/><stop offset="100%" stop-color="#6366f1"/></linearGradient>
+            <linearGradient id="highlight-grad" x1="0.5" y1="0" x2="0.5" y2="1"><stop offset="0%" stop-color="white" stop-opacity="0.12"/><stop offset="100%" stop-color="white" stop-opacity="0"/></linearGradient>
+            <radialGradient id="lens-grad" cx="0.35" cy="0.35" r="0.65"><stop offset="0%" stop-color="white" stop-opacity="0.1"/><stop offset="100%" stop-color="black" stop-opacity="0.1"/></radialGradient>
+            <filter id="shadow1"><feDropShadow dx="0" dy="4" stdDeviation="10" flood-color="#000" flood-opacity="0.3"/></filter>
+            <filter id="glow1"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="glow2"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            <filter id="softshadow"><feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.18"/></filter>
+          </defs>
+          <g clip-path="url(#squircle-clip)" id="canvas-content"></g>
+          <g id="selection-overlay"></g>
+        </svg>
+      </div>
+    </div>
+    <div class="size-strip" id="sizeStrip"></div>
+  </div>
+  <div class="right-panel" id="rightPanel"></div>
+</div>
+
+<canvas id="export-canvas" width="1024" height="1024" style="display:none"></canvas>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const S = {
+  mode: 'gallery',
+  preset: 0,
+  elements: [],
+  selectedId: null,
+  bg: { c1: '#3730a3', c2: '#6366f1', angle: 145 },
+  nextId: 1,
+  dragging: null,
+  dragOffset: { x: 0, y: 0 },
+  galleryFilter: 'all'
+};
+
+// ============================================================
+// ASSET DEFINITIONS
+// ============================================================
+const ASSETS = [
+  // --- Lenses ---
+  { id: 'mag_bold', name: 'Magnifier Bold', cat: 'Lenses', w: 120, h: 120,
+    svg: c => `<circle cx="45" cy="45" r="38" stroke="${c}" stroke-width="9" fill="none"/><line x1="72" y1="72" x2="105" y2="105" stroke="${c}" stroke-width="9" stroke-linecap="round"/>` },
+  { id: 'mag_thin', name: 'Magnifier Thin', cat: 'Lenses', w: 120, h: 120,
+    svg: c => `<circle cx="45" cy="45" r="38" stroke="${c}" stroke-width="4" fill="none"/><line x1="72" y1="72" x2="105" y2="105" stroke="${c}" stroke-width="4" stroke-linecap="round"/>` },
+  { id: 'mag_filled', name: 'Magnifier Glass', cat: 'Lenses', w: 120, h: 120,
+    svg: c => `<circle cx="45" cy="45" r="38" stroke="${c}" stroke-width="7" fill="${c}" fill-opacity="0.1"/><ellipse cx="34" cy="34" rx="16" ry="9" fill="${c}" fill-opacity="0.12" transform="rotate(-20,34,34)"/><line x1="72" y1="72" x2="105" y2="105" stroke="${c}" stroke-width="7" stroke-linecap="round"/>` },
+  { id: 'eye_open', name: 'Eye Open', cat: 'Lenses', w: 100, h: 60,
+    svg: c => `<path d="M5 30C5 30 25 5 50 5C75 5 95 30 95 30C95 30 75 55 50 55C25 55 5 30 5 30Z" stroke="${c}" stroke-width="4" fill="none"/><circle cx="50" cy="30" r="12" stroke="${c}" stroke-width="3" fill="none"/><circle cx="50" cy="30" r="5" fill="${c}"/>` },
+  { id: 'eye_minimal', name: 'Eye Simple', cat: 'Lenses', w: 80, h: 50,
+    svg: c => `<path d="M4 25Q40 0 76 25Q40 50 4 25Z" stroke="${c}" stroke-width="3" fill="none"/><circle cx="40" cy="25" r="8" fill="${c}"/>` },
+  { id: 'lens_ring', name: 'Lens Ring', cat: 'Lenses', w: 80, h: 80,
+    svg: c => `<circle cx="40" cy="40" r="34" stroke="${c}" stroke-width="6" fill="none"/><circle cx="40" cy="40" r="22" stroke="${c}" stroke-width="2" fill="none" opacity="0.4"/>` },
+
+  // --- Brackets ---
+  { id: 'curly', name: 'Curly { }', cat: 'Brackets', w: 100, h: 80,
+    svg: c => `<text x="10" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">{</text><text x="58" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">}</text>` },
+  { id: 'angle', name: 'Angle < >', cat: 'Brackets', w: 100, h: 80,
+    svg: c => `<text x="5" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">&lt;</text><text x="55" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">&gt;</text>` },
+  { id: 'square', name: 'Square [ ]', cat: 'Brackets', w: 90, h: 80,
+    svg: c => `<text x="8" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">[</text><text x="50" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">]</text>` },
+  { id: 'tag', name: 'Tag < />', cat: 'Brackets', w: 110, h: 70,
+    svg: c => `<text x="5" y="54" font-family="SF Mono,Menlo,monospace" font-size="52" font-weight="300" fill="${c}">&lt;/&gt;</text>` },
+  { id: 'dbl_curly', name: 'Double {{ }}', cat: 'Brackets', w: 120, h: 80,
+    svg: c => `<text x="2" y="62" font-family="SF Mono,Menlo,monospace" font-size="48" font-weight="300" fill="${c}">{{</text><text x="66" y="62" font-family="SF Mono,Menlo,monospace" font-size="48" font-weight="300" fill="${c}">}}</text>` },
+  { id: 'parens', name: 'Parens ( )', cat: 'Brackets', w: 90, h: 80,
+    svg: c => `<text x="8" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">(</text><text x="50" y="62" font-family="SF Mono,Menlo,monospace" font-size="64" font-weight="300" fill="${c}">)</text>` },
+
+  // --- Characters ---
+  { id: 'dot_char', name: 'Dot .', cat: 'Characters', w: 40, h: 60,
+    svg: c => `<circle cx="20" cy="48" r="8" fill="${c}"/>` },
+  { id: 'dot_glow', name: 'Dot Glow', cat: 'Characters', w: 40, h: 40,
+    svg: c => `<circle cx="20" cy="20" r="12" fill="${c}" opacity="0.2" filter="url(#glow2)"/><circle cx="20" cy="20" r="6" fill="${c}"/>` },
+  { id: 'hash_char', name: 'Hash #', cat: 'Characters', w: 60, h: 70,
+    svg: c => `<text x="5" y="56" font-family="SF Mono,Menlo,monospace" font-size="60" font-weight="600" fill="${c}">#</text>` },
+  { id: 'arrow_fn', name: 'Arrow =>', cat: 'Characters', w: 80, h: 50,
+    svg: c => `<text x="5" y="40" font-family="SF Mono,Menlo,monospace" font-size="44" font-weight="400" fill="${c}">=&gt;</text>` },
+  { id: 'cursor', name: 'Cursor |', cat: 'Characters', w: 20, h: 70,
+    svg: c => `<rect x="7" y="4" width="3" height="60" rx="1.5" fill="${c}"/>` },
+  { id: 'semicolon', name: 'Semicolon ;', cat: 'Characters', w: 30, h: 60,
+    svg: c => `<text x="2" y="48" font-family="SF Mono,Menlo,monospace" font-size="52" font-weight="400" fill="${c}">;</text>` },
+  { id: 'slash', name: 'Slash /', cat: 'Characters', w: 40, h: 70,
+    svg: c => `<text x="2" y="56" font-family="SF Mono,Menlo,monospace" font-size="60" font-weight="300" fill="${c}">/</text>` },
+  { id: 'prompt', name: 'Prompt >_', cat: 'Characters', w: 90, h: 50,
+    svg: c => `<text x="4" y="38" font-family="SF Mono,Menlo,monospace" font-size="40" font-weight="500" fill="${c}">&gt;_</text>` },
+
+  // --- Code ---
+  { id: 'line1', name: 'Code Line', cat: 'Code', w: 100, h: 10,
+    svg: c => `<rect x="0" y="2" width="100" height="6" rx="3" fill="${c}"/>` },
+  { id: 'lines3', name: '3 Lines', cat: 'Code', w: 100, h: 40,
+    svg: c => `<rect x="0" y="2" width="65" height="5" rx="2.5" fill="${c}" opacity="0.7"/><rect x="8" y="14" width="85" height="5" rx="2.5" fill="${c}" opacity="0.7"/><rect x="8" y="26" width="55" height="5" rx="2.5" fill="${c}" opacity="0.7"/>` },
+  { id: 'lines5', name: '5 Lines', cat: 'Code', w: 100, h: 60,
+    svg: c => `<rect x="0" y="2" width="60" height="5" rx="2.5" fill="${c}" opacity="0.5"/><rect x="8" y="14" width="80" height="5" rx="2.5" fill="${c}" opacity="0.5"/><rect x="8" y="26" width="50" height="5" rx="2.5" fill="${c}" opacity="0.5"/><rect x="0" y="38" width="70" height="5" rx="2.5" fill="${c}" opacity="0.5"/><rect x="8" y="50" width="90" height="5" rx="2.5" fill="${c}" opacity="0.5"/>` },
+  { id: 'highlight_line', name: 'Highlight Line', cat: 'Code', w: 120, h: 14,
+    svg: c => `<rect x="0" y="2" width="120" height="10" rx="5" fill="${c}" filter="url(#glow1)"/>` },
+  { id: 'code_block', name: 'Code Block', cat: 'Code', w: 100, h: 80,
+    svg: c => `<rect x="0" y="2" width="50" height="4" rx="2" fill="${c}" opacity="0.5"/><rect x="10" y="14" width="70" height="4" rx="2" fill="${c}" opacity="0.5"/><rect x="10" y="26" width="45" height="4" rx="2" fill="${c}" opacity="0.5"/><rect x="20" y="38" width="60" height="4" rx="2" fill="${c}" opacity="0.8"/><rect x="20" y="50" width="40" height="4" rx="2" fill="${c}" opacity="0.5"/><rect x="10" y="62" width="55" height="4" rx="2" fill="${c}" opacity="0.5"/><rect x="0" y="74" width="35" height="4" rx="2" fill="${c}" opacity="0.5"/>` },
+
+  // --- Shapes ---
+  { id: 'doc_page', name: 'Document', cat: 'Shapes', w: 80, h: 100,
+    svg: c => `<path d="M4 8C4 4 6 2 10 2H56L76 22V92C76 96 74 98 70 98H10C6 98 4 96 4 92Z" stroke="${c}" stroke-width="3" fill="${c}" fill-opacity="0.08"/><path d="M56 2L76 22H60C58 22 56 20 56 18Z" fill="${c}" fill-opacity="0.15"/>` },
+  { id: 'window', name: 'Window', cat: 'Shapes', w: 100, h: 80,
+    svg: c => `<rect x="2" y="2" width="96" height="76" rx="8" stroke="${c}" stroke-width="3" fill="${c}" fill-opacity="0.06"/><line x1="2" y1="18" x2="98" y2="18" stroke="${c}" stroke-width="2" opacity="0.3"/><circle cx="14" cy="10" r="3" fill="${c}" opacity="0.5"/><circle cx="24" cy="10" r="3" fill="${c}" opacity="0.3"/><circle cx="34" cy="10" r="3" fill="${c}" opacity="0.3"/>` },
+  { id: 'hexagon', name: 'Hexagon', cat: 'Shapes', w: 80, h: 80,
+    svg: c => `<polygon points="40,4 72,22 72,58 40,76 8,58 8,22" stroke="${c}" stroke-width="3" fill="none"/>` },
+  { id: 'circle_shape', name: 'Circle', cat: 'Shapes', w: 60, h: 60,
+    svg: c => `<circle cx="30" cy="30" r="26" stroke="${c}" stroke-width="3" fill="none"/>` },
+  { id: 'rounded_sq', name: 'Rounded Sq', cat: 'Shapes', w: 60, h: 60,
+    svg: c => `<rect x="4" y="4" width="52" height="52" rx="12" stroke="${c}" stroke-width="3" fill="none"/>` },
+  { id: 'diamond', name: 'Diamond', cat: 'Shapes', w: 60, h: 60,
+    svg: c => `<rect x="4" y="4" width="40" height="40" rx="4" stroke="${c}" stroke-width="3" fill="none" transform="rotate(45,24,24) translate(6,6)"/>` },
+
+  // --- Effects ---
+  { id: 'sparkle', name: 'Sparkle', cat: 'Effects', w: 40, h: 40,
+    svg: c => `<path d="M20 2L23 15L36 12L25 20L36 28L23 25L20 38L17 25L4 28L15 20L4 12L17 15Z" fill="${c}" opacity="0.8"/>` },
+  { id: 'glow_blob', name: 'Glow', cat: 'Effects', w: 60, h: 60,
+    svg: c => `<circle cx="30" cy="30" r="20" fill="${c}" opacity="0.25" filter="url(#glow2)"/>` },
+  { id: 'scan_beam', name: 'Scan Beam', cat: 'Effects', w: 120, h: 16,
+    svg: c => `<rect x="0" y="4" width="120" height="8" rx="4" fill="${c}" opacity="0.6" filter="url(#glow1)"/>` },
+  { id: 'orbit_ring', name: 'Orbit', cat: 'Effects', w: 80, h: 80,
+    svg: c => `<ellipse cx="40" cy="40" rx="36" ry="14" stroke="${c}" stroke-width="2" fill="none" opacity="0.5" transform="rotate(-30,40,40)"/><ellipse cx="40" cy="40" rx="36" ry="14" stroke="${c}" stroke-width="2" fill="none" opacity="0.5" transform="rotate(30,40,40)"/>` },
+  { id: 'rays', name: 'Rays', cat: 'Effects', w: 80, h: 80,
+    svg: c => `<line x1="40" y1="2" x2="40" y2="16" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.5"/><line x1="40" y1="64" x2="40" y2="78" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.5"/><line x1="2" y1="40" x2="16" y2="40" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.5"/><line x1="64" y1="40" x2="78" y2="40" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.5"/><line x1="13" y1="13" x2="23" y2="23" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><line x1="57" y1="57" x2="67" y2="67" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><line x1="67" y1="13" x2="57" y2="23" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.3"/><line x1="23" y1="57" x2="13" y2="67" stroke="${c}" stroke-width="2" stroke-linecap="round" opacity="0.3"/>` },
+
+  // ===============================================
+  // APPLE GLASS ASSETS (new)
+  // ===============================================
+  { id: 'glass_sphere', name: 'Glass Sphere', cat: 'Apple Glass', w: 80, h: 84,
+    svg: c => `<ellipse cx="40" cy="68" rx="28" ry="6" fill="${c}" opacity="0.08"/><circle cx="40" cy="40" r="36" fill="${c}"/><ellipse cx="30" cy="28" rx="16" ry="9" fill="white" opacity="0.35" transform="rotate(-15,30,28)"/><ellipse cx="48" cy="52" rx="10" ry="6" fill="black" opacity="0.06"/>` },
+  { id: 'glass_cloud', name: 'Glass Cloud', cat: 'Apple Glass', w: 100, h: 70,
+    svg: c => `<ellipse cx="50" cy="60" rx="38" ry="6" fill="${c}" opacity="0.06"/><ellipse cx="36" cy="42" rx="24" ry="22" fill="${c}"/><ellipse cx="62" cy="38" rx="28" ry="26" fill="${c}"/><ellipse cx="50" cy="28" rx="20" ry="18" fill="${c}"/><rect x="14" y="42" width="72" height="18" rx="0" fill="${c}"/><ellipse cx="40" cy="22" rx="14" ry="8" fill="white" opacity="0.3"/><ellipse cx="58" cy="25" rx="10" ry="6" fill="white" opacity="0.2"/>` },
+  { id: 'glass_mag', name: 'Glass Loupe', cat: 'Apple Glass', w: 120, h: 120,
+    svg: c => `<line x1="74" y1="74" x2="108" y2="108" stroke="${c}" stroke-width="12" stroke-linecap="round"/><circle cx="48" cy="48" r="42" fill="${c}"/><circle cx="48" cy="48" r="32" fill="white" fill-opacity="0.15"/><ellipse cx="38" cy="36" rx="16" ry="10" fill="white" opacity="0.3" transform="rotate(-15,38,36)"/>` },
+  { id: 'glass_hex', name: 'Glass Hex', cat: 'Apple Glass', w: 80, h: 80,
+    svg: c => `<polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="${c}"/><polygon points="40,10 66,25 66,55 40,70 14,55 14,25" fill="white" opacity="0.08"/><ellipse cx="34" cy="28" rx="14" ry="8" fill="white" opacity="0.25" transform="rotate(-10,34,28)"/>` },
+  { id: 'glass_doc', name: 'Glass Doc', cat: 'Apple Glass', w: 80, h: 100,
+    svg: c => `<path d="M4 10C4 4 8 2 12 2H56L76 22V90C76 96 72 98 68 98H12C8 98 4 96 4 90Z" fill="${c}"/><path d="M56 2L76 22H62C58 22 56 18 56 14Z" fill="white" fill-opacity="0.2"/><ellipse cx="40" cy="16" rx="24" ry="10" fill="white" opacity="0.2"/><rect x="16" y="36" width="36" height="4" rx="2" fill="white" opacity="0.25"/><rect x="16" y="46" width="46" height="4" rx="2" fill="white" opacity="0.25"/><rect x="16" y="56" width="28" height="4" rx="2" fill="white" opacity="0.25"/>` },
+  { id: 'glass_circle_fill', name: 'Glass Circle', cat: 'Apple Glass', w: 80, h: 84,
+    svg: c => `<ellipse cx="40" cy="68" rx="26" ry="5" fill="${c}" opacity="0.06"/><circle cx="40" cy="40" r="36" fill="${c}"/><ellipse cx="32" cy="28" rx="14" ry="8" fill="white" opacity="0.3" transform="rotate(-12,32,28)"/>` },
+  { id: 'glass_pill', name: 'Glass Pill', cat: 'Apple Glass', w: 100, h: 40,
+    svg: c => `<rect x="2" y="2" width="96" height="36" rx="18" fill="${c}"/><ellipse cx="34" cy="14" rx="20" ry="6" fill="white" opacity="0.25"/><circle cx="74" cy="20" r="12" fill="white" fill-opacity="0.9"/><ellipse cx="72" cy="17" rx="5" ry="3" fill="white" opacity="0.3"/>` },
+  { id: 'glass_pill_off', name: 'Glass Pill Off', cat: 'Apple Glass', w: 100, h: 40,
+    svg: c => `<rect x="2" y="2" width="96" height="36" rx="18" fill="${c}" opacity="0.35"/><ellipse cx="60" cy="14" rx="20" ry="6" fill="white" opacity="0.15"/><circle cx="26" cy="20" r="12" fill="white" fill-opacity="0.9"/><ellipse cx="24" cy="17" rx="5" ry="3" fill="white" opacity="0.3"/>` },
+  { id: 'glass_window', name: 'Glass Window', cat: 'Apple Glass', w: 100, h: 80,
+    svg: c => `<rect x="2" y="2" width="96" height="76" rx="10" fill="${c}"/><rect x="2" y="2" width="96" height="18" rx="10" fill="white" fill-opacity="0.12"/><circle cx="14" cy="11" r="3.5" fill="${c}" opacity="0.6"/><circle cx="24" cy="11" r="3.5" fill="${c}" opacity="0.4"/><circle cx="34" cy="11" r="3.5" fill="${c}" opacity="0.4"/><ellipse cx="50" cy="8" rx="30" ry="6" fill="white" opacity="0.1"/>` },
+  { id: 'petal', name: 'Petal', cat: 'Apple Glass', w: 40, h: 60,
+    svg: c => `<ellipse cx="20" cy="30" rx="16" ry="26" fill="${c}" transform="rotate(0,20,30)"/><ellipse cx="16" cy="20" rx="6" ry="10" fill="white" opacity="0.25"/>` },
+  { id: 'chevron_r', name: 'Chevron >', cat: 'Apple Glass', w: 40, h: 50,
+    svg: c => `<polyline points="10,5 32,25 10,45" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>` },
+  { id: 'dash_line', name: 'Dash', cat: 'Apple Glass', w: 50, h: 10,
+    svg: c => `<rect x="2" y="2" width="46" height="6" rx="3" fill="${c}"/>` },
+  { id: 'concentric', name: 'Rings', cat: 'Apple Glass', w: 80, h: 80,
+    svg: c => `<circle cx="40" cy="40" r="36" stroke="${c}" stroke-width="2" fill="none" opacity="0.2"/><circle cx="40" cy="40" r="26" stroke="${c}" stroke-width="2.5" fill="none" opacity="0.4"/><circle cx="40" cy="40" r="16" stroke="${c}" stroke-width="3" fill="none" opacity="0.6"/><circle cx="40" cy="40" r="5" fill="${c}"/>` },
+  { id: 'dot_large', name: 'Big Dot', cat: 'Apple Glass', w: 60, h: 60,
+    svg: c => `<circle cx="30" cy="30" r="26" fill="${c}"/><ellipse cx="24" cy="22" rx="10" ry="7" fill="white" opacity="0.3"/>` },
+
+  // --- Apple Templates (clone-ready scene assets) ---
+  { id: 'clone_inspector', name: 'Template Inspector', cat: 'Apple Templates', w: 120, h: 120,
+    svg: c => `<g><rect x="18" y="66" width="36" height="4" rx="2" fill="${c}" opacity="0.25"/><rect x="22" y="74" width="48" height="4" rx="2" fill="${c}" opacity="0.25"/><rect x="22" y="82" width="36" height="4" rx="2" fill="${c}" opacity="0.25"/><circle cx="56" cy="56" r="30" stroke="${c}" stroke-width="6" fill="none"/><circle cx="56" cy="56" r="24" fill="${c}" fill-opacity="0.08"/><line x1="77" y1="77" x2="100" y2="100" stroke="${c}" stroke-width="7" stroke-linecap="round"/></g>` },
+  { id: 'clone_dot_lens', name: 'Template Dot Lens', cat: 'Apple Templates', w: 120, h: 120,
+    svg: c => `<g><circle cx="56" cy="56" r="32" stroke="${c}" stroke-width="7" fill="none"/><circle cx="56" cy="56" r="25" fill="${c}" fill-opacity="0.08"/><circle cx="56" cy="56" r="10" fill="${c}"/><line x1="78" y1="78" x2="102" y2="102" stroke="${c}" stroke-width="8" stroke-linecap="round"/></g>` },
+  { id: 'clone_code_brackets', name: 'Template Brackets', cat: 'Apple Templates', w: 120, h: 120,
+    svg: c => `<g><text x="18" y="86" font-family="SF Mono,Menlo,monospace" font-size="74" font-weight="300" fill="${c}" opacity="0.78">{</text><text x="66" y="86" font-family="SF Mono,Menlo,monospace" font-size="74" font-weight="300" fill="${c}" opacity="0.78">}</text><circle cx="60" cy="62" r="11" fill="${c}"/></g>` },
+  { id: 'clone_document_eye', name: 'Template Doc Eye', cat: 'Apple Templates', w: 120, h: 120,
+    svg: c => `<g><rect x="28" y="12" width="64" height="86" rx="8" fill="${c}" fill-opacity="0.2" stroke="${c}" stroke-opacity="0.5" stroke-width="2"/><path d="M78 12 L92 12 L92 26 Z" fill="${c}" opacity="0.25"/><rect x="38" y="34" width="32" height="3" rx="1.5" fill="${c}" opacity="0.35"/><rect x="38" y="42" width="40" height="3" rx="1.5" fill="${c}" opacity="0.3"/><path d="M34 86 Q60 68 86 86 Q60 104 34 86Z" fill="white" fill-opacity="0.88" stroke="${c}" stroke-width="2.5"/><circle cx="60" cy="86" r="7" fill="${c}"/></g>` },
+];
+
+// ============================================================
+// PRESET DEFINITIONS
+// ============================================================
+const PRESETS = [
+  // ---- ORIGINAL PRESETS ----
+  { name: 'Code Inspector', group: 'original', bg: { c1:'#3730a3', c2:'#6366f1', angle:145 }, els: [
+    { type:'lines5', x:80, y:100, scale:3.5, opacity:0.07, color:'#ffffff', rot:0 },
+    { type:'mag_filled', x:196, y:196, scale:2.0, opacity:1, color:'#ffffffee', rot:0 },
+    { type:'lines3', x:222, y:236, scale:1.0, opacity:0.6, color:'#ffffff', rot:0 },
+    { type:'highlight_line', x:218, y:248, scale:0.7, opacity:0.85, color:'#a78bfa', rot:0 },
+  ]},
+  { name: 'Dot Lens', group: 'original', bg: { c1:'#4a3fb8', c2:'#7c5ce7', angle:145 }, els: [
+    { type:'mag_filled', x:172, y:178, scale:2.4, opacity:1, color:'#ffffffea', rot:0 },
+    { type:'dot_char', x:236, y:220, scale:2.5, opacity:0.95, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Curly Dot', group: 'original', bg: { c1:'#1e1b4b', c2:'#312e81', angle:145 }, els: [
+    { type:'curly', x:152, y:196, scale:2.0, opacity:0.7, color:'#ffffff', rot:0 },
+    { type:'dot_glow', x:240, y:260, scale:1.8, opacity:1, color:'#a78bfa', rot:0 },
+  ]},
+  { name: 'Document Eye', group: 'original', bg: { c1:'#2d3a8c', c2:'#4f46e5', angle:145 }, els: [
+    { type:'doc_page', x:196, y:160, scale:1.8, opacity:0.95, color:'#ffffffee', rot:0 },
+    { type:'lines3', x:220, y:200, scale:0.8, opacity:0.3, color:'#4f46e5', rot:0 },
+    { type:'eye_open', x:200, y:280, scale:1.0, opacity:0.9, color:'#4f46e5', rot:0 },
+  ]},
+  { name: 'Terminal', group: 'original', bg: { c1:'#0c0c14', c2:'#1a1a2e', angle:170 }, els: [
+    { type:'window', x:156, y:156, scale:2.2, opacity:0.6, color:'#4ade80', rot:0 },
+    { type:'prompt', x:200, y:270, scale:1.8, opacity:0.95, color:'#4ade80', rot:0 },
+    { type:'dot_glow', x:305, y:280, scale:1.2, opacity:0.8, color:'#4ade80', rot:0 },
+  ]},
+  { name: 'Angle Tag', group: 'original', bg: { c1:'#0d4f6b', c2:'#0891b2', angle:145 }, els: [
+    { type:'tag', x:168, y:206, scale:2.0, opacity:0.9, color:'#ffffff', rot:0 },
+    { type:'dot_glow', x:248, y:256, scale:1.5, opacity:0.8, color:'#67e8f9', rot:0 },
+  ]},
+  { name: 'Scan Line', group: 'original', bg: { c1:'#1e1b4b', c2:'#2d2a6e', angle:170 }, els: [
+    { type:'code_block', x:166, y:166, scale:2.2, opacity:0.25, color:'#ffffff', rot:0 },
+    { type:'scan_beam', x:156, y:258, scale:2.2, opacity:0.7, color:'#60a5fa', rot:0 },
+    { type:'highlight_line', x:180, y:258, scale:1.5, opacity:0.9, color:'#60a5fa', rot:0 },
+  ]},
+  { name: 'Window View', group: 'original', bg: { c1:'#334155', c2:'#64748b', angle:145 }, els: [
+    { type:'window', x:146, y:156, scale:2.6, opacity:0.95, color:'#ffffff', rot:0 },
+    { type:'lines5', x:182, y:230, scale:1.8, opacity:0.6, color:'#ffffff', rot:0 },
+    { type:'highlight_line', x:188, y:258, scale:0.9, opacity:0.9, color:'#38bdf8', rot:0 },
+  ]},
+  { name: 'Dot Matrix', group: 'original', bg: { c1:'#0f172a', c2:'#1e293b', angle:145 }, els: [
+    { type:'dot_char', x:160, y:175, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:205, y:175, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:250, y:175, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:295, y:175, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:160, y:220, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:205, y:220, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_glow', x:241, y:234, scale:2.0, opacity:1.0, color:'#a78bfa', rot:0 },
+    { type:'dot_char', x:295, y:220, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:160, y:265, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:205, y:265, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:250, y:265, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+    { type:'dot_char', x:295, y:265, scale:1.0, opacity:0.15, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Orbital', group: 'original', bg: { c1:'#2e1065', c2:'#581c87', angle:145 }, els: [
+    { type:'orbit_ring', x:196, y:196, scale:2.6, opacity:0.5, color:'#c084fc', rot:0 },
+    { type:'dot_glow', x:240, y:240, scale:3.0, opacity:1.0, color:'#e9d5ff', rot:0 },
+  ]},
+  { name: 'Hex Viewer', group: 'original', bg: { c1:'#1a1a2e', c2:'#2d2a6e', angle:145 }, els: [
+    { type:'hexagon', x:186, y:186, scale:2.2, opacity:0.8, color:'#818cf8', rot:0 },
+    { type:'eye_minimal', x:210, y:230, scale:1.4, opacity:0.9, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Nested Curly', group: 'original', bg: { c1:'#312e81', c2:'#4338ca', angle:145 }, els: [
+    { type:'dbl_curly', x:148, y:196, scale:2.2, opacity:0.35, color:'#ffffff', rot:0 },
+    { type:'curly', x:184, y:202, scale:1.8, opacity:0.8, color:'#ffffff', rot:0 },
+    { type:'dot_glow', x:242, y:262, scale:1.5, opacity:1, color:'#c4b5fd', rot:0 },
+  ]},
+  { name: 'Cursor Blink', group: 'original', bg: { c1:'#18181b', c2:'#27272a', angle:170 }, els: [
+    { type:'lines3', x:160, y:216, scale:2.0, opacity:0.2, color:'#ffffff', rot:0 },
+    { type:'cursor', x:260, y:226, scale:1.6, opacity:0.9, color:'#f59e0b', rot:0 },
+    { type:'dot_char', x:252, y:238, scale:1.5, opacity:0.9, color:'#f59e0b', rot:0 },
+  ]},
+  { name: 'Prism', group: 'original', bg: { c1:'#1e1b4b', c2:'#3730a3', angle:145 }, els: [
+    { type:'diamond', x:200, y:200, scale:3.0, opacity:0.7, color:'#ffffff', rot:0 },
+    { type:'line1', x:140, y:255, scale:1.0, opacity:0.7, color:'#f87171', rot:0 },
+    { type:'line1', x:145, y:268, scale:0.8, opacity:0.7, color:'#fbbf24', rot:0 },
+    { type:'line1', x:150, y:279, scale:0.6, opacity:0.7, color:'#34d399', rot:0 },
+    { type:'line1', x:155, y:288, scale:0.5, opacity:0.7, color:'#60a5fa', rot:0 },
+    { type:'sparkle', x:244, y:218, scale:0.8, opacity:0.6, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Radar Scope', group: 'original', bg: { c1:'#022c22', c2:'#064e3b', angle:145 }, els: [
+    { type:'lens_ring', x:176, y:176, scale:2.4, opacity:0.5, color:'#34d399', rot:0 },
+    { type:'circle_shape', x:196, y:196, scale:2.0, opacity:0.3, color:'#34d399', rot:0 },
+    { type:'dot_glow', x:270, y:220, scale:1.5, opacity:1, color:'#4ade80', rot:0 },
+    { type:'line1', x:239, y:238, scale:0.8, opacity:0.5, color:'#4ade80', rot:-50 },
+  ]},
+  { name: 'Clean Mono', group: 'original', bg: { c1:'#f8fafc', c2:'#e2e8f0', angle:145 }, els: [
+    { type:'mag_thin', x:196, y:196, scale:2.2, opacity:1, color:'#1e293b', rot:0 },
+    { type:'lines3', x:222, y:236, scale:0.9, opacity:0.4, color:'#1e293b', rot:0 },
+    { type:'highlight_line', x:222, y:248, scale:0.6, opacity:0.8, color:'#6366f1', rot:0 },
+  ]},
+  { name: 'Gradient Bracket', group: 'original', bg: { c1:'#0f0f17', c2:'#1a1a2e', angle:170 }, els: [
+    { type:'curly', x:140, y:190, scale:2.6, opacity:0.9, color:'#f472b6', rot:0 },
+    { type:'lines3', x:226, y:240, scale:1.0, opacity:0.5, color:'#818cf8', rot:0 },
+    { type:'dot_glow', x:250, y:260, scale:1.5, opacity:1, color:'#c084fc', rot:0 },
+  ]},
+  { name: 'Focus Ring', group: 'original', bg: { c1:'#1e3a5f', c2:'#3b82f6', angle:145 }, els: [
+    { type:'lens_ring', x:176, y:176, scale:2.4, opacity:0.85, color:'#ffffff', rot:0 },
+    { type:'code_block', x:198, y:208, scale:1.2, opacity:0.6, color:'#ffffff', rot:0 },
+    { type:'sparkle', x:310, y:180, scale:0.8, opacity:0.5, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Hash Inspector', group: 'original', bg: { c1:'#4a1d96', c2:'#7e22ce', angle:145 }, els: [
+    { type:'mag_bold', x:180, y:180, scale:2.2, opacity:0.9, color:'#ffffffdd', rot:0 },
+    { type:'hash_char', x:226, y:222, scale:1.2, opacity:0.85, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Arrow Function', group: 'original', bg: { c1:'#312e81', c2:'#6366f1', angle:135 }, els: [
+    { type:'rounded_sq', x:176, y:176, scale:3.0, opacity:0.3, color:'#ffffff', rot:0 },
+    { type:'arrow_fn', x:206, y:238, scale:1.6, opacity:0.9, color:'#ffffff', rot:0 },
+    { type:'dot_glow', x:310, y:254, scale:1.2, opacity:0.7, color:'#a78bfa', rot:0 },
+  ]},
+
+  // ============================================================
+  // APPLE STYLE PRESETS
+  // ============================================================
+
+  // 1. Preview Style - Blue bg, 3D glass magnifier (like Preview app)
+  { name: 'Preview Loupe', group: 'apple', bg: { c1:'#4a90d9', c2:'#74b9ff', angle:160 }, els: [
+    { type:'glass_mag', x:156, y:148, scale:2.6, opacity:1, color:'#2563eb', rot:0 },
+    { type:'lines3', x:196, y:210, scale:1.0, opacity:0.35, color:'#ffffff', rot:0 },
+  ]},
+  // 2. iCloud Code - White bg, blue glass cloud with bracket
+  { name: 'iCode Cloud', group: 'apple', bg: { c1:'#f8f9fa', c2:'#e9ecef', angle:170 }, els: [
+    { type:'glass_cloud', x:156, y:176, scale:2.4, opacity:1, color:'#42a5f5', rot:0 },
+    { type:'curly', x:192, y:214, scale:1.2, opacity:0.9, color:'#ffffff', rot:0 },
+  ]},
+  // 3. Shazam Dot - Blue gradient, white circle with dot (like Shazam)
+  { name: 'Signal Dot', group: 'apple', bg: { c1:'#1565c0', c2:'#42a5f5', angle:160 }, els: [
+    { type:'glass_circle_fill', x:168, y:168, scale:2.4, opacity:1, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:214, y:214, scale:1.2, opacity:0.9, color:'#1565c0', rot:0 },
+  ]},
+  // 4. Color Orbs - White bg, overlapping colored glass circles
+  { name: 'Color Orbs', group: 'apple', bg: { c1:'#f8f9fa', c2:'#e9ecef', angle:145 }, els: [
+    { type:'glass_sphere', x:140, y:150, scale:2.2, opacity:0.8, color:'#ff6b6b', rot:0 },
+    { type:'glass_sphere', x:210, y:140, scale:1.8, opacity:0.8, color:'#ffa726', rot:0 },
+    { type:'glass_sphere', x:230, y:220, scale:1.6, opacity:0.85, color:'#42a5f5', rot:0 },
+    { type:'dot_large', x:200, y:224, scale:0.5, opacity:0.7, color:'#7c4dff', rot:0 },
+  ]},
+  // 5. Code Petals - White bg, colored dots in flower pattern (like Photos)
+  { name: 'Code Petals', group: 'apple', bg: { c1:'#fafafa', c2:'#f0f0f5', angle:170 }, els: [
+    { type:'petal', x:238, y:140, scale:2.0, opacity:0.85, color:'#ff9500', rot:0 },
+    { type:'petal', x:282, y:172, scale:2.0, opacity:0.85, color:'#ff3b30', rot:60 },
+    { type:'petal', x:282, y:232, scale:2.0, opacity:0.85, color:'#af52de', rot:120 },
+    { type:'petal', x:238, y:264, scale:2.0, opacity:0.85, color:'#007aff', rot:180 },
+    { type:'petal', x:192, y:232, scale:2.0, opacity:0.85, color:'#34c759', rot:240 },
+    { type:'petal', x:192, y:172, scale:2.0, opacity:0.85, color:'#ffcc00', rot:300 },
+  ]},
+  // 6. Hex Grid - White bg, colored glass hexagons (like Color hexagons app)
+  { name: 'Hex Grid', group: 'apple', bg: { c1:'#f8f9fa', c2:'#eff1f5', angle:145 }, els: [
+    { type:'glass_hex', x:186, y:132, scale:1.2, opacity:0.9, color:'#ffa726', rot:0 },
+    { type:'glass_hex', x:256, y:132, scale:1.2, opacity:0.9, color:'#ef5350', rot:0 },
+    { type:'glass_hex', x:152, y:200, scale:1.2, opacity:0.9, color:'#66bb6a', rot:0 },
+    { type:'glass_hex', x:222, y:200, scale:1.2, opacity:0.85, color:'#e0e0e0', rot:0 },
+    { type:'glass_hex', x:292, y:200, scale:1.2, opacity:0.9, color:'#ec407a', rot:0 },
+    { type:'glass_hex', x:186, y:268, scale:1.2, opacity:0.9, color:'#5c6bc0', rot:0 },
+    { type:'glass_hex', x:256, y:268, scale:1.2, opacity:0.9, color:'#ab47bc', rot:0 },
+  ]},
+  // 7. Dark Console - Near-black bg, amber glowing text (like Console app)
+  { name: 'Dark Console', group: 'apple', bg: { c1:'#1a1a1a', c2:'#252525', angle:170 }, els: [
+    { type:'lines5', x:120, y:160, scale:2.8, opacity:0.15, color:'#ffa000', rot:0 },
+    { type:'highlight_line', x:140, y:230, scale:1.6, opacity:0.9, color:'#ffc107', rot:0 },
+    { type:'highlight_line', x:160, y:258, scale:1.2, opacity:0.6, color:'#ffa000', rot:0 },
+    { type:'dot_glow', x:310, y:248, scale:1.0, opacity:0.8, color:'#ffc107', rot:0 },
+  ]},
+  // 8. Cloud Terminal - White bg, purple cloud with prompt (like Terminal cloud)
+  { name: 'Cloud Shell', group: 'apple', bg: { c1:'#f8f9fa', c2:'#eef0f5', angle:170 }, els: [
+    { type:'glass_cloud', x:146, y:166, scale:2.6, opacity:1, color:'#7c5cfc', rot:0 },
+    { type:'chevron_r', x:218, y:228, scale:1.6, opacity:0.9, color:'#ffffff', rot:0 },
+    { type:'dash_line', x:254, y:244, scale:1.4, opacity:0.8, color:'#ffffff', rot:0 },
+  ]},
+  // 9. Finder Blue - Blue gradient, white silhouette (like Finder)
+  { name: 'Finder Style', group: 'apple', bg: { c1:'#2196f3', c2:'#00bcd4', angle:170 }, els: [
+    { type:'glass_mag', x:148, y:140, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+  ]},
+  // 10. Settings Toggle - White bg, toggle switches (like Settings)
+  { name: 'Toggle View', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e8e8ed', angle:170 }, els: [
+    { type:'glass_pill_off', x:166, y:184, scale:1.8, opacity:1, color:'#8e8e93', rot:0 },
+    { type:'glass_pill', x:166, y:268, scale:1.8, opacity:1, color:'#007aff', rot:0 },
+  ]},
+  // 11. GitHub Purple - Purple bg, white magnifier silhouette
+  { name: 'Purple Scope', group: 'apple', bg: { c1:'#7b1fa2', c2:'#9c27b0', angle:145 }, els: [
+    { type:'glass_mag', x:152, y:144, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:218, y:218, scale:0.8, opacity:0.6, color:'#e1bee7', rot:0 },
+  ]},
+  // 12. Glass Document - White bg, blue frosted document
+  { name: 'Glass Document', group: 'apple', bg: { c1:'#f8f9fa', c2:'#e8ecf0', angle:160 }, els: [
+    { type:'glass_doc', x:186, y:148, scale:2.0, opacity:1, color:'#42a5f5', rot:0 },
+    { type:'dot_large', x:230, y:310, scale:0.7, opacity:0.7, color:'#1976d2', rot:0 },
+  ]},
+  // 13. Keynote Style - Blue-purple gradient, window with code
+  { name: 'Keynote Code', group: 'apple', bg: { c1:'#5c6bc0', c2:'#42a5f5', angle:150 }, els: [
+    { type:'glass_window', x:146, y:148, scale:2.4, opacity:0.9, color:'#bbdefb', rot:0 },
+    { type:'lines3', x:186, y:218, scale:1.4, opacity:0.5, color:'#ffffff', rot:0 },
+    { type:'highlight_line', x:188, y:238, scale:0.8, opacity:0.8, color:'#ffffff', rot:0 },
+  ]},
+  // 14. Minimal Blue Mag - White bg, solid blue magnifier
+  { name: 'Clean Blue', group: 'apple', bg: { c1:'#f8f9fa', c2:'#e8ecf0', angle:170 }, els: [
+    { type:'glass_mag', x:156, y:148, scale:2.6, opacity:1, color:'#007aff', rot:0 },
+  ]},
+  // 15. Signal Rings - White bg, concentric rings with dot
+  { name: 'Dot Signal', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e8e8ed', angle:145 }, els: [
+    { type:'concentric', x:176, y:176, scale:2.4, opacity:1, color:'#007aff', rot:0 },
+  ]},
+  // 16. Frosted Card - White bg, glass card with code
+  { name: 'Frosted Card', group: 'apple', bg: { c1:'#f0f2f5', c2:'#dde1e8', angle:155 }, els: [
+    { type:'glass_window', x:146, y:156, scale:2.5, opacity:1, color:'#90caf9', rot:0 },
+    { type:'code_block', x:182, y:216, scale:1.2, opacity:0.5, color:'#1565c0', rot:0 },
+  ]},
+  // 17. Aqua Magnifier - Cyan-teal gradient, white glass magnifier
+  { name: 'Aqua Scope', group: 'apple', bg: { c1:'#00838f', c2:'#4dd0e1', angle:155 }, els: [
+    { type:'glass_mag', x:152, y:144, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+    { type:'lines3', x:194, y:208, scale:1.0, opacity:0.4, color:'#ffffff', rot:0 },
+    { type:'highlight_line', x:194, y:222, scale:0.65, opacity:0.7, color:'#b2ebf2', rot:0 },
+  ]},
+  // 18. Indigo Glass - Deep indigo bg, glass sphere + brackets
+  { name: 'Indigo Glass', group: 'apple', bg: { c1:'#283593', c2:'#5c6bc0', angle:150 }, els: [
+    { type:'glass_circle_fill', x:168, y:168, scale:2.4, opacity:0.9, color:'#c5cae9', rot:0 },
+    { type:'curly', x:194, y:208, scale:1.4, opacity:0.85, color:'#283593', rot:0 },
+  ]},
+  // 19. Neon Bracket - Dark bg with vivid neon brackets
+  { name: 'Neon Code', group: 'apple', bg: { c1:'#0d0d0d', c2:'#1a1a2e', angle:170 }, els: [
+    { type:'curly', x:148, y:192, scale:2.2, opacity:0.9, color:'#00e5ff', rot:0 },
+    { type:'dot_glow', x:246, y:258, scale:2.0, opacity:1, color:'#00e5ff', rot:0 },
+    { type:'lines3', x:210, y:234, scale:0.8, opacity:0.3, color:'#00e5ff', rot:0 },
+  ]},
+  // 20. Warm Cloud - White bg, orange-pink cloud
+  { name: 'Warm Cloud', group: 'apple', bg: { c1:'#fafafa', c2:'#f5f0f0', angle:155 }, els: [
+    { type:'glass_cloud', x:148, y:170, scale:2.6, opacity:1, color:'#ff7043', rot:0 },
+    { type:'dot_large', x:236, y:234, scale:0.9, opacity:0.8, color:'#ffffff', rot:0 },
+  ]},
+  // 21. Sunset Loupe - Warm gradient, glass magnifier
+  { name: 'Sunset Scope', group: 'apple', bg: { c1:'#e65100', c2:'#ff9800', angle:145 }, els: [
+    { type:'glass_mag', x:152, y:144, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+    { type:'lines3', x:194, y:208, scale:1.0, opacity:0.35, color:'#ffffff', rot:0 },
+  ]},
+  // 22. Midnight Blue - Very dark blue, subtle magnifier
+  { name: 'Midnight Blue', group: 'apple', bg: { c1:'#0d1b2a', c2:'#1b2838', angle:170 }, els: [
+    { type:'glass_mag', x:152, y:144, scale:2.8, opacity:0.85, color:'#4fc3f7', rot:0 },
+    { type:'highlight_line', x:190, y:226, scale:0.7, opacity:0.7, color:'#4fc3f7', rot:0 },
+  ]},
+  // 23. Rose Glass - Pink gradient, glass magnifier
+  { name: 'Rose Glass', group: 'apple', bg: { c1:'#c2185b', c2:'#f06292', angle:145 }, els: [
+    { type:'glass_mag', x:156, y:148, scale:2.6, opacity:1, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:222, y:220, scale:0.7, opacity:0.6, color:'#fce4ec', rot:0 },
+  ]},
+  // 24. Emerald - Green gradient, glass scope
+  { name: 'Emerald Scope', group: 'apple', bg: { c1:'#1b5e20', c2:'#4caf50', angle:150 }, els: [
+    { type:'glass_mag', x:152, y:144, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+    { type:'lines3', x:194, y:210, scale:0.9, opacity:0.35, color:'#ffffff', rot:0 },
+  ]},
+  // 25. Dual Pill - White bg, two-tone toggles
+  { name: 'Dual Mode', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e8e8ed', angle:170 }, els: [
+    { type:'glass_pill', x:126, y:200, scale:2.0, opacity:1, color:'#34c759', rot:0 },
+    { type:'glass_pill_off', x:126, y:268, scale:2.0, opacity:1, color:'#8e8e93', rot:0 },
+    { type:'dot_large', x:236, y:150, scale:1.0, opacity:0.6, color:'#34c759', rot:0 },
+  ]},
+  // 26. Dot Spectrum - White bg, rainbow dots in arc
+  { name: 'Dot Spectrum', group: 'apple', bg: { c1:'#f8f9fa', c2:'#eef0f5', angle:145 }, els: [
+    { type:'dot_large', x:130, y:240, scale:0.9, opacity:0.85, color:'#ff3b30', rot:0 },
+    { type:'dot_large', x:166, y:186, scale:0.9, opacity:0.85, color:'#ff9500', rot:0 },
+    { type:'dot_large', x:216, y:158, scale:0.9, opacity:0.85, color:'#ffcc00', rot:0 },
+    { type:'dot_large', x:270, y:164, scale:0.9, opacity:0.85, color:'#34c759', rot:0 },
+    { type:'dot_large', x:314, y:196, scale:0.9, opacity:0.85, color:'#007aff', rot:0 },
+    { type:'dot_large', x:334, y:248, scale:0.9, opacity:0.85, color:'#af52de', rot:0 },
+  ]},
+  // 27. Glass Bracket Light - White bg, frosted blue bracket
+  { name: 'Glass Bracket', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e0e3ea', angle:160 }, els: [
+    { type:'glass_circle_fill', x:168, y:168, scale:2.4, opacity:0.8, color:'#bbdefb', rot:0 },
+    { type:'curly', x:196, y:210, scale:1.3, opacity:0.9, color:'#1565c0', rot:0 },
+    { type:'dot_large', x:240, y:258, scale:0.5, opacity:0.7, color:'#1565c0', rot:0 },
+  ]},
+  // 28. Hex Viewer Apple - White bg, single large glass hex
+  { name: 'Hex Focus', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e8e8ed', angle:145 }, els: [
+    { type:'glass_hex', x:150, y:150, scale:2.8, opacity:1, color:'#5c6bc0', rot:0 },
+    { type:'eye_minimal', x:202, y:228, scale:1.4, opacity:0.85, color:'#ffffff', rot:0 },
+  ]},
+  // 29. Pastel Cloud - White bg, lavender cloud with eye
+  { name: 'Pastel View', group: 'apple', bg: { c1:'#faf8ff', c2:'#f0edf8', angle:155 }, els: [
+    { type:'glass_cloud', x:148, y:170, scale:2.6, opacity:1, color:'#b39ddb', rot:0 },
+    { type:'eye_minimal', x:212, y:234, scale:1.2, opacity:0.8, color:'#ffffff', rot:0 },
+  ]},
+  // 30. Ice Blue Doc - Light blue bg, white glass document
+  { name: 'Ice Document', group: 'apple', bg: { c1:'#e3f2fd', c2:'#bbdefb', angle:160 }, els: [
+    { type:'glass_doc', x:186, y:148, scale:2.0, opacity:1, color:'#ffffff', rot:0 },
+    { type:'lines3', x:210, y:208, scale:0.7, opacity:0.3, color:'#1976d2', rot:0 },
+    { type:'highlight_line', x:210, y:228, scale:0.5, opacity:0.6, color:'#1976d2', rot:0 },
+  ]},
+  // 31. Window Terminal - Glass window on teal
+  { name: 'Teal Terminal', group: 'apple', bg: { c1:'#004d40', c2:'#26a69a', angle:150 }, els: [
+    { type:'glass_window', x:146, y:156, scale:2.5, opacity:0.95, color:'#b2dfdb', rot:0 },
+    { type:'prompt', x:196, y:262, scale:1.2, opacity:0.9, color:'#ffffff', rot:0 },
+  ]},
+  // 32. Pure White Scope - Very clean, white bg, thin dark magnifier
+  { name: 'Pure Minimal', group: 'apple', bg: { c1:'#ffffff', c2:'#f5f5f7', angle:170 }, els: [
+    { type:'mag_thin', x:182, y:178, scale:2.4, opacity:1, color:'#1d1d1f', rot:0 },
+    { type:'dot_char', x:246, y:228, scale:1.8, opacity:0.7, color:'#1d1d1f', rot:0 },
+  ]},
+  // 33. Warm Hex - Warm gradient, glass hexagons
+  { name: 'Warm Hex', group: 'apple', bg: { c1:'#bf360c', c2:'#ff8a65', angle:145 }, els: [
+    { type:'glass_hex', x:186, y:176, scale:2.0, opacity:0.9, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:230, y:222, scale:0.7, opacity:0.7, color:'#ffccbc', rot:0 },
+  ]},
+  // 34. Candy Pill - Fun colorful toggles on white
+  { name: 'Candy Toggle', group: 'apple', bg: { c1:'#fafafa', c2:'#f0f0f5', angle:170 }, els: [
+    { type:'glass_pill', x:136, y:170, scale:1.8, opacity:1, color:'#ff3b30', rot:0 },
+    { type:'glass_pill', x:136, y:232, scale:1.8, opacity:1, color:'#007aff', rot:0 },
+    { type:'glass_pill', x:136, y:294, scale:1.8, opacity:1, color:'#34c759', rot:0 },
+  ]},
+  // 35. Deep Ocean - Deep blue, glass sphere
+  { name: 'Deep Ocean', group: 'apple', bg: { c1:'#0d47a1', c2:'#1976d2', angle:160 }, els: [
+    { type:'glass_circle_fill', x:160, y:160, scale:2.6, opacity:1, color:'#e3f2fd', rot:0 },
+    { type:'mag_thin', x:192, y:192, scale:1.8, opacity:0.7, color:'#0d47a1', rot:0 },
+  ]},
+  // 36. Signal Rings Dark - Dark bg, neon rings
+  { name: 'Dark Signal', group: 'apple', bg: { c1:'#121212', c2:'#1e1e1e', angle:170 }, els: [
+    { type:'concentric', x:176, y:176, scale:2.4, opacity:1, color:'#7c4dff', rot:0 },
+    { type:'sparkle', x:300, y:174, scale:0.9, opacity:0.5, color:'#7c4dff', rot:0 },
+  ]},
+  // 37. Light Loupe + Sparkle - Clean magnifier on white with sparkle
+  { name: 'Sparkle Scope', group: 'apple', bg: { c1:'#f8f9fa', c2:'#e8ecf0', angle:155 }, els: [
+    { type:'glass_mag', x:154, y:154, scale:2.5, opacity:1, color:'#5c6bc0', rot:0 },
+    { type:'sparkle', x:312, y:160, scale:1.2, opacity:0.6, color:'#ffd54f', rot:0 },
+    { type:'sparkle', x:144, y:340, scale:0.8, opacity:0.4, color:'#7c4dff', rot:0 },
+  ]},
+  // 38. Glass Window Code - Blue window on white
+  { name: 'Blue Window', group: 'apple', bg: { c1:'#f5f5f7', c2:'#e5e8ee', angle:160 }, els: [
+    { type:'glass_window', x:140, y:148, scale:2.6, opacity:1, color:'#42a5f5', rot:0 },
+    { type:'code_block', x:182, y:216, scale:1.1, opacity:0.4, color:'#ffffff', rot:0 },
+    { type:'highlight_line', x:186, y:250, scale:0.7, opacity:0.7, color:'#ffffff', rot:0 },
+  ]},
+  // 39. Monochrome Cloud - Gray cloud on gray
+  { name: 'Mono Cloud', group: 'apple', bg: { c1:'#f0f0f0', c2:'#d6d6d6', angle:170 }, els: [
+    { type:'glass_cloud', x:148, y:170, scale:2.6, opacity:1, color:'#616161', rot:0 },
+    { type:'curly', x:200, y:218, scale:1.0, opacity:0.7, color:'#ffffff', rot:0 },
+  ]},
+  // 40. Gradient Sphere - Multi-color gradient bg, glass sphere
+  { name: 'Prism Sphere', group: 'apple', bg: { c1:'#6a1b9a', c2:'#00bcd4', angle:135 }, els: [
+    { type:'glass_circle_fill', x:160, y:160, scale:2.6, opacity:0.95, color:'#ffffff', rot:0 },
+    { type:'mag_thin', x:194, y:194, scale:1.8, opacity:0.6, color:'#4a148c', rot:0 },
+    { type:'dot_large', x:240, y:240, scale:0.5, opacity:0.5, color:'#4a148c', rot:0 },
+  ]},
+
+  // 41-44. Direct clone templates from the original 4 concept directions
+  { name: 'Template Inspector', group: 'apple', bg: { c1:'#3730a3', c2:'#6366f1', angle:145 }, els: [
+    { type:'clone_inspector', x:126, y:126, scale:2.15, opacity:0.98, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Template Dot Lens', group: 'apple', bg: { c1:'#4a3fb8', c2:'#7c5ce7', angle:145 }, els: [
+    { type:'clone_dot_lens', x:126, y:126, scale:2.15, opacity:0.98, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Template Brackets', group: 'apple', bg: { c1:'#1e1b4b', c2:'#312e81', angle:145 }, els: [
+    { type:'clone_code_brackets', x:126, y:126, scale:2.15, opacity:0.98, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Template Document Eye', group: 'apple', bg: { c1:'#2d3a8c', c2:'#4f46e5', angle:145 }, els: [
+    { type:'clone_document_eye', x:126, y:126, scale:2.15, opacity:0.98, color:'#ffffff', rot:0 },
+  ]},
+
+  // 45-56. More Apple-like presets for Gallery + Studio workflows
+  { name: 'Liquid Toggle Max', group: 'apple', bg: { c1:'#f8fafc', c2:'#e7edf7', angle:168 }, els: [
+    { type:'glass_circle_fill', x:142, y:142, scale:2.9, opacity:0.9, color:'#ffffff', rot:0 },
+    { type:'glass_pill_off', x:128, y:168, scale:2.35, opacity:0.96, color:'#c4cadd', rot:0 },
+    { type:'glass_pill', x:128, y:252, scale:2.35, opacity:0.98, color:'#0a84ff', rot:0 },
+    { type:'dot_large', x:286, y:188, scale:0.74, opacity:0.92, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Layered Cloud', group: 'apple', bg: { c1:'#f7fbff', c2:'#e9f1fb', angle:160 }, els: [
+    { type:'glass_cloud', x:102, y:162, scale:2.7, opacity:0.94, color:'#8cd6ff', rot:0 },
+    { type:'glass_cloud', x:176, y:142, scale:2.35, opacity:0.9, color:'#4fa7ff', rot:0 },
+    { type:'glass_cloud', x:246, y:178, scale:1.85, opacity:0.84, color:'#2f8fff', rot:0 },
+    { type:'dot_large', x:294, y:244, scale:0.58, opacity:0.72, color:'#eaf4ff', rot:0 },
+  ]},
+  { name: 'Terminal Cloud+', group: 'apple', bg: { c1:'#eef2ff', c2:'#dfe7ff', angle:158 }, els: [
+    { type:'glass_circle_fill', x:146, y:146, scale:2.85, opacity:0.72, color:'#ffffff', rot:0 },
+    { type:'glass_cloud', x:114, y:166, scale:2.55, opacity:0.95, color:'#6d5dfc', rot:0 },
+    { type:'chevron_r', x:206, y:222, scale:1.65, opacity:0.95, color:'#ffffff', rot:0 },
+    { type:'dash_line', x:246, y:238, scale:1.5, opacity:0.86, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:278, y:248, scale:0.48, opacity:0.72, color:'#d6d2ff', rot:0 },
+  ]},
+  { name: 'Finder Split', group: 'apple', bg: { c1:'#11b5ff', c2:'#0076ff', angle:160 }, els: [
+    { type:'rounded_sq', x:124, y:124, scale:3.85, opacity:0.22, color:'#ffffff', rot:0 },
+    { type:'clone_document_eye', x:132, y:128, scale:1.98, opacity:0.95, color:'#ffffff', rot:0 },
+    { type:'line1', x:146, y:304, scale:2.2, opacity:0.76, color:'#0d274f', rot:7 },
+    { type:'dot_large', x:286, y:272, scale:0.44, opacity:0.6, color:'#0d274f', rot:0 },
+  ]},
+  { name: 'Cards Profile', group: 'apple', bg: { c1:'#d7edff', c2:'#8ca8ff', angle:150 }, els: [
+    { type:'glass_window', x:94, y:94, scale:3.2, opacity:0.96, color:'#d7eeff', rot:0 },
+    { type:'rounded_sq', x:136, y:136, scale:1.4, opacity:0.65, color:'#ffffff', rot:0 },
+    { type:'rounded_sq', x:232, y:136, scale:1.7, opacity:0.65, color:'#ffffff', rot:0 },
+    { type:'dot_large', x:208, y:228, scale:1.4, opacity:0.95, color:'#1a1b2f', rot:0 },
+    { type:'glass_pill_off', x:150, y:282, scale:2.0, opacity:0.85, color:'#1a1b2f', rot:0 },
+  ]},
+  { name: 'Honey Hexes', group: 'apple', bg: { c1:'#f8f9fa', c2:'#eef0f5', angle:160 }, els: [
+    { type:'glass_hex', x:144, y:110, scale:1.5, opacity:0.9, color:'#ffbf47', rot:0 },
+    { type:'glass_hex', x:230, y:110, scale:1.5, opacity:0.9, color:'#ff7b58', rot:0 },
+    { type:'glass_hex', x:102, y:188, scale:1.5, opacity:0.9, color:'#6fd181', rot:0 },
+    { type:'glass_hex', x:188, y:188, scale:1.5, opacity:0.86, color:'#f5f5f7', rot:0 },
+    { type:'glass_hex', x:274, y:188, scale:1.5, opacity:0.9, color:'#ff61ac', rot:0 },
+    { type:'glass_hex', x:144, y:266, scale:1.5, opacity:0.9, color:'#66b7ff', rot:0 },
+    { type:'glass_hex', x:230, y:266, scale:1.5, opacity:0.9, color:'#aa7bff', rot:0 },
+  ]},
+  { name: 'Liquid Bubbles', group: 'apple', bg: { c1:'#f8f9fa', c2:'#eef0f5', angle:150 }, els: [
+    { type:'glass_sphere', x:110, y:116, scale:3.3, opacity:0.82, color:'#ff5f86', rot:0 },
+    { type:'glass_sphere', x:246, y:104, scale:2.5, opacity:0.82, color:'#ffd500', rot:0 },
+    { type:'glass_sphere', x:236, y:220, scale:3.0, opacity:0.84, color:'#4fa1ff', rot:0 },
+    { type:'glass_sphere', x:152, y:266, scale:1.8, opacity:0.8, color:'#8f5dff', rot:0 },
+  ]},
+  { name: 'Preview Cup', group: 'apple', bg: { c1:'#7ec9ff', c2:'#3e86ff', angle:160 }, els: [
+    { type:'glass_mag', x:132, y:100, scale:2.7, opacity:0.98, color:'#0e1016', rot:0 },
+    { type:'glass_sphere', x:154, y:190, scale:2.45, opacity:0.56, color:'#d4f0ff', rot:0 },
+    { type:'concentric', x:188, y:124, scale:1.15, opacity:0.28, color:'#4fa1ff', rot:0 },
+    { type:'highlight_line', x:184, y:242, scale:0.9, opacity:0.34, color:'#ffffff', rot:0 },
+  ]},
+  { name: 'Purple Mark', group: 'apple', bg: { c1:'#7c3aed', c2:'#5b21b6', angle:145 }, els: [
+    { type:'glass_circle_fill', x:146, y:146, scale:2.8, opacity:1, color:'#ffffff', rot:0 },
+    { type:'concentric', x:184, y:184, scale:1.9, opacity:0.95, color:'#6d28d9', rot:0 },
+    { type:'dot_large', x:232, y:232, scale:0.65, opacity:0.8, color:'#6d28d9', rot:0 },
+  ]},
+  { name: 'Rainbow Flower', group: 'apple', bg: { c1:'#fafafa', c2:'#f0f0f5', angle:170 }, els: [
+    { type:'petal', x:236, y:108, scale:2.2, opacity:0.85, color:'#ff8a00', rot:0 },
+    { type:'petal', x:284, y:146, scale:2.2, opacity:0.85, color:'#ffd500', rot:45 },
+    { type:'petal', x:296, y:208, scale:2.2, opacity:0.85, color:'#7bd500', rot:90 },
+    { type:'petal', x:272, y:264, scale:2.2, opacity:0.85, color:'#20c997', rot:135 },
+    { type:'petal', x:220, y:292, scale:2.2, opacity:0.85, color:'#2d8cff', rot:180 },
+    { type:'petal', x:166, y:262, scale:2.2, opacity:0.85, color:'#9f6bff', rot:225 },
+    { type:'petal', x:154, y:204, scale:2.2, opacity:0.85, color:'#ff50c8', rot:270 },
+    { type:'petal', x:180, y:146, scale:2.2, opacity:0.85, color:'#ff5f7a', rot:315 },
+  ]},
+  { name: 'Link Wave', group: 'apple', bg: { c1:'#08b5ff', c2:'#006fff', angle:155 }, els: [
+    { type:'glass_circle_fill', x:146, y:146, scale:2.82, opacity:1, color:'#ffffff', rot:0 },
+    { type:'chevron_r', x:180, y:212, scale:1.9, opacity:0.92, color:'#0a84ff', rot:180 },
+    { type:'chevron_r', x:224, y:212, scale:1.9, opacity:0.92, color:'#0a84ff', rot:0 },
+    { type:'dash_line', x:206, y:210, scale:1.55, opacity:0.76, color:'#0a84ff', rot:90 },
+    { type:'dot_large', x:236, y:236, scale:0.44, opacity:0.78, color:'#0a84ff', rot:0 },
+  ]},
+  { name: 'Glass Control', group: 'apple', bg: { c1:'#dbeafe', c2:'#c4b5fd', angle:145 }, els: [
+    { type:'glass_window', x:104, y:96, scale:3.1, opacity:0.95, color:'#d5ecff', rot:0 },
+    { type:'glass_pill_off', x:136, y:250, scale:1.9, opacity:0.9, color:'#a7b0c6', rot:0 },
+    { type:'glass_pill', x:136, y:302, scale:1.9, opacity:0.9, color:'#0a84ff', rot:0 },
+    { type:'dot_large', x:278, y:312, scale:0.9, opacity:0.8, color:'#8f5dff', rot:0 },
+  ]},
+];
+
+// ============================================================
+// RENDERING
+// ============================================================
+function getAsset(id) { return ASSETS.find(a => a.id === id); }
+
+function renderAssetSVG(assetId, color) {
+  const a = getAsset(assetId);
+  return a ? a.svg(color || '#ffffff') : '';
+}
+
+function renderElementSVG(el) {
+  const a = getAsset(el.type);
+  if (!a) return '';
+  const tx = el.x || 0, ty = el.y || 0, sc = el.scale || 1, op = el.opacity ?? 1, rot = el.rot || 0;
+  const svg = a.svg(el.color || '#ffffff');
+  return `<g transform="translate(${tx},${ty}) rotate(${rot},${a.w*sc/2},${a.h*sc/2}) scale(${sc})" opacity="${op}" data-id="${el.id || ''}">${svg}</g>`;
+}
+
+function renderBG(bg) {
+  const angle = (bg.angle || 145) * Math.PI / 180;
+  const x1 = 0.5 - Math.cos(angle) * 0.5, y1 = 0.5 - Math.sin(angle) * 0.5;
+  const x2 = 0.5 + Math.cos(angle) * 0.5, y2 = 0.5 + Math.sin(angle) * 0.5;
+  return `<linearGradient id="bg-grad" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"><stop offset="0%" stop-color="${bg.c1}"/><stop offset="100%" stop-color="${bg.c2}"/></linearGradient>`;
+}
+
+function renderCanvas() {
+  const cc = document.getElementById('canvas-content');
+  const defs = document.querySelector('#icon-canvas defs');
+  const oldGrad = defs.querySelector('#bg-grad');
+  const tmp = document.createElementNS('http://www.w3.org/2000/svg','g');
+  tmp.innerHTML = renderBG(S.bg);
+  if (oldGrad) oldGrad.replaceWith(tmp.firstChild);
+
+  let html = `<rect width="512" height="512" fill="url(#bg-grad)"/>`;
+  html += `<ellipse cx="256" cy="0" rx="320" ry="260" fill="white" opacity="0.08"/>`;
+  S.elements.forEach(el => { html += renderElementSVG(el); });
+  cc.innerHTML = html;
+  renderSelection();
+  renderSizeStrip();
+}
+
+function renderSelection() {
+  const ov = document.getElementById('selection-overlay');
+  if (!S.selectedId) { ov.innerHTML = ''; return; }
+  const el = S.elements.find(e => e.id === S.selectedId);
+  if (!el) { ov.innerHTML = ''; return; }
+  const a = getAsset(el.type);
+  if (!a) return;
+  const w = a.w * (el.scale||1), h = a.h * (el.scale||1);
+  const pad = 6;
+  ov.innerHTML = `<rect x="${el.x-pad}" y="${el.y-pad}" width="${w+pad*2}" height="${h+pad*2}" rx="4" class="sel-rect"/>`;
+}
+
+function renderSizeStrip() {
+  const svg = document.getElementById('icon-canvas');
+  const sizes = [64, 48, 32, 16];
+  let html = '';
+  sizes.forEach(s => {
+    html += `<div class="size-item"><svg width="${s}" height="${s}" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">${svg.querySelector('defs').outerHTML}<g clip-path="url(#squircle-clip)">${document.getElementById('canvas-content').innerHTML}</g></svg><span>${s}px</span></div>`;
+  });
+  document.getElementById('sizeStrip').innerHTML = html;
+}
+
+// ============================================================
+// PRESET THUMBNAILS
+// ============================================================
+function pid(p,i) { return 'p' + i; }
+function presetThumbSVG(p, idx) {
+  const k = pid(p,idx);
+  const angle = (p.bg.angle || 145) * Math.PI / 180;
+  const x1 = 0.5 - Math.cos(angle) * 0.5, y1 = 0.5 - Math.sin(angle) * 0.5;
+  const x2 = 0.5 + Math.cos(angle) * 0.5, y2 = 0.5 + Math.sin(angle) * 0.5;
+  let html = `<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">`;
+  html += `<defs><linearGradient id="bg-${k}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"><stop offset="0%" stop-color="${p.bg.c1}"/><stop offset="100%" stop-color="${p.bg.c2}"/></linearGradient>`;
+  html += `<filter id="gl-${k}"><feGaussianBlur in="SourceGraphic" stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  html += `<filter id="gl2-${k}"><feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`;
+  html += `<clipPath id="sq-${k}"><path d="M256 0C354 0 400 0 434 18C462 33 480 50 494 78C512 112 512 158 512 256C512 354 512 400 494 434C480 462 462 480 434 494C400 512 354 512 256 512C158 512 112 512 78 494C50 480 33 462 18 434C0 400 0 354 0 256C0 158 0 112 18 78C33 50 50 33 78 18C112 0 158 0 256 0Z"/></clipPath></defs>`;
+  html += `<g clip-path="url(#sq-${k})">`;
+  html += `<rect width="512" height="512" fill="url(#bg-${k})"/>`;
+  html += `<ellipse cx="256" cy="0" rx="320" ry="260" fill="white" opacity="0.08"/>`;
+  p.els.forEach(el => {
+    const a = getAsset(el.type);
+    if (!a) return;
+    const tx = el.x||0, ty = el.y||0, sc = el.scale||1, op = el.opacity??1, rot = el.rot||0;
+    let svgContent = a.svg(el.color || '#ffffff');
+    svgContent = svgContent.replace(/filter="url\(#glow1\)"/g, `filter="url(#gl-${k})"`);
+    svgContent = svgContent.replace(/filter="url\(#glow2\)"/g, `filter="url(#gl2-${k})"`);
+    html += `<g transform="translate(${tx},${ty}) rotate(${rot},${a.w*sc/2},${a.h*sc/2}) scale(${sc})" opacity="${op}">${svgContent}</g>`;
+  });
+  html += `</g></svg>`;
+  return html;
+}
+
+// ============================================================
+// LEFT PANEL
+// ============================================================
+function renderLeftPanel() {
+  const panel = document.getElementById('leftPanel');
+  if (S.mode === 'gallery') {
+    const origCount = PRESETS.filter(p => p.group === 'original').length;
+    const appleCount = PRESETS.filter(p => p.group === 'apple').length;
+    let html = '<div class="panel-header">Presets</div>';
+    html += '<div class="filter-tabs">';
+    html += `<button class="filter-tab ${S.galleryFilter==='all'?'active':''}" onclick="setGalleryFilter('all')">All<span class="filter-count"> ${PRESETS.length}</span></button>`;
+    html += `<button class="filter-tab ${S.galleryFilter==='original'?'active':''}" onclick="setGalleryFilter('original')">Original<span class="filter-count"> ${origCount}</span></button>`;
+    html += `<button class="filter-tab ${S.galleryFilter==='apple'?'active':''}" onclick="setGalleryFilter('apple')">Apple<span class="filter-count"> ${appleCount}</span></button>`;
+    html += '</div>';
+    html += '<div class="preset-grid">';
+    PRESETS.forEach((p, i) => {
+      if (S.galleryFilter !== 'all' && p.group !== S.galleryFilter) return;
+      const badge = p.group === 'apple' ? '<span class="preset-badge apple">Apple</span>' : '';
+      html += `<div class="preset-card ${S.preset===i?'active':''}" onclick="loadPreset(${i})">${badge}${presetThumbSVG(p,i)}<div class="preset-name">${p.name}</div></div>`;
+    });
+    html += '</div>';
+    panel.innerHTML = html;
+  } else {
+    let html = '';
+    const cats = [...new Set(ASSETS.map(a => a.cat))];
+    cats.forEach(cat => {
+      html += `<div class="asset-category">${cat}</div><div class="asset-grid">`;
+      ASSETS.filter(a => a.cat === cat).forEach(a => {
+        html += `<div class="asset-item" data-asset="${a.id}" onpointerdown="startAssetDrag(event,'${a.id}')" onclick="addAsset('${a.id}')"><svg viewBox="0 0 ${a.w} ${a.h}" xmlns="http://www.w3.org/2000/svg">${a.svg('#c4b5fd')}</svg><div class="aname">${a.name}</div></div>`;
+      });
+      html += '</div>';
+    });
+    panel.innerHTML = html;
+  }
+}
+
+// ============================================================
+// RIGHT PANEL
+// ============================================================
+function renderRightPanel() {
+  const panel = document.getElementById('rightPanel');
+  let html = '';
+  html += `<div class="prop-section"><div class="prop-label">Background</div>`;
+  html += `<div class="prop-row"><label>Color 1</label><input type="color" value="${S.bg.c1}" onchange="S.bg.c1=this.value;renderCanvas()"></div>`;
+  html += `<div class="prop-row"><label>Color 2</label><input type="color" value="${S.bg.c2}" onchange="S.bg.c2=this.value;renderCanvas()"></div>`;
+  html += `<div class="prop-row"><label>Angle</label><input type="range" min="0" max="360" value="${S.bg.angle}" oninput="S.bg.angle=+this.value;this.nextElementSibling.textContent=this.value+'°';renderCanvas()"><span class="val">${S.bg.angle}°</span></div>`;
+  html += `</div>`;
+  const sel = S.elements.find(e => e.id === S.selectedId);
+  if (sel) {
+    const a = getAsset(sel.type);
+    html += `<div class="prop-section"><div class="prop-label"><span class="sel-indicator"></span>${a ? a.name : sel.type}</div>`;
+    html += `<div class="prop-row"><label>Color</label><input type="color" value="${sel.color||'#ffffff'}" onchange="updateSel('color',this.value)"></div>`;
+    html += `<div class="prop-row"><label>Opacity</label><input type="range" min="0" max="100" value="${Math.round((sel.opacity??1)*100)}" oninput="updateSel('opacity',this.value/100);this.nextElementSibling.textContent=this.value+'%'"><span class="val">${Math.round((sel.opacity??1)*100)}%</span></div>`;
+    html += `<div class="prop-row"><label>Scale</label><input type="range" min="10" max="500" value="${Math.round((sel.scale||1)*100)}" oninput="updateSel('scale',this.value/100);this.nextElementSibling.textContent=(this.value/100).toFixed(1)+'x'"><span class="val">${(sel.scale||1).toFixed(1)}x</span></div>`;
+    html += `<div class="prop-row"><label>Rotation</label><input type="range" min="-180" max="180" value="${sel.rot||0}" oninput="updateSel('rot',+this.value);this.nextElementSibling.textContent=this.value+'°'"><span class="val">${sel.rot||0}°</span></div>`;
+    html += `<div class="prop-row"><label>X</label><input type="number" value="${Math.round(sel.x)}" onchange="updateSel('x',+this.value)"></div>`;
+    html += `<div class="prop-row"><label>Y</label><input type="number" value="${Math.round(sel.y)}" onchange="updateSel('y',+this.value)"></div>`;
+    html += `<div class="btn-row"><button class="btn-sm" onclick="duplicateSelected()">Duplicate</button><button class="btn-sm" onclick="bringForward()">Forward</button></div>`;
+    html += `<div class="btn-row"><button class="btn-sm" onclick="sendBackward()">Backward</button><button class="btn-sm danger" onclick="deleteSelected()">Delete</button></div>`;
+    html += `</div>`;
+  } else {
+    html += `<div class="prop-section"><div class="prop-label">Element</div><div class="empty-state"><div class="icon">⬚</div>${S.mode==='studio' ? 'Click an asset to add it,<br>or click an element on canvas to select it' : 'Click a preset to load it,<br>then switch to Studio to edit'}</div></div>`;
+  }
+  html += `<div class="prop-section"><div class="prop-label">Layers (${S.elements.length})</div><div class="layer-list">`;
+  [...S.elements].reverse().forEach(el => {
+    const a = getAsset(el.type);
+    html += `<div class="layer-item ${el.id===S.selectedId?'selected':''}" onclick="selectElement(${el.id})"><svg class="li-icon" viewBox="0 0 ${a?a.w:20} ${a?a.h:20}" xmlns="http://www.w3.org/2000/svg">${a?a.svg('#c4b5fd'):''}</svg><span class="li-name">${a?a.name:el.type}</span><span class="li-vis" onclick="event.stopPropagation();toggleVis(${el.id})">${(el.opacity??1)>0?'👁':'◌'}</span></div>`;
+  });
+  html += `</div></div>`;
+  panel.innerHTML = html;
+}
+
+function updateSel(prop, val) {
+  const el = S.elements.find(e => e.id === S.selectedId);
+  if (el) { el[prop] = val; renderCanvas(); renderRightPanel(); }
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+function setMode(m) {
+  S.mode = m;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === m));
+  renderLeftPanel();
+  renderRightPanel();
+}
+
+function setGalleryFilter(f) {
+  S.galleryFilter = f;
+  renderLeftPanel();
+}
+
+function loadPreset(i) {
+  S.preset = i;
+  const p = PRESETS[i];
+  S.bg = { ...p.bg };
+  S.elements = p.els.map(el => ({ ...el, id: S.nextId++ }));
+  S.selectedId = null;
+  renderCanvas();
+  renderLeftPanel();
+  renderRightPanel();
+}
+
+function selectElement(id) {
+  S.selectedId = (S.selectedId === id) ? null : id;
+  renderSelection();
+  renderRightPanel();
+}
+
+function addAsset(assetId) {
+  const a = getAsset(assetId);
+  if (!a) return;
+  const el = { id: S.nextId++, type: assetId, x: 256 - a.w/2, y: 256 - a.h/2, scale: 1.5, opacity: 0.9, color: '#ffffff', rot: 0 };
+  S.elements.push(el);
+  S.selectedId = el.id;
+  renderCanvas();
+  renderRightPanel();
+}
+
+function deleteSelected() {
+  S.elements = S.elements.filter(e => e.id !== S.selectedId);
+  S.selectedId = null;
+  renderCanvas();
+  renderRightPanel();
+}
+
+function duplicateSelected() {
+  const el = S.elements.find(e => e.id === S.selectedId);
+  if (!el) return;
+  const dup = { ...el, id: S.nextId++, x: el.x + 20, y: el.y + 20 };
+  S.elements.push(dup);
+  S.selectedId = dup.id;
+  renderCanvas();
+  renderRightPanel();
+}
+
+function bringForward() {
+  const idx = S.elements.findIndex(e => e.id === S.selectedId);
+  if (idx < S.elements.length - 1) {
+    [S.elements[idx], S.elements[idx+1]] = [S.elements[idx+1], S.elements[idx]];
+    renderCanvas(); renderRightPanel();
+  }
+}
+function sendBackward() {
+  const idx = S.elements.findIndex(e => e.id === S.selectedId);
+  if (idx > 0) {
+    [S.elements[idx], S.elements[idx-1]] = [S.elements[idx-1], S.elements[idx]];
+    renderCanvas(); renderRightPanel();
+  }
+}
+
+function toggleVis(id) {
+  const el = S.elements.find(e => e.id === id);
+  if (el) { el.opacity = (el.opacity ?? 1) > 0 ? 0 : 1; renderCanvas(); renderRightPanel(); }
+}
+
+// Canvas click to select/deselect
+document.getElementById('icon-canvas').addEventListener('pointerdown', function(e) {
+  const svg = this;
+  const pt = svg.createSVGPoint();
+  pt.x = e.clientX; pt.y = e.clientY;
+  const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+  let found = null;
+  for (let i = S.elements.length - 1; i >= 0; i--) {
+    const el = S.elements[i];
+    const a = getAsset(el.type);
+    if (!a) continue;
+    const w = a.w * (el.scale||1), h = a.h * (el.scale||1);
+    if (svgP.x >= el.x && svgP.x <= el.x + w && svgP.y >= el.y && svgP.y <= el.y + h) {
+      found = el; break;
+    }
+  }
+  if (found) {
+    S.selectedId = found.id;
+    S.dragging = found.id;
+    S.dragOffset = { x: svgP.x - found.x, y: svgP.y - found.y };
+    renderSelection();
+    renderRightPanel();
+  } else {
+    S.selectedId = null;
+    renderSelection();
+    renderRightPanel();
+  }
+});
+
+document.addEventListener('pointermove', function(e) {
+  if (!S.dragging) return;
+  const svg = document.getElementById('icon-canvas');
+  const pt = svg.createSVGPoint();
+  pt.x = e.clientX; pt.y = e.clientY;
+  const svgP = pt.matrixTransform(svg.getScreenCTM().inverse());
+  const el = S.elements.find(el => el.id === S.dragging);
+  if (el) {
+    el.x = svgP.x - S.dragOffset.x;
+    el.y = svgP.y - S.dragOffset.y;
+    renderCanvas();
+  }
+});
+
+document.addEventListener('pointerup', function() {
+  if (S.dragging) { S.dragging = null; renderRightPanel(); }
+});
+
+let assetDragGhost = null;
+function startAssetDrag(e, assetId) {}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Delete' || e.key === 'Backspace') {
+    if (S.selectedId && !e.target.closest('input')) { deleteSelected(); }
+  }
+  if (e.key === 'Escape') { S.selectedId = null; renderSelection(); renderRightPanel(); }
+  if (e.key === 'd' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); duplicateSelected(); }
+});
+
+// ============================================================
+// EXPORT
+// ============================================================
+function exportPNG() {
+  const svg = document.getElementById('icon-canvas');
+  const data = new XMLSerializer().serializeToString(svg);
+  const blob = new Blob([data], { type: 'image/svg+xml' });
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.getElementById('export-canvas');
+    canvas.width = 1024; canvas.height = 1024;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 1024, 1024);
+    ctx.drawImage(img, 0, 0, 1024, 1024);
+    URL.revokeObjectURL(url);
+    canvas.toBlob(function(b) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = 'dotViewer-icon-1024.png';
+      a.click();
+    }, 'image/png');
+  };
+  img.src = url;
+}
+
+function exportSVG() {
+  const svg = document.getElementById('icon-canvas');
+  const clone = svg.cloneNode(true);
+  clone.setAttribute('width', '1024');
+  clone.setAttribute('height', '1024');
+  const data = new XMLSerializer().serializeToString(clone);
+  const blob = new Blob([data], { type: 'image/svg+xml' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'dotViewer-icon.svg';
+  a.click();
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadPreset(0);
+renderLeftPanel();
+renderRightPanel();
+</script>
+</body>
+</html>

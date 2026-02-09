@@ -1,0 +1,274 @@
+Perfect. Below is a **clean, production-ready set of 10 asset concepts PLUS the exact prompts** you can reuse verbatim.
+
+This is intentionally structured so you can:
+
+* Generate **each asset independently**
+* Keep them **composable**
+* Stay **100% aligned with Apple HIG + Liquid Glass**
+* Avoid drifting into “illustration” territory
+
+Think of these as **Finder-style facial features**: simple, symbolic, layerable.
+
+---
+
+# dotViewer — Asset Language Map
+
+First, the **semantic vocabulary** (this is important for consistency):
+
+| Concept    | Meaning in dotViewer        |
+| ---------- | --------------------------- |
+| Eye / Lens | View, preview, inspect      |
+| Dot        | dotfiles, subtlety, hidden  |
+| Glass Pane | Preview surface             |
+| Overlap    | Quick Look / instant        |
+| Lines      | Syntax highlighting         |
+| Fold       | File abstraction            |
+| Ring       | Focus                       |
+| Stack      | Multiple file types         |
+| Mask       | Hidden / reveal             |
+| Window     | Finder / system integration |
+
+Each asset below maps to **one word → one shape**.
+
+---
+
+# MASTER RULE (applies to ALL prompts)
+
+* 1024×1024
+* Transparent background
+* One object only
+* Apple Liquid Glass
+* No text
+* No background
+* Soft, rounded, restrained
+* Upper-left light only
+
+---
+
+## 1. **Abstract Eye (View / Inspect)**
+
+**Use case:** Core “viewer” identity
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a minimal abstract eye shape made of frosted glass, simplified and rounded,
+with no sharp edges and no realism.
+
+Style: Apple Human Interface Guidelines, WWDC 2025 Liquid Glass material.
+Soft translucent glass, subtle internal blur, gentle rim light.
+Specular highlight from the upper-left only.
+
+Color: cool blue with slight cyan tint, restrained and calm.
+
+Composition: centered, generous negative space, readable at small sizes.
+No text, no UI, no background.
+```
+
+---
+
+## 2. **Single Floating Dot (dotfiles / subtle)**
+
+**Use case:** The “dot” in dotViewer
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a single floating glass dot, perfectly circular, minimal and centered.
+
+Style: frosted translucent glass with subtle depth, soft highlight from upper-left.
+No texture, no noise.
+
+Color: pale blue transitioning gently to indigo inside the glass.
+
+Composition: lots of negative space, extremely simple, iconic.
+```
+
+---
+
+## 3. **Magnifying Lens (Inspect / focus)**
+
+**Use case:** Inspection without opening
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a simplified magnifying lens, circular glass with a short rounded handle,
+highly abstracted and minimal.
+
+Style: frosted glass lens with soft internal refraction,
+gentle rim light, no metal, no realism.
+
+Color: cool blue glass with subtle purple depth.
+
+No background, no text, no UI elements.
+```
+
+---
+
+## 4. **Overlapping Glass Panes (Quick Look)**
+
+**Use case:** Instant preview metaphor
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: two overlapping rounded glass rectangles, slightly offset,
+representing layered preview surfaces.
+
+Style: translucent frosted glass with soft separation between layers,
+gentle highlights, smooth curvature.
+
+Color: light blue foreground pane, slightly deeper blue background pane.
+```
+
+---
+
+## 5. **Rounded Syntax Lines (Code abstraction)**
+
+**Use case:** Syntax highlighting without text
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a small group of rounded horizontal glass bars,
+abstracted to suggest code lines without text.
+
+Style: frosted glass bars with subtle depth and spacing,
+soft highlights from upper-left.
+
+Color: monochrome blue with very slight tonal variation.
+```
+
+---
+
+## 6. **Folded Glass Sheet (File metaphor)**
+
+**Use case:** File type preview
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a minimal rounded glass sheet with a soft folded corner,
+highly abstracted.
+
+Style: translucent frosted glass with subtle edge glow,
+no sharp angles.
+
+Color: pale blue glass with slightly brighter fold edge.
+```
+
+---
+
+## 7. **Focus Ring (Selection / highlight)**
+
+**Use case:** Active preview
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a hollow circular focus ring made of glass,
+even thickness, soft curvature.
+
+Style: frosted translucent ring with gentle rim light,
+subtle depth inside the ring.
+
+Color: cool cyan-blue with restrained glow.
+```
+
+---
+
+## 8. **Stacked Sheets (Multiple formats)**
+
+**Use case:** Broad file support
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: three slightly offset rounded glass sheets stacked diagonally,
+minimal and symbolic.
+
+Style: layered translucent glass with subtle depth separation,
+no shadows baked in.
+
+Color: same blue hue family, slightly varied per layer.
+```
+
+---
+
+## 9. **Hidden Mask (Dotfiles / reveal)**
+
+**Use case:** Hidden files becoming visible
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a rounded glass panel with a subtle cut-out oval shape,
+suggesting reveal or masking.
+
+Style: frosted glass with smooth edges and soft internal blur.
+
+Color: cool blue with slightly darker inner cut-out edge.
+```
+
+---
+
+## 10. **Finder-Style Preview Window (System integration)**
+
+**Use case:** macOS-native feel
+
+**Prompt:**
+
+```
+A single Apple-style Liquid Glass icon asset, 1024x1024, transparent background.
+
+Subject: a minimal rounded rectangle resembling a Finder preview window,
+with no controls, no text.
+
+Style: translucent frosted glass panel, soft highlights,
+smooth curvature, premium finish.
+
+Color: light blue glass with gentle depth.
+```
+
+---
+
+# HOW TO COMBINE (IMPORTANT)
+
+**Recommended final icon formula:**
+
+* Background: gradient glass tile
+* Layer 1: overlapping panes OR folded sheet
+* Layer 2: eye OR lens
+* Layer 3: single dot (small, centered offset)
+
+That’s **Finder logic** applied to dotViewer.
+
+---
+
+If you want next, I can:
+
+* Design **3 final icon compositions** using these assets
+* Translate this directly into **Icon Composer layer settings**
+* Reduce this into a **one-page brand asset spec**
+* Generate a **dark-mode tuned asset set**
+
+Just tell me the next step.

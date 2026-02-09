@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>dotViewer Icon Studio — HIG Glass</title>
+<style>
+  :root { --bg:#0e0e18; --sf:#181828; --sf2:#20203a; --ac:#6366f1; --tx:#e4e4ec; --tx2:#7880a0; --bd:rgba(255,255,255,.07); }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+  .hd{text-align:center;padding:36px 20px 8px}
+  .hd h1{font-size:30px;font-weight:700;background:linear-gradient(135deg,#6366f1,#38bdf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .hd p{color:var(--tx2);font-size:13px;margin-top:4px}
+  .hd .ct{color:var(--ac);font-weight:600}
+  .lay{display:flex;gap:24px;max-width:1460px;margin:0 auto;padding:16px 20px}
+  .pv-panel{flex:0 0 370px;position:sticky;top:16px;align-self:flex-start}
+  .pv-card{background:var(--sf);border:1px solid var(--bd);border-radius:18px;padding:24px;text-align:center}
+  .pv-main{width:220px;height:220px;margin:0 auto 8px;filter:drop-shadow(0 8px 28px rgba(0,0,0,.5))}
+  .pv-main svg{width:100%;height:100%}
+  .pv-row{display:flex;align-items:flex-end;justify-content:center;gap:18px;margin:10px 0}
+  .pv-sz{text-align:center}
+  .pv-sz svg{filter:drop-shadow(0 2px 6px rgba(0,0,0,.3))}
+  .pv-sz label{display:block;font-size:9px;color:var(--tx2);margin-top:3px}
+  .pv-nm{font-size:15px;font-weight:600;margin-bottom:1px}
+  .pv-ds{font-size:11px;color:var(--tx2);margin-bottom:10px;min-height:14px}
+  .dock-w{padding:14px 0 6px;border-top:1px solid var(--bd)}
+  .dock-w label{display:block;font-size:9px;color:var(--tx2);margin-bottom:7px;text-transform:uppercase;letter-spacing:1px}
+  .dock-bar{display:inline-flex;align-items:flex-end;gap:4px;background:rgba(255,255,255,.04);padding:4px 10px 3px;border-radius:13px}
+  .dk-i{width:42px;height:42px;border-radius:9px;overflow:hidden}
+  .dk-i svg{width:100%;height:100%}
+  .dk-i.ph{background:rgba(255,255,255,.05)}
+  .dk-d{width:3px;height:3px;background:rgba(255,255,255,.35);border-radius:50%;margin:3px auto 0}
+  .bg-t{display:flex;gap:4px;justify-content:center;margin:10px 0}
+  .bg-o{width:20px;height:20px;border-radius:5px;border:2px solid transparent;cursor:pointer;transition:border-color .15s}
+  .bg-o:hover,.bg-o.on{border-color:var(--ac)}
+  .cust{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)}
+  .cust h3{font-size:12px;font-weight:600;margin-bottom:8px}
+  .cr{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+  .cr label{font-size:10px;color:var(--tx2);width:65px}
+  .cr input[type=color]{-webkit-appearance:none;width:26px;height:20px;border:none;border-radius:3px;cursor:pointer;background:none}
+  .cr input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+  .cr input[type=color]::-webkit-color-swatch{border:none;border-radius:3px}
+  .bts{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .bt{padding:6px 12px;border-radius:7px;border:1px solid var(--bd);background:rgba(255,255,255,.03);color:var(--tx);font-size:11px;cursor:pointer;transition:background .15s}
+  .bt:hover{background:rgba(255,255,255,.08)}
+  .bt.pr{background:var(--ac);border-color:var(--ac)}
+  .bt.pr:hover{background:#5254d8}
+  .pp{flex:1;min-width:0}
+  .sec{margin-bottom:24px}
+  .sec h2{font-size:15px;font-weight:600;margin-bottom:2px}
+  .sec>p{font-size:11px;color:var(--tx2);margin-bottom:10px}
+  .gr{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:10px}
+  .cd{background:var(--sf);border:2px solid transparent;border-radius:13px;padding:10px;text-align:center;cursor:pointer;transition:all .2s}
+  .cd:hover{border-color:rgba(99,102,241,.3);transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.3)}
+  .cd.on{border-color:var(--ac);background:rgba(99,102,241,.08);box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+  .cd svg{width:84px;height:84px;margin-bottom:4px;filter:drop-shadow(0 3px 8px rgba(0,0,0,.35))}
+  .cd .n{font-size:10px;color:var(--tx2);font-weight:500}
+  .cd.on .n{color:var(--tx)}
+  @media(max-width:900px){.lay{flex-direction:column}.pv-panel{position:static;flex:none}}
+</style>
+</head>
+<body>
+<div class="hd">
+  <h1>dotViewer Icon Studio</h1>
+  <p><span class="ct" id="cnt">0</span> HIG Glass presets — 7-layer glass formula per Apple Human Interface Guidelines</p>
+</div>
+<div class="lay">
+  <div class="pv-panel">
+    <div class="pv-card" id="card">
+      <div id="pm" class="pv-main"></div>
+      <div class="pv-row">
+        <div class="pv-sz"><div id="s128" style="width:96px;height:96px"></div><label>128</label></div>
+        <div class="pv-sz"><div id="s64" style="width:52px;height:52px"></div><label>64</label></div>
+        <div class="pv-sz"><div id="s32" style="width:28px;height:28px"></div><label>32</label></div>
+        <div class="pv-sz"><div id="s16" style="width:14px;height:14px"></div><label>16</label></div>
+      </div>
+      <div id="nm" class="pv-nm">Select a preset</div>
+      <div id="ds" class="pv-ds"></div>
+      <div class="dock-w">
+        <label>Dock Preview</label>
+        <div class="dock-bar">
+          <div><div class="dk-i ph"></div></div>
+          <div><div class="dk-i ph"></div></div>
+          <div><div class="dk-i" id="dk"></div><div class="dk-d"></div></div>
+          <div><div class="dk-i ph"></div></div>
+          <div><div class="dk-i ph"></div></div>
+        </div>
+      </div>
+      <div class="bg-t" id="bgt"></div>
+      <div class="cust">
+        <h3>Customize Colors</h3>
+        <div class="cr"><label>BG Start</label><input type="color" id="i1" value="#3730a3"></div>
+        <div class="cr"><label>BG End</label><input type="color" id="i2" value="#6366f1"></div>
+        <div class="cr"><label>Glyph</label><input type="color" id="i3" value="#ffffff"></div>
+        <div class="cr"><label>Accent</label><input type="color" id="i4" value="#a5b4fc"></div>
+      </div>
+      <div class="bts">
+        <button class="bt pr" onclick="xSVG()">Export SVG</button>
+        <button class="bt" onclick="xPNG(1024)">PNG 1024</button>
+        <button class="bt" onclick="xPNG(512)">PNG 512</button>
+      </div>
+    </div>
+  </div>
+  <div class="pp" id="pp"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  SQUIRCLE (Apple continuous-corner superellipse)
+// ═══════════════════════════════════════════════════════
+const SQ='M512 60c180 0 270 0 338 68s68 158 68 338v92c0 180 0 270-68 338s-158 68-338 68-270 0-338-68S106 728 106 548v-92c0-180 0-270 68-338S332 60 512 60z';
+
+// ═══════════════════════════════════════════════════════
+//  7-LAYER HIG GLASS HELPERS
+// ═══════════════════════════════════════════════════════
+// These helpers build glass-quality shapes per the HIG guide
+
+// Glass circle with all 7 layers
+function glassCircle(cx, cy, r, color, opts={}) {
+  const op = opts.opacity ?? 1;
+  const hlOff = opts.hlOffset ?? {x:-r*0.2, y:-r*0.3};
+  return `
+    <ellipse cx="${cx}" cy="${cy+r+4}" rx="${r*0.7}" ry="${3+r*0.04}" fill="${color}" opacity="${0.06*op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="${op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r-3}" fill="white" fill-opacity="${0.08*op}"/>
+    <ellipse cx="${cx+hlOff.x}" cy="${cy+hlOff.y}" rx="${r*0.42}" ry="${r*0.26}" fill="white" opacity="${0.40*op}" transform="rotate(-15,${cx+hlOff.x},${cy+hlOff.y})"/>
+    <ellipse cx="${cx+hlOff.x+r*0.3}" cy="${cy+hlOff.y+r*0.15}" rx="${r*0.2}" ry="${r*0.12}" fill="white" opacity="${0.16*op}"/>
+    <ellipse cx="${cx+hlOff.x-r*0.1}" cy="${cy+hlOff.y-r*0.1}" rx="${r*0.08}" ry="${r*0.05}" fill="white" opacity="${0.11*op}"/>
+    <ellipse cx="${cx}" cy="${cy+r*0.35}" rx="${r*0.6}" ry="${r*0.15}" fill="black" opacity="${0.04*op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="white" stroke-width="0.7" fill="none" opacity="${0.13*op}"/>`;
+}
+
+// Glass rounded-rect with all 7 layers
+function glassRect(x, y, w, h, rx, color, opts={}) {
+  const op = opts.opacity ?? 1;
+  const cx=x+w/2, cy=y+h/2;
+  return `
+    <ellipse cx="${cx}" cy="${y+h+4}" rx="${w*0.35}" ry="3.5" fill="${color}" opacity="${0.06*op}"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${color}" opacity="${op}"/>
+    <rect x="${x+2}" y="${y+2}" width="${w-4}" height="${h-4}" rx="${rx-1}" fill="white" fill-opacity="${0.07*op}"/>
+    <ellipse cx="${x+w*0.32}" cy="${y+h*0.22}" rx="${w*0.28}" ry="${h*0.16}" fill="white" opacity="${0.38*op}" transform="rotate(-14,${x+w*0.32},${y+h*0.22})"/>
+    <ellipse cx="${x+w*0.52}" cy="${y+h*0.3}" rx="${w*0.14}" ry="${h*0.08}" fill="white" opacity="${0.15*op}"/>
+    <ellipse cx="${x+w*0.24}" cy="${y+h*0.16}" rx="${w*0.06}" ry="${h*0.04}" fill="white" opacity="${0.10*op}"/>
+    <ellipse cx="${cx}" cy="${y+h*0.82}" rx="${w*0.4}" ry="${h*0.1}" fill="black" opacity="${0.04*op}"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" stroke="white" stroke-width="0.6" fill="none" opacity="${0.12*op}"/>`;
+}
+
+// Glass line/bar with simplified layers
+function glassBar(x, y, w, h, rx, color, opts={}) {
+  const op = opts.opacity ?? 1;
+  return `
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${color}" opacity="${op}"/>
+    <rect x="${x+1}" y="${y+1}" width="${w-2}" height="${h*0.45}" rx="${rx}" fill="white" fill-opacity="${0.15*op}"/>
+    <rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" stroke="white" stroke-width="0.4" fill="none" opacity="${0.1*op}"/>`;
+}
+
+// Glass magnifying glass (the signature dotViewer element)
+function glassMag(cx, cy, r, color, opts={}) {
+  const op = opts.opacity ?? 1;
+  const hx = cx + r*0.6, hy = cy + r*0.6;
+  const hx2 = hx + r*0.55, hy2 = hy + r*0.55;
+  return `
+    <ellipse cx="${cx}" cy="${cy+r+6}" rx="${r*0.7}" ry="4" fill="${color}" opacity="${0.05*op}"/>
+    <line x1="${hx}" y1="${hy}" x2="${hx2}" y2="${hy2}" stroke="${color}" stroke-width="${r*0.22}" stroke-linecap="round" opacity="${0.85*op}"/>
+    <line x1="${hx}" y1="${hy}" x2="${hx2}" y2="${hy2}" stroke="white" stroke-width="${r*0.18}" stroke-linecap="round" opacity="${0.15*op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="${op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r-2}" fill="white" fill-opacity="${0.10*op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r*0.72}" fill="white" fill-opacity="${0.08*op}"/>
+    <ellipse cx="${cx-r*0.18}" cy="${cy-r*0.28}" rx="${r*0.38}" ry="${r*0.22}" fill="white" opacity="${0.42*op}" transform="rotate(-16,${cx-r*0.18},${cy-r*0.28})"/>
+    <ellipse cx="${cx+r*0.12}" cy="${cy-r*0.14}" rx="${r*0.18}" ry="${r*0.11}" fill="white" opacity="${0.16*op}"/>
+    <ellipse cx="${cx-r*0.25}" cy="${cy-r*0.36}" rx="${r*0.07}" ry="${r*0.04}" fill="white" opacity="${0.10*op}"/>
+    <ellipse cx="${cx}" cy="${cy+r*0.3}" rx="${r*0.55}" ry="${r*0.12}" fill="black" opacity="${0.04*op}"/>
+    <circle cx="${cx}" cy="${cy}" r="${r}" stroke="white" stroke-width="0.7" fill="none" opacity="${0.14*op}"/>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  ICON BUILDER
+// ═══════════════════════════════════════════════════════
+function mkIcon(bgC1, bgC2, angle, contentFn, uid) {
+  const a = (angle||150)*Math.PI/180;
+  const x1=(.5-Math.cos(a)*.5).toFixed(2), y1=(.5-Math.sin(a)*.5).toFixed(2);
+  const x2=(.5+Math.cos(a)*.5).toFixed(2), y2=(.5+Math.sin(a)*.5).toFixed(2);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+<defs>
+  <clipPath id="sq${uid}"><path d="${SQ}"/></clipPath>
+  <linearGradient id="bg${uid}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}">
+    <stop offset="0" stop-color="${bgC1}"/><stop offset="1" stop-color="${bgC2}"/>
+  </linearGradient>
+  <linearGradient id="hl${uid}" x1=".5" y1="0" x2=".5" y2="1">
+    <stop offset="0" stop-color="white" stop-opacity=".12"/><stop offset="1" stop-color="white" stop-opacity="0"/>
+  </linearGradient>
+</defs>
+<g clip-path="url(#sq${uid})">
+  <rect x="106" y="60" width="812" height="904" fill="url(#bg${uid})"/>
+  <rect x="106" y="60" width="812" height="400" fill="url(#hl${uid})"/>
+  ${contentFn()}
+  <path d="${SQ}" fill="none" stroke="rgba(255,255,255,.13)" stroke-width="1.5"/>
+</g></svg>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  24 HIG GLASS PRESETS
+// ═══════════════════════════════════════════════════════
+const P=[];
+let _i=0;
+function add(cat,name,desc,fn){P.push({id:_i++,cat,name,desc,fn});}
+
+// ── MAGNIFIER / LOUPE (core dotViewer metaphor) ──
+
+add('loupe','Glass Loupe + Dot','Signature dotViewer: magnifier with accent dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    ${glassMag(440,400,155,g)}
+    ${glassCircle(560,540,42,a)}
+  `,'p0');
+});
+
+add('loupe','Loupe Over Code','Magnifier inspecting syntax lines',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,152,()=>`
+    ${glassBar(280,320,380,11,4,g,{opacity:.06})}
+    ${glassBar(300,350,320,11,4,g,{opacity:.06})}
+    ${glassBar(280,380,400,11,4,g,{opacity:.06})}
+    ${glassBar(300,410,280,11,4,g,{opacity:.06})}
+    ${glassBar(280,440,360,11,4,g,{opacity:.06})}
+    ${glassBar(300,560,340,11,4,g,{opacity:.06})}
+    ${glassBar(280,590,400,11,4,g,{opacity:.06})}
+    ${glassBar(300,620,260,11,4,g,{opacity:.06})}
+    ${glassBar(280,650,380,11,4,g,{opacity:.06})}
+    ${glassMag(460,420,160,g)}
+  `,'p1');
+});
+
+add('loupe','Loupe + Sparkle','Magnifier with star sparkle accent',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,148,()=>{
+    const sx=620,sy=300;
+    const sparkle=`
+      <line x1="${sx-24}" y1="${sy}" x2="${sx+24}" y2="${sy}" stroke="${a}" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+      <line x1="${sx}" y1="${sy-24}" x2="${sx}" y2="${sy+24}" stroke="${a}" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+      <line x1="${sx-16}" y1="${sy-16}" x2="${sx+16}" y2="${sy+16}" stroke="${a}" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+      <line x1="${sx+16}" y1="${sy-16}" x2="${sx-16}" y2="${sy+16}" stroke="${a}" stroke-width="2" stroke-linecap="round" opacity=".5"/>
+      ${glassCircle(sx,sy,6,a)}`;
+    return `${glassMag(430,430,150,g)}${sparkle}`;
+  },'p2');
+});
+
+add('loupe','Loupe + Three Dots','Magnifier with dotfile ellipsis',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,155,()=>`
+    ${glassMag(420,380,145,g)}
+    ${glassCircle(440,610,22,a)}
+    ${glassCircle(520,610,22,a)}
+    ${glassCircle(600,610,22,a)}
+  `,'p3');
+});
+
+add('loupe','Big Loupe Minimal','Large centered magnifier, no extras',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    ${glassMag(460,410,180,g)}
+  `,'p4');
+});
+
+// ── CODE / BRACKETS ──
+
+add('code','Glass Brackets','HIG glass angle brackets with dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>{
+    // Glass < bracket
+    const lb = `
+      ${glassBar(280,320,32,120,6,g,{opacity:.85})}
+      ${glassBar(280,430,32,14,4,g,{opacity:.85})}
+      ${glassBar(270,440,44,120,6,g,{opacity:.85})}`;
+    // Really, let's use proper glass shapes for brackets
+    return `
+      <g opacity=".9">
+        <path d="M400,300 L280,510 L400,720" fill="none" stroke="${g}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M400,300 L280,510 L400,720" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" opacity=".15"/>
+        <path d="M400,300 L280,510 L400,720" fill="none" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" opacity=".04"/>
+      </g>
+      <g opacity=".9">
+        <path d="M624,300 L744,510 L624,720" fill="none" stroke="${g}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M624,300 L744,510 L624,720" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" opacity=".15"/>
+        <path d="M624,300 L744,510 L624,720" fill="none" stroke="white" stroke-width="48" stroke-linecap="round" stroke-linejoin="round" opacity=".04"/>
+      </g>
+      ${glassCircle(512,510,30,a)}`;
+  },'p5');
+});
+
+add('code','Glass Curly Braces','Volumetric { } with center dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,152,()=>`
+    <g opacity=".88">
+      <path d="M410,220 C380,280 370,360 370,420 Q360,480 300,510 Q360,540 370,600 C370,660 380,740 410,800" fill="none" stroke="${g}" stroke-width="40" stroke-linecap="round"/>
+      <path d="M410,220 C380,280 370,360 370,420 Q360,480 300,510 Q360,540 370,600 C370,660 380,740 410,800" fill="none" stroke="white" stroke-width="34" stroke-linecap="round" opacity=".12"/>
+    </g>
+    <g opacity=".88">
+      <path d="M614,220 C644,280 654,360 654,420 Q664,480 724,510 Q664,540 654,600 C654,660 644,740 614,800" fill="none" stroke="${g}" stroke-width="40" stroke-linecap="round"/>
+      <path d="M614,220 C644,280 654,360 654,420 Q664,480 724,510 Q664,540 654,600 C654,660 644,740 614,800" fill="none" stroke="white" stroke-width="34" stroke-linecap="round" opacity=".12"/>
+    </g>
+    ${glassCircle(512,510,28,a)}
+  `,'p6');
+});
+
+add('code','Glass Editor Window','Code window with glass traffic lights',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,155,()=>`
+    ${glassRect(180,190,664,500,22,'rgba(0,0,0,.35)')}
+    <rect x="180" y="190" width="664" height="44" rx="22" fill="rgba(0,0,0,.2)"/>
+    <rect x="180" y="212" width="664" height="22" fill="rgba(0,0,0,.2)"/>
+    ${glassCircle(216,212,7,'#ff5f57')}
+    ${glassCircle(240,212,7,'#febc2e')}
+    ${glassCircle(264,212,7,'#28c840')}
+    ${glassBar(214,258,160,14,4,a,{opacity:.7})}
+    ${glassBar(214,286,260,12,4,g,{opacity:.35})}
+    ${glassBar(234,312,340,12,4,g,{opacity:.22})}
+    ${glassBar(234,338,190,12,4,a,{opacity:.45})}
+    ${glassBar(438,338,150,12,4,g,{opacity:.28})}
+    ${glassBar(234,364,290,12,4,g,{opacity:.2})}
+    ${glassBar(234,390,130,12,4,g,{opacity:.38})}
+    ${glassBar(214,416,200,12,4,g,{opacity:.3})}
+    ${glassBar(214,442,320,12,4,g,{opacity:.18})}
+    ${glassBar(234,468,240,12,4,a,{opacity:.35})}
+    ${glassBar(214,494,160,12,4,g,{opacity:.28})}
+    ${glassBar(214,520,280,12,4,g,{opacity:.15})}
+  `,'p7');
+});
+
+add('code','Syntax Highlight Lines','Multi-colored code lines',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    <rect x="210" y="228" width="3" height="556" rx="1.5" fill="${g}" opacity=".12"/>
+    ${glassBar(244,244,200,20,5,a,{opacity:.7})}
+    ${glassBar(244,284,320,18,5,g,{opacity:.4})}
+    ${glassBar(270,320,400,18,5,g,{opacity:.25})}
+    ${glassBar(270,356,220,18,5,a,{opacity:.55})}
+    ${glassBar(510,356,170,18,5,g,{opacity:.32})}
+    ${glassBar(270,392,340,18,5,g,{opacity:.2})}
+    ${glassBar(270,428,160,18,5,g,{opacity:.42})}
+    ${glassBar(450,428,240,18,5,a,{opacity:.45})}
+    ${glassBar(270,464,380,18,5,g,{opacity:.18})}
+    ${glassBar(244,500,200,18,5,g,{opacity:.38})}
+    ${glassBar(244,536,280,18,5,g,{opacity:.25})}
+    ${glassBar(244,572,140,18,5,a,{opacity:.65})}
+    ${glassBar(244,608,220,18,5,g,{opacity:.18})}
+    ${glassBar(244,644,320,18,5,g,{opacity:.12})}
+  `,'p8');
+});
+
+add('code','Glass Hash Symbol','Config file # with depth',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,148,()=>`
+    <g opacity=".88">
+      <line x1="420" y1="240" x2="380" y2="780" stroke="${g}" stroke-width="48" stroke-linecap="round"/>
+      <line x1="420" y1="240" x2="380" y2="780" stroke="white" stroke-width="42" stroke-linecap="round" opacity=".12"/>
+      <line x1="644" y1="240" x2="604" y2="780" stroke="${g}" stroke-width="48" stroke-linecap="round"/>
+      <line x1="644" y1="240" x2="604" y2="780" stroke="white" stroke-width="42" stroke-linecap="round" opacity=".12"/>
+      <line x1="260" y1="420" x2="764" y2="420" stroke="${g}" stroke-width="48" stroke-linecap="round"/>
+      <line x1="260" y1="420" x2="764" y2="420" stroke="white" stroke-width="42" stroke-linecap="round" opacity=".12"/>
+      <line x1="240" y1="600" x2="744" y2="600" stroke="${g}" stroke-width="48" stroke-linecap="round"/>
+      <line x1="240" y1="600" x2="744" y2="600" stroke="white" stroke-width="42" stroke-linecap="round" opacity=".12"/>
+    </g>
+  `,'p9');
+});
+
+add('code','Terminal Prompt','Glass >_ command prompt',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,155,()=>`
+    <g opacity=".88">
+      <polyline points="280,410 380,510 280,610" fill="none" stroke="${g}" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+      <polyline points="280,410 380,510 280,610" fill="none" stroke="white" stroke-width="42" stroke-linecap="round" stroke-linejoin="round" opacity=".14"/>
+    </g>
+    ${glassBar(430,584,280,32,8,a,{opacity:.85})}
+  `,'pa');
+});
+
+// ── EYE / VIEWER ──
+
+add('eye','Glass Eye','Volumetric eye with glass iris',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    <g transform="translate(512,470)">
+      <path d="M-260,0 Q-128,-180 0,-180 Q128,-180 260,0 Q128,180 0,180 Q-128,180 -260,0Z" fill="${g}" opacity=".15"/>
+      <path d="M-260,0 Q-128,-180 0,-180 Q128,-180 260,0 Q128,180 0,180 Q-128,180 -260,0Z" fill="none" stroke="${g}" stroke-width="14" opacity=".7"/>
+      <path d="M-260,0 Q-128,-180 0,-180 Q128,-180 260,0 Q128,180 0,180 Q-128,180 -260,0Z" fill="none" stroke="white" stroke-width="10" opacity=".1"/>
+    </g>
+    ${glassCircle(512,470,100,g)}
+    ${glassCircle(512,470,48,a)}
+  `,'pb');
+});
+
+add('eye','Minimal Eye','Bold simple eye shape',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,152,()=>`
+    <g transform="translate(512,480)">
+      <path d="M-250,0 C-130,-195 130,-195 250,0 C130,195 -130,195 -250,0Z" fill="none" stroke="${g}" stroke-width="40" stroke-linejoin="round" opacity=".88"/>
+      <path d="M-250,0 C-130,-195 130,-195 250,0 C130,195 -130,195 -250,0Z" fill="none" stroke="white" stroke-width="34" stroke-linejoin="round" opacity=".1"/>
+    </g>
+    ${glassCircle(512,480,72,g)}
+    ${glassCircle(512,480,34,a)}
+  `,'pc');
+});
+
+add('eye','Scan Frame','Code scanning viewfinder',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,148,()=>`
+    <g stroke="${g}" stroke-width="18" stroke-linecap="round" fill="none" opacity=".75">
+      <path d="M280,340 L280,260 L360,260"/>
+      <path d="M744,260 L664,260 M744,260 L744,340"/>
+      <path d="M280,684 L280,764 L360,764"/>
+      <path d="M744,764 L664,764 M744,764 L744,684"/>
+    </g>
+    <g stroke="white" stroke-width="14" stroke-linecap="round" fill="none" opacity=".08">
+      <path d="M280,340 L280,260 L360,260"/>
+      <path d="M744,260 L664,260 M744,260 L744,340"/>
+      <path d="M280,684 L280,764 L360,764"/>
+      <path d="M744,764 L664,764 M744,764 L744,684"/>
+    </g>
+    ${glassBar(340,350,170,16,4,a,{opacity:.65})}
+    ${glassBar(340,384,310,14,4,g,{opacity:.38})}
+    ${glassBar(358,414,270,14,4,g,{opacity:.25})}
+    ${glassBar(358,444,200,14,4,g,{opacity:.38})}
+    ${glassBar(340,474,330,14,4,g,{opacity:.2})}
+    ${glassBar(340,504,210,14,4,a,{opacity:.5})}
+    ${glassBar(340,534,290,14,4,g,{opacity:.28})}
+    ${glassBar(340,564,170,14,4,g,{opacity:.38})}
+    ${glassBar(340,594,250,14,4,g,{opacity:.15})}
+    ${glassBar(340,624,190,14,4,a,{opacity:.35})}
+    <line x1="264" y1="512" x2="760" y2="512" stroke="${a}" stroke-width="2" opacity=".4"/>
+  `,'pd');
+});
+
+add('eye','Lens Focus','Camera aperture ring',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,155,()=>`
+    <circle cx="512" cy="490" r="230" fill="none" stroke="${g}" stroke-width="36" opacity=".12"/>
+    <circle cx="512" cy="490" r="230" fill="none" stroke="white" stroke-width="30" opacity=".04"/>
+    <circle cx="512" cy="490" r="230" fill="none" stroke="${g}" stroke-width="5" stroke-dasharray="22 16" opacity=".25"/>
+    <circle cx="512" cy="490" r="165" fill="none" stroke="${g}" stroke-width="2.5" opacity=".35"/>
+    <circle cx="512" cy="490" r="165" fill="none" stroke="white" stroke-width="1.5" opacity=".08"/>
+    ${glassCircle(512,490,85,g,{opacity:.3})}
+    <g fill="none" stroke="${g}" stroke-width="20" stroke-linecap="round" opacity=".8">
+      <polyline points="482,460 450,490 482,520"/>
+      <polyline points="542,460 574,490 542,520"/>
+    </g>
+    <g fill="none" stroke="white" stroke-width="16" stroke-linecap="round" opacity=".1">
+      <polyline points="482,460 450,490 482,520"/>
+      <polyline points="542,460 574,490 542,520"/>
+    </g>
+    ${glassCircle(512,490,7,a)}
+  `,'pe');
+});
+
+// ── ABSTRACT / GEOMETRIC ──
+
+add('abstract','Glass Layers','Stacked translucent glass panels',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    <g transform="translate(512,470)">
+      ${glassRect(-180,60,360,200,26,g,{opacity:.2})}
+      ${glassRect(-180,-10,360,200,26,g,{opacity:.4})}
+      ${glassRect(-180,-80,360,200,26,g,{opacity:.85})}
+    </g>
+    ${glassCircle(512,400,32,a)}
+  `,'pf');
+});
+
+add('abstract','Letter d','Elegant lightweight "d" with glass dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    <text x="512" y="620" text-anchor="middle" font-family="-apple-system,'SF Pro Display',sans-serif" font-size="480" font-weight="200" fill="${g}" opacity=".88">d</text>
+    <text x="512" y="620" text-anchor="middle" font-family="-apple-system,'SF Pro Display',sans-serif" font-size="480" font-weight="200" fill="white" opacity=".06">d</text>
+    ${glassCircle(352,648,24,a)}
+  `,'pg');
+});
+
+add('abstract','Glass Prism','Diamond with code-color refraction',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    <g transform="translate(512,488)">
+      <path d="M0,-220 L200,0 L0,220 L-200,0Z" fill="${g}" opacity=".85"/>
+      <path d="M0,-220 L200,0 L0,220 L-200,0Z" fill="white" fill-opacity=".06"/>
+      <path d="M0,-220 L70,0 L0,220" fill="none" stroke="white" stroke-width="1.5" opacity=".08"/>
+      <ellipse cx="-40" cy="-80" rx="55" ry="35" fill="white" opacity=".32" transform="rotate(-18,-40,-80)"/>
+      <ellipse cx="10" cy="-50" rx="25" ry="14" fill="white" opacity=".12"/>
+      ${glassBar(-70,-32,140,10,3,a,{opacity:.55})}
+      ${glassBar(-52,-12,104,10,3,g,{opacity:.35})}
+      ${glassBar(-80,8,160,10,3,g,{opacity:.35})}
+      ${glassBar(-42,28,84,10,3,a,{opacity:.45})}
+      <ellipse cx="0" cy="80" rx="70" ry="18" fill="black" opacity=".04"/>
+      <path d="M0,-220 L200,0 L0,220 L-200,0Z" fill="none" stroke="white" stroke-width=".7" opacity=".12"/>
+    </g>
+  `,'ph');
+});
+
+add('abstract','Glass Wave','Flowing wave with glass dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,158,()=>`
+    <path d="M106,560 Q310,330 512,480 Q714,630 918,390" fill="none" stroke="${g}" stroke-width="56" stroke-linecap="round" opacity=".8"/>
+    <path d="M106,560 Q310,330 512,480 Q714,630 918,390" fill="none" stroke="white" stroke-width="50" stroke-linecap="round" opacity=".1"/>
+    <path d="M106,560 Q310,330 512,480 Q714,630 918,390" fill="none" stroke="${g}" stroke-width="110" stroke-linecap="round" opacity=".15"/>
+    ${glassCircle(512,480,28,a)}
+  `,'pi');
+});
+
+// ── DOT-THEMED ──
+
+add('dot','Glass Sphere','Large prominent glass dot',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    ${glassCircle(512,480,140,g)}
+  `,'pj');
+});
+
+add('dot','Constellation','Connected glass nodes',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,152,()=>`
+    <g stroke="${g}" stroke-width="2.5" opacity=".2">
+      <line x1="324" y1="310" x2="512" y2="270"/>
+      <line x1="512" y1="270" x2="700" y2="350"/>
+      <line x1="324" y1="310" x2="284" y2="510"/>
+      <line x1="512" y1="270" x2="512" y2="490"/>
+      <line x1="700" y1="350" x2="680" y2="530"/>
+      <line x1="284" y1="510" x2="512" y2="490"/>
+      <line x1="512" y1="490" x2="680" y2="530"/>
+      <line x1="284" y1="510" x2="404" y2="700"/>
+      <line x1="512" y1="490" x2="404" y2="700"/>
+      <line x1="512" y1="490" x2="620" y2="710"/>
+      <line x1="680" y1="530" x2="620" y2="710"/>
+    </g>
+    ${glassCircle(324,310,18,g)}
+    ${glassCircle(512,270,25,a)}
+    ${glassCircle(700,350,15,g)}
+    ${glassCircle(284,510,13,g)}
+    ${glassCircle(512,490,34,g)}
+    ${glassCircle(680,530,19,a)}
+    ${glassCircle(404,700,21,g)}
+    ${glassCircle(620,710,12,g)}
+  `,'pk');
+});
+
+add('dot','Three Glass Dots','Ellipsis in glass',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,150,()=>`
+    ${glassCircle(290,490,70,g)}
+    ${glassCircle(512,490,70,a)}
+    ${glassCircle(734,490,70,g)}
+  `,'pl');
+});
+
+add('dot','Ripple','Concentric glass rings',(b1,b2,g,a)=>{
+  return mkIcon(b1,b2,148,()=>`
+    <circle cx="512" cy="490" r="280" fill="none" stroke="${g}" stroke-width="16" opacity=".08"/>
+    <circle cx="512" cy="490" r="280" fill="none" stroke="white" stroke-width="12" opacity=".03"/>
+    <circle cx="512" cy="490" r="220" fill="none" stroke="${g}" stroke-width="16" opacity=".12"/>
+    <circle cx="512" cy="490" r="220" fill="none" stroke="white" stroke-width="12" opacity=".04"/>
+    <circle cx="512" cy="490" r="160" fill="none" stroke="${g}" stroke-width="16" opacity=".18"/>
+    <circle cx="512" cy="490" r="160" fill="none" stroke="white" stroke-width="12" opacity=".06"/>
+    <circle cx="512" cy="490" r="100" fill="none" stroke="${g}" stroke-width="16" opacity=".26"/>
+    <circle cx="512" cy="490" r="100" fill="none" stroke="white" stroke-width="12" opacity=".08"/>
+    ${glassCircle(512,490,44,g)}
+  `,'pm2');
+});
+
+// ═══════════════════════════════════════════════════════
+//  RENDER ENGINE
+// ═══════════════════════════════════════════════════════
+const CATS={
+  loupe:{t:'Magnifier / Loupe',d:'The signature dotViewer metaphor — inspection, viewing, analysis'},
+  code:{t:'Code & Brackets',d:'Syntax highlighting, editor windows, config symbols'},
+  eye:{t:'Eye & Viewer',d:'The "viewer" concept — seeing, scanning, inspecting'},
+  abstract:{t:'Abstract & Geometric',d:'Modern minimal Apple-style compositions'},
+  dot:{t:'Dot-Themed',d:'The "dot" in dotViewer — dotfiles, data points, the period'},
+};
+let sel=null, B1,B2,G,A;
+
+function init(){
+  B1=$('i1').value; B2=$('i2').value; G=$('i3').value; A=$('i4').value;
+  $('cnt').textContent=P.length;
+  ['i1','i2','i3','i4'].forEach(id=>$(id).oninput=recolor);
+  const bgs=[['#181828'],['#000'],['#f0f0f4'],['#fff'],['ck']];
+  const bt=$('bgt');
+  bgs.forEach((b,i)=>{
+    const d=document.createElement('div');
+    d.className='bg-o'+(i===0?' on':'');
+    d.style.background=b[0]==='ck'?'repeating-conic-gradient(#bbb 0% 25%,#fff 0% 50%) 50%/7px 7px':b[0];
+    d.onclick=()=>{bt.querySelectorAll('.bg-o').forEach(o=>o.classList.remove('on'));d.classList.add('on');
+      $('card').style.background=b[0]==='ck'?'repeating-conic-gradient(#bbb 0% 25%,#fff 0% 50%) 50%/12px 12px':b[0];};
+    bt.appendChild(d);
+  });
+  build(); pick(0);
+}
+
+function $(id){return document.getElementById(id)}
+
+function build(){
+  const pp=$('pp'); pp.innerHTML='';
+  const grp={};
+  P.forEach(p=>{(grp[p.cat]=grp[p.cat]||[]).push(p)});
+  for(const[cat,info]of Object.entries(CATS)){
+    const items=grp[cat]; if(!items)continue;
+    const s=document.createElement('div'); s.className='sec';
+    s.innerHTML=`<h2>${info.t} <span style="font-size:11px;color:var(--tx2);font-weight:400">(${items.length})</span></h2><p>${info.d}</p>`;
+    const g=document.createElement('div'); g.className='gr';
+    items.forEach(p=>{
+      const c=document.createElement('div'); c.className='cd'; c.id='c'+p.id;
+      try{c.innerHTML=p.fn(B1,B2,G,A)+`<div class="n">${p.name}</div>`}
+      catch(e){c.innerHTML=`<div style="width:84px;height:84px;background:rgba(255,0,0,.15);border-radius:10px;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#f88">err</div><div class="n">${p.name}</div>`;console.error(p.name,e)}
+      c.onclick=()=>pick(p.id);
+      g.appendChild(c);
+    });
+    s.appendChild(g); pp.appendChild(s);
+  }
+}
+
+function pick(id){
+  sel=id;
+  document.querySelectorAll('.cd').forEach(c=>c.classList.remove('on'));
+  const el=$('c'+id); if(el)el.classList.add('on');
+  const p=P.find(x=>x.id===id); if(!p)return;
+  let svg; try{svg=p.fn(B1,B2,G,A)}catch(e){svg='';console.error(e)}
+  ['pm','s128','s64','s32','s16','dk'].forEach(id=>$(id).innerHTML=svg);
+  $('nm').textContent=p.name;
+  $('ds').textContent=p.desc;
+}
+
+function recolor(){
+  B1=$('i1').value; B2=$('i2').value; G=$('i3').value; A=$('i4').value;
+  build(); if(sel!==null)pick(sel);
+}
+
+function xSVG(){
+  if(sel===null){alert('Select first');return}
+  const p=P.find(x=>x.id===sel), svg=p.fn(B1,B2,G,A);
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+  a.download=`dotViewer-${p.name.replace(/\s+/g,'-')}.svg`; a.click();
+}
+
+function xPNG(sz){
+  if(sel===null){alert('Select first');return}
+  const p=P.find(x=>x.id===sel), svg=p.fn(B1,B2,G,A);
+  const cv=document.createElement('canvas'); cv.width=cv.height=sz;
+  const ctx=cv.getContext('2d'), img=new Image();
+  img.onload=()=>{ctx.drawImage(img,0,0,sz,sz);cv.toBlob(b=>{
+    const a=document.createElement('a'); a.href=URL.createObjectURL(b);
+    a.download=`dotViewer-${p.name.replace(/\s+/g,'-')}-${sz}.png`; a.click();
+  },'image/png')};
+  img.src=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));
+}
+
+init();
+</script>
+</body>
+</html>

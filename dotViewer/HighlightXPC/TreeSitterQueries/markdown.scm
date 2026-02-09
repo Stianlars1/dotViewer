@@ -19,12 +19,11 @@
 [
   (link_title)
   (indented_code_block)
-  (fenced_code_block)
 ] @text.literal
 
 (fenced_code_block_delimiter) @punctuation.delimiter
 
-(code_fence_content) @none
+(code_fence_content) @text.literal
 
 (link_destination) @text.uri
 

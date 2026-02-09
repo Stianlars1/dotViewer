@@ -1,0 +1,32 @@
+Key principles to apply:
+
+Multi-layer composition - background, midground, foreground with clear separation
+Glass material properties - translucency, refraction, specular highlights, frosting
+Chromatic shadows - color-shifted shadows for realistic glass
+Edge highlights - specular rim lighting
+Depth range 0-30 - thicker glass = stronger refraction
+Front-facing perspective - icons should face the viewer
+Single metaphor - one clear idea per icon
+Rich but subtle gradients - light-to-dark flowing with light source direction
+Environmental response - feeling of glass responding to light
+
+I'm creating a new "HIG Glass" category with Apple HIG-informed assets featuring even more sophisticated glass effects, starting with a globe icon that embodies these principles.
+Now I'm planning out the full set of HIG Glass icons—a globe with refraction bands, a privacy shield with layered glass, a frosted gear, stacked glass cards, a compass with a glass needle, a book with glass pages, a camera lens with iris detail, a music note with glass body, a volumetric star, a glass lock, a heart with glass treatment, a map pin, a bell with glass resonance, and more to round out the collection.
+For each preset, I'm thinking through the layering carefully—floor shadows as dark ellipses, multiple specular highlights at different intensities, inner glow zones, rim lighting with thin white strokes, ambient occlusion at the bottom, chromatic shadow effects, frosted inner layers, and how they'll respond to environmental light. I'll also need to add a new CSS badge style and filter tab for the 'hig' group, then write out all the new code to append to the file.
+I'm identifying the exact insertion points: the ASSETS array closes at line 380 and PRESETS at line 940, so I'll add the new assets before line 380 and new presets before line 940. Now I'm crafting the new assets with sophisticated multi-layer specular highlights...
+Adding seven new HIG Glass assets: a glass globe with latitude lines, a frosted shield with volumetric depth, a gear with detailed teeth, stacked layered rectangles, a compass rose, an open book with glass pages, and a camera iris with glass treatment.
+Now I'm expanding the collection with musical notes, stars, locks, hearts, map pins, bells, isometric cubes, magic wands, and leaves—each with the same glass treatment approach. I need to ensure these are more refined than the liquid assets, layering multiple specular highlights and using chromatic shadows instead of flat blacks.
+Writing SVG glass assets... black
+
+More refined rim lighting
+Inner diffusion layers
+Subtle gradient fills within the shape itself
+
+I need to be strategic about my edits since the file is large. I'll add the new CSS badge style first, then insert the assets before line 380, add presets before line 940, and update the badge rendering and filter tabs accordingly.
+Now I'm designing each asset to be visually sophisticated—a Safari-like globe with latitude lines and specular highlights, a privacy shield with frosted fill and multiple highlight layers, a settings gear with detailed teeth and glass effects, and stacked cards with offset positioning and top-card highlights.
+Continuing with compass, book, camera, musical note, star, lock, heart, and map pin designs—each with glass treatments, volumetric effects, and carefully layered highlights to create depth and visual interest.
+Now I'm moving through the remaining icons: bell with its resonance effect, an isometric cube with varying face opacities, a magic wand with sparkles, and a leaf with detailed veining. I'm shifting my approach to prioritize quality over quantity, aiming for 12-14 truly polished assets paired with 20-24 presets, where each icon includes a subtle floor shadow using a colored ellipse with low opacity.
+Writing SVG code... Writing SVG code... Still writing SVG code... Writing SVG icon definitions... Writing SVG star icon... Still writing SVG code... Writing SVG camera elements... Writing SVG glass elements... Writing SVG icon definitions... Still writing SVG code... Writing SVG icon definitions... Writing SVG icon definitions... Adding highlight and shadow layers... Writing SVG code... Writing SVG sparkles... Writing SVG leaf details... Writing SVG icon presets... Finishing up the icon list with the last few presets, then I'm ready to implement the styling. I need to create a distinctive badge for the HIG group using a gold gradient to make these premium icons stand out from the rest.
+Writing badge styles...
+Now I'm mapping out the five specific edits I need to make: the CSS styling, the new icon assets, the preset definitions, the badge rendering logic, and the filter tabs. I should be careful about the exact line numbers and edit strings to avoid any conflicts when making these changes. Adding the HIG filter count and tab...
+I'm planning out the edit sequence to avoid mistakes—starting with CSS, then assets, presets, and finally the filter and badge logic. Since the SVG assets are already written as multi-line template literals in the existing code, I'll follow that same pattern.Show less
