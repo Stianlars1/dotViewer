@@ -41,6 +41,21 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             logger.log("Heartbeat preview returned for \(url.lastPathComponent, privacy: .public)")
             return makeHTMLReply(html: heartbeatHTML, lineCount: 3, fontSize: 14, showHeader: false)
         }
+
+        // Experiment 1: RTF data-based reply — test if QL renders RTF with native text selection
+        if url.lastPathComponent.hasPrefix("test_rtf_") {
+            logger.log("Experiment 1: RTF path for \(url.lastPathComponent, privacy: .public)")
+            let text: String
+            do {
+                text = try String(contentsOf: url, encoding: .utf8)
+            } catch {
+                logger.error("Experiment 1: Read failed: \(error.localizedDescription, privacy: .public)")
+                text = "Failed to read file"
+            }
+            let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
+            let lineCount = text.components(separatedBy: "\n").count
+            return makeRTFReply(text: text, palette: palette, lineCount: lineCount, fontSize: SharedSettings.shared.fontSize)
+        }
 #endif
 
         let (requestId, previousId) = await PreviewRequestCoordinator.shared.startNewRequest()
@@ -96,7 +111,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let isEmptyFile = fileSize == 0
 
         let languageId = registry.highlightLanguage(for: key) ?? "plaintext"
-        let languageName = registry.fileType(for: key)?.displayName ?? (key.isEmpty ? "Text" : key.uppercased())
+        let languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
 
         let isMarkdown = languageId == "markdown"
         let showLineNumbers = SharedSettings.shared.showLineNumbers
@@ -159,7 +174,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 showBinaryWarning: showBinaryWarning,
                 systemIsDark: systemIsDark,
                 wordWrap: SharedSettings.shared.wordWrap,
-                markdownShowTOC: SharedSettings.shared.markdownShowTOC
+                markdownShowTOC: SharedSettings.shared.markdownShowTOC,
+                copyBehavior: SharedSettings.shared.copyBehavior
             )
 
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
@@ -273,7 +289,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             showBinaryWarning: showBinaryWarning,
             systemIsDark: systemIsDark,
             wordWrap: SharedSettings.shared.wordWrap,
-            markdownShowTOC: SharedSettings.shared.markdownShowTOC
+            markdownShowTOC: SharedSettings.shared.markdownShowTOC,
+            copyBehavior: SharedSettings.shared.copyBehavior
         )
 
         let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
@@ -339,6 +356,54 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         return reply
     }
 
+    // MARK: - Experiment 1: RTF Data-Based Reply
+    // Hypothesis: If QL renders RTF using a native NSTextView, Cmd+C may work natively.
+    private static func makeRTFReply(
+        text: String,
+        palette: ThemePalette,
+        lineCount: Int,
+        fontSize: Double
+    ) -> QLPreviewReply {
+        let font = NSFont.monospacedSystemFont(ofSize: CGFloat(fontSize), weight: .regular)
+        let textColor = NSColor(hex: palette.text) ?? .labelColor
+        let bgColor = NSColor(hex: palette.background) ?? .textBackgroundColor
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.45
+
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: textColor,
+            .backgroundColor: bgColor,
+            .paragraphStyle: paragraphStyle
+        ]
+
+        let attributed = NSAttributedString(string: text, attributes: attributes)
+
+        guard let rtfData = try? attributed.data(
+            from: NSRange(location: 0, length: attributed.length),
+            documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf]
+        ) else {
+            logger.error("Experiment 1: RTF conversion failed, falling back to HTML")
+            let escaped = text
+                .replacingOccurrences(of: "&", with: "&amp;")
+                .replacingOccurrences(of: "<", with: "&lt;")
+                .replacingOccurrences(of: ">", with: "&gt;")
+            return makeHTMLReply(html: "<pre>\(escaped)</pre>", lineCount: lineCount, fontSize: fontSize, showHeader: false)
+        }
+
+        logger.log("Experiment 1: RTF data generated, \(rtfData.count) bytes")
+
+        let lineHeight = fontSize * 1.45
+        let height = min(max(CGFloat(lineCount) * lineHeight + 32, 160), 1000)
+        let width: CGFloat = lineCount <= 5 ? 420 : 700
+
+        let reply = QLPreviewReply(dataOfContentType: .rtf, contentSize: CGSize(width: width, height: height)) { _ in
+            rtfData
+        }
+        return reply
+    }
+
     private static func makePlainTextFallback(url: URL, systemIsDark: Bool) -> QLPreviewReply {
         let text: String
         if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
@@ -385,5 +450,31 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             fontSize: SharedSettings.shared.fontSize,
             showHeader: false
         )
+    }
+}
+
+// MARK: - NSColor(hex:)
+
+private extension NSColor {
+    convenience init?(hex: String) {
+        var sanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
+        if sanitized.hasPrefix("#") { sanitized.removeFirst() }
+        guard sanitized.count == 6 || sanitized.count == 8 else { return nil }
+        let scanner = Scanner(string: sanitized)
+        var hexNumber: UInt64 = 0
+        guard scanner.scanHexInt64(&hexNumber) else { return nil }
+        let r, g, b, a: CGFloat
+        if sanitized.count == 6 {
+            r = CGFloat((hexNumber & 0xFF0000) >> 16) / 255
+            g = CGFloat((hexNumber & 0x00FF00) >> 8) / 255
+            b = CGFloat(hexNumber & 0x0000FF) / 255
+            a = 1.0
+        } else {
+            r = CGFloat((hexNumber & 0xFF000000) >> 24) / 255
+            g = CGFloat((hexNumber & 0x00FF0000) >> 16) / 255
+            b = CGFloat((hexNumber & 0x0000FF00) >> 8) / 255
+            a = CGFloat(hexNumber & 0x000000FF) / 255
+        }
+        self.init(calibratedRed: r, green: g, blue: b, alpha: a)
     }
 }

@@ -145,6 +145,11 @@ struct FileTypesView: View {
                         }
                     }
                 }
+
+                Text("Custom extensions apply highlighting to files that already reach dotViewer. Most common developer file extensions are supported out of the box.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal)
             }
             .listStyle(.inset(alternatesRowBackgrounds: true))
         }

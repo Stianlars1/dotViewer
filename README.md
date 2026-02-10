@@ -5,14 +5,15 @@ A macOS Quick Look extension that adds syntax-highlighted previews for source co
 ## Features
 
 - **Syntax highlighting** — 53 tree-sitter grammars with heuristic fallback for unknown languages
-- **Markdown preview** — raw source with syntax highlighting (rendered mode in development)
+- **Markdown preview** — raw/rendered toggle with Typora-quality rendered mode (GFM tables, task lists, TOC sidebar)
 - **Quick Look integration** — spacebar preview from Finder, Path Finder, or any Quick Look host
 - **Finder thumbnails** — full-bleed syntax-highlighted thumbnails in icon and column views
 - **10+ themes** — with automatic dark/light mode detection
-- **Header UI** — file type badge, file size, copy-to-clipboard button
-- **Configurable** — font size, word wrap, line numbers, theme selection via host app
+- **Header UI** — file type badge, file size, copy-to-clipboard button, markdown mode toggle
+- **Smart copy** — 8 configurable copy behavior presets (auto-copy, floating button, tap-to-confirm, shake, and more)
+- **Configurable** — font size, word wrap, line numbers, theme, copy behavior via host app
 - **Custom file types** — register your own extensions and assign highlight languages
-- **Broad coverage** — 325+ file type definitions, 480+ extensions, 277+ filename patterns
+- **Broad coverage** — 388 file type definitions, 561 extensions, 283 filename patterns
 
 ## Screenshots
 

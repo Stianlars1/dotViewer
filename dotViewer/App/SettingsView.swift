@@ -18,6 +18,18 @@ struct SettingsView: View {
     @State private var previewCacheEnabled: Bool = SharedSettings.shared.previewCacheEnabled
     @State private var previewCacheMaxMB: Double = Double(SharedSettings.shared.previewCacheMaxMB)
     @State private var previewCacheTTLSeconds: Double = Double(SharedSettings.shared.previewCacheTTLSeconds)
+    @State private var copyBehavior: String = SharedSettings.shared.copyBehavior
+
+    private let copyBehaviors: [(String, String, String)] = [
+        ("autoCopy", "Auto-copy", "Copies text to clipboard when you release the mouse after selecting."),
+        ("floatingButton", "Floating copy button", "A small Copy button appears near your selection — click it to copy."),
+        ("toastAction", "Toast with copy button", "A toast notification appears with a Copy button to confirm."),
+        ("tapToCopy", "Tap to confirm", "Select text, then tap anywhere to copy it. Two-step confirmation."),
+        ("holdToCopy", "Hold-to-copy", "Only copies when you hold the mouse for more than 500ms while selecting."),
+        ("shakeToCopy", "Shake to copy", "Select text, then shake your mouse left-right to copy."),
+        ("autoCopyUndo", "Auto-copy with undo", "Auto-copies on selection with a 3-second Undo button in the toast."),
+        ("off", "Off", "No automatic copy behavior. Use the header button or right-click to copy."),
+    ]
 
     private let themes: [(String, String)] = [
         ("auto", "Auto (System)"),
@@ -133,17 +145,37 @@ struct SettingsView: View {
 
                         Divider()
 
+                        Picker("Copy Behavior", selection: $copyBehavior) {
+                            ForEach(copyBehaviors, id: \.0) { behavior in
+                                Text(behavior.1).tag(behavior.0)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: copyBehavior) { _, newValue in
+                            SharedSettings.shared.copyBehavior = newValue
+                        }
+
+                        Text(copyBehaviors.first(where: { $0.0 == copyBehavior })?.2 ?? "")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Divider()
+
                         Toggle("Preview All File Types", isOn: $previewUnknownFiles)
                             .onChange(of: previewUnknownFiles) { _, newValue in
                                 SharedSettings.shared.previewAllFileTypes = newValue
                             }
+
+                        Text("Preview files with extensions not in the built-in registry")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
 
                         Toggle("Force Text Preview for Unknown Files", isOn: $forceTextForUnknown)
                             .onChange(of: forceTextForUnknown) { _, newValue in
                                 SharedSettings.shared.previewForceTextForUnknown = newValue
                             }
 
-                        Text("Show plain text preview for unrecognized file types")
+                        Text("Treat files without a text MIME type as plain text if they contain readable bytes")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }

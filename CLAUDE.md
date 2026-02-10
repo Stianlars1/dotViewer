@@ -2,6 +2,15 @@
 
 macOS Quick Look extension for syntax-highlighted previews of source code, config files, and dotfiles.
 
+## Prior Work & Context
+Before starting any analysis, planning, or research task, ALWAYS ask: 'Is there existing prior work, plans, or research I should read first?' Check for existing plan documents, memory files, and previous session artifacts before doing independent exploration.
+
+## Planning vs Execution
+Do NOT spend more than ~20% of session time planning. When a plan exists, move to implementation immediately. If you catch yourself creating plan documents, asking repeated clarifying questions, or 'exiting plan mode' without writing code — STOP and start executing. The user will redirect if the approach is wrong.
+
+## Output Delivery
+Always produce a deliverable artifact (code change, document, or concrete answer) within the first ~30 minutes of a session. Never spend an entire session only reading files, writing internal plans, or asking questions without giving the user something tangible.
+
 ## Product Direction
 
 Best-in-class Quick Look code previewer for macOS. Typora-quality markdown rendering. Seamless Finder integration with consistent thumbnails and previews. Support every text-based file a developer encounters.
@@ -88,15 +97,18 @@ Canonical scope — what this product must support:
 - **Thumbnails**: full-bleed Finder thumbnails, visually consistent with preview output
 - **Preview header**: file type badge, file size, copy-to-clipboard button, markdown mode toggle
 - **Responsive sizing**: dynamic preview window dimensions based on content
-- **Settings**: font size, theme, word wrap, line numbers (synced via App Group)
+- **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
+- **Settings**: font size, theme, word wrap, line numbers, copy behavior (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
-- **File type coverage**: 325+ definitions, 480+ extensions, 277+ filenames
+- **File type coverage**: 388 definitions, 561 extensions, 283 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams
 - **Sensitive file detection**: warn on .env, credentials, keys
 
 ## Key Concepts
 
-- **UTI routing**: Quick Look matches on exact UTType identifiers (not conformance). The `QLSupportedContentTypes` list in `project.yml` must include every UTI we want to handle. Use `scripts/dotviewer-gen-ql-content-types.sh` to regenerate from `FileTypeRegistry`.
+- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 501 UTIs covering all 561 extensions in DefaultFileTypes.json: 396 custom exports (`com.stianlars1.dotviewer.*`), ~64 system UTIs, ~63 vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
+- **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 561 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
+- **Multi-dot file resolution**: `FileTypeResolution.bestKey()` tries full name → progressive prefix stripping → bare extension → intermediate segment scanning. For `.claude.json.backup.xxx`, this resolves to `json`.
 - **XPC protocol**: `HighlightServiceProtocol` — the QuickLookExtension calls `highlight(code:language:theme:showLineNumbers:requestId:reply:)` on the XPC service. The reply returns HTML as `NSData`.
 - **App Group**: Settings (font size, theme) sync between the host app and extensions via `group.stianlars1.dotViewer.shared`.
 - **Binary gating**: `FileAttributes.looksTextual` samples bytes to avoid rendering binary files. `TransportStreamDetector` prevents `.ts` video files from being treated as TypeScript.
@@ -112,6 +124,7 @@ Source `scripts/dotviewer-aliases.zsh` for shortcuts:
 | `dvql`     | `dotviewer-ql-status.sh`            | Show extension registration status         |
 | `dvsmoke`  | `dotviewer-ql-smoke.sh`             | Smoke test: qlmanage + log capture         |
 | `dvutis`   | `dotviewer-gen-ql-content-types.sh` | Regenerate UTI list from FileTypeRegistry  |
+| `dvgenutis`| `dotviewer-gen-utis.py`             | Generate UTI declarations from JSON registry|
 | `dvaudit`  | `dotviewer-gen-default-filetypes.py`| Audit JSON against codebase                |
 
 Log filtering examples:
@@ -141,11 +154,16 @@ See [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for current bugs and [BACKLOG.md](BACKLOG
 - App Group: `group.stianlars1.dotViewer.shared`
 - Dev team: `7F5ZSQFCQ4`
 - Log subsystem: `com.stianlars1.dotViewer`
-- Adding a new file type: update `FileTypeRegistry.swift`, add UTI to `QLSupportedContentTypes` in `project.yml` (both preview and thumbnail sections), add tree-sitter grammar + `.scm` query if available
+- Adding a new file type: update `DefaultFileTypes.json`, run `python3 scripts/dotviewer-gen-utis.py --apply` to regenerate UTI declarations, update `project.yml` with new output, add tree-sitter grammar + `.scm` query if available
 
 ## Research
 
 Reference library of 37 Quick Look extension deep-dives, architecture patterns, and performance research compiled during v2: [docs/research/CLAUDE.md](docs/research/CLAUDE.md).
+
+## Platform-Specific Notes
+
+### macOS Development
+When working on macOS/Quick Look features involving system permissions (Accessibility, TCC, sandboxing), research platform limitations FIRST before attempting implementation. Document known dead-ends upfront. Apple's TCC restrictions are strict — never assume permission workarounds will succeed without verification.
 
 ## Version History
 

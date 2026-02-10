@@ -343,6 +343,7 @@
     "id": "ini",
     "displayName": "INI",
     "extensions": [
+      "ini",
       "cfg",
       "desktop",
       "doxyfile",
@@ -743,6 +744,8 @@
     "id": "xml",
     "displayName": "XML",
     "extensions": [
+      "plist",
+      "xml",
       "csproj",
       "dtd",
       "ecf",
@@ -1157,7 +1160,8 @@
     "displayName": "Plain text",
     "extensions": [
       "txt",
-      "text"
+      "text",
+      "log"
     ],
     "filenames": [],
     "highlightLanguage": "txt"
@@ -1703,6 +1707,7 @@
     "id": "json",
     "displayName": "JSON",
     "extensions": [
+      "jsonc",
       "json"
     ],
     "filenames": [],
@@ -3238,7 +3243,13 @@
       "eslint.config.mjs",
       "prettier.config.js",
       ".eslintrc.cjs",
-      ".prettierrc.cjs"
+      ".prettierrc.cjs",
+      ".stylelintrc.cjs",
+      ".lintstagedrc.cjs",
+      ".commitlintrc.cjs",
+      ".config.mjs",
+      "next-env.d.ts",
+      ".tsbuildinfo"
     ]
   },
   {
@@ -3341,5 +3352,663 @@
       "compose.yml",
       "compose.yaml"
     ]
+  },
+  {
+    "id": "gleam",
+    "displayName": "Gleam",
+    "extensions": [
+      "gleam"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gleam",
+    "category": "sourceCode"
+  },
+  {
+    "id": "graphql",
+    "displayName": "GraphQL",
+    "extensions": [
+      "graphql",
+      "gql"
+    ],
+    "filenames": [],
+    "highlightLanguage": "graphql",
+    "category": "sourceCode"
+  },
+  {
+    "id": "astro",
+    "displayName": "Astro",
+    "extensions": [
+      "astro"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html",
+    "category": "sourceCode"
+  },
+  {
+    "id": "prisma",
+    "displayName": "Prisma Schema",
+    "extensions": [
+      "prisma"
+    ],
+    "filenames": [],
+    "highlightLanguage": "graphql",
+    "category": "sourceCode"
+  },
+  {
+    "id": "mojo",
+    "displayName": "Mojo",
+    "extensions": [
+      "mojo"
+    ],
+    "filenames": [],
+    "highlightLanguage": "python",
+    "category": "sourceCode"
+  },
+  {
+    "id": "svelte",
+    "displayName": "Svelte",
+    "extensions": [
+      "svelte"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html",
+    "category": "sourceCode"
+  },
+  {
+    "id": "postcss",
+    "displayName": "PostCSS",
+    "extensions": [
+      "pcss"
+    ],
+    "filenames": [],
+    "highlightLanguage": "css",
+    "category": "sourceCode"
+  },
+  {
+    "id": "odin",
+    "displayName": "Odin",
+    "extensions": [
+      "odin"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "elvish",
+    "displayName": "Elvish Shell",
+    "extensions": [
+      "elv"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bash",
+    "category": "sourceCode"
+  },
+  {
+    "id": "mql",
+    "displayName": "MQL (MetaTrader)",
+    "extensions": [
+      "mq4",
+      "mq5",
+      "mqh"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "smali",
+    "displayName": "Smali",
+    "extensions": [
+      "smali"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "sourceCode"
+  },
+  {
+    "id": "nextflow",
+    "displayName": "Nextflow",
+    "extensions": [
+      "nf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "groovy",
+    "category": "sourceCode"
+  },
+  {
+    "id": "supercollider",
+    "displayName": "SuperCollider",
+    "extensions": [
+      "scd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "stata",
+    "displayName": "Stata",
+    "extensions": [
+      "do",
+      "ado"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "sourceCode"
+  },
+  {
+    "id": "sagemath",
+    "displayName": "SageMath",
+    "extensions": [
+      "sage"
+    ],
+    "filenames": [],
+    "highlightLanguage": "python",
+    "category": "sourceCode"
+  },
+  {
+    "id": "plotdevice",
+    "displayName": "PlotDevice",
+    "extensions": [
+      "pv"
+    ],
+    "filenames": [],
+    "highlightLanguage": "python",
+    "category": "sourceCode"
+  },
+  {
+    "id": "scala-build",
+    "displayName": "Scala Build",
+    "extensions": [
+      "sbt"
+    ],
+    "filenames": [],
+    "highlightLanguage": "scala",
+    "category": "sourceCode"
+  },
+  {
+    "id": "ocaml-lex",
+    "displayName": "OCaml Lex",
+    "extensions": [
+      "mll"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ocaml",
+    "category": "sourceCode"
+  },
+  {
+    "id": "ocaml-yacc",
+    "displayName": "OCaml Yacc",
+    "extensions": [
+      "mly"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ocaml",
+    "category": "sourceCode"
+  },
+  {
+    "id": "jsmodule",
+    "displayName": "JavaScript Module",
+    "extensions": [
+      "jsm"
+    ],
+    "filenames": [],
+    "highlightLanguage": "javascript",
+    "category": "sourceCode"
+  },
+  {
+    "id": "glsl",
+    "displayName": "GLSL Shader",
+    "extensions": [
+      "glsl",
+      "vert",
+      "vs",
+      "frag",
+      "geom",
+      "tesc",
+      "tese",
+      "comp"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "hlsl",
+    "displayName": "HLSL Shader",
+    "extensions": [
+      "hlsl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "unity-shader",
+    "displayName": "Unity Shader",
+    "extensions": [
+      "shader",
+      "cg",
+      "cginc"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "wgsl",
+    "displayName": "WGSL Shader",
+    "extensions": [
+      "wgsl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c",
+    "category": "sourceCode"
+  },
+  {
+    "id": "plsql",
+    "displayName": "PL/SQL",
+    "extensions": [
+      "fnc",
+      "prc",
+      "trg",
+      "pks",
+      "pkb",
+      "pck",
+      "tps",
+      "tpb"
+    ],
+    "filenames": [],
+    "highlightLanguage": "sql",
+    "category": "sourceCode"
+  },
+  {
+    "id": "bazel",
+    "displayName": "Bazel/Starlark",
+    "extensions": [
+      "bzl"
+    ],
+    "filenames": [
+      "BUILD",
+      "BUILD.bazel",
+      "WORKSPACE",
+      "WORKSPACE.bazel"
+    ],
+    "highlightLanguage": "python",
+    "category": "dataFormats"
+  },
+  {
+    "id": "m4-macro",
+    "displayName": "M4 Macro",
+    "extensions": [
+      "m4"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bash",
+    "category": "sourceCode"
+  },
+  {
+    "id": "autoconf",
+    "displayName": "Autoconf",
+    "extensions": [
+      "ac"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bash",
+    "category": "sourceCode"
+  },
+  {
+    "id": "osgi-bnd",
+    "displayName": "OSGi Bundle",
+    "extensions": [
+      "bnd",
+      "bndrun"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ini",
+    "category": "dataFormats"
+  },
+  {
+    "id": "razor",
+    "displayName": "Razor (C#/HTML)",
+    "extensions": [
+      "cshtml",
+      "razor"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html",
+    "category": "sourceCode"
+  },
+  {
+    "id": "liquid",
+    "displayName": "Liquid Template",
+    "extensions": [
+      "liquid"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html",
+    "category": "sourceCode"
+  },
+  {
+    "id": "template-html",
+    "displayName": "HTML Template",
+    "extensions": [
+      "tpl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "html",
+    "category": "sourceCode"
+  },
+  {
+    "id": "json5",
+    "displayName": "JSON5",
+    "extensions": [
+      "json5"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "jsonlines",
+    "displayName": "JSON Lines",
+    "extensions": [
+      "jsonl",
+      "ndjson"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "obsidian-canvas",
+    "displayName": "Obsidian Canvas",
+    "extensions": [
+      "canvas"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "lottie",
+    "displayName": "Lottie Animation",
+    "extensions": [
+      "lottie"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "neon",
+    "displayName": "NEON Config",
+    "extensions": [
+      "neon"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "raml",
+    "displayName": "RAML",
+    "extensions": [
+      "raml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "wdl",
+    "displayName": "Workflow Description Language",
+    "extensions": [
+      "wdl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats"
+  },
+  {
+    "id": "kml",
+    "displayName": "KML",
+    "extensions": [
+      "kml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "wsdl",
+    "displayName": "WSDL",
+    "extensions": [
+      "wsdl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "maven-pom",
+    "displayName": "Maven POM",
+    "extensions": [
+      "pom"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "xaml",
+    "displayName": "XAML",
+    "extensions": [
+      "xaml"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "mpd-manifest",
+    "displayName": "MPEG-DASH Manifest",
+    "extensions": [
+      "mpd"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "ttx",
+    "displayName": "FontTools TTX",
+    "extensions": [
+      "ttx"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "steam-acf",
+    "displayName": "Steam App Manifest",
+    "extensions": [
+      "acf"
+    ],
+    "filenames": [],
+    "highlightLanguage": "ini",
+    "category": "dataFormats"
+  },
+  {
+    "id": "terraform-state",
+    "displayName": "Terraform State",
+    "extensions": [
+      "tfstate"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "otio",
+    "displayName": "OpenTimelineIO",
+    "extensions": [
+      "otio"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json",
+    "category": "dataFormats"
+  },
+  {
+    "id": "apple-strings",
+    "displayName": "Apple Strings",
+    "extensions": [
+      "strings"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats"
+  },
+  {
+    "id": "apple-stringsdict",
+    "displayName": "Apple Strings Dict",
+    "extensions": [
+      "stringsdict"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "apple-mobileconfig",
+    "displayName": "Mobile Config Profile",
+    "extensions": [
+      "mobileconfig"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "macos-terminal",
+    "displayName": "Terminal Settings",
+    "extensions": [
+      "terminal"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "srt-subtitle",
+    "displayName": "SRT Subtitle",
+    "extensions": [
+      "srt"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats"
+  },
+  {
+    "id": "edl",
+    "displayName": "Edit Decision List",
+    "extensions": [
+      "edl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats"
+  },
+  {
+    "id": "mhl",
+    "displayName": "Media Hash List",
+    "extensions": [
+      "mhl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "xml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "command-script",
+    "displayName": "Command Script",
+    "extensions": [
+      "command"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bash",
+    "category": "sourceCode"
+  },
+  {
+    "id": "digdag",
+    "displayName": "Digdag Workflow",
+    "extensions": [
+      "dig"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "debian-sources",
+    "displayName": "Debian Sources",
+    "extensions": [
+      "sources"
+    ],
+    "filenames": [],
+    "highlightLanguage": "yaml",
+    "category": "dataFormats"
+  },
+  {
+    "id": "gherkin",
+    "displayName": "Gherkin",
+    "extensions": [
+      "feature"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "sourceCode"
+  },
+  {
+    "id": "pddl",
+    "displayName": "PDDL",
+    "extensions": [
+      "pddl"
+    ],
+    "filenames": [],
+    "highlightLanguage": "lisp",
+    "category": "sourceCode"
+  },
+  {
+    "id": "ssh-pubkey",
+    "displayName": "SSH Public Key",
+    "extensions": [
+      "pub"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext",
+    "category": "dataFormats"
+  },
+  {
+    "id": "readme-ext",
+    "displayName": "README",
+    "extensions": [
+      "readme"
+    ],
+    "filenames": [],
+    "highlightLanguage": "markdown",
+    "category": "documentation"
+  },
+  {
+    "id": "podfile-lock",
+    "displayName": "Podfile Lock",
+    "extensions": [],
+    "filenames": [
+      "Podfile.lock"
+    ],
+    "highlightLanguage": "yaml",
+    "category": "dataFormats"
   }
 ]

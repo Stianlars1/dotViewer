@@ -685,6 +685,14 @@ public final class FileTypeRegistry: @unchecked Sendable {
         extensionToType[ext.lowercased()]
     }
 
+    public func displayName(for ext: String) -> String? {
+        let lowered = ext.lowercased()
+        if let custom = SharedSettings.shared.customExtensions.first(where: { $0.extensionName == lowered }) {
+            return custom.displayName
+        }
+        return extensionToType[lowered]?.displayName
+    }
+
     public func fileType(byId id: String) -> SupportedFileType? {
         idToType[id]
     }

@@ -158,15 +158,30 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Fixed (workaround) |
+| **Status** | Fixed (workaround v2 — configurable presets) |
 
 **Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Copy button and right-click "Copy" work, but the keyboard shortcut does not.
 
 **Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` and `copy` events never fire in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
 
-**Fix (2026-02-10)**: Auto-copy on selection — a debounced `mouseup` listener detects text selections and automatically copies them to the clipboard using `navigator.clipboard.writeText()`. Mouse events reach WebKit's DOM (unlike keyboard events), and `mouseup` counts as a trusted user gesture for the Clipboard API. A 150ms debounce ensures triple-click (select line) only triggers one copy. A "Copied selection" toast confirms the action. Works in both code previews and markdown (raw + rendered).
+**Fix v1 (2026-02-10)**: Auto-copy on selection — a debounced `mouseup` listener detects text selections and automatically copies them to the clipboard using `navigator.clipboard.writeText()`. Mouse events reach WebKit's DOM (unlike keyboard events), and `mouseup` counts as a trusted user gesture for the Clipboard API.
 
-**What still works**: Copy button (copies full file or selection), right-click context menu "Copy" (WKWebView native), selection-aware copy button with dynamic tooltip.
+**Fix v2 (2026-02-10)**: Configurable copy behavior — 8 presets selectable from Settings → Preview UI → Copy Behavior:
+
+| Preset | Key | Description |
+|--------|-----|-------------|
+| Auto-copy (default) | `autoCopy` | Select → release mouse → clipboard populated. Zero-friction. |
+| Floating copy button | `floatingButton` | Small "Copy" button appears near selection. Click to copy. |
+| Toast with copy button | `toastAction` | Toast appears with "Copy" button. Click to confirm (4s window). |
+| Tap to confirm | `tapToCopy` | Select text → tap anywhere to copy. Two-step confirmation. 3s expiry. |
+| Hold-to-copy | `holdToCopy` | Only copies when mouse held >500ms during drag selection. |
+| Shake to copy | `shakeToCopy` | Select → shake mouse left-right (3+ reversals of 30px+). 2s window. |
+| Auto-copy with undo | `autoCopyUndo` | Auto-copies with 3s "Undo" button. Tracks internal clipboard for sandbox fallback. |
+| Off | `off` | No automatic copy. Header button and right-click still work. |
+
+Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInfo.copyBehavior` → `PreviewHTMLBuilder.buildCopyBehaviorScript()` generates preset-specific JS via IIFE. Each preset is scoped to avoid variable collisions. Shared utilities (`showToast`, `writeClipboard`) remain global.
+
+**What always works regardless of preset**: Copy button (copies full file or active selection), right-click context menu "Copy" (WKWebView native), selection-aware copy button with dynamic tooltip.
 
 ### Approaches Tried (2026-02-09/10)
 
@@ -179,6 +194,10 @@
 - **Hardened Runtime required**: TCC requires `flags=0x10000(runtime)` for `AXIsProcessTrustedWithOptions` to show the system prompt. Debug builds default to `flags=0x0`.
 - **Bare executables invisible to TCC**: Command-line tools (`type: tool`) without `.app` bundle + Info.plist don't appear in the Accessibility preferences list at all.
 - Even after addressing all above (proper `.app` bundle, Hardened Runtime, LaunchServices launch, DistributedNotificationCenter for IPC), the helper still does not appear in the Accessibility list — likely because TCC traces back to the sandboxed parent as the responsible code.
+
+**3. NSTextView view-based mode (`QLIsDataBasedPreview: false`, `NSViewController`)** — Created `PreviewViewController` with `NSTextView(isSelectable: true)`. Result: **Partially works but unusable**. `Cmd+A` and `Cmd+C` DO work — action messages (`selectAll:`, `copy:`) reach the text view through the standard responder chain, bypassing `performKeyEquivalent`. However, the Quick Look host window constantly reclaims first responder, causing "focus flapping" — selection disappears, requiring double-pressing Cmd+A. Critically, this approach loses the entire HTML pipeline (headers, syntax highlighting, markdown toggle, themes) because NSTextView can't render HTML.
+
+**4. WKWebView view-based mode (`QLIsDataBasedPreview: false`, `NSViewController` + `WKWebView`)** — Created `CopyableWebView` (WKWebView subclass) with full HTML pipeline and first-responder stabilization (`resignFirstResponder→false`, `mouseDown` re-assertion). Result: **Fatal failure**. WKWebView's multi-process architecture (WebContent, GPU, Network child processes) cannot operate inside the Quick Look extension's sandbox. The WebContent process crashes immediately: `Application does not have permission to communicate with network resources. rc=1 : errno=34`. After crash, WebKit retries but `launchProcessForReload: no current item to reload` — the `loadHTMLString` data is lost, resulting in blank pages. This is a fundamental platform limitation: only `quicklookd` (the system process) has the entitlements to host WKWebView child processes.
 
 ### Approaches NOT Yet Tried
 
@@ -198,3 +217,32 @@
 - Qt Blog: ["The Curious Case of the Responsible Process"](https://www.qt.io/blog/the-curious-case-of-the-responsible-process) documents `responsibility_spawnattrs_setdisclaim`
 
 **Acceptance criteria**: Cmd+C copies selected text from Quick Look preview without requiring the user to use the copy button or right-click menu.
+
+---
+
+## KI-010 — Custom file types limited by Quick Look UTI routing
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Low |
+| **Status** | Mostly Fixed |
+
+**Impact**: Users can add custom file type mappings in Settings (extension → highlight language), but these only take effect for files whose UTI is already in `QLSupportedContentTypes`. Files with completely unknown extensions (numeric backup extensions like `.1770685742797`) never reach the Quick Look extension at all.
+
+**Root cause**: Quick Look routes files to extensions based on **exact UTI matching**, not conformance. Despite `public.data` being listed in `QLSupportedContentTypes`, files with dynamic UTIs (`dyn.*`) are NOT matched. Only files whose exact UTI appears in the list get routed to dotViewer.
+
+**Fixes applied (2026-02-10)**:
+- Fixed `displayName(for:)` — custom extensions now show their user-specified display name in the preview header
+- Fixed `bestKey()` — multi-dot files resolve to intermediate known segments via right-to-left segment scanning
+- Fixed 5 missing primary extensions in DefaultFileTypes.json (`xml`, `plist`, `jsonc`, `ini`, `log`)
+- **Exhaustive UTI coverage expansion** — expanded from ~78 to 501 QLSupportedContentTypes:
+  - 396 `UTExportedTypeDeclarations` for extensions without system UTIs
+  - ~64 system UTIs + ~63 vendor UTIs
+  - 388 file type entries covering 561 extensions and 283 filenames
+  - Script `scripts/dotviewer-gen-utis.py` generates declarations from DefaultFileTypes.json
+  - Added 58 new file type entries sourced from sbarex/SourceCodeSyntaxHighlight user requests: shaders (GLSL, HLSL, WGSL, Unity), PL/SQL, Bazel/Starlark, Razor, Liquid, JSON5, JSONL, KML, WSDL, XAML, Apple .strings/.mobileconfig, Svelte, Odin, Elvish, MQL, Gherkin, SRT subtitles, and more
+  - Removed 313 pre-computed `dyn.*` fallback codes that were non-functional (encoding mismatch with macOS)
+
+**Remaining gap**: Truly novel extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) still won't reach our extension. This is an inherent limitation of macOS Quick Look — there is no catch-all mechanism for `.appex` extensions. No Quick Look extension (sbarex, Peek, QLStephen) has solved this; QLStephen's `.qlgenerator` approach is dead on macOS 15.
+
+**Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 561 extensions in the registry. Only completely unknown extensions remain unroutable.

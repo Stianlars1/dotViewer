@@ -24,6 +24,7 @@ public struct PreviewInfo {
     public let systemIsDark: Bool
     public let wordWrap: Bool
     public let markdownShowTOC: Bool
+    public let copyBehavior: String
 
     public init(
         title: String,
@@ -48,7 +49,8 @@ public struct PreviewInfo {
         showBinaryWarning: Bool,
         systemIsDark: Bool = false,
         wordWrap: Bool = false,
-        markdownShowTOC: Bool = false
+        markdownShowTOC: Bool = false,
+        copyBehavior: String = "autoCopy"
     ) {
         self.title = title
         self.language = language
@@ -73,12 +75,12 @@ public struct PreviewInfo {
         self.systemIsDark = systemIsDark
         self.wordWrap = wordWrap
         self.markdownShowTOC = markdownShowTOC
+        self.copyBehavior = copyBehavior
     }
 }
 
 public enum PreviewHTMLBuilder {
     public static func buildHTML(info: PreviewInfo, palette: ThemePalette) -> String {
-        let header = info.showHeader ? buildHeader(info: info, palette: palette) : ""
         let warnings = buildWarnings(info: info)
         let defaultRendered = info.defaultMarkdownMode == "rendered"
         let rawStyle = info.renderedHTML != nil && defaultRendered ? " style=\"display:none;\"" : ""
@@ -88,20 +90,23 @@ public enum PreviewHTMLBuilder {
             ? "<div id=\"rendered-view\" class=\"rendered-view\"\(renderedStyle)>\(info.renderedHTML!)</div>"
             : ""
 
-        let tocHTML: String
-        if info.renderedHTML != nil && info.markdownShowTOC {
-            tocHTML = MarkdownRenderer.generateTOC(from: info.rawText) ?? ""
-        } else {
-            tocHTML = ""
-        }
-        let tocSection = tocHTML.isEmpty ? "" : """
+        // Generate TOC for any markdown file with 2+ headings
+        let tocHTML: String = info.renderedHTML != nil
+            ? (MarkdownRenderer.generateTOC(from: info.rawText) ?? "")
+            : ""
+        let hasTOC = !tocHTML.isEmpty
+
+        let header = info.showHeader ? buildHeader(info: info, palette: palette, hasTOC: hasTOC) : ""
+
+        let tocSection = hasTOC ? """
         <aside id="toc-panel" class="toc-sidebar" style="display:none;">
           <div class="toc-header">
             <span class="toc-title">Contents</span>
           </div>
           <div class="toc-content">\(tocHTML)</div>
         </aside>
-        """
+        <div id="toc-resize-handle" class="toc-resize-handle" style="display:none;"></div>
+        """ : ""
 
         return """
         <!doctype html>
@@ -126,18 +131,18 @@ public enum PreviewHTMLBuilder {
           <div id="toast" class="toast">Copied</div>
           <textarea id="raw-source" class="hidden">\(escapeHTML(info.rawText))</textarea>
           <script>
-          \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil))
+          \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior))
           </script>
         </body>
         </html>
         """
     }
 
-    private static func buildHeader(info: PreviewInfo, palette: ThemePalette) -> String {
+    private static func buildHeader(info: PreviewInfo, palette: ThemePalette, hasTOC: Bool) -> String {
         let sizeText = ByteCountFormatter.string(fromByteCount: Int64(info.fileSizeBytes), countStyle: .file)
         let lineText = "\(info.lineCount) lines"
         let markdownToggle = info.renderedHTML != nil ? buildMarkdownToggle(defaultMode: info.defaultMarkdownMode) : ""
-        let tocToggle = info.renderedHTML != nil ? buildTOCToggle(showTOC: info.markdownShowTOC) : ""
+        let tocToggle = hasTOC ? buildTOCToggle(showTOC: info.markdownShowTOC) : ""
         return """
         <div class="header">
           <div class="header-left">
@@ -192,8 +197,9 @@ public enum PreviewHTMLBuilder {
     }
 
     private static func buildTOCToggle(showTOC: Bool) -> String {
+        let activeClass = showTOC ? " active" : ""
         return """
-        <button class="icon-button toc-toggle active" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
+        <button class="icon-button toc-toggle\(activeClass)" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2zm14-7h4v2h-4v-2z"/>
           </svg>
@@ -772,6 +778,20 @@ public enum PreviewHTMLBuilder {
           border-right: 1px solid var(--border);
           overflow-y: auto;
           font-size: 13px;
+          scrollbar-width: thin;
+        }
+
+        .toc-resize-handle {
+          width: 5px;
+          flex-shrink: 0;
+          cursor: col-resize;
+          background: transparent;
+          transition: background 0.15s ease;
+        }
+        .toc-resize-handle:hover,
+        .toc-resize-handle.dragging {
+          background: var(--accent);
+          opacity: 0.5;
         }
 
         .toc-header {
@@ -804,11 +824,12 @@ public enum PreviewHTMLBuilder {
         .toc-content a {
           display: block;
           padding: 3px 10px 3px 12px;
-          color: var(--text);
+          color: var(--comment);
           text-decoration: none;
           font-size: 12px;
           line-height: 1.4;
-          transition: background 0.15s ease, color 0.15s ease;
+          border-left: 2px solid transparent;
+          transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -816,10 +837,18 @@ public enum PreviewHTMLBuilder {
 
         .toc-content a:hover {
           background: var(--surface-strong);
-          color: var(--accent);
+          color: var(--text);
+        }
+
+        .toc-content a.active {
+          color: var(--text);
+          font-weight: 500;
+          border-left-color: var(--accent);
+          background: var(--surface-strong);
         }
 
         .toc-content .toc-h1 a { font-weight: 600; }
+        .toc-content .toc-h1 a.active { font-weight: 700; }
         .toc-content .toc-h2 a { padding-left: 22px; }
         .toc-content .toc-h3 a { padding-left: 34px; font-size: 11px; }
         .toc-content .toc-h4 a { padding-left: 44px; font-size: 11px; opacity: 0.8; }
@@ -851,20 +880,19 @@ public enum PreviewHTMLBuilder {
         return baseCSS
     }
 
-    private static func buildScript(defaultMode: String, hasRendered: Bool) -> String {
+    private static func buildScript(defaultMode: String, hasRendered: Bool, copyBehavior: String) -> String {
         guard hasRendered else {
             return """
             const copyButton = document.getElementById('copy-button');
             const toast = document.getElementById('toast');
             let toastTimer = null;
-            let copyTimer = null;
 
-            function showToast(message) {
+            function showToast(message, html) {
               if (!toast) return;
-              toast.textContent = message;
+              if (html) { toast.innerHTML = html; } else { toast.textContent = message; }
               toast.classList.add('show');
               if (toastTimer) clearTimeout(toastTimer);
-              toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+              toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 1200);
             }
 
             function writeClipboard(text) {
@@ -911,15 +939,7 @@ public enum PreviewHTMLBuilder {
               }
             });
 
-            document.addEventListener('mouseup', () => {
-              if (copyTimer) clearTimeout(copyTimer);
-              copyTimer = setTimeout(() => {
-                const sel = window.getSelection().toString();
-                if (sel.length > 0) {
-                  writeClipboard(sel).then(() => showToast('Copied selection'));
-                }
-              }, 150);
-            });
+            \(buildCopyBehaviorScript(copyBehavior))
             """
         }
 
@@ -930,15 +950,14 @@ public enum PreviewHTMLBuilder {
         const copyButton = document.getElementById('copy-button');
         const toast = document.getElementById('toast');
         let toastTimer = null;
-        let copyTimer = null;
         let currentMode = '\(defaultMode == "rendered" ? "rendered" : "raw")';
 
-        function showToast(message) {
+        function showToast(message, html) {
           if (!toast) return;
-          toast.textContent = message;
+          if (html) { toast.innerHTML = html; } else { toast.textContent = message; }
           toast.classList.add('show');
           if (toastTimer) clearTimeout(toastTimer);
-          toastTimer = setTimeout(() => toast.classList.remove('show'), 1200);
+          toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 1200);
         }
 
         function writeClipboard(text) {
@@ -976,12 +995,18 @@ public enum PreviewHTMLBuilder {
 
           const tocPanel = document.getElementById('toc-panel');
           const tocToggle = document.getElementById('toc-toggle');
+          const tocHandle = document.getElementById('toc-resize-handle');
           if (tocToggle) {
             tocToggle.style.display = mode === 'rendered' ? '' : 'none';
           }
+          const tocVisible = mode === 'rendered' && tocToggle?.classList.contains('active');
           if (tocPanel) {
-            tocPanel.style.display = mode === 'rendered' && tocToggle?.classList.contains('active') ? 'block' : 'none';
+            tocPanel.style.display = tocVisible ? 'block' : 'none';
           }
+          if (tocHandle) {
+            tocHandle.style.display = tocVisible ? 'block' : 'none';
+          }
+          if (tocVisible) updateActiveTOCLink();
         }
 
         buttons.forEach(btn => {
@@ -992,13 +1017,16 @@ public enum PreviewHTMLBuilder {
 
         const tocToggle = document.getElementById('toc-toggle');
         const tocPanel = document.getElementById('toc-panel');
+        const tocResizeHandle = document.getElementById('toc-resize-handle');
 
         if (tocToggle && tocPanel) {
           tocToggle.addEventListener('click', function() {
             if (currentMode !== 'rendered') return;
             const isVisible = tocPanel.style.display !== 'none';
             tocPanel.style.display = isVisible ? 'none' : 'block';
+            if (tocResizeHandle) tocResizeHandle.style.display = isVisible ? 'none' : 'block';
             tocToggle.classList.toggle('active', !isVisible);
+            if (!isVisible) updateActiveTOCLink();
           });
 
           tocPanel.addEventListener('click', function(e) {
@@ -1010,6 +1038,85 @@ public enum PreviewHTMLBuilder {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }
             }
+          });
+        }
+
+        // Scroll spy: highlight the current section in the TOC
+        function updateActiveTOCLink() {
+          if (!tocPanel || tocPanel.style.display === 'none') return;
+          const content = document.querySelector('.content');
+          if (!content) return;
+
+          const headings = content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+          const tocLinks = tocPanel.querySelectorAll('.toc-content a');
+          if (headings.length === 0) return;
+
+          const contentTop = content.getBoundingClientRect().top;
+          let activeHeading = headings[0];
+
+          for (const heading of headings) {
+            if (heading.getBoundingClientRect().top - contentTop <= 30) {
+              activeHeading = heading;
+            } else {
+              break;
+            }
+          }
+
+          tocLinks.forEach(link => link.classList.remove('active'));
+          if (activeHeading) {
+            const href = '#' + activeHeading.id;
+            for (const link of tocLinks) {
+              if (link.getAttribute('href') === href) {
+                link.classList.add('active');
+                link.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+                break;
+              }
+            }
+          }
+        }
+
+        const contentEl = document.querySelector('.content');
+        if (contentEl) {
+          let scrollTicking = false;
+          contentEl.addEventListener('scroll', function() {
+            if (!scrollTicking) {
+              requestAnimationFrame(function() {
+                updateActiveTOCLink();
+                scrollTicking = false;
+              });
+              scrollTicking = true;
+            }
+          });
+        }
+
+        // Drag-to-resize TOC sidebar
+        if (tocResizeHandle && tocPanel) {
+          let isDragging = false;
+          let startX = 0;
+          let startWidth = 0;
+
+          tocResizeHandle.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            startX = e.clientX;
+            startWidth = tocPanel.offsetWidth;
+            tocResizeHandle.classList.add('dragging');
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+          });
+
+          document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            const newWidth = Math.max(120, Math.min(400, startWidth + (e.clientX - startX)));
+            tocPanel.style.width = newWidth + 'px';
+          });
+
+          document.addEventListener('mouseup', function() {
+            if (!isDragging) return;
+            isDragging = false;
+            tocResizeHandle.classList.remove('dragging');
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
           });
         }
 
@@ -1044,16 +1151,293 @@ public enum PreviewHTMLBuilder {
           }
         });
 
-        document.addEventListener('mouseup', () => {
-          if (copyTimer) clearTimeout(copyTimer);
-          copyTimer = setTimeout(() => {
-            const sel = window.getSelection().toString();
-            if (sel.length > 0) {
-              writeClipboard(sel).then(() => showToast('Copied selection'));
-            }
-          }, 150);
-        });
+        \(buildCopyBehaviorScript(copyBehavior))
         """
+    }
+
+    private static func buildCopyBehaviorScript(_ behavior: String) -> String {
+        switch behavior {
+        case "off":
+            return ""
+
+        case "autoCopy":
+            return """
+            (function() {
+              let copyTimer = null;
+              document.addEventListener('mouseup', () => {
+                if (copyTimer) clearTimeout(copyTimer);
+                copyTimer = setTimeout(() => {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                  }
+                }, 150);
+              });
+            })();
+            """
+
+        case "floatingButton":
+            return """
+            (function() {
+              const style = document.createElement('style');
+              style.textContent = `
+                .float-copy-btn {
+                  position: fixed;
+                  z-index: 100;
+                  padding: 4px 10px;
+                  border-radius: 6px;
+                  border: 1px solid var(--border);
+                  background: var(--surface-strong);
+                  color: var(--text);
+                  font-size: 11px;
+                  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+                  cursor: pointer;
+                  opacity: 0;
+                  pointer-events: none;
+                  transition: opacity 0.15s ease;
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+                }
+                .float-copy-btn.visible {
+                  opacity: 1;
+                  pointer-events: auto;
+                }
+                .float-copy-btn:hover {
+                  background: var(--accent);
+                  color: white;
+                }
+              `;
+              document.head.appendChild(style);
+
+              const btn = document.createElement('button');
+              btn.className = 'float-copy-btn';
+              btn.textContent = 'Copy';
+              document.body.appendChild(btn);
+
+              let debounce = null;
+
+              btn.addEventListener('mousedown', (e) => { e.preventDefault(); });
+              btn.addEventListener('click', () => {
+                const sel = window.getSelection().toString();
+                if (sel.length > 0) {
+                  writeClipboard(sel).then(() => showToast('Copied selection'));
+                }
+                btn.classList.remove('visible');
+              });
+
+              document.addEventListener('mouseup', () => {
+                if (debounce) clearTimeout(debounce);
+                debounce = setTimeout(() => {
+                  const sel = window.getSelection();
+                  const text = sel.toString();
+                  if (text.length > 0) {
+                    const range = sel.getRangeAt(0);
+                    const rect = range.getBoundingClientRect();
+                    let top = rect.bottom + 4;
+                    let left = rect.right - 40;
+                    if (top + 30 > window.innerHeight) top = rect.top - 30;
+                    if (left < 4) left = 4;
+                    if (left + 50 > window.innerWidth) left = window.innerWidth - 54;
+                    btn.style.top = top + 'px';
+                    btn.style.left = left + 'px';
+                    btn.classList.add('visible');
+                  } else {
+                    btn.classList.remove('visible');
+                  }
+                }, 100);
+              });
+
+              document.addEventListener('mousedown', (e) => {
+                if (e.target !== btn) btn.classList.remove('visible');
+              });
+            })();
+            """
+
+        case "toastAction":
+            return """
+            (function() {
+              let debounce = null;
+              document.addEventListener('mouseup', () => {
+                if (debounce) clearTimeout(debounce);
+                debounce = setTimeout(() => {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    const captured = sel;
+                    const btnId = 'toast-copy-' + Date.now();
+                    const html = 'Text selected &nbsp;<button id="' + btnId + '" style="border:none;background:var(--accent);color:white;padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px;">Copy</button>';
+                    toast.innerHTML = html;
+                    toast.style.pointerEvents = 'auto';
+                    toast.classList.add('show');
+                    if (toastTimer) clearTimeout(toastTimer);
+                    toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 4000);
+                    document.getElementById(btnId)?.addEventListener('click', () => {
+                      writeClipboard(captured).then(() => {
+                        toast.style.pointerEvents = '';
+                        showToast('Copied selection');
+                      });
+                    });
+                  }
+                }, 150);
+              });
+            })();
+            """
+
+        case "tapToCopy":
+            return """
+            (function() {
+              let pendingText = null;
+              let pendingTimer = null;
+              document.addEventListener('mouseup', () => {
+                setTimeout(() => {
+                  const sel = window.getSelection().toString();
+                  if (pendingText && sel.length === 0) {
+                    writeClipboard(pendingText).then(() => showToast('Copied selection'));
+                    pendingText = null;
+                    if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+                    return;
+                  }
+                  if (sel.length > 0) {
+                    pendingText = sel;
+                    if (pendingTimer) clearTimeout(pendingTimer);
+                    showToast('Tap to copy');
+                    pendingTimer = setTimeout(() => { pendingText = null; }, 3000);
+                  }
+                }, 50);
+              });
+            })();
+            """
+
+        case "holdToCopy":
+            return """
+            (function() {
+              let dragStart = 0;
+              document.addEventListener('mousedown', () => { dragStart = Date.now(); });
+              document.addEventListener('mouseup', () => {
+                if ((Date.now() - dragStart) > 500) {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                  }
+                }
+              });
+            })();
+            """
+
+        case "shakeToCopy":
+            return """
+            (function() {
+              let shakeActive = false;
+              let shakeTimer = null;
+              let lastX = null;
+              let currentDir = 0;
+              let extremeX = null;
+              let reversals = 0;
+
+              function deactivateShake() {
+                shakeActive = false;
+                lastX = null;
+                currentDir = 0;
+                extremeX = null;
+                reversals = 0;
+                if (shakeTimer) { clearTimeout(shakeTimer); shakeTimer = null; }
+                document.removeEventListener('mousemove', onShakeMove);
+              }
+
+              function onShakeMove(e) {
+                if (!shakeActive) return;
+                const x = e.clientX;
+                if (lastX === null) { lastX = x; extremeX = x; return; }
+                const dx = x - lastX;
+                lastX = x;
+                if (dx === 0) return;
+                const dir = dx > 0 ? 1 : -1;
+                if (currentDir === 0) { currentDir = dir; extremeX = x; return; }
+                if (dir === currentDir) {
+                  if ((currentDir > 0 && x > extremeX) || (currentDir < 0 && x < extremeX)) {
+                    extremeX = x;
+                  }
+                  return;
+                }
+                const distFromExtreme = Math.abs(x - extremeX);
+                if (distFromExtreme >= 30) {
+                  reversals++;
+                  currentDir = dir;
+                  extremeX = x;
+                  if (reversals >= 3) {
+                    const sel = window.getSelection().toString();
+                    if (sel.length > 0) {
+                      writeClipboard(sel).then(() => showToast('Copied selection'));
+                    }
+                    deactivateShake();
+                  }
+                }
+              }
+
+              document.addEventListener('mouseup', () => {
+                setTimeout(() => {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    shakeActive = true;
+                    lastX = null;
+                    currentDir = 0;
+                    extremeX = null;
+                    reversals = 0;
+                    showToast('Shake to copy');
+                    document.addEventListener('mousemove', onShakeMove);
+                    shakeTimer = setTimeout(deactivateShake, 2000);
+                  }
+                }, 50);
+              });
+            })();
+            """
+
+        case "autoCopyUndo":
+            return """
+            (function() {
+              let debounce = null;
+              let lastCopiedText = null;
+              document.addEventListener('mouseup', () => {
+                if (debounce) clearTimeout(debounce);
+                debounce = setTimeout(() => {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    const internalPrev = lastCopiedText;
+                    const tryRead = navigator.clipboard && navigator.clipboard.readText
+                      ? navigator.clipboard.readText().catch(() => null)
+                      : Promise.resolve(null);
+                    tryRead.then(prev => {
+                      const restoreTo = prev || internalPrev;
+                      lastCopiedText = sel;
+                      return writeClipboard(sel).then(() => restoreTo);
+                    }).then(restoreTo => {
+                      if (restoreTo && restoreTo !== sel) {
+                        const btnId = 'undo-' + Date.now();
+                        const html = 'Copied selection &nbsp;<button id="' + btnId + '" style="border:none;background:var(--comment);color:var(--bg);padding:2px 8px;border-radius:4px;font-size:11px;cursor:pointer;margin-left:4px;">Undo</button>';
+                        toast.innerHTML = html;
+                        toast.style.pointerEvents = 'auto';
+                        toast.classList.add('show');
+                        if (toastTimer) clearTimeout(toastTimer);
+                        toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 3000);
+                        document.getElementById(btnId)?.addEventListener('click', () => {
+                          lastCopiedText = restoreTo;
+                          writeClipboard(restoreTo).then(() => {
+                            toast.style.pointerEvents = '';
+                            showToast('Clipboard restored');
+                          });
+                        });
+                      } else {
+                        showToast('Copied selection');
+                      }
+                    });
+                  }
+                }, 150);
+              });
+            })();
+            """
+
+        default:
+            // Unknown behavior, fall back to autoCopy
+            return buildCopyBehaviorScript("autoCopy")
+        }
     }
 
     private static func escapeHTML(_ string: String) -> String {

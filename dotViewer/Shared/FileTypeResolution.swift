@@ -7,9 +7,11 @@ public enum FileTypeResolution {
     /// 1. Full filename without leading dot  (e.g. `env.local`, `eslintrc.json`, `docker-compose.yml`)
     /// 2. Progressive prefix segments        (e.g. `eslintrc` from `eslintrc.json`)
     /// 3. Path extension                     (e.g. `json`, `yml`, `js`)
+    /// 4. Intermediate dot segments           (e.g. `json` from `claude.json.backup.1770685742797`)
     ///
     /// This ensures chained dotfiles like `.eslintrc.json` resolve to "eslintrc" (ESLint config)
     /// rather than generic "json", while `.env.staging` resolves to "env" (Environment).
+    /// Multi-dot files like `.claude.json.backup.xxx` resolve to "json" (first known intermediate segment).
     public static func bestKey(for url: URL, registry: FileTypeRegistry = .shared) -> String {
         let pathExt = url.pathExtension.lowercased()
         let fileName = url.lastPathComponent.lowercased()
@@ -17,7 +19,7 @@ public enum FileTypeResolution {
 
         // Build candidates from most specific to least specific
         var candidates: [String] = []
-        candidates.reserveCapacity(6)
+        candidates.reserveCapacity(10)
 
         // 1. Full name (e.g. "env.local", "eslintrc.json", "docker-compose.override.yml")
         if !fileNameNoLeadingDot.isEmpty {
@@ -43,6 +45,19 @@ public enum FileTypeResolution {
         for candidate in candidates {
             if registry.highlightLanguage(for: candidate) != nil || registry.fileType(for: candidate) != nil {
                 return candidate
+            }
+        }
+
+        // 4. Intermediate dot segments for multi-dot filenames (right to left)
+        //    "claude.json.backup.1770685742797" → try "backup", "json"
+        //    Skips first segment (filename base) and last (already tried as pathExtension)
+        let segments = fileNameNoLeadingDot.split(separator: ".").map { String($0) }
+        if segments.count > 2 {
+            for i in stride(from: segments.count - 2, through: 1, by: -1) {
+                let seg = segments[i]
+                if registry.highlightLanguage(for: seg) != nil || registry.fileType(for: seg) != nil {
+                    return seg
+                }
             }
         }
 

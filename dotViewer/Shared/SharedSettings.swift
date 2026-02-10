@@ -116,6 +116,11 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "showFileInfoHeader") } }
     }
 
+    public var copyBehavior: String {
+        get { lock.withLock { defaults.string(forKey: "copyBehavior") ?? "autoCopy" } }
+        set { lock.withLock { defaults.set(newValue, forKey: "copyBehavior") } }
+    }
+
     public var markdownPreviewMode: String {
         get { markdownDefaultMode }
         set { markdownDefaultMode = newValue }
@@ -178,7 +183,7 @@ public final class SharedSettings: @unchecked Sendable {
     }
 
     public var markdownShowTOC: Bool {
-        get { lock.withLock { defaults.object(forKey: "markdownShowTOC") as? Bool ?? false } }
+        get { lock.withLock { defaults.object(forKey: "markdownShowTOC") as? Bool ?? true } }
         set { lock.withLock { defaults.set(newValue, forKey: "markdownShowTOC") } }
     }
 
