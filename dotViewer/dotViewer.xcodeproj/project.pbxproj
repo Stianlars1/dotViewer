@@ -48,6 +48,7 @@
 		2DFA3D2861FD7B79BBCCA618 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = E8332DEF18E8165ECBC6A5DE /* scanner.c */; };
 		2FE9FC3FF3486887D4E40100 /* HighlightService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1C03AB359888988F53829DA /* HighlightService.swift */; };
 		30C87F21C1B3D091F532595D /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = B9BFF42F641DCC5FCF5DC68E /* parser.c */; };
+		30DBE47D86C2652721507243 /* HighlightXPC.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		32746E5362FDBFD389B67564 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D8878AE41D8B76892DD01197 /* Shared.framework */; };
 		33488DC7B8FE019A49921B4E /* PlainTextRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ECF313A25FC7A5AA9AF688 /* PlainTextRenderer.swift */; };
 		3418E8FD801565C1528BDD3D /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E05B3CBF1B83F9A14DD59A /* StatusView.swift */; };
@@ -274,6 +275,13 @@
 			remoteGlobalIDString = E1AB1EEAC0A1F5EAC7F4FDB8;
 			remoteInfo = Shared;
 		};
+		F1CC1C30E0E0A66A7D1B6FF8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 30B04C625492380F80BC9C0D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2BDBB65ABCA256D2E3B86C29;
+			remoteInfo = HighlightXPC;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -297,6 +305,16 @@
 				ECD539E981145F4CD40D0E4E /* Shared.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8FBE501592807A7A256510FC /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/XPCServices";
+			dstSubfolderSpec = 16;
+			files = (
+				30DBE47D86C2652721507243 /* HighlightXPC.xpc in CopyFiles */,
+			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		A9A4CD268FA4D93B210825A2 /* CopyFiles */ = {
@@ -2726,12 +2744,14 @@
 			buildConfigurationList = 6216CE009B0B02D84E4465F3 /* Build configuration list for PBXNativeTarget "QuickLookThumbnailExtension" */;
 			buildPhases = (
 				1A7F613CB328501CE23540A1 /* Sources */,
+				8FBE501592807A7A256510FC /* CopyFiles */,
 				CBFE8C880DC8B7FADB4D8CF4 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				447EA13153067E03797723A3 /* PBXTargetDependency */,
+				E3775091E2978F4CFC72A4D4 /* PBXTargetDependency */,
 			);
 			name = QuickLookThumbnailExtension;
 			packageProductDependencies = (
@@ -3096,6 +3116,11 @@
 			target = E1AB1EEAC0A1F5EAC7F4FDB8 /* Shared */;
 			targetProxy = EFDF663B243DD423CA0CD597 /* PBXContainerItemProxy */;
 		};
+		E3775091E2978F4CFC72A4D4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2BDBB65ABCA256D2E3B86C29 /* HighlightXPC */;
+			targetProxy = F1CC1C30E0E0A66A7D1B6FF8 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -3159,7 +3184,7 @@
 		2C8A5691C6B6FB2ED0ED7EB8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = dotIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = dotViewerIcon;
 				CODE_SIGN_ENTITLEMENTS = App/dotViewer.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
@@ -3260,7 +3285,7 @@
 		5C6E9B8D1E5D266176976155 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = dotIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = dotViewerIcon;
 				CODE_SIGN_ENTITLEMENTS = App/dotViewer.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;

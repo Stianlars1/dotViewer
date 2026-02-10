@@ -186,8 +186,21 @@ enum TextThumbnailRenderer {
         fileSizeBytes: Int,
         showHeader: Bool,
         showLineNumbers: Bool,
-        fontSize: CGFloat
+        fontSize: CGFloat,
+        treeSitterTokens: [HighlightToken]? = nil
     ) -> QLThumbnailReply {
+        // Pre-convert tree-sitter tokens to per-line colored tokens
+        let perLineTokens: [[ColoredToken]]?
+        if let treeSitterTokens, !treeSitterTokens.isEmpty {
+            perLineTokens = TreeSitterTokenConverter.convert(
+                tokens: treeSitterTokens,
+                lines: snippet.lines,
+                palette: palette
+            )
+        } else {
+            perLineTokens = nil
+        }
+
         let image = NSImage(size: size, flipped: true) { rect in
             let headerHeight: CGFloat = showHeader ? 20 : 0
             let padding: CGFloat = 8
@@ -304,9 +317,10 @@ enum TextThumbnailRenderer {
                         number.draw(at: CGPoint(x: numberX, y: currentY), withAttributes: numberAttributes)
                     }
 
+                    // Use tree-sitter tokens when available, fall back to heuristic colorizer
+                    let tokens = perLineTokens?[index] ?? ThumbnailSyntaxColorizer.colorize(line: displayLine, palette: palette)
+
                     if lineWraps {
-                        // For wrapped lines, build an NSAttributedString with per-token colors
-                        let tokens = ThumbnailSyntaxColorizer.colorize(line: displayLine, palette: palette)
                         let attributed = NSMutableAttributedString()
                         for token in tokens {
                             let attrs: [NSAttributedString.Key: Any] = [
@@ -324,8 +338,6 @@ enum TextThumbnailRenderer {
                         )
                         attributed.draw(with: drawRect, options: [.usesLineFragmentOrigin, .usesFontLeading])
                     } else {
-                        // Single-line: draw tokens sequentially for precise positioning
-                        let tokens = ThumbnailSyntaxColorizer.colorize(line: displayLine, palette: palette)
                         var tokenX = textOriginX
                         for token in tokens {
                             let tokenAttrs: [NSAttributedString.Key: Any] = [
@@ -382,6 +394,100 @@ enum TextThumbnailRenderer {
             return decoded
         }
         return String(decoding: data, as: UTF8.self)
+    }
+}
+
+enum TokenColorMapper {
+    static func color(for tokenClass: String, palette: ThemePalette) -> NSColor {
+        let hex: String
+        switch tokenClass {
+        case "comment":     hex = palette.comment
+        case "keyword":     hex = palette.keyword
+        case "string":      hex = palette.string
+        case "number":      hex = palette.number
+        case "type":        hex = palette.type
+        case "function":    hex = palette.function
+        case "property":    hex = palette.property
+        case "constant":    hex = palette.number
+        case "identifier":  hex = palette.text
+        case "punctuation": hex = palette.punctuation
+        case "tag":         hex = palette.tag
+        case "attribute":   hex = palette.attribute
+        case "escape":      hex = palette.escape
+        case "builtin":     hex = palette.builtin
+        case "namespace":   hex = palette.namespace
+        case "parameter":   hex = palette.parameter
+        default:            hex = palette.text
+        }
+        return NSColor(hex: hex) ?? .labelColor
+    }
+}
+
+enum TreeSitterTokenConverter {
+    /// Converts byte-offset tokens into per-line `[ColoredToken]` arrays.
+    /// Each line in `lines` gets its own array of colored tokens, covering every character.
+    static func convert(
+        tokens: [HighlightToken],
+        lines: [String],
+        palette: ThemePalette
+    ) -> [[ColoredToken]] {
+        let textColor = NSColor(hex: palette.text) ?? .labelColor
+
+        // Build a byte offset map: lineStartOffsets[i] = byte offset of the start of lines[i]
+        var lineStartOffsets: [Int] = []
+        var offset = 0
+        for line in lines {
+            lineStartOffsets.append(offset)
+            offset += line.utf8.count + 1 // +1 for the "\n" that joined them
+        }
+
+        var result: [[ColoredToken]] = Array(repeating: [], count: lines.count)
+
+        for lineIndex in lines.indices {
+            let lineStart = lineStartOffsets[lineIndex]
+            let lineBytes = lines[lineIndex].utf8.count
+            let lineEnd = lineStart + lineBytes
+            let lineData = Array(lines[lineIndex].utf8)
+
+            // Collect tokens that overlap this line
+            var lineTokens: [(start: Int, end: Int, color: NSColor)] = []
+            for token in tokens {
+                if token.e <= lineStart { continue }
+                if token.s >= lineEnd { break }
+                // Clamp to line bounds
+                let s = max(token.s - lineStart, 0)
+                let e = min(token.e - lineStart, lineBytes)
+                if s < e {
+                    lineTokens.append((s, e, TokenColorMapper.color(for: token.c, palette: palette)))
+                }
+            }
+
+            if lineTokens.isEmpty {
+                result[lineIndex] = [ColoredToken(text: lines[lineIndex], color: textColor)]
+                continue
+            }
+
+            var colored: [ColoredToken] = []
+            var pos = 0
+            for lt in lineTokens {
+                if lt.start > pos {
+                    let text = String(decoding: lineData[pos..<lt.start], as: UTF8.self)
+                    colored.append(ColoredToken(text: text, color: textColor))
+                }
+                if lt.start < lt.end {
+                    let text = String(decoding: lineData[lt.start..<lt.end], as: UTF8.self)
+                    colored.append(ColoredToken(text: text, color: lt.color))
+                }
+                pos = lt.end
+            }
+            if pos < lineBytes {
+                let text = String(decoding: lineData[pos..<lineBytes], as: UTF8.self)
+                colored.append(ColoredToken(text: text, color: textColor))
+            }
+            result[lineIndex] = colored.isEmpty ? [ColoredToken(text: lines[lineIndex], color: textColor)] : colored
+        }
+
+        return result
     }
 }
 

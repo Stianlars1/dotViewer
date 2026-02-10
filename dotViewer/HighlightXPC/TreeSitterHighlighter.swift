@@ -1,4 +1,5 @@
 import Foundation
+import Shared
 
 final class TreeSitterHighlighter {
     private struct LanguageConfig {
@@ -11,6 +12,91 @@ final class TreeSitterHighlighter {
 
     init() {
         configs = Self.loadConfigs()
+    }
+
+    func extractTokens(
+        code: String,
+        language: String,
+        shouldCancel: (() -> Bool)? = nil
+    ) -> [HighlightToken]? {
+        if shouldCancel?() == true { return nil }
+        let loweredLanguage = language.lowercased()
+
+        guard let data = code.data(using: .utf8) else { return [] }
+
+        guard let config = configs[loweredLanguage] else {
+            guard loweredLanguage != "plaintext", !loweredLanguage.isEmpty else { return [] }
+            let captures = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
+            if shouldCancel?() == true { return nil }
+            return captures.map { HighlightToken(s: $0.start, e: $0.end, c: Self.mapCaptureToClass($0.name).dropTokPrefix()) }
+        }
+
+        guard let parser = ts_parser_new() else { return [] }
+        defer { ts_parser_delete(parser) }
+
+        if !ts_parser_set_language(parser, config.language) { return [] }
+
+        let tree: OpaquePointer? = data.withUnsafeBytes { buffer in
+            guard let baseAddress = buffer.baseAddress else { return nil }
+            return ts_parser_parse_string(parser, nil, baseAddress.assumingMemoryBound(to: CChar.self), UInt32(data.count))
+        }
+        guard let tree else { return [] }
+        defer { ts_tree_delete(tree) }
+
+        if shouldCancel?() == true { return nil }
+
+        guard let cursor = ts_query_cursor_new() else { return [] }
+        defer { ts_query_cursor_delete(cursor) }
+
+        let rootNode = ts_tree_root_node(tree)
+        ts_query_cursor_exec(cursor, config.query, rootNode)
+
+        var captures: [Capture] = []
+        var match = TSQueryMatch()
+        var captureIndex: UInt32 = 0
+        var captureCount = 0
+
+        while ts_query_cursor_next_capture(cursor, &match, &captureIndex) {
+            captureCount += 1
+            if captureCount % 200 == 0, shouldCancel?() == true { return nil }
+            guard let capturePtr = match.captures else { continue }
+            let captureBuffer = UnsafeBufferPointer(start: capturePtr, count: Int(match.capture_count))
+            let capture = captureBuffer[Int(captureIndex)]
+            let node = capture.node
+            let start = Int(ts_node_start_byte(node))
+            let end = Int(ts_node_end_byte(node))
+            if start >= end || start < 0 || end > data.count { continue }
+
+            var nameLength: UInt32 = 0
+            guard let namePtr = ts_query_capture_name_for_id(config.query, capture.index, &nameLength) else { continue }
+            let nameBytes = UnsafeBufferPointer(start: UnsafeRawPointer(namePtr).assumingMemoryBound(to: UInt8.self), count: Int(nameLength))
+            let name = String(decoding: nameBytes, as: UTF8.self)
+            captures.append(Capture(start: start, end: end, name: name))
+        }
+
+        if captures.isEmpty {
+            let fallback = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
+            if shouldCancel?() == true { return nil }
+            captures = fallback
+        }
+
+        captures.sort { lhs, rhs in
+            if lhs.start == rhs.start { return lhs.end > rhs.end }
+            return lhs.start < rhs.start
+        }
+
+        if shouldCancel?() == true { return nil }
+
+        // Deduplicate overlapping captures (same logic as renderHighlighted)
+        var tokens: [HighlightToken] = []
+        var currentIndex = 0
+        for capture in captures {
+            if capture.start < currentIndex { continue }
+            let className = Self.mapCaptureToClass(capture.name).dropTokPrefix()
+            tokens.append(HighlightToken(s: capture.start, e: capture.end, c: className))
+            currentIndex = capture.end
+        }
+        return tokens
     }
 
     func highlight(
@@ -560,5 +646,11 @@ private extension TreeSitterHighlighter {
         if lower.contains("punctuation") { return "tok-punctuation" }
 
         return "tok-identifier"
+    }
+}
+
+private extension String {
+    func dropTokPrefix() -> String {
+        hasPrefix("tok-") ? String(dropFirst(4)) : self
     }
 }

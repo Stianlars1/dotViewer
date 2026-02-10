@@ -71,7 +71,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
             }
 
             let encoding = fileAttributes?.stringEncoding ?? .utf8
-            let languageName = registry.fileType(for: key)?.displayName ?? (key.isEmpty ? "Text" : key.uppercased())
+            let languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
 
             if Task.isCancelled {
                 await MainActor.run {
@@ -109,6 +109,23 @@ final class ThumbnailProvider: QLThumbnailProvider {
                 }
             }
 
+            // Request tree-sitter tokens from XPC (1.5s timeout for thumbnails)
+            let languageId = registry.highlightLanguage(for: key) ?? ""
+            var treeSitterTokens: [HighlightToken]? = nil
+            if !languageId.isEmpty {
+                let snippetCode = snippet.lines.joined(separator: "\n")
+                let requestId = UUID().uuidString
+                let result = await HighlightXPCClient.shared.highlightTokens(
+                    code: snippetCode,
+                    language: languageId,
+                    requestId: requestId,
+                    timeout: 1.5
+                )
+                if case .success(let tokens) = result, !tokens.isEmpty {
+                    treeSitterTokens = tokens
+                }
+            }
+
             let systemIsDark = await MainActor.run { ThumbnailProvider.systemIsDark() }
             let palette = ThemePalette.palette(for: settings.selectedTheme, systemIsDark: systemIsDark)
             let badgeText = ThumbnailProvider.badgeText(for: url, key: key, languageName: languageName)
@@ -121,7 +138,8 @@ final class ThumbnailProvider: QLThumbnailProvider {
                 fileSizeBytes: fileSize,
                 showHeader: settings.showHeader,
                 showLineNumbers: settings.showLineNumbers,
-                fontSize: CGFloat(settings.codeFontSize)
+                fontSize: CGFloat(settings.codeFontSize),
+                treeSitterTokens: treeSitterTokens
             )
 
             await MainActor.run {

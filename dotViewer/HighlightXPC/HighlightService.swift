@@ -57,6 +57,38 @@ final class HighlightService: NSObject, NSXPCListenerDelegate, HighlightServiceP
         cancellationRegistry.clear(requestId)
     }
 
+    func highlightTokens(
+        code: String,
+        language: String,
+        requestId: String,
+        reply: @escaping (NSData?, NSError?) -> Void
+    ) {
+        if cancellationRegistry.isCancelled(requestId) {
+            let error = NSError(domain: "com.stianlars1.dotViewer.HighlightCancelled", code: 1)
+            reply(nil, error)
+            return
+        }
+
+        let tokens = highlighter.extractTokens(
+            code: code,
+            language: language,
+            shouldCancel: { [weak cancellationRegistry] in
+                cancellationRegistry?.isCancelled(requestId) ?? false
+            }
+        )
+
+        if cancellationRegistry.isCancelled(requestId) || tokens == nil {
+            let error = NSError(domain: "com.stianlars1.dotViewer.HighlightCancelled", code: 1)
+            reply(nil, error)
+        } else if let tokens, let data = try? JSONEncoder().encode(tokens) {
+            reply(data as NSData, nil)
+        } else {
+            reply(NSData(), nil)
+        }
+
+        cancellationRegistry.clear(requestId)
+    }
+
     func cancel(requestId: String) {
         cancellationRegistry.cancel(requestId)
     }

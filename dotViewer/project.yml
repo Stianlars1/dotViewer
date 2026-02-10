@@ -35,57 +35,2892 @@ targets:
       path: App/Info.plist
       properties:
         UTExportedTypeDeclarations:
-          - UTTypeIdentifier: com.stianlars1.dotviewer.typescript
-            UTTypeDescription: TypeScript Source
+          - UTTypeIdentifier: com.stianlars1.dotviewer.29k
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 29k
+          - UTTypeIdentifier: com.stianlars1.dotviewer.4gl
+            UTTypeDescription: Informix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 4gl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.68s
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 68s
+          - UTTypeIdentifier: com.stianlars1.dotviewer.68x
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 68x
+          - UTTypeIdentifier: com.stianlars1.dotviewer.a
+            UTTypeDescription: ADA95
             UTTypeConformsTo:
               - public.source-code
               - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - cts
-                - ts
-          - UTTypeIdentifier: com.stianlars1.dotviewer.env
-            UTTypeDescription: Environment Variables
+                - a
+          - UTTypeIdentifier: com.stianlars1.dotviewer.a4c
+            UTTypeDescription: ASCEND
             UTTypeConformsTo:
               - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - env
-          - UTTypeIdentifier: com.stianlars1.dotviewer.batch
-            UTTypeDescription: Windows Batch Script
+                - a4c
+          - UTTypeIdentifier: com.stianlars1.dotviewer.a51
+            UTTypeDescription: Generic Assembler
             UTTypeConformsTo:
               - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - a51
+          - UTTypeIdentifier: com.stianlars1.dotviewer.abap
+            UTTypeDescription: ABAP/4
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - abap
+          - UTTypeIdentifier: com.stianlars1.dotviewer.abc
+            UTTypeDescription: ABC
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - abc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.abnf
+            UTTypeDescription: Advanced Backus-Naur Form
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - abnf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.abp
+            UTTypeDescription: Abap4
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - abp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ac
+            UTTypeDescription: Autoconf
+            UTTypeConformsTo:
               - public.script
+              - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - bat
-                - cmd
-          - UTTypeIdentifier: com.stianlars1.dotviewer.jsx
-            UTTypeDescription: JavaScript JSX Source
+                - ac
+          - UTTypeIdentifier: com.stianlars1.dotviewer.acf
+            UTTypeDescription: Steam App Manifest
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - acf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ado
+            UTTypeDescription: Stata
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ado
+          - UTTypeIdentifier: com.stianlars1.dotviewer.agda
+            UTTypeDescription: Agda
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - agda
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ahk
+            UTTypeDescription: AutoHotKey
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ahk
+          - UTTypeIdentifier: com.stianlars1.dotviewer.alan
+            UTTypeDescription: ALAN Interactive Fiction Language
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - alan
+          - UTTypeIdentifier: com.stianlars1.dotviewer.alg
+            UTTypeDescription: ALGOL 68
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - alg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.applescript
+            UTTypeDescription: AppleScript
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - applescript
+          - UTTypeIdentifier: com.stianlars1.dotviewer.arc
+            UTTypeDescription: Arc
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - arc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.arm
+            UTTypeDescription: ARM
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - arm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.as
+            UTTypeDescription: ActionScript
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - as
+          - UTTypeIdentifier: com.stianlars1.dotviewer.as400cl
+            UTTypeDescription: AS/400 CL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - as400cl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ascx
+            UTTypeDescription: Active Server Pages
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ascx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ashx
+            UTTypeDescription: Active Server Pages
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ashx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.aspx
+            UTTypeDescription: Active Server Pages
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - aspx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.astro
+            UTTypeDescription: Astro
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - astro
+          - UTTypeIdentifier: com.stianlars1.dotviewer.au3
+            UTTypeDescription: AutoIt
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - au3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.avenue
+            UTTypeDescription: Avenue
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - avenue
+          - UTTypeIdentifier: com.stianlars1.dotviewer.b
+            UTTypeDescription: Limbo
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - b
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bal
+            UTTypeDescription: Ballerina
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bal
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bas
+            UTTypeDescription: Visual Basic
             UTTypeConformsTo:
               - public.source-code
               - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - jsx
-          - UTTypeIdentifier: com.stianlars1.dotviewer.fsharp
-            UTTypeDescription: F# Source
+                - bas
+          - UTTypeIdentifier: com.stianlars1.dotviewer.basic
+            UTTypeDescription: Visual Basic
             UTTypeConformsTo:
               - public.source-code
               - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - fs
-                - fsx
-                - fsi
-          - UTTypeIdentifier: com.stianlars1.dotviewer.vb
-            UTTypeDescription: Visual Basic Source
+                - basic
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bb
+            UTTypeDescription: Blitz Basic
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bbcode
+            UTTypeDescription: BBcode
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bbcode
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bcpl
+            UTTypeDescription: BCPL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bcpl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bdy
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bdy
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bfr
+            UTTypeDescription: Biferno
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bfr
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bi
+            UTTypeDescription: Visual Basic
             UTTypeConformsTo:
               - public.source-code
               - public.plain-text
             UTTypeTagSpecification:
               public.filename-extension:
-                - vb
+                - bi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bms
+            UTTypeDescription: BM Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bms
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bnd
+            UTTypeDescription: OSGi Bundle
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bnd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bndrun
+            UTTypeDescription: OSGi Bundle
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bndrun
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bnf
+            UTTypeDescription: Backus-Naur Form
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bnf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.boo
+            UTTypeDescription: Boo
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - boo
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bzl
+            UTTypeDescription: Bazel/Starlark
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bzl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.canvas
+            UTTypeDescription: Obsidian Canvas
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - canvas
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cb
+            UTTypeDescription: ClearBasic
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cbl
+            UTTypeDescription: COBOL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cbl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ceylon
+            UTTypeDescription: Ceylon
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ceylon
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cfc
+            UTTypeDescription: ColdFusion MX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cfc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cfg
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cfg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cfm
+            UTTypeDescription: ColdFusion MX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cfm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cg
+            UTTypeDescription: Unity Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cgi
+            UTTypeDescription: Perl
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cgi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cginc
+            UTTypeDescription: Unity Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cginc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.chl
+            UTTypeDescription: CHILL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - chl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.chpl
+            UTTypeDescription: Chapel
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - chpl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cl
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.class
+            UTTypeDescription: Gambas
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - class
+          - UTTypeIdentifier: com.stianlars1.dotviewer.clipper
+            UTTypeDescription: Clipper
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - clipper
+          - UTTypeIdentifier: com.stianlars1.dotviewer.clisp
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - clisp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.clp
+            UTTypeDescription: Clips
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - clp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cmake
+            UTTypeDescription: CMake
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cmake
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cob
+            UTTypeDescription: COBOL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cob
+          - UTTypeIdentifier: com.stianlars1.dotviewer.coffee
+            UTTypeDescription: Coffeescript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - coffee
+          - UTTypeIdentifier: com.stianlars1.dotviewer.comp
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - comp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cpy
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cpy
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cr
+            UTTypeDescription: Crystal
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cr
+          - UTTypeIdentifier: com.stianlars1.dotviewer.critic
+            UTTypeDescription: CriticMarkup
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - critic
+          - UTTypeIdentifier: com.stianlars1.dotviewer.crk
+            UTTypeDescription: Crack
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - crk
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cshtml
+            UTTypeDescription: Razor (C#/HTML)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cshtml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.csproj
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - csproj
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cu
+            UTTypeDescription: C and C++
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dat
+            UTTypeDescription: AMPL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dat
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dats
+            UTTypeDescription: Applied Type System
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dats
+          - UTTypeIdentifier: com.stianlars1.dotviewer.def
+            UTTypeDescription: Modula2
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - def
+          - UTTypeIdentifier: com.stianlars1.dotviewer.desktop
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - desktop
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dig
+            UTTypeDescription: Digdag Workflow
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dig
+          - UTTypeIdentifier: com.stianlars1.dotviewer.do
+            UTTypeDescription: Stata
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - do
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dot
+            UTTypeDescription: Graphviz
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dot
+          - UTTypeIdentifier: com.stianlars1.dotviewer.doxyfile
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - doxyfile
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dpr
+            UTTypeDescription: delphi
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dpr
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dtd
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dtd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dtsi
+            UTTypeDescription: Device Tree Source
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dtsi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dylan
+            UTTypeDescription: Dylan
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dylan
+          - UTTypeIdentifier: com.stianlars1.dotviewer.e
+            UTTypeDescription: Eiffel
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - e
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ebnf
+            UTTypeDescription: Extended Backus-Naur Form
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ebnf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ebuild
+            UTTypeDescription: Sh
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ebuild
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ecf
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ecf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.eclass
+            UTTypeDescription: Sh
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - eclass
+          - UTTypeIdentifier: com.stianlars1.dotviewer.editorconfig
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - editorconfig
+          - UTTypeIdentifier: com.stianlars1.dotviewer.edl
+            UTTypeDescription: Edit Decision List
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - edl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.edn
+            UTTypeDescription: Clojure
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - edn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.el
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - el
+          - UTTypeIdentifier: com.stianlars1.dotviewer.elv
+            UTTypeDescription: Elvish Shell
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - elv
+          - UTTypeIdentifier: com.stianlars1.dotviewer.eml
+            UTTypeDescription: E-Mail treated as Markup
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - eml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ent
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ent
+          - UTTypeIdentifier: com.stianlars1.dotviewer.erb
+            UTTypeDescription: ERB Templates
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - erb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.erl
+            UTTypeDescription: Erlang
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - erl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.eu
+            UTTypeDescription: Euphoria
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - eu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ew
+            UTTypeDescription: Euphoria
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ew
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ex
+            UTTypeDescription: Elixir
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ex
+          - UTTypeIdentifier: com.stianlars1.dotviewer.exa
+            UTTypeDescription: EXAPUNKS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - exa
+          - UTTypeIdentifier: com.stianlars1.dotviewer.exapunks
+            UTTypeDescription: EXAPUNKS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - exapunks
+          - UTTypeIdentifier: com.stianlars1.dotviewer.exp
+            UTTypeDescription: Express
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - exp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.exs
+            UTTypeDescription: Elixir
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - exs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.exw
+            UTTypeDescription: Euphoria
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - exw
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fas
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fas
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fasl
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fasl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fcgi
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fcgi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fea
+            UTTypeDescription: OpenType Feature File
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fea
+          - UTTypeIdentifier: com.stianlars1.dotviewer.feature
+            UTTypeDescription: Gherkin
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - feature
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ff
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ff
+          - UTTypeIdentifier: com.stianlars1.dotviewer.flx
+            UTTypeDescription: Felix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - flx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fnc
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fnc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fpp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fpp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.frink
+            UTTypeDescription: Frink
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - frink
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fstab
+            UTTypeDescription: fstab config file
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fstab
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ftn
+            UTTypeDescription: Fortran 77
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ftn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fx
+            UTTypeDescription: Java FX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gd
+            UTTypeDescription: GDScript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gdb
+            UTTypeDescription: gdb
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gdb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.glade
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - glade
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gleam
+            UTTypeDescription: Gleam
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gleam
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnad
+            UTTypeDescription: ADA95
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnad
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gql
+            UTTypeDescription: GraphQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.graphql
+            UTTypeDescription: GraphQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - graphql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.grm
+            UTTypeDescription: Polygen
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - grm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.grv
+            UTTypeDescription: Java
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - grv
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gst
+            UTTypeDescription: Smalltalk
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gst
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gvimrc
+            UTTypeDescription: Vim Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gvimrc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gyp
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gyp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gypi
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gypi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ha
+            UTTypeDescription: Hare
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ha
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ham
+            UTTypeDescription: Jam
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ham
+          - UTTypeIdentifier: com.stianlars1.dotviewer.haml
+            UTTypeDescription: Haml (HTML Abstraction Markup Language)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - haml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hcl
+            UTTypeDescription: Hecl
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hcl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hdr
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hdr
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hnd
+            UTTypeDescription: AMTrix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hnd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hrl
+            UTTypeDescription: Erlang
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hrl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.httpd
+            UTTypeDescription: Apache Config
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - httpd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hub
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hub
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hug
+            UTTypeDescription: Hugo
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hug
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hx
+            UTTypeDescription: haXe
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.i3
+            UTTypeDescription: Modula3
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - i3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.icl
+            UTTypeDescription: Clean
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - icl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.icn
+            UTTypeDescription: Icon
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - icn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.idl
+            UTTypeDescription: IDL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - idl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.idlang
+            UTTypeDescription: Interactive Data Language
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - idlang
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ili
+            UTTypeDescription: INTERLIS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ili
+          - UTTypeIdentifier: com.stianlars1.dotviewer.inc
+            UTTypeDescription: fasm
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - inc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.inf
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - inf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.inp
+            UTTypeDescription: Charmm
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - inp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.io
+            UTTypeDescription: IO
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - io
+          - UTTypeIdentifier: com.stianlars1.dotviewer.iss
+            UTTypeDescription: Inno Setup
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - iss
+          - UTTypeIdentifier: com.stianlars1.dotviewer.itcl
+            UTTypeDescription: Tcl/Tk
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - itcl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.j
+            UTTypeDescription: Jasmin
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - j
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jinja
+            UTTypeDescription: HTML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jinja
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jnlp
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jnlp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.js_regex
+            UTTypeDescription: Javascript Regex
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - js_regex
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsm
+            UTTypeDescription: JavaScript Module
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.json5
+            UTTypeDescription: JSON5
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - json5
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsonc
+            UTTypeDescription: JSON
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsonc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsonl
+            UTTypeDescription: JSON Lines
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsonl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsp
+            UTTypeDescription: JavaServer Pages
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.kdev3
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - kdev3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.kml
+            UTTypeDescription: KML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - kml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lbn
+            UTTypeDescription: Luban
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lbn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ldif
+            UTTypeDescription: LDAP
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ldif
+          - UTTypeIdentifier: com.stianlars1.dotviewer.less
+            UTTypeDescription: LESS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - less
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lgt
+            UTTypeDescription: Logtalk
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lgt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.liquid
+            UTTypeDescription: Liquid Template
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - liquid
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lotos
+            UTTypeDescription: Lotos
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lotos
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lottie
+            UTTypeDescription: Lottie Animation
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lottie
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ls
+            UTTypeDescription: Lotus
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ls
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lsl
+            UTTypeDescription: Linden Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lsl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ly
+            UTTypeDescription: Lilypond
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ly
+          - UTTypeIdentifier: com.stianlars1.dotviewer.m3
+            UTTypeDescription: Modula3
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - m3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.m4
+            UTTypeDescription: M4 Macro
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - m4
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mat
+            UTTypeDescription: Matlab
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mat
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mbox
+            UTTypeDescription: E-Mail treated as Markup
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mbox
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mel
+            UTTypeDescription: Maya
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mel
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mercury
+            UTTypeDescription: Mercury
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mercury
+          - UTTypeIdentifier: com.stianlars1.dotviewer.meson
+            UTTypeDescription: Meson
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - meson
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mhl
+            UTTypeDescription: Media Hash List
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mhl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mib
+            UTTypeDescription: SNMP
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mib
+          - UTTypeIdentifier: com.stianlars1.dotviewer.miranda
+            UTTypeDescription: Miranda
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - miranda
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ml
+            UTTypeDescription: Objective Caml
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mli
+            UTTypeDescription: Objective Caml
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mli
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mll
+            UTTypeDescription: OCaml Lex
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mll
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mlx
+            UTTypeDescription: Matlab
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mlx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mly
+            UTTypeDescription: OCaml Yacc
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mly
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mo
+            UTTypeDescription: Modelica
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mo
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mod
+            UTTypeDescription: Modula2
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mod
+          - UTTypeIdentifier: com.stianlars1.dotviewer.moon
+            UTTypeDescription: MoonScript
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - moon
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mpd
+            UTTypeDescription: MPEG-DASH Manifest
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mpd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mpl
+            UTTypeDescription: Maple
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mpl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mq4
+            UTTypeDescription: MQL (MetaTrader)
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mq4
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mq5
+            UTTypeDescription: MQL (MetaTrader)
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mq5
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mqh
+            UTTypeDescription: MQL (MetaTrader)
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mqh
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ms
+            UTTypeDescription: MaxScript
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ms
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mssql
+            UTTypeDescription: MSSQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mssql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mts
+            UTTypeDescription: TypeScript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mts
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mud
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mud
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mxml
+            UTTypeDescription: Magic eXtensible Markup
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mxml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.n
+            UTTypeDescription: Nemerle
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - n
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nas
+            UTTypeDescription: Nasal
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nas
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nbc
+            UTTypeDescription: NeXT Byte Codes
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nbc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nbs
+            UTTypeDescription: mIRC Scripting
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nbs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.neon
+            UTTypeDescription: NEON Config
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - neon
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nf
+            UTTypeDescription: Nextflow
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nginx
+            UTTypeDescription: Nginx configuration
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nginx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nice
+            UTTypeDescription: Nice
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nice
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nim
+            UTTypeDescription: Nim
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nim
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nix
+            UTTypeDescription: Nix Expression Language
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nix
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nrm
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nrm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nrx
+            UTTypeDescription: NetRexx
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nrx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nsh
+            UTTypeDescription: NSIS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nsh
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nsi
+            UTTypeDescription: NSIS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nsi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nt
+            UTTypeDescription: N3
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nut
+            UTTypeDescription: Squirrel
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nut
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nxc
+            UTTypeDescription: Not eXactly C
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nxc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.octave
+            UTTypeDescription: Octave
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - octave
+          - UTTypeIdentifier: com.stianlars1.dotviewer.odin
+            UTTypeDescription: Odin
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - odin
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ooc
+            UTTypeDescription: Oberon
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ooc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.oorexx
+            UTTypeDescription: OpenObjectRexx
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - oorexx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.opml
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - opml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.os
+            UTTypeDescription: Object Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - os
+          - UTTypeIdentifier: com.stianlars1.dotviewer.otio
+            UTTypeDescription: OpenTimelineIO
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - otio
+          - UTTypeIdentifier: com.stianlars1.dotviewer.oz
+            UTTypeDescription: Oz
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - oz
+          - UTTypeIdentifier: com.stianlars1.dotviewer.p
+            UTTypeDescription: Progress
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - p
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pb
+            UTTypeDescription: PureBASIC
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pbf
+            UTTypeDescription: PureBASIC
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pbf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pbi
+            UTTypeDescription: PureBASIC
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pbi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pck
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pck
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pcss
+            UTTypeDescription: PostCSS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pcss
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pddl
+            UTTypeDescription: PDDL
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pddl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.perl
+            UTTypeDescription: Perl
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - perl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.php5
+            UTTypeDescription: PHP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - php5
+          - UTTypeIdentifier: com.stianlars1.dotviewer.php6
+            UTTypeDescription: PHP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - php6
+          - UTTypeIdentifier: com.stianlars1.dotviewer.php7
+            UTTypeDescription: PHP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - php7
+          - UTTypeIdentifier: com.stianlars1.dotviewer.phps
+            UTTypeDescription: PHP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - phps
+          - UTTypeIdentifier: com.stianlars1.dotviewer.phpt
+            UTTypeDescription: PHP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - phpt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pkb
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pkb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pks
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pks
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plex
+            UTTypeDescription: Perl
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plex
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plperl
+            UTTypeDescription: PL/Perl
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plperl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plpython
+            UTTypeDescription: PL/Python
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plpython
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pltcl
+            UTTypeDescription: PL/Tcl
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pltcl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plx
+            UTTypeDescription: Perl
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pmod
+            UTTypeDescription: Pike
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pmod
+          - UTTypeIdentifier: com.stianlars1.dotviewer.po
+            UTTypeDescription: PO translation
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - po
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pom
+            UTTypeDescription: Maven POM
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pom
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pony
+            UTTypeDescription: Pony
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pony
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pov
+            UTTypeDescription: POV-Ray
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pov
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pp
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.prawn
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - prawn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.prc
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - prc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.prefs
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - prefs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pri
+            UTTypeDescription: QMake Project
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pri
+          - UTTypeIdentifier: com.stianlars1.dotviewer.prisma
+            UTTypeDescription: Prisma Schema
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - prisma
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pro
+            UTTypeDescription: Prolog
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pro
+          - UTTypeIdentifier: com.stianlars1.dotviewer.properties
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - properties
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ps1
+            UTTypeDescription: Microsoft PowerShell
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ps1
+          - UTTypeIdentifier: com.stianlars1.dotviewer.psd1
+            UTTypeDescription: Microsoft PowerShell
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - psd1
+          - UTTypeIdentifier: com.stianlars1.dotviewer.psl
+            UTTypeDescription: PATROL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - psl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.psm1
+            UTTypeDescription: Microsoft PowerShell
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - psm1
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pub
+            UTTypeDescription: SSH Public Key
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pub
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pure
+            UTTypeDescription: Pure
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pure
+          - UTTypeIdentifier: com.stianlars1.dotviewer.purs
+            UTTypeDescription: PureScript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - purs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pv
+            UTTypeDescription: PlotDevice
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pv
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pxd
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pxd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pxi
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pxi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.py3
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - py3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pyi
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pyi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pyw
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pyw
+          - UTTypeIdentifier: com.stianlars1.dotviewer.pyx
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - pyx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.q
+            UTTypeDescription: Qore
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - q
+          - UTTypeIdentifier: com.stianlars1.dotviewer.qml
+            UTTypeDescription: QML
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - qml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.qu
+            UTTypeDescription: Qu
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - qu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rabl
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rabl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rake
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rake
+          - UTTypeIdentifier: com.stianlars1.dotviewer.raml
+            UTTypeDescription: RAML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - raml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.razor
+            UTTypeDescription: Razor (C#/HTML)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - razor
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rbx
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rbx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.readme
+            UTTypeDescription: README
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - readme
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rebol
+            UTTypeDescription: Rebol
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rebol
+          - UTTypeIdentifier: com.stianlars1.dotviewer.reg
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - reg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rego
+            UTTypeDescription: Rego
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rego
+          - UTTypeIdentifier: com.stianlars1.dotviewer.resx
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - resx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rex
+            UTTypeDescription: Rexx
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rex
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rjs
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rjs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rkt
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rkt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rnc
+            UTTypeDescription: Relax NG
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rnc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rpg
+            UTTypeDescription: RPG
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rpg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rpl
+            UTTypeDescription: RPL Programming Language
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rpl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rpp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rpp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rpy
+            UTTypeDescription: Python
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rpy
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ruby
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ruby
+          - UTTypeIdentifier: com.stianlars1.dotviewer.run
+            UTTypeDescription: AMPL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - run
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rx
+            UTTypeDescription: Rexx
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.s4
+            UTTypeDescription: AMTrix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - s4
+          - UTTypeIdentifier: com.stianlars1.dotviewer.s4h
+            UTTypeDescription: AMTrix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - s4h
+          - UTTypeIdentifier: com.stianlars1.dotviewer.s4t
+            UTTypeDescription: AMTrix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - s4t
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sage
+            UTTypeDescription: SageMath
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sage
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sam
+            UTTypeDescription: Sequence Alignment Map (use with sam_seq.lua plug-in)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sam
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sas
+            UTTypeDescription: SAS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sas
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sbcl
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sbcl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sbt
+            UTTypeDescription: Scala Build
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sbt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sc
+            UTTypeDescription: Paradox
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scad
+            UTTypeDescription: OpenSCAD
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scad
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scd
+            UTTypeDescription: SuperCollider
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sce
+            UTTypeDescription: Scilab
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sce
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sch
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sch
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sci
+            UTTypeDescription: Scilab
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sci
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scom
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scom
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scss
+            UTTypeDescription: SASS/SCSS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scss
+          - UTTypeIdentifier: com.stianlars1.dotviewer.se
+            UTTypeDescription: Eiffel
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - se
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sf
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sgm
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sgm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sgml
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sgml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.shader
+            UTTypeDescription: Unity Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - shader
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sld
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sld
+          - UTTypeIdentifier: com.stianlars1.dotviewer.slim
+            UTTypeDescription: Slim (experimental)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - slim
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sls
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sls
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sma
+            UTTypeDescription: SMALL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sma
+          - UTTypeIdentifier: com.stianlars1.dotviewer.smali
+            UTTypeDescription: Smali
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - smali
+          - UTTypeIdentifier: com.stianlars1.dotviewer.smi
+            UTTypeDescription: SNMP
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - smi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sml
+            UTTypeDescription: Standard ML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sno
+            UTTypeDescription: SNOBOL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sno
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sol
+            UTTypeDescription: Solidity
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sol
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sources
+            UTTypeDescription: Debian Sources
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sources
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.spb
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - spb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.spe
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - spe
+          - UTTypeIdentifier: com.stianlars1.dotviewer.spec
+            UTTypeDescription: RPM Spec
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - spec
+          - UTTypeIdentifier: com.stianlars1.dotviewer.spn
+            UTTypeDescription: SPIN SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - spn
+          - UTTypeIdentifier: com.stianlars1.dotviewer.spp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - spp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sps
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sps
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sq
+            UTTypeDescription: Smalltalk
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sq
+          - UTTypeIdentifier: com.stianlars1.dotviewer.st
+            UTTypeDescription: Smalltalk
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - st
+          - UTTypeIdentifier: com.stianlars1.dotviewer.styl
+            UTTypeDescription: Stylus
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - styl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.t4
+            UTTypeDescription: AMTrix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - t4
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tcl
+            UTTypeDescription: Tcl/Tk
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tcl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tesc
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tesc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tese
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tese
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tf
+            UTTypeDescription: Terraform
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tfstate
+            UTTypeDescription: Terraform State
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tfstate
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tfvars
+            UTTypeDescription: Terraform
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tfvars
+          - UTTypeIdentifier: com.stianlars1.dotviewer.the
+            UTTypeDescription: Rexx
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - the
+          - UTTypeIdentifier: com.stianlars1.dotviewer.thor
+            UTTypeDescription: Ruby
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - thor
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tk
+            UTTypeDescription: Tcl/Tk
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tk
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tld
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tld
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tpb
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tpb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tpl
+            UTTypeDescription: HTML Template
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tpl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tps
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tps
+          - UTTypeIdentifier: com.stianlars1.dotviewer.trg
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - trg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tsql
+            UTTypeDescription: Transact-SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tsql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ttcn3
+            UTTypeDescription: TTCN3
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ttcn3
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ttl
+            UTTypeDescription: N3
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ttl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ttx
+            UTTypeDescription: FontTools TTX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ttx
+          - UTTypeIdentifier: com.stianlars1.dotviewer.twig
+            UTTypeDescription: HTML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - twig
+          - UTTypeIdentifier: com.stianlars1.dotviewer.upc
+            UTTypeDescription: UPC (and C, technically)
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - upc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vala
+            UTTypeDescription: Vala
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vala
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vbs
+            UTTypeDescription: Visual Basic
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vbs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vim
+            UTTypeDescription: Vim Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vim
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vimrc
+            UTTypeDescription: Vim Script
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vimrc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vue
+            UTTypeDescription: vue.js (beta)
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vue
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vxml
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vxml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.w
+            UTTypeDescription: Progress
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - w
+          - UTTypeIdentifier: com.stianlars1.dotviewer.was
+            UTTypeDescription: Abstract
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - was
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wat
+            UTTypeDescription: Web Assembly Text
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wat
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wdl
+            UTTypeDescription: Workflow Description Language
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wdl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wf
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wgsl
+            UTTypeDescription: WGSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wgsl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.whiley
+            UTTypeDescription: Whiley
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - whiley
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wish
+            UTTypeDescription: Tcl/Tk
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wish
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wml
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wpb
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wpb
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wpp
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wpp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wps
+            UTTypeDescription: PL/1
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wps
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wren
+            UTTypeDescription: Wren
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wren
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wsdl
+            UTTypeDescription: WSDL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wsdl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wud
+            UTTypeDescription: Abstract
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wud
+          - UTTypeIdentifier: com.stianlars1.dotviewer.wxu
+            UTTypeDescription: Euphoria
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - wxu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.x86
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - x86
+          - UTTypeIdentifier: com.stianlars1.dotviewer.xaml
+            UTTypeDescription: XAML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - xaml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.xpp
+            UTTypeDescription: SuperX++
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - xpp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.xsd
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - xsd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.xsl
+            UTTypeDescription: XML
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - xsl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.yaiff
+            UTTypeDescription: Yaiff
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - yaiff
+          - UTTypeIdentifier: com.stianlars1.dotviewer.yang
+            UTTypeDescription: Yang
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - yang
+          - UTTypeIdentifier: com.stianlars1.dotviewer.zig
+            UTTypeDescription: Zig
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - zig
+          - UTTypeIdentifier: com.stianlars1.dotviewer.znn
+            UTTypeDescription: Zonnon
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - znn
     entitlements:
       path: App/dotViewer.entitlements
       properties:
@@ -96,9 +2931,9 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer
         DEAD_CODE_STRIPPING: YES
-        ASSETCATALOG_COMPILER_APPICON_NAME: dotIcon
+        ASSETCATALOG_COMPILER_APPICON_NAME: dotViewerIcon
     resources:
-      - path: App/dotIcon.xcassets
+      - path: App/dotViewerIcon.xcassets
     dependencies:
       - target: Shared
       - target: QuickLookExtension
@@ -119,86 +2954,512 @@ targets:
           NSExtensionAttributes:
             QLIsDataBasedPreview: true
             QLSupportedContentTypes:
-              # Note: Quick Look matching appears to require exact UTType identifiers (not conformance).
-              # Keep this list broad for common source/text UTIs, plus `public.data` for dotfiles/unknowns.
-              - public.data
-              - public.mpeg-2-transport-stream
-              - public.plain-text
-              - public.text
-              - public.source-code
-              - public.script
-              - public.shell-script
+              # System UTIs
+              - public.ada-source
+              - public.assembly-source
               - public.bash-script
-              - public.zsh-script
-              - public.ksh-script
+              - public.c-header
+              - public.c-plus-plus-header
+              - public.c-plus-plus-inline-header
+              - public.c-plus-plus-source
+              - public.c-source
+              - public.c-source.preprocessed
+              - public.comma-separated-values-text
               - public.csh-script
-              - public.tcsh-script
-              - public.python-script
-              - public.ruby-script
+              - public.css
+              - public.data
+              - public.fortran-90-source
+              - public.fortran-95-source
+              - public.fortran-source
+              - public.handlebars
+              - public.html
+              - public.json
+              - public.ksh-script
+              - public.make-source
+              - public.mpeg-2-transport-stream
+              - public.mustache
+              - public.ndjson
+              - public.objective-c-plus-plus-source
+              - public.objective-c-source
+              - public.pascal-source
+              - public.patch-file
               - public.perl-script
               - public.php-script
-              - public.swift-source
-              - com.netscape.javascript-source
-              - com.microsoft.typescript
-              - com.sun.java-source
-              - com.microsoft.c-sharp
-              - org.golang.go-script
-              - org.rust-lang.rust-script
-              - org.kotlinlang.source
-              - org.scala-lang.scala-source
-              - org.dlang.d-source
-              - org.haskell.haskell-script
-              - org.lua.lua-source
-              - org.julialang.julia
-              - org.iso.sql
-              - public.c-source
-              - public.c-header
-              - public.c-plus-plus-source
-              - public.c-plus-plus-header
-              - public.objective-c-source
-              - public.objective-c-plus-plus-source
-              - public.assembly-source
-              - public.make-source
+              - public.plain-text
               - public.protobuf-source
+              - public.python-script
+              - public.rss
+              - public.ruby-script
+              - public.script
+              - public.shell-script
+              - public.source-code
+              - public.svg-image
+              - public.swift-source
+              - public.tab-separated-values-text
+              - public.tcsh-script
+              - public.text
+              - public.toml
+              - public.xhtml
+              - public.xml
+              - public.yacc-source
+              - public.yaml
+              - public.zsh-script
+              # Vendor UTIs (com.*)
+              - com.adobe.postscript
+              - com.apple.applescript.script
+              - com.apple.log
+              - com.apple.mobileconfig
+              - com.apple.property-list
+              - com.apple.rez-source
+              - com.apple.terminal.settings
+              - com.apple.terminal.shell-script
+              - com.apple.xcode.strings-dictionary
+              - com.apple.xcode.strings-text
+              - com.coteditor.awk
+              - com.coteditor.conf
+              - com.coteditor.lisp
+              - com.coteditor.mojo
+              - com.coteditor.scheme
+              - com.coteditor.verilog
+              - com.coteditor.vhdl
+              - com.fishshell.script
+              - com.microsoft.c-sharp
+              - com.microsoft.hlsl
+              - com.microsoft.ini
+              - com.microsoft.typescript
+              - com.netscape.javascript-source
+              - com.stianlars1.dotviewer.29k
+              - com.stianlars1.dotviewer.4gl
+              - com.stianlars1.dotviewer.68s
+              - com.stianlars1.dotviewer.68x
+              - com.stianlars1.dotviewer.a
+              - com.stianlars1.dotviewer.a4c
+              - com.stianlars1.dotviewer.a51
+              - com.stianlars1.dotviewer.abap
+              - com.stianlars1.dotviewer.abc
+              - com.stianlars1.dotviewer.abnf
+              - com.stianlars1.dotviewer.abp
+              - com.stianlars1.dotviewer.ac
+              - com.stianlars1.dotviewer.acf
+              - com.stianlars1.dotviewer.ado
+              - com.stianlars1.dotviewer.agda
+              - com.stianlars1.dotviewer.ahk
+              - com.stianlars1.dotviewer.alan
+              - com.stianlars1.dotviewer.alg
+              - com.stianlars1.dotviewer.applescript
+              - com.stianlars1.dotviewer.arc
+              - com.stianlars1.dotviewer.arm
+              - com.stianlars1.dotviewer.as
+              - com.stianlars1.dotviewer.as400cl
+              - com.stianlars1.dotviewer.ascx
+              - com.stianlars1.dotviewer.ashx
+              - com.stianlars1.dotviewer.aspx
+              - com.stianlars1.dotviewer.astro
+              - com.stianlars1.dotviewer.au3
+              - com.stianlars1.dotviewer.avenue
+              - com.stianlars1.dotviewer.b
+              - com.stianlars1.dotviewer.bal
+              - com.stianlars1.dotviewer.bas
+              - com.stianlars1.dotviewer.basic
+              - com.stianlars1.dotviewer.batch
+              - com.stianlars1.dotviewer.bb
+              - com.stianlars1.dotviewer.bbcode
+              - com.stianlars1.dotviewer.bcpl
+              - com.stianlars1.dotviewer.bdy
+              - com.stianlars1.dotviewer.bfr
+              - com.stianlars1.dotviewer.bi
+              - com.stianlars1.dotviewer.bms
+              - com.stianlars1.dotviewer.bnd
+              - com.stianlars1.dotviewer.bndrun
+              - com.stianlars1.dotviewer.bnf
+              - com.stianlars1.dotviewer.boo
+              - com.stianlars1.dotviewer.bzl
+              - com.stianlars1.dotviewer.canvas
+              - com.stianlars1.dotviewer.cb
+              - com.stianlars1.dotviewer.cbl
+              - com.stianlars1.dotviewer.ceylon
+              - com.stianlars1.dotviewer.cfc
+              - com.stianlars1.dotviewer.cfg
+              - com.stianlars1.dotviewer.cfm
+              - com.stianlars1.dotviewer.cg
+              - com.stianlars1.dotviewer.cgi
+              - com.stianlars1.dotviewer.cginc
+              - com.stianlars1.dotviewer.chl
+              - com.stianlars1.dotviewer.chpl
+              - com.stianlars1.dotviewer.cl
+              - com.stianlars1.dotviewer.class
+              - com.stianlars1.dotviewer.clipper
+              - com.stianlars1.dotviewer.clisp
+              - com.stianlars1.dotviewer.clp
+              - com.stianlars1.dotviewer.cmake
+              - com.stianlars1.dotviewer.cob
+              - com.stianlars1.dotviewer.coffee
+              - com.stianlars1.dotviewer.comp
+              - com.stianlars1.dotviewer.cpy
+              - com.stianlars1.dotviewer.cr
+              - com.stianlars1.dotviewer.critic
+              - com.stianlars1.dotviewer.crk
+              - com.stianlars1.dotviewer.cshtml
+              - com.stianlars1.dotviewer.csproj
+              - com.stianlars1.dotviewer.cu
+              - com.stianlars1.dotviewer.dat
+              - com.stianlars1.dotviewer.dats
+              - com.stianlars1.dotviewer.def
+              - com.stianlars1.dotviewer.desktop
+              - com.stianlars1.dotviewer.dig
+              - com.stianlars1.dotviewer.do
+              - com.stianlars1.dotviewer.dot
+              - com.stianlars1.dotviewer.doxyfile
+              - com.stianlars1.dotviewer.dpr
+              - com.stianlars1.dotviewer.dtd
+              - com.stianlars1.dotviewer.dtsi
+              - com.stianlars1.dotviewer.dylan
+              - com.stianlars1.dotviewer.e
+              - com.stianlars1.dotviewer.ebnf
+              - com.stianlars1.dotviewer.ebuild
+              - com.stianlars1.dotviewer.ecf
+              - com.stianlars1.dotviewer.eclass
+              - com.stianlars1.dotviewer.editorconfig
+              - com.stianlars1.dotviewer.edl
+              - com.stianlars1.dotviewer.edn
+              - com.stianlars1.dotviewer.el
+              - com.stianlars1.dotviewer.elv
+              - com.stianlars1.dotviewer.eml
+              - com.stianlars1.dotviewer.ent
+              - com.stianlars1.dotviewer.env
+              - com.stianlars1.dotviewer.erb
+              - com.stianlars1.dotviewer.erl
+              - com.stianlars1.dotviewer.eu
+              - com.stianlars1.dotviewer.ew
+              - com.stianlars1.dotviewer.ex
+              - com.stianlars1.dotviewer.exa
+              - com.stianlars1.dotviewer.exapunks
+              - com.stianlars1.dotviewer.exp
+              - com.stianlars1.dotviewer.exs
+              - com.stianlars1.dotviewer.exw
+              - com.stianlars1.dotviewer.fas
+              - com.stianlars1.dotviewer.fasl
+              - com.stianlars1.dotviewer.fcgi
+              - com.stianlars1.dotviewer.fea
+              - com.stianlars1.dotviewer.feature
+              - com.stianlars1.dotviewer.ff
+              - com.stianlars1.dotviewer.flx
+              - com.stianlars1.dotviewer.fnc
+              - com.stianlars1.dotviewer.fp
+              - com.stianlars1.dotviewer.fpp
+              - com.stianlars1.dotviewer.frink
+              - com.stianlars1.dotviewer.fsharp
+              - com.stianlars1.dotviewer.fstab
+              - com.stianlars1.dotviewer.ftn
+              - com.stianlars1.dotviewer.fx
+              - com.stianlars1.dotviewer.gd
+              - com.stianlars1.dotviewer.gdb
+              - com.stianlars1.dotviewer.glade
+              - com.stianlars1.dotviewer.gleam
+              - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gql
+              - com.stianlars1.dotviewer.graphql
+              - com.stianlars1.dotviewer.grm
+              - com.stianlars1.dotviewer.grv
+              - com.stianlars1.dotviewer.gst
+              - com.stianlars1.dotviewer.gvimrc
+              - com.stianlars1.dotviewer.gyp
+              - com.stianlars1.dotviewer.gypi
+              - com.stianlars1.dotviewer.ha
+              - com.stianlars1.dotviewer.ham
+              - com.stianlars1.dotviewer.haml
+              - com.stianlars1.dotviewer.hcl
+              - com.stianlars1.dotviewer.hdr
+              - com.stianlars1.dotviewer.hnd
+              - com.stianlars1.dotviewer.hrl
+              - com.stianlars1.dotviewer.httpd
+              - com.stianlars1.dotviewer.hub
+              - com.stianlars1.dotviewer.hug
+              - com.stianlars1.dotviewer.hx
+              - com.stianlars1.dotviewer.i3
+              - com.stianlars1.dotviewer.icl
+              - com.stianlars1.dotviewer.icn
+              - com.stianlars1.dotviewer.idl
+              - com.stianlars1.dotviewer.idlang
+              - com.stianlars1.dotviewer.ili
+              - com.stianlars1.dotviewer.inc
+              - com.stianlars1.dotviewer.inf
+              - com.stianlars1.dotviewer.inp
+              - com.stianlars1.dotviewer.io
+              - com.stianlars1.dotviewer.iss
+              - com.stianlars1.dotviewer.itcl
+              - com.stianlars1.dotviewer.j
+              - com.stianlars1.dotviewer.jinja
+              - com.stianlars1.dotviewer.jnlp
+              - com.stianlars1.dotviewer.js_regex
+              - com.stianlars1.dotviewer.jsm
+              - com.stianlars1.dotviewer.json5
+              - com.stianlars1.dotviewer.jsonc
+              - com.stianlars1.dotviewer.jsonl
+              - com.stianlars1.dotviewer.jsp
+              - com.stianlars1.dotviewer.jsx
+              - com.stianlars1.dotviewer.kdev3
+              - com.stianlars1.dotviewer.kml
+              - com.stianlars1.dotviewer.lbn
+              - com.stianlars1.dotviewer.ldif
+              - com.stianlars1.dotviewer.less
+              - com.stianlars1.dotviewer.lgt
+              - com.stianlars1.dotviewer.liquid
+              - com.stianlars1.dotviewer.lotos
+              - com.stianlars1.dotviewer.lottie
+              - com.stianlars1.dotviewer.ls
+              - com.stianlars1.dotviewer.lsl
+              - com.stianlars1.dotviewer.ly
+              - com.stianlars1.dotviewer.m3
+              - com.stianlars1.dotviewer.m4
+              - com.stianlars1.dotviewer.mat
+              - com.stianlars1.dotviewer.mbox
+              - com.stianlars1.dotviewer.mel
+              - com.stianlars1.dotviewer.mercury
+              - com.stianlars1.dotviewer.meson
+              - com.stianlars1.dotviewer.mhl
+              - com.stianlars1.dotviewer.mib
+              - com.stianlars1.dotviewer.miranda
+              - com.stianlars1.dotviewer.ml
+              - com.stianlars1.dotviewer.mli
+              - com.stianlars1.dotviewer.mll
+              - com.stianlars1.dotviewer.mlx
+              - com.stianlars1.dotviewer.mly
+              - com.stianlars1.dotviewer.mo
+              - com.stianlars1.dotviewer.mod
+              - com.stianlars1.dotviewer.moon
+              - com.stianlars1.dotviewer.mpd
+              - com.stianlars1.dotviewer.mpl
+              - com.stianlars1.dotviewer.mq4
+              - com.stianlars1.dotviewer.mq5
+              - com.stianlars1.dotviewer.mqh
+              - com.stianlars1.dotviewer.ms
+              - com.stianlars1.dotviewer.mssql
+              - com.stianlars1.dotviewer.mts
+              - com.stianlars1.dotviewer.mud
+              - com.stianlars1.dotviewer.mxml
+              - com.stianlars1.dotviewer.n
+              - com.stianlars1.dotviewer.nas
+              - com.stianlars1.dotviewer.nbc
+              - com.stianlars1.dotviewer.nbs
+              - com.stianlars1.dotviewer.neon
+              - com.stianlars1.dotviewer.nf
+              - com.stianlars1.dotviewer.nginx
+              - com.stianlars1.dotviewer.nice
+              - com.stianlars1.dotviewer.nim
+              - com.stianlars1.dotviewer.nix
+              - com.stianlars1.dotviewer.nrm
+              - com.stianlars1.dotviewer.nrx
+              - com.stianlars1.dotviewer.nsh
+              - com.stianlars1.dotviewer.nsi
+              - com.stianlars1.dotviewer.nt
+              - com.stianlars1.dotviewer.nut
+              - com.stianlars1.dotviewer.nxc
+              - com.stianlars1.dotviewer.octave
+              - com.stianlars1.dotviewer.odin
+              - com.stianlars1.dotviewer.ooc
+              - com.stianlars1.dotviewer.oorexx
+              - com.stianlars1.dotviewer.opml
+              - com.stianlars1.dotviewer.os
+              - com.stianlars1.dotviewer.otio
+              - com.stianlars1.dotviewer.oz
+              - com.stianlars1.dotviewer.p
+              - com.stianlars1.dotviewer.pb
+              - com.stianlars1.dotviewer.pbf
+              - com.stianlars1.dotviewer.pbi
+              - com.stianlars1.dotviewer.pck
+              - com.stianlars1.dotviewer.pcss
+              - com.stianlars1.dotviewer.pddl
+              - com.stianlars1.dotviewer.perl
+              - com.stianlars1.dotviewer.php5
+              - com.stianlars1.dotviewer.php6
+              - com.stianlars1.dotviewer.php7
+              - com.stianlars1.dotviewer.phps
+              - com.stianlars1.dotviewer.phpt
+              - com.stianlars1.dotviewer.pkb
+              - com.stianlars1.dotviewer.pks
+              - com.stianlars1.dotviewer.plex
+              - com.stianlars1.dotviewer.plperl
+              - com.stianlars1.dotviewer.plpython
+              - com.stianlars1.dotviewer.pltcl
+              - com.stianlars1.dotviewer.plx
+              - com.stianlars1.dotviewer.pmod
+              - com.stianlars1.dotviewer.po
+              - com.stianlars1.dotviewer.pom
+              - com.stianlars1.dotviewer.pony
+              - com.stianlars1.dotviewer.pov
+              - com.stianlars1.dotviewer.pp
+              - com.stianlars1.dotviewer.prawn
+              - com.stianlars1.dotviewer.prc
+              - com.stianlars1.dotviewer.prefs
+              - com.stianlars1.dotviewer.pri
+              - com.stianlars1.dotviewer.prisma
+              - com.stianlars1.dotviewer.pro
+              - com.stianlars1.dotviewer.properties
+              - com.stianlars1.dotviewer.ps1
+              - com.stianlars1.dotviewer.psd1
+              - com.stianlars1.dotviewer.psl
+              - com.stianlars1.dotviewer.psm1
+              - com.stianlars1.dotviewer.pub
+              - com.stianlars1.dotviewer.pure
+              - com.stianlars1.dotviewer.purs
+              - com.stianlars1.dotviewer.pv
+              - com.stianlars1.dotviewer.pxd
+              - com.stianlars1.dotviewer.pxi
+              - com.stianlars1.dotviewer.py3
+              - com.stianlars1.dotviewer.pyi
+              - com.stianlars1.dotviewer.pyw
+              - com.stianlars1.dotviewer.pyx
+              - com.stianlars1.dotviewer.q
+              - com.stianlars1.dotviewer.qml
+              - com.stianlars1.dotviewer.qu
+              - com.stianlars1.dotviewer.rabl
+              - com.stianlars1.dotviewer.rake
+              - com.stianlars1.dotviewer.raml
+              - com.stianlars1.dotviewer.razor
+              - com.stianlars1.dotviewer.rbx
+              - com.stianlars1.dotviewer.readme
+              - com.stianlars1.dotviewer.rebol
+              - com.stianlars1.dotviewer.reg
+              - com.stianlars1.dotviewer.rego
+              - com.stianlars1.dotviewer.resx
+              - com.stianlars1.dotviewer.rex
+              - com.stianlars1.dotviewer.rjs
+              - com.stianlars1.dotviewer.rkt
+              - com.stianlars1.dotviewer.rnc
+              - com.stianlars1.dotviewer.rpg
+              - com.stianlars1.dotviewer.rpl
+              - com.stianlars1.dotviewer.rpp
+              - com.stianlars1.dotviewer.rpy
+              - com.stianlars1.dotviewer.ruby
+              - com.stianlars1.dotviewer.run
+              - com.stianlars1.dotviewer.rx
+              - com.stianlars1.dotviewer.s4
+              - com.stianlars1.dotviewer.s4h
+              - com.stianlars1.dotviewer.s4t
+              - com.stianlars1.dotviewer.sage
+              - com.stianlars1.dotviewer.sam
+              - com.stianlars1.dotviewer.sas
+              - com.stianlars1.dotviewer.sbcl
+              - com.stianlars1.dotviewer.sbt
+              - com.stianlars1.dotviewer.sc
+              - com.stianlars1.dotviewer.scad
+              - com.stianlars1.dotviewer.scd
+              - com.stianlars1.dotviewer.sce
+              - com.stianlars1.dotviewer.sch
+              - com.stianlars1.dotviewer.sci
+              - com.stianlars1.dotviewer.scom
+              - com.stianlars1.dotviewer.scss
+              - com.stianlars1.dotviewer.se
+              - com.stianlars1.dotviewer.sf
+              - com.stianlars1.dotviewer.sgm
+              - com.stianlars1.dotviewer.sgml
+              - com.stianlars1.dotviewer.shader
+              - com.stianlars1.dotviewer.sld
+              - com.stianlars1.dotviewer.slim
+              - com.stianlars1.dotviewer.sls
+              - com.stianlars1.dotviewer.sma
+              - com.stianlars1.dotviewer.smali
+              - com.stianlars1.dotviewer.smi
+              - com.stianlars1.dotviewer.sml
+              - com.stianlars1.dotviewer.sno
+              - com.stianlars1.dotviewer.sol
+              - com.stianlars1.dotviewer.sources
+              - com.stianlars1.dotviewer.sp
+              - com.stianlars1.dotviewer.spb
+              - com.stianlars1.dotviewer.spe
+              - com.stianlars1.dotviewer.spec
+              - com.stianlars1.dotviewer.spn
+              - com.stianlars1.dotviewer.spp
+              - com.stianlars1.dotviewer.sps
+              - com.stianlars1.dotviewer.sq
+              - com.stianlars1.dotviewer.st
+              - com.stianlars1.dotviewer.styl
+              - com.stianlars1.dotviewer.t4
+              - com.stianlars1.dotviewer.tcl
+              - com.stianlars1.dotviewer.tesc
+              - com.stianlars1.dotviewer.tese
+              - com.stianlars1.dotviewer.tf
+              - com.stianlars1.dotviewer.tfstate
+              - com.stianlars1.dotviewer.tfvars
+              - com.stianlars1.dotviewer.the
+              - com.stianlars1.dotviewer.thor
+              - com.stianlars1.dotviewer.tk
+              - com.stianlars1.dotviewer.tld
+              - com.stianlars1.dotviewer.tpb
+              - com.stianlars1.dotviewer.tpl
+              - com.stianlars1.dotviewer.tps
+              - com.stianlars1.dotviewer.trg
+              - com.stianlars1.dotviewer.tsql
+              - com.stianlars1.dotviewer.ttcn3
+              - com.stianlars1.dotviewer.ttl
+              - com.stianlars1.dotviewer.ttx
+              - com.stianlars1.dotviewer.twig
+              - com.stianlars1.dotviewer.typescript
+              - com.stianlars1.dotviewer.upc
+              - com.stianlars1.dotviewer.vala
+              - com.stianlars1.dotviewer.vb
+              - com.stianlars1.dotviewer.vbs
+              - com.stianlars1.dotviewer.vim
+              - com.stianlars1.dotviewer.vimrc
+              - com.stianlars1.dotviewer.vue
+              - com.stianlars1.dotviewer.vxml
+              - com.stianlars1.dotviewer.w
+              - com.stianlars1.dotviewer.was
+              - com.stianlars1.dotviewer.wat
+              - com.stianlars1.dotviewer.wdl
+              - com.stianlars1.dotviewer.wf
+              - com.stianlars1.dotviewer.wgsl
+              - com.stianlars1.dotviewer.whiley
+              - com.stianlars1.dotviewer.wish
+              - com.stianlars1.dotviewer.wml
+              - com.stianlars1.dotviewer.wp
+              - com.stianlars1.dotviewer.wpb
+              - com.stianlars1.dotviewer.wpp
+              - com.stianlars1.dotviewer.wps
+              - com.stianlars1.dotviewer.wren
+              - com.stianlars1.dotviewer.wsdl
+              - com.stianlars1.dotviewer.wud
+              - com.stianlars1.dotviewer.wxu
+              - com.stianlars1.dotviewer.x86
+              - com.stianlars1.dotviewer.xaml
+              - com.stianlars1.dotviewer.xpp
+              - com.stianlars1.dotviewer.xsd
+              - com.stianlars1.dotviewer.xsl
+              - com.stianlars1.dotviewer.yaiff
+              - com.stianlars1.dotviewer.yang
+              - com.stianlars1.dotviewer.zig
+              - com.stianlars1.dotviewer.znn
+              - com.sun.java-source
+              - com.textpattern.textile
+              # Vendor UTIs (org.*)
+              - org.asciidoc
+              - org.bibtex
+              - org.clojure
+              - org.dartlang.dart
+              - org.dlang.d-source
+              - org.golang.go-script
+              - org.haskell.haskell-script
+              - org.iso.sql
+              - org.julialang.julia
+              - org.khronos.glsl-source
+              - org.khronos.glsl.fragment-shader
+              - org.khronos.glsl.geometry-shader
+              - org.khronos.glsl.vertex-shader
+              - org.kotlinlang.source
+              - org.lua
+              - org.lua.lua-source
+              - org.orgmode
+              - org.python.restructuredtext
+              - org.r-project.r
+              - org.rust-lang.rust-script
+              - org.scala-lang.scala-source
+              - org.tug.tex
+              # Vendor UTIs (net.*)
               - net.daringfireball.markdown
               - net.ia.markdown
-              - org.asciidoc
-              - org.python.restructuredtext
-              - org.tug.tex
-              - org.orgmode
-              - com.textpattern.textile
-              - org.clojure
-              - public.json
-              - public.xml
-              - public.yaml
-              - public.toml
-              - com.apple.property-list
-              - com.microsoft.ini
-              - com.coteditor.conf
-              - com.coteditor.verilog
-              - com.apple.log
-              - com.apple.rez-source
-              - public.html
-              - public.xhtml
-              - public.css
-              - public.svg-image
-              - public.comma-separated-values-text
-              - public.tab-separated-values-text
+              # Vendor UTIs (dev.*)
               - dev.svelte
-              - public.handlebars
-              - public.mustache
-              - com.fishshell.script
-              - com.stianlars1.dotviewer.typescript
-              - com.stianlars1.dotviewer.env
-              - com.stianlars1.dotviewer.batch
-              - com.stianlars1.dotviewer.jsx
-              - com.stianlars1.dotviewer.fsharp
-              - com.stianlars1.dotviewer.vb
-              - org.dartlang.dart
-              - public.patch-file
-              - org.lua
-              - public.pascal-source
-              - com.apple.applescript.script
     entitlements:
       path: QuickLookExtension/QuickLookPreview.entitlements
       properties:
@@ -228,84 +3489,512 @@ targets:
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ThumbnailProvider
           NSExtensionAttributes:
             QLSupportedContentTypes:
-              - public.data
-              - public.mpeg-2-transport-stream
-              - public.plain-text
-              - public.text
-              - public.source-code
-              - public.script
-              - public.shell-script
+              # System UTIs
+              - public.ada-source
+              - public.assembly-source
               - public.bash-script
-              - public.zsh-script
-              - public.ksh-script
+              - public.c-header
+              - public.c-plus-plus-header
+              - public.c-plus-plus-inline-header
+              - public.c-plus-plus-source
+              - public.c-source
+              - public.c-source.preprocessed
+              - public.comma-separated-values-text
               - public.csh-script
-              - public.tcsh-script
-              - public.python-script
-              - public.ruby-script
+              - public.css
+              - public.data
+              - public.fortran-90-source
+              - public.fortran-95-source
+              - public.fortran-source
+              - public.handlebars
+              - public.html
+              - public.json
+              - public.ksh-script
+              - public.make-source
+              - public.mpeg-2-transport-stream
+              - public.mustache
+              - public.ndjson
+              - public.objective-c-plus-plus-source
+              - public.objective-c-source
+              - public.pascal-source
+              - public.patch-file
               - public.perl-script
               - public.php-script
-              - public.swift-source
-              - com.netscape.javascript-source
-              - com.microsoft.typescript
-              - com.sun.java-source
-              - com.microsoft.c-sharp
-              - org.golang.go-script
-              - org.rust-lang.rust-script
-              - org.kotlinlang.source
-              - org.scala-lang.scala-source
-              - org.dlang.d-source
-              - org.haskell.haskell-script
-              - org.lua.lua-source
-              - org.julialang.julia
-              - org.iso.sql
-              - public.c-source
-              - public.c-header
-              - public.c-plus-plus-source
-              - public.c-plus-plus-header
-              - public.objective-c-source
-              - public.objective-c-plus-plus-source
-              - public.assembly-source
-              - public.make-source
+              - public.plain-text
               - public.protobuf-source
+              - public.python-script
+              - public.rss
+              - public.ruby-script
+              - public.script
+              - public.shell-script
+              - public.source-code
+              - public.svg-image
+              - public.swift-source
+              - public.tab-separated-values-text
+              - public.tcsh-script
+              - public.text
+              - public.toml
+              - public.xhtml
+              - public.xml
+              - public.yacc-source
+              - public.yaml
+              - public.zsh-script
+              # Vendor UTIs (com.*)
+              - com.adobe.postscript
+              - com.apple.applescript.script
+              - com.apple.log
+              - com.apple.mobileconfig
+              - com.apple.property-list
+              - com.apple.rez-source
+              - com.apple.terminal.settings
+              - com.apple.terminal.shell-script
+              - com.apple.xcode.strings-dictionary
+              - com.apple.xcode.strings-text
+              - com.coteditor.awk
+              - com.coteditor.conf
+              - com.coteditor.lisp
+              - com.coteditor.mojo
+              - com.coteditor.scheme
+              - com.coteditor.verilog
+              - com.coteditor.vhdl
+              - com.fishshell.script
+              - com.microsoft.c-sharp
+              - com.microsoft.hlsl
+              - com.microsoft.ini
+              - com.microsoft.typescript
+              - com.netscape.javascript-source
+              - com.stianlars1.dotviewer.29k
+              - com.stianlars1.dotviewer.4gl
+              - com.stianlars1.dotviewer.68s
+              - com.stianlars1.dotviewer.68x
+              - com.stianlars1.dotviewer.a
+              - com.stianlars1.dotviewer.a4c
+              - com.stianlars1.dotviewer.a51
+              - com.stianlars1.dotviewer.abap
+              - com.stianlars1.dotviewer.abc
+              - com.stianlars1.dotviewer.abnf
+              - com.stianlars1.dotviewer.abp
+              - com.stianlars1.dotviewer.ac
+              - com.stianlars1.dotviewer.acf
+              - com.stianlars1.dotviewer.ado
+              - com.stianlars1.dotviewer.agda
+              - com.stianlars1.dotviewer.ahk
+              - com.stianlars1.dotviewer.alan
+              - com.stianlars1.dotviewer.alg
+              - com.stianlars1.dotviewer.applescript
+              - com.stianlars1.dotviewer.arc
+              - com.stianlars1.dotviewer.arm
+              - com.stianlars1.dotviewer.as
+              - com.stianlars1.dotviewer.as400cl
+              - com.stianlars1.dotviewer.ascx
+              - com.stianlars1.dotviewer.ashx
+              - com.stianlars1.dotviewer.aspx
+              - com.stianlars1.dotviewer.astro
+              - com.stianlars1.dotviewer.au3
+              - com.stianlars1.dotviewer.avenue
+              - com.stianlars1.dotviewer.b
+              - com.stianlars1.dotviewer.bal
+              - com.stianlars1.dotviewer.bas
+              - com.stianlars1.dotviewer.basic
+              - com.stianlars1.dotviewer.batch
+              - com.stianlars1.dotviewer.bb
+              - com.stianlars1.dotviewer.bbcode
+              - com.stianlars1.dotviewer.bcpl
+              - com.stianlars1.dotviewer.bdy
+              - com.stianlars1.dotviewer.bfr
+              - com.stianlars1.dotviewer.bi
+              - com.stianlars1.dotviewer.bms
+              - com.stianlars1.dotviewer.bnd
+              - com.stianlars1.dotviewer.bndrun
+              - com.stianlars1.dotviewer.bnf
+              - com.stianlars1.dotviewer.boo
+              - com.stianlars1.dotviewer.bzl
+              - com.stianlars1.dotviewer.canvas
+              - com.stianlars1.dotviewer.cb
+              - com.stianlars1.dotviewer.cbl
+              - com.stianlars1.dotviewer.ceylon
+              - com.stianlars1.dotviewer.cfc
+              - com.stianlars1.dotviewer.cfg
+              - com.stianlars1.dotviewer.cfm
+              - com.stianlars1.dotviewer.cg
+              - com.stianlars1.dotviewer.cgi
+              - com.stianlars1.dotviewer.cginc
+              - com.stianlars1.dotviewer.chl
+              - com.stianlars1.dotviewer.chpl
+              - com.stianlars1.dotviewer.cl
+              - com.stianlars1.dotviewer.class
+              - com.stianlars1.dotviewer.clipper
+              - com.stianlars1.dotviewer.clisp
+              - com.stianlars1.dotviewer.clp
+              - com.stianlars1.dotviewer.cmake
+              - com.stianlars1.dotviewer.cob
+              - com.stianlars1.dotviewer.coffee
+              - com.stianlars1.dotviewer.comp
+              - com.stianlars1.dotviewer.cpy
+              - com.stianlars1.dotviewer.cr
+              - com.stianlars1.dotviewer.critic
+              - com.stianlars1.dotviewer.crk
+              - com.stianlars1.dotviewer.cshtml
+              - com.stianlars1.dotviewer.csproj
+              - com.stianlars1.dotviewer.cu
+              - com.stianlars1.dotviewer.dat
+              - com.stianlars1.dotviewer.dats
+              - com.stianlars1.dotviewer.def
+              - com.stianlars1.dotviewer.desktop
+              - com.stianlars1.dotviewer.dig
+              - com.stianlars1.dotviewer.do
+              - com.stianlars1.dotviewer.dot
+              - com.stianlars1.dotviewer.doxyfile
+              - com.stianlars1.dotviewer.dpr
+              - com.stianlars1.dotviewer.dtd
+              - com.stianlars1.dotviewer.dtsi
+              - com.stianlars1.dotviewer.dylan
+              - com.stianlars1.dotviewer.e
+              - com.stianlars1.dotviewer.ebnf
+              - com.stianlars1.dotviewer.ebuild
+              - com.stianlars1.dotviewer.ecf
+              - com.stianlars1.dotviewer.eclass
+              - com.stianlars1.dotviewer.editorconfig
+              - com.stianlars1.dotviewer.edl
+              - com.stianlars1.dotviewer.edn
+              - com.stianlars1.dotviewer.el
+              - com.stianlars1.dotviewer.elv
+              - com.stianlars1.dotviewer.eml
+              - com.stianlars1.dotviewer.ent
+              - com.stianlars1.dotviewer.env
+              - com.stianlars1.dotviewer.erb
+              - com.stianlars1.dotviewer.erl
+              - com.stianlars1.dotviewer.eu
+              - com.stianlars1.dotviewer.ew
+              - com.stianlars1.dotviewer.ex
+              - com.stianlars1.dotviewer.exa
+              - com.stianlars1.dotviewer.exapunks
+              - com.stianlars1.dotviewer.exp
+              - com.stianlars1.dotviewer.exs
+              - com.stianlars1.dotviewer.exw
+              - com.stianlars1.dotviewer.fas
+              - com.stianlars1.dotviewer.fasl
+              - com.stianlars1.dotviewer.fcgi
+              - com.stianlars1.dotviewer.fea
+              - com.stianlars1.dotviewer.feature
+              - com.stianlars1.dotviewer.ff
+              - com.stianlars1.dotviewer.flx
+              - com.stianlars1.dotviewer.fnc
+              - com.stianlars1.dotviewer.fp
+              - com.stianlars1.dotviewer.fpp
+              - com.stianlars1.dotviewer.frink
+              - com.stianlars1.dotviewer.fsharp
+              - com.stianlars1.dotviewer.fstab
+              - com.stianlars1.dotviewer.ftn
+              - com.stianlars1.dotviewer.fx
+              - com.stianlars1.dotviewer.gd
+              - com.stianlars1.dotviewer.gdb
+              - com.stianlars1.dotviewer.glade
+              - com.stianlars1.dotviewer.gleam
+              - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gql
+              - com.stianlars1.dotviewer.graphql
+              - com.stianlars1.dotviewer.grm
+              - com.stianlars1.dotviewer.grv
+              - com.stianlars1.dotviewer.gst
+              - com.stianlars1.dotviewer.gvimrc
+              - com.stianlars1.dotviewer.gyp
+              - com.stianlars1.dotviewer.gypi
+              - com.stianlars1.dotviewer.ha
+              - com.stianlars1.dotviewer.ham
+              - com.stianlars1.dotviewer.haml
+              - com.stianlars1.dotviewer.hcl
+              - com.stianlars1.dotviewer.hdr
+              - com.stianlars1.dotviewer.hnd
+              - com.stianlars1.dotviewer.hrl
+              - com.stianlars1.dotviewer.httpd
+              - com.stianlars1.dotviewer.hub
+              - com.stianlars1.dotviewer.hug
+              - com.stianlars1.dotviewer.hx
+              - com.stianlars1.dotviewer.i3
+              - com.stianlars1.dotviewer.icl
+              - com.stianlars1.dotviewer.icn
+              - com.stianlars1.dotviewer.idl
+              - com.stianlars1.dotviewer.idlang
+              - com.stianlars1.dotviewer.ili
+              - com.stianlars1.dotviewer.inc
+              - com.stianlars1.dotviewer.inf
+              - com.stianlars1.dotviewer.inp
+              - com.stianlars1.dotviewer.io
+              - com.stianlars1.dotviewer.iss
+              - com.stianlars1.dotviewer.itcl
+              - com.stianlars1.dotviewer.j
+              - com.stianlars1.dotviewer.jinja
+              - com.stianlars1.dotviewer.jnlp
+              - com.stianlars1.dotviewer.js_regex
+              - com.stianlars1.dotviewer.jsm
+              - com.stianlars1.dotviewer.json5
+              - com.stianlars1.dotviewer.jsonc
+              - com.stianlars1.dotviewer.jsonl
+              - com.stianlars1.dotviewer.jsp
+              - com.stianlars1.dotviewer.jsx
+              - com.stianlars1.dotviewer.kdev3
+              - com.stianlars1.dotviewer.kml
+              - com.stianlars1.dotviewer.lbn
+              - com.stianlars1.dotviewer.ldif
+              - com.stianlars1.dotviewer.less
+              - com.stianlars1.dotviewer.lgt
+              - com.stianlars1.dotviewer.liquid
+              - com.stianlars1.dotviewer.lotos
+              - com.stianlars1.dotviewer.lottie
+              - com.stianlars1.dotviewer.ls
+              - com.stianlars1.dotviewer.lsl
+              - com.stianlars1.dotviewer.ly
+              - com.stianlars1.dotviewer.m3
+              - com.stianlars1.dotviewer.m4
+              - com.stianlars1.dotviewer.mat
+              - com.stianlars1.dotviewer.mbox
+              - com.stianlars1.dotviewer.mel
+              - com.stianlars1.dotviewer.mercury
+              - com.stianlars1.dotviewer.meson
+              - com.stianlars1.dotviewer.mhl
+              - com.stianlars1.dotviewer.mib
+              - com.stianlars1.dotviewer.miranda
+              - com.stianlars1.dotviewer.ml
+              - com.stianlars1.dotviewer.mli
+              - com.stianlars1.dotviewer.mll
+              - com.stianlars1.dotviewer.mlx
+              - com.stianlars1.dotviewer.mly
+              - com.stianlars1.dotviewer.mo
+              - com.stianlars1.dotviewer.mod
+              - com.stianlars1.dotviewer.moon
+              - com.stianlars1.dotviewer.mpd
+              - com.stianlars1.dotviewer.mpl
+              - com.stianlars1.dotviewer.mq4
+              - com.stianlars1.dotviewer.mq5
+              - com.stianlars1.dotviewer.mqh
+              - com.stianlars1.dotviewer.ms
+              - com.stianlars1.dotviewer.mssql
+              - com.stianlars1.dotviewer.mts
+              - com.stianlars1.dotviewer.mud
+              - com.stianlars1.dotviewer.mxml
+              - com.stianlars1.dotviewer.n
+              - com.stianlars1.dotviewer.nas
+              - com.stianlars1.dotviewer.nbc
+              - com.stianlars1.dotviewer.nbs
+              - com.stianlars1.dotviewer.neon
+              - com.stianlars1.dotviewer.nf
+              - com.stianlars1.dotviewer.nginx
+              - com.stianlars1.dotviewer.nice
+              - com.stianlars1.dotviewer.nim
+              - com.stianlars1.dotviewer.nix
+              - com.stianlars1.dotviewer.nrm
+              - com.stianlars1.dotviewer.nrx
+              - com.stianlars1.dotviewer.nsh
+              - com.stianlars1.dotviewer.nsi
+              - com.stianlars1.dotviewer.nt
+              - com.stianlars1.dotviewer.nut
+              - com.stianlars1.dotviewer.nxc
+              - com.stianlars1.dotviewer.octave
+              - com.stianlars1.dotviewer.odin
+              - com.stianlars1.dotviewer.ooc
+              - com.stianlars1.dotviewer.oorexx
+              - com.stianlars1.dotviewer.opml
+              - com.stianlars1.dotviewer.os
+              - com.stianlars1.dotviewer.otio
+              - com.stianlars1.dotviewer.oz
+              - com.stianlars1.dotviewer.p
+              - com.stianlars1.dotviewer.pb
+              - com.stianlars1.dotviewer.pbf
+              - com.stianlars1.dotviewer.pbi
+              - com.stianlars1.dotviewer.pck
+              - com.stianlars1.dotviewer.pcss
+              - com.stianlars1.dotviewer.pddl
+              - com.stianlars1.dotviewer.perl
+              - com.stianlars1.dotviewer.php5
+              - com.stianlars1.dotviewer.php6
+              - com.stianlars1.dotviewer.php7
+              - com.stianlars1.dotviewer.phps
+              - com.stianlars1.dotviewer.phpt
+              - com.stianlars1.dotviewer.pkb
+              - com.stianlars1.dotviewer.pks
+              - com.stianlars1.dotviewer.plex
+              - com.stianlars1.dotviewer.plperl
+              - com.stianlars1.dotviewer.plpython
+              - com.stianlars1.dotviewer.pltcl
+              - com.stianlars1.dotviewer.plx
+              - com.stianlars1.dotviewer.pmod
+              - com.stianlars1.dotviewer.po
+              - com.stianlars1.dotviewer.pom
+              - com.stianlars1.dotviewer.pony
+              - com.stianlars1.dotviewer.pov
+              - com.stianlars1.dotviewer.pp
+              - com.stianlars1.dotviewer.prawn
+              - com.stianlars1.dotviewer.prc
+              - com.stianlars1.dotviewer.prefs
+              - com.stianlars1.dotviewer.pri
+              - com.stianlars1.dotviewer.prisma
+              - com.stianlars1.dotviewer.pro
+              - com.stianlars1.dotviewer.properties
+              - com.stianlars1.dotviewer.ps1
+              - com.stianlars1.dotviewer.psd1
+              - com.stianlars1.dotviewer.psl
+              - com.stianlars1.dotviewer.psm1
+              - com.stianlars1.dotviewer.pub
+              - com.stianlars1.dotviewer.pure
+              - com.stianlars1.dotviewer.purs
+              - com.stianlars1.dotviewer.pv
+              - com.stianlars1.dotviewer.pxd
+              - com.stianlars1.dotviewer.pxi
+              - com.stianlars1.dotviewer.py3
+              - com.stianlars1.dotviewer.pyi
+              - com.stianlars1.dotviewer.pyw
+              - com.stianlars1.dotviewer.pyx
+              - com.stianlars1.dotviewer.q
+              - com.stianlars1.dotviewer.qml
+              - com.stianlars1.dotviewer.qu
+              - com.stianlars1.dotviewer.rabl
+              - com.stianlars1.dotviewer.rake
+              - com.stianlars1.dotviewer.raml
+              - com.stianlars1.dotviewer.razor
+              - com.stianlars1.dotviewer.rbx
+              - com.stianlars1.dotviewer.readme
+              - com.stianlars1.dotviewer.rebol
+              - com.stianlars1.dotviewer.reg
+              - com.stianlars1.dotviewer.rego
+              - com.stianlars1.dotviewer.resx
+              - com.stianlars1.dotviewer.rex
+              - com.stianlars1.dotviewer.rjs
+              - com.stianlars1.dotviewer.rkt
+              - com.stianlars1.dotviewer.rnc
+              - com.stianlars1.dotviewer.rpg
+              - com.stianlars1.dotviewer.rpl
+              - com.stianlars1.dotviewer.rpp
+              - com.stianlars1.dotviewer.rpy
+              - com.stianlars1.dotviewer.ruby
+              - com.stianlars1.dotviewer.run
+              - com.stianlars1.dotviewer.rx
+              - com.stianlars1.dotviewer.s4
+              - com.stianlars1.dotviewer.s4h
+              - com.stianlars1.dotviewer.s4t
+              - com.stianlars1.dotviewer.sage
+              - com.stianlars1.dotviewer.sam
+              - com.stianlars1.dotviewer.sas
+              - com.stianlars1.dotviewer.sbcl
+              - com.stianlars1.dotviewer.sbt
+              - com.stianlars1.dotviewer.sc
+              - com.stianlars1.dotviewer.scad
+              - com.stianlars1.dotviewer.scd
+              - com.stianlars1.dotviewer.sce
+              - com.stianlars1.dotviewer.sch
+              - com.stianlars1.dotviewer.sci
+              - com.stianlars1.dotviewer.scom
+              - com.stianlars1.dotviewer.scss
+              - com.stianlars1.dotviewer.se
+              - com.stianlars1.dotviewer.sf
+              - com.stianlars1.dotviewer.sgm
+              - com.stianlars1.dotviewer.sgml
+              - com.stianlars1.dotviewer.shader
+              - com.stianlars1.dotviewer.sld
+              - com.stianlars1.dotviewer.slim
+              - com.stianlars1.dotviewer.sls
+              - com.stianlars1.dotviewer.sma
+              - com.stianlars1.dotviewer.smali
+              - com.stianlars1.dotviewer.smi
+              - com.stianlars1.dotviewer.sml
+              - com.stianlars1.dotviewer.sno
+              - com.stianlars1.dotviewer.sol
+              - com.stianlars1.dotviewer.sources
+              - com.stianlars1.dotviewer.sp
+              - com.stianlars1.dotviewer.spb
+              - com.stianlars1.dotviewer.spe
+              - com.stianlars1.dotviewer.spec
+              - com.stianlars1.dotviewer.spn
+              - com.stianlars1.dotviewer.spp
+              - com.stianlars1.dotviewer.sps
+              - com.stianlars1.dotviewer.sq
+              - com.stianlars1.dotviewer.st
+              - com.stianlars1.dotviewer.styl
+              - com.stianlars1.dotviewer.t4
+              - com.stianlars1.dotviewer.tcl
+              - com.stianlars1.dotviewer.tesc
+              - com.stianlars1.dotviewer.tese
+              - com.stianlars1.dotviewer.tf
+              - com.stianlars1.dotviewer.tfstate
+              - com.stianlars1.dotviewer.tfvars
+              - com.stianlars1.dotviewer.the
+              - com.stianlars1.dotviewer.thor
+              - com.stianlars1.dotviewer.tk
+              - com.stianlars1.dotviewer.tld
+              - com.stianlars1.dotviewer.tpb
+              - com.stianlars1.dotviewer.tpl
+              - com.stianlars1.dotviewer.tps
+              - com.stianlars1.dotviewer.trg
+              - com.stianlars1.dotviewer.tsql
+              - com.stianlars1.dotviewer.ttcn3
+              - com.stianlars1.dotviewer.ttl
+              - com.stianlars1.dotviewer.ttx
+              - com.stianlars1.dotviewer.twig
+              - com.stianlars1.dotviewer.typescript
+              - com.stianlars1.dotviewer.upc
+              - com.stianlars1.dotviewer.vala
+              - com.stianlars1.dotviewer.vb
+              - com.stianlars1.dotviewer.vbs
+              - com.stianlars1.dotviewer.vim
+              - com.stianlars1.dotviewer.vimrc
+              - com.stianlars1.dotviewer.vue
+              - com.stianlars1.dotviewer.vxml
+              - com.stianlars1.dotviewer.w
+              - com.stianlars1.dotviewer.was
+              - com.stianlars1.dotviewer.wat
+              - com.stianlars1.dotviewer.wdl
+              - com.stianlars1.dotviewer.wf
+              - com.stianlars1.dotviewer.wgsl
+              - com.stianlars1.dotviewer.whiley
+              - com.stianlars1.dotviewer.wish
+              - com.stianlars1.dotviewer.wml
+              - com.stianlars1.dotviewer.wp
+              - com.stianlars1.dotviewer.wpb
+              - com.stianlars1.dotviewer.wpp
+              - com.stianlars1.dotviewer.wps
+              - com.stianlars1.dotviewer.wren
+              - com.stianlars1.dotviewer.wsdl
+              - com.stianlars1.dotviewer.wud
+              - com.stianlars1.dotviewer.wxu
+              - com.stianlars1.dotviewer.x86
+              - com.stianlars1.dotviewer.xaml
+              - com.stianlars1.dotviewer.xpp
+              - com.stianlars1.dotviewer.xsd
+              - com.stianlars1.dotviewer.xsl
+              - com.stianlars1.dotviewer.yaiff
+              - com.stianlars1.dotviewer.yang
+              - com.stianlars1.dotviewer.zig
+              - com.stianlars1.dotviewer.znn
+              - com.sun.java-source
+              - com.textpattern.textile
+              # Vendor UTIs (org.*)
+              - org.asciidoc
+              - org.bibtex
+              - org.clojure
+              - org.dartlang.dart
+              - org.dlang.d-source
+              - org.golang.go-script
+              - org.haskell.haskell-script
+              - org.iso.sql
+              - org.julialang.julia
+              - org.khronos.glsl-source
+              - org.khronos.glsl.fragment-shader
+              - org.khronos.glsl.geometry-shader
+              - org.khronos.glsl.vertex-shader
+              - org.kotlinlang.source
+              - org.lua
+              - org.lua.lua-source
+              - org.orgmode
+              - org.python.restructuredtext
+              - org.r-project.r
+              - org.rust-lang.rust-script
+              - org.scala-lang.scala-source
+              - org.tug.tex
+              # Vendor UTIs (net.*)
               - net.daringfireball.markdown
               - net.ia.markdown
-              - org.asciidoc
-              - org.python.restructuredtext
-              - org.tug.tex
-              - org.orgmode
-              - com.textpattern.textile
-              - org.clojure
-              - public.json
-              - public.xml
-              - public.yaml
-              - public.toml
-              - com.apple.property-list
-              - com.microsoft.ini
-              - com.coteditor.conf
-              - com.coteditor.verilog
-              - com.apple.log
-              - com.apple.rez-source
-              - public.html
-              - public.xhtml
-              - public.css
-              - public.svg-image
-              - public.comma-separated-values-text
-              - public.tab-separated-values-text
+              # Vendor UTIs (dev.*)
               - dev.svelte
-              - public.handlebars
-              - public.mustache
-              - com.fishshell.script
-              - com.stianlars1.dotviewer.typescript
-              - com.stianlars1.dotviewer.env
-              - com.stianlars1.dotviewer.batch
-              - com.stianlars1.dotviewer.jsx
-              - com.stianlars1.dotviewer.fsharp
-              - com.stianlars1.dotviewer.vb
-              - org.dartlang.dart
-              - public.patch-file
-              - org.lua
-              - public.pascal-source
-              - com.apple.applescript.script
     entitlements:
       path: QuickLookThumbnailExtension/QuickLookThumbnail.entitlements
       properties:
@@ -319,6 +4008,8 @@ targets:
         DEAD_CODE_STRIPPING: YES
     dependencies:
       - target: Shared
+      - target: HighlightXPC
+        embed: true
       - framework: QuickLookThumbnailing.framework
   HighlightXPC:
     type: xpc-service

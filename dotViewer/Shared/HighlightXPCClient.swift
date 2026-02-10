@@ -68,6 +68,59 @@ public final class HighlightXPCClient: @unchecked Sendable {
         }
     }
 
+    public func highlightTokens(
+        code: String,
+        language: String,
+        requestId: String,
+        timeout: TimeInterval
+    ) async -> Result<[HighlightToken], HighlightFallbackReason> {
+        await withCheckedContinuation { continuation in
+            let state = CallbackState()
+            let proxy = makeConnection().synchronousRemoteObjectProxyWithErrorHandler { _ in
+                state.finish {
+                    continuation.resume(returning: .failure(.serviceUnavailable))
+                }
+            } as? HighlightServiceProtocol
+
+            guard let proxy else {
+                state.finish {
+                    continuation.resume(returning: .failure(.serviceUnavailable))
+                }
+                return
+            }
+
+            proxy.highlightTokens(code: code, language: language, requestId: requestId) { data, error in
+                state.finish {
+                    if let error = error as NSError?, error.domain == "com.stianlars1.dotViewer.HighlightCancelled" {
+                        continuation.resume(returning: .failure(.cancelled))
+                        return
+                    }
+                    guard error == nil else {
+                        continuation.resume(returning: .failure(.highlightingFailed))
+                        return
+                    }
+                    guard let data = data as Data?, !data.isEmpty else {
+                        continuation.resume(returning: .success([]))
+                        return
+                    }
+                    do {
+                        let tokens = try JSONDecoder().decode([HighlightToken].self, from: data)
+                        continuation.resume(returning: .success(tokens))
+                    } catch {
+                        continuation.resume(returning: .failure(.highlightingFailed))
+                    }
+                }
+            }
+
+            DispatchQueue.global().asyncAfter(deadline: .now() + timeout) {
+                state.finish {
+                    self.logger.error("Token highlight timed out for request \(requestId, privacy: .public)")
+                    continuation.resume(returning: .failure(.timeout))
+                }
+            }
+        }
+    }
+
     public func cancel(requestId: String) {
         let proxy = makeConnection().synchronousRemoteObjectProxyWithErrorHandler { _ in } as? HighlightServiceProtocol
         proxy?.cancel(requestId: requestId)
