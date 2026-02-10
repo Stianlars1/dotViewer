@@ -1,0 +1,105 @@
+Ampera Launch Plan v3 (Parallel Agent Teams, Skill-Driven)
+Summary
+This revision is optimized for parallel execution by multiple coding agents and applies these skills directly: vercel-react-best-practices, payload, vercel-composition-patterns, next-best-practices, next-cache-components.
+
+Primary launch goal: full landing page + SEO + conversion forms (byggestrøm, LFS, contact) + end-to-end persistence + dashboard visibility, deployed fast on hybrid stack (Vercel frontend/Payload + AWS backend/Postgres/S3).
+
+Agent Team Topology (Parallel by Design)
+Team	Scope	Owns files	Must not touch
+A0 Orchestrator	Sequencing, merge order, contracts	roadmap-launch.md, backlog.md	Feature code
+A1 Security/Infra	Secrets, env, deploy config, DNS/CORS checklist	checklist.md, application.properties	UI/components
+A2 SEO/Metadata	metadata, robots, sitemap, OG, JSON-LD	metadata.tsx, sitemap.ts, robots.txt, route metadata files	Forms/backend
+A3 Homepage/Brand UI	navbar/footer/home sections	.../frontend/src/components/layout/NavbarV2/*, page.tsx, .../frontend/src/components/Forside/*, .../frontend/src/components/sections/ContactCTA/*	Backend/API
+A4 Payload CMS Model	globals/collections/hooks/access correctness	.../frontend/src/payload/globals/*, .../frontend/src/payload/collections/*, .../frontend/src/payload/fields/*, fetchers.ts	Backend Kotlin
+A5 Backend Inquiry API	DTO/entity/service/controller changes	.../backend/src/main/kotlin/ampera/controller/inquiry/*, .../backend/src/main/kotlin/ampera/core/dto/contact/*, .../backend/src/main/kotlin/ampera/service/Inquiry/*	Frontend UI
+A6 Forms Frontend	/bestilling, contact conversion forms, validation/actions	.../frontend/src/app/(app)/(public)/(undersider)/bestilling/*, .../frontend/src/app/(app)/(public)/(undersider)/kontakt/*, sendContactMessage.ts	CMS schema
+A7 Admin Dashboard	/admin routes + inquiry table integration	new .../frontend/src/app/(app)/(admin)/**, .../frontend/src/components/admin/InquiryTable/*, .../frontend/src/app/actions/admin/*	Homepage UI
+A8 Performance/Cache	waterfalls, cache components, bundle trimming	next.config.mjs, RSC data modules, selected pages	Backend/domain logic
+A9 QA/Release	smoke/E2E/release checklist/cutover	docs + CI scripts	Domain feature code
+Parallel Execution Waves
+Wave 0 (Contract Freeze, 0.5 day)
+ID	Team	Task	Output	Dependency
+AT-000	A0	Create integration contract doc for inquiry payload + CMS ownership	inquiry-contract.md	None
+AT-001	A0	Split backlog into agent-ready tickets with file ownership	backlog.md updated with IDs	None
+AT-002	A1	Security hotfix plan for exposed credentials and rotation steps	checklist.md security section	None
+Wave 1 (Run in Parallel, Day 1-2)
+ID	Team	Task	Output	Dependency
+AT-101	A2	Fix stale manifest brand (Sonio)	manifest.json	AT-000
+AT-102	A2	Fix robots/sitemap host (larsen.gg -> production domain)	robots.txt	AT-000
+AT-103	A2	Rewrite sitemap URL generation for real route structure	sitemap.ts	AT-000
+AT-104	A2	Baseline metadata and canonical defaults	metadata.tsx	AT-000
+AT-111	A3	Fix navbar links desktop/mobile	NavbarV2.tsx	AT-000
+AT-112	A3	Style Fordeler section fully	Fordeler.tsx, Fordeler.module.css	AT-000
+AT-113	A3	Add homepage “Om oss” block + Contact CTA + footer render	homepage + layout components	AT-000
+AT-121	A4	Align homepage globals to actual rendering needs	Hjem.ts, Nettstedsinnstillinger.ts, Navigasjon.ts	AT-000
+AT-122	A4	Add safe hooks pattern (req.context) for revalidation	relevant Payload hooks	AT-000
+AT-123	A4	Ensure access correctness for Local API usage (overrideAccess: false where needed)	payload query call sites	AT-000
+AT-131	A5	Extend inquiry DTO/entity for byggestrøm + LFS specific fields	backend DTO/entity	AT-000
+AT-132	A5	Add backend validation and backward compatibility mapping	service/controller	AT-131
+AT-133	A5	Ensure admin inquiry update path remains stable	admin controller/service	AT-131
+Wave 2 (Run in Parallel, Day 3-5)
+ID	Team	Task	Output	Dependency
+AT-201	A6	Build /bestilling shell with emne routing and fallback	page.tsx	AT-131
+AT-202	A6	Implement Byggestrøm form component + validation	new components under bestilling	AT-201
+AT-203	A6	Implement LFS form component + validation	new components under bestilling	AT-201
+AT-204	A6	Refactor Contact form for conversion (upsell fields, cleaner copy)	ContactForm.tsx	AT-131
+AT-205	A6	Align frontend action payloads with backend contract	sendContactMessage.ts, inquiry.ts	AT-131
+AT-211	A7	Create admin route tree and auth guard	new .../frontend/src/app/(app)/(admin)/...	AT-000
+AT-212	A7	Mount existing inquiry table on /admin/henvendelser	page + actions wiring	AT-131
+AT-213	A7	Add lightweight /admin/innsikt metrics cards	admin analytics page	AT-211
+AT-214	A7	Add filter by inquiry type/status in table	.../frontend/src/components/admin/InquiryTable/*	AT-212
+Wave 3 (Run in Parallel, Day 5-6)
+ID	Team	Task	Output	Dependency
+AT-301	A8	Enable Cache Components in Next 16 config	next.config.mjs	AT-104
+AT-302	A8	Add 'use cache' + cacheLife for stable content fetchers	fetchers.ts and selected RSC pages	AT-301
+AT-303	A8	Add cacheTag/updateTag strategy for CMS-driven pages	shared data layer + revalidation actions	AT-302
+AT-304	A8	Remove waterfalls with Promise.all + Suspense boundaries	selected pages/sections	AT-302
+AT-305	A8	Defer analytics until consent and avoid unnecessary preloads	layout + analytics provider + image usage	AT-111
+Wave 4 (Integration + Release, Day 7)
+ID	Team	Task	Output	Dependency
+AT-401	A9	Full smoke suite (forms, SEO, admin, CMS edits)	test report in status.md	Waves 1-3
+AT-402	A9	Build/lint/types gate in CI and local runbook	CI config + docs	Waves 1-3
+AT-403	A1 + A9	Staging deploy, DNS/cutover, rollback script	release checklist + runbook	AT-401
+AT-404	A0	Merge order + release note + backlog rollover	final roadmap update	AT-403
+Public API / Interface / Type Changes
+POST /api/v1/inquiry/contact request extended with service-specific optional fields (inquiryType, company, location, periodFrom, periodTo, startDate, duration, powerNeed, notes).
+Frontend inquiry types in inquiry.ts updated to match backend enum/status model.
+Payload globals become source-of-truth for homepage sections, navigation/footer, and contact details.
+Admin frontend routes introduced under .../frontend/src/app/(app)/(admin)/....
+Caching contract introduced for RSC/Payload fetches (use cache, cacheLife, cacheTag, updateTag).
+Test Cases and Scenarios
+ID	Scenario	Pass criteria
+TC-01	Homepage load mobile/desktop	No skeleton gaps, navbar/footer correct
+TC-02	/bestilling?emne=byggestrom	Correct form, validates, persists
+TC-03	/bestilling?emne=lfs	Correct form, validates, persists
+TC-04	Contact form submit	Success message + DB record
+TC-05	Invalid form input	Field-level errors, no persistence
+TC-06	Admin inquiries page	Shows records, status updates persist
+TC-07	CMS edit to homepage text	Frontend reflects change per cache policy
+TC-08	robots/sitemap/metadata	Correct domain, valid SEO tags
+TC-09	Cookie reject path	Analytics not loaded before consent
+TC-10	Quality gate	npm run lint && npm run check-types && npm run build passes
+Multi-Agent Prompt Pack (Copy/Paste Ready)
+Orchestrator Prompt (use this first)
+“Act as release orchestrator. Spawn 8 parallel agents (A1-A8) with strict file ownership from backlog.md ticket IDs. Each agent must only edit its assigned paths, run relevant checks, and return: changed files, decisions, risks, and validation output. Use merge order: A2+A3+A4+A5 -> A6+A7 -> A8 -> A9. Block release on any failing test or unresolved contract mismatch.”
+
+Team Prompt Template (reuse per team)
+“Implement tickets: <IDs>. Respect only these paths: <PATHS>. Do not touch other files. Follow Next.js 16 best practices, Payload safety rules (overrideAccess: false when acting as user, avoid hook loops with context), and Vercel React performance rules (no waterfalls, minimal client bundle). Return: 1) patch summary, 2) file list, 3) test commands run, 4) open risks.”
+
+Mandatory Team Assignment
+A1 gets AT-002, AT-403.
+A2 gets AT-101..AT-104.
+A3 gets AT-111..AT-113.
+A4 gets AT-121..AT-123.
+A5 gets AT-131..AT-133.
+A6 gets AT-201..AT-205.
+A7 gets AT-211..AT-214.
+A8 gets AT-301..AT-305.
+A9 gets AT-401..AT-402.
+A0 handles AT-000, AT-001, AT-404.
+Assumptions and Defaults
+Deployment remains hybrid: Vercel for frontend/Payload, AWS for backend/Postgres/S3.
+Security credential rotation is a hard gate before production cutover.
+Payload remains editable source for content/SEO/navigation; code remains source for design system and business logic.
+Cache Components are enabled only after correctness is validated on staging.
+Release target is fastest safe path, not full enterprise feature completion.

@@ -246,3 +246,35 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 **Remaining gap**: Truly novel extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) still won't reach our extension. This is an inherent limitation of macOS Quick Look — there is no catch-all mechanism for `.appex` extensions. No Quick Look extension (sbarex, Peek, QLStephen) has solved this; QLStephen's `.qlgenerator` approach is dead on macOS 15.
 
 **Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 561 extensions in the registry. Only completely unknown extensions remain unroutable.
+
+---
+
+## KI-011 — Finder thumbnail ignores dark mode (white background)
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Fixed |
+
+**Impact**: Finder thumbnails (column view preview, icon view) show a white/light background even when the system is in dark mode and the user's theme is "auto". The Quick Look spacebar preview correctly shows the dark theme.
+
+**Root cause**: `ThumbnailProvider.systemIsDark()` used `NSApplication.shared.effectiveAppearance`, which is unreliable in headless extension contexts. The thumbnail extension runs without a window or visual context, so `effectiveAppearance` defaults to light ("aqua"). The preview extension works because quicklookd (which hosts it) has a visual context.
+
+**Fix (2026-02-11)**: Changed `systemIsDark()` to read `UserDefaults.standard.string(forKey: "AppleInterfaceStyle")`, which directly queries the system preference regardless of visual context.
+
+---
+
+## KI-012 — Links in rendered markdown preview are not clickable
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Fixed |
+
+**Impact**: Links in rendered markdown (e.g., `[KNOWN_ISSUES.md](KNOWN_ISSUES.md)`) are styled as links but clicking them does nothing. Both relative file links and absolute HTTP links are non-functional.
+
+**Root cause**: Data-based Quick Look previews load HTML into quicklookd's WKWebView without a base URL. Relative links can't resolve, and the default WKWebView doesn't handle navigation for data-based content.
+
+**Fix (2026-02-11)**: Added JavaScript click handler for `<a>` tags in the rendered view. The source file's parent directory is injected into the HTML via `data-source-dir` attribute. Relative links are resolved to `file://` URLs against this directory, and `window.open(url, '_blank')` is used to request the system open the URL. Absolute HTTP links open in the default browser. Anchor links (`#heading`) continue to work for in-page navigation (TOC).
+
+**Limitation**: `window.open()` depends on quicklookd's WKWebView allowing new window requests. If quicklookd blocks this, links will remain non-functional — this would be a macOS platform limitation.

@@ -175,7 +175,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 systemIsDark: systemIsDark,
                 wordWrap: SharedSettings.shared.wordWrap,
                 markdownShowTOC: SharedSettings.shared.markdownShowTOC,
-                copyBehavior: SharedSettings.shared.copyBehavior
+                copyBehavior: SharedSettings.shared.copyBehavior,
+                sourceDirectory: url.deletingLastPathComponent().path
             )
 
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
@@ -290,7 +291,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             systemIsDark: systemIsDark,
             wordWrap: SharedSettings.shared.wordWrap,
             markdownShowTOC: SharedSettings.shared.markdownShowTOC,
-            copyBehavior: SharedSettings.shared.copyBehavior
+            copyBehavior: SharedSettings.shared.copyBehavior,
+            sourceDirectory: url.deletingLastPathComponent().path
         )
 
         let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)

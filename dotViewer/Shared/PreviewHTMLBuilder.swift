@@ -25,6 +25,7 @@ public struct PreviewInfo {
     public let wordWrap: Bool
     public let markdownShowTOC: Bool
     public let copyBehavior: String
+    public let sourceDirectory: String
 
     public init(
         title: String,
@@ -50,7 +51,8 @@ public struct PreviewInfo {
         systemIsDark: Bool = false,
         wordWrap: Bool = false,
         markdownShowTOC: Bool = false,
-        copyBehavior: String = "autoCopy"
+        copyBehavior: String = "autoCopy",
+        sourceDirectory: String = ""
     ) {
         self.title = title
         self.language = language
@@ -76,6 +78,7 @@ public struct PreviewInfo {
         self.wordWrap = wordWrap
         self.markdownShowTOC = markdownShowTOC
         self.copyBehavior = copyBehavior
+        self.sourceDirectory = sourceDirectory
     }
 }
 
@@ -118,7 +121,7 @@ public enum PreviewHTMLBuilder {
           \(buildCSS(info: info, palette: palette))
           </style>
         </head>
-        <body>
+        <body data-source-dir="\(escapeHTML(info.sourceDirectory))">
           \(header)
           \(warnings)
           <div class="main-layout">
@@ -523,10 +526,12 @@ public enum PreviewHTMLBuilder {
         .rendered-view a {
           color: var(--link);
           text-decoration: none;
+          cursor: pointer;
         }
 
         .rendered-view a:hover {
           text-decoration: underline;
+          opacity: 0.85;
         }
 
         /* Inline code */
@@ -1150,6 +1155,30 @@ public enum PreviewHTMLBuilder {
             copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
           }
         });
+
+        // Clickable links in rendered markdown
+        (function() {
+          const rv = document.getElementById('rendered-view');
+          if (!rv) return;
+          const sourceDir = document.body.getAttribute('data-source-dir') || '';
+          rv.addEventListener('click', function(e) {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#')) return;
+            e.preventDefault();
+            e.stopPropagation();
+            let url = href;
+            if (!/^https?:\\/\\//.test(href) && !/^file:\\/\\//.test(href)) {
+              if (sourceDir) {
+                url = 'file://' + sourceDir + '/' + href;
+              } else {
+                return;
+              }
+            }
+            window.open(url, '_blank');
+          });
+        })();
 
         \(buildCopyBehaviorScript(copyBehavior))
         """

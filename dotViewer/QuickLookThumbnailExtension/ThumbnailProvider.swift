@@ -150,9 +150,11 @@ final class ThumbnailProvider: QLThumbnailProvider {
 
     @MainActor
     private static func systemIsDark() -> Bool {
-        let appearance = NSApplication.shared.effectiveAppearance
-        if let match = appearance.bestMatch(from: [.darkAqua, .aqua]) {
-            return match == .darkAqua
+        // NSApplication.shared.effectiveAppearance is unreliable in headless
+        // extension contexts (thumbnail provider has no window/visual context).
+        // Read the system preference directly instead.
+        if let style = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") {
+            return style.lowercased() == "dark"
         }
         return false
     }
