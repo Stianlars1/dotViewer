@@ -24,6 +24,15 @@ schemes:
       config: Debug
     test:
       config: Debug
+  dotViewerTests:
+    build:
+      targets:
+        dotViewerTests: [test]
+        Shared: [test]
+    test:
+      config: Debug
+      targets:
+        - dotViewerTests
 targets:
   dotViewer:
     type: application
@@ -4325,3 +4334,15 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.Shared
         DEAD_CODE_STRIPPING: YES
         CLANG_ENABLE_MODULE_VERIFIER: YES
+
+  dotViewerTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - dotViewerTests
+    dependencies:
+      - target: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.Tests
+        GENERATE_INFOPLIST_FILE: YES
