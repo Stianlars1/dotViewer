@@ -126,15 +126,23 @@
   },
   {
     "id": "c",
-    "displayName": "C and C++",
+    "displayName": "C",
     "extensions": [
       "c",
+      "h"
+    ],
+    "filenames": [],
+    "highlightLanguage": "c"
+  },
+  {
+    "id": "cpp",
+    "displayName": "C++",
+    "extensions": [
       "c++",
       "cc",
       "cpp",
       "cu",
       "cxx",
-      "h",
       "hh",
       "hpp",
       "hxx",
@@ -142,7 +150,7 @@
       "ipp"
     ],
     "filenames": [],
-    "highlightLanguage": "c"
+    "highlightLanguage": "cpp"
   },
   {
     "id": "cmake",
