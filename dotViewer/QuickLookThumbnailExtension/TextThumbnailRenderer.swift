@@ -12,6 +12,15 @@ struct TextThumbnailSnippet {
 struct ColoredToken {
     let text: String
     let color: NSColor
+    let isBold: Bool
+    let isItalic: Bool
+
+    init(text: String, color: NSColor, isBold: Bool = false, isItalic: Bool = false) {
+        self.text = text
+        self.color = color
+        self.isBold = isBold
+        self.isItalic = isItalic
+    }
 }
 
 enum ThumbnailSyntaxColorizer {
@@ -50,7 +59,7 @@ enum ThumbnailSyntaxColorizer {
            trimmed.hasPrefix("/*") || trimmed.hasPrefix("*") ||
            trimmed.hasPrefix(";") || trimmed.hasPrefix("rem ") ||
            trimmed.hasPrefix("REM ") {
-            return [ColoredToken(text: line, color: commentColor)]
+            return [ColoredToken(text: line, color: commentColor, isItalic: true)]
         }
 
         var tokens: [ColoredToken] = []
@@ -86,7 +95,7 @@ enum ThumbnailSyntaxColorizer {
             // Inline comment: //
             if ch == "/" && i + 1 < count && chars[i + 1] == "/" {
                 let start = line.index(line.startIndex, offsetBy: i)
-                tokens.append(ColoredToken(text: String(line[start...]), color: commentColor))
+                tokens.append(ColoredToken(text: String(line[start...]), color: commentColor, isItalic: true))
                 i = count
                 continue
             }
@@ -102,9 +111,9 @@ enum ThumbnailSyntaxColorizer {
                 let word = String(line[start..<finish])
 
                 if keywords.contains(word) {
-                    tokens.append(ColoredToken(text: word, color: keywordColor))
+                    tokens.append(ColoredToken(text: word, color: keywordColor, isBold: true))
                 } else if word.first?.isUppercase == true && word.count > 1 && word.dropFirst().contains(where: { $0.isLowercase }) {
-                    tokens.append(ColoredToken(text: word, color: typeColor))
+                    tokens.append(ColoredToken(text: word, color: typeColor, isBold: true))
                 } else {
                     tokens.append(ColoredToken(text: word, color: textColor))
                 }
@@ -272,7 +281,17 @@ enum TextThumbnailRenderer {
                 NSGraphicsContext.current?.cgContext.saveGState()
                 NSGraphicsContext.current?.cgContext.clip(to: contentRect)
 
-                let lineFont = NSFont.monospacedSystemFont(ofSize: max(9, min(fontSize, 12)), weight: .regular)
+                let codeFontSize = max(9, min(fontSize, 12))
+                let lineFont = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
+                let lineFontBold = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .bold)
+                let lineFontItalic: NSFont = {
+                    let desc = lineFont.fontDescriptor.withSymbolicTraits(.italic)
+                    return NSFont(descriptor: desc, size: codeFontSize) ?? lineFont
+                }()
+                let lineFontBoldItalic: NSFont = {
+                    let desc = lineFontBold.fontDescriptor.withSymbolicTraits(.italic)
+                    return NSFont(descriptor: desc, size: codeFontSize) ?? lineFontBold
+                }()
                 let numberFont = NSFont.monospacedSystemFont(ofSize: max(8, min(fontSize - 1, 11)), weight: .regular)
                 let singleLineHeight = lineFont.ascender - lineFont.descender + lineFont.leading
 
@@ -281,6 +300,15 @@ enum TextThumbnailRenderer {
                 let gutterWidth = showLineNumbers ? max(24, digitWidth * CGFloat(lineDigits) + 6) : 0
                 let textOriginX = contentRect.minX + gutterWidth
                 let textAvailableWidth = contentRect.width - gutterWidth
+
+                let fontForToken: (ColoredToken) -> NSFont = { token in
+                    switch (token.isBold, token.isItalic) {
+                    case (true, true):   return lineFontBoldItalic
+                    case (true, false):  return lineFontBold
+                    case (false, true):  return lineFontItalic
+                    case (false, false): return lineFont
+                    }
+                }
 
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.lineBreakMode = .byWordWrapping
@@ -324,7 +352,7 @@ enum TextThumbnailRenderer {
                         let attributed = NSMutableAttributedString()
                         for token in tokens {
                             let attrs: [NSAttributedString.Key: Any] = [
-                                .font: lineFont,
+                                .font: fontForToken(token),
                                 .foregroundColor: token.color,
                                 .paragraphStyle: paragraphStyle
                             ]
@@ -341,7 +369,7 @@ enum TextThumbnailRenderer {
                         var tokenX = textOriginX
                         for token in tokens {
                             let tokenAttrs: [NSAttributedString.Key: Any] = [
-                                .font: lineFont,
+                                .font: fontForToken(token),
                                 .foregroundColor: token.color
                             ]
                             let tokenStr = NSAttributedString(string: token.text, attributes: tokenAttrs)
@@ -397,29 +425,53 @@ enum TextThumbnailRenderer {
     }
 }
 
+struct TokenStyle {
+    let color: NSColor
+    let isBold: Bool
+    let isItalic: Bool
+}
+
 enum TokenColorMapper {
     static func color(for tokenClass: String, palette: ThemePalette) -> NSColor {
-        let hex: String
-        switch tokenClass {
-        case "comment":     hex = palette.comment
-        case "keyword":     hex = palette.keyword
-        case "string":      hex = palette.string
-        case "number":      hex = palette.number
-        case "type":        hex = palette.type
-        case "function":    hex = palette.function
-        case "property":    hex = palette.property
-        case "constant":    hex = palette.number
-        case "identifier":  hex = palette.text
-        case "punctuation": hex = palette.punctuation
-        case "tag":         hex = palette.tag
-        case "attribute":   hex = palette.attribute
-        case "escape":      hex = palette.escape
-        case "builtin":     hex = palette.builtin
-        case "namespace":   hex = palette.namespace
-        case "parameter":   hex = palette.parameter
-        default:            hex = palette.text
+        return style(for: tokenClass, palette: palette).color
+    }
+
+    /// Bold/italic style per token type (thumbnail-specific — CSS handles this separately in previews).
+    private static func styleFlags(for token: TokenType) -> (isBold: Bool, isItalic: Bool) {
+        switch token {
+        case .comment:     return (false, true)
+        case .keyword:     return (true,  false)
+        case .string:      return (false, false)
+        case .number:      return (false, false)
+        case .type:        return (true,  false)
+        case .function:    return (false, false)
+        case .property:    return (false, false)
+        case .constant:    return (false, false)
+        case .identifier:  return (false, false)
+        case .punctuation: return (false, false)
+        case .tag:         return (true,  false)
+        case .attribute:   return (false, true)
+        case .escape:      return (false, false)
+        case .builtin:     return (false, true)
+        case .namespace:   return (false, false)
+        case .parameter:   return (false, false)
         }
-        return NSColor(hex: hex) ?? .labelColor
+    }
+
+    static func style(for tokenClass: String, palette: ThemePalette) -> TokenStyle {
+        if let token = TokenType(rawValue: tokenClass) {
+            let flags = styleFlags(for: token)
+            return TokenStyle(
+                color: NSColor(hex: palette.hex(for: token)) ?? .labelColor,
+                isBold: flags.isBold,
+                isItalic: flags.isItalic
+            )
+        }
+        return TokenStyle(
+            color: NSColor(hex: palette.text) ?? .labelColor,
+            isBold: false,
+            isItalic: false
+        )
     }
 }
 
@@ -450,7 +502,7 @@ enum TreeSitterTokenConverter {
             let lineData = Array(lines[lineIndex].utf8)
 
             // Collect tokens that overlap this line
-            var lineTokens: [(start: Int, end: Int, color: NSColor)] = []
+            var lineTokens: [(start: Int, end: Int, style: TokenStyle)] = []
             for token in tokens {
                 if token.e <= lineStart { continue }
                 if token.s >= lineEnd { break }
@@ -458,7 +510,7 @@ enum TreeSitterTokenConverter {
                 let s = max(token.s - lineStart, 0)
                 let e = min(token.e - lineStart, lineBytes)
                 if s < e {
-                    lineTokens.append((s, e, TokenColorMapper.color(for: token.c, palette: palette)))
+                    lineTokens.append((s, e, TokenColorMapper.style(for: token.c, palette: palette)))
                 }
             }
 
@@ -476,7 +528,7 @@ enum TreeSitterTokenConverter {
                 }
                 if lt.start < lt.end {
                     let text = String(decoding: lineData[lt.start..<lt.end], as: UTF8.self)
-                    colored.append(ColoredToken(text: text, color: lt.color))
+                    colored.append(ColoredToken(text: text, color: lt.style.color, isBold: lt.style.isBold, isItalic: lt.style.isItalic))
                 }
                 pos = lt.end
             }
