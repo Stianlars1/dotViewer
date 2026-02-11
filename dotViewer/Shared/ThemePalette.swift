@@ -1,5 +1,28 @@
 import Foundation
 
+/// All syntax token types used in highlighting.
+/// Adding a case here forces updates to `ThemePalette.hex(for:)`,
+/// `PreviewHTMLBuilder` CSS generation, and `TokenColorMapper`.
+public enum TokenType: String, CaseIterable, Sendable {
+    case comment
+    case keyword
+    case string
+    case number
+    case type
+    case function
+    case property
+    case punctuation
+    case tag
+    case attribute
+    case escape
+    case builtin
+    case namespace
+    case parameter
+    // Semantic aliases (not backed by palette properties — they map to other tokens)
+    case constant    // uses number color
+    case identifier  // uses text color
+}
+
 public struct ThemePalette: Equatable, Sendable {
     public let name: String
     public let isDark: Bool
@@ -20,6 +43,29 @@ public struct ThemePalette: Equatable, Sendable {
     public let builtin: String
     public let namespace: String
     public let parameter: String
+
+    /// Returns the hex color for a given token type.
+    /// The exhaustive switch ensures compile-time enforcement when new cases are added.
+    public func hex(for token: TokenType) -> String {
+        switch token {
+        case .comment:     return comment
+        case .keyword:     return keyword
+        case .string:      return string
+        case .number:      return number
+        case .type:        return type
+        case .function:    return function
+        case .property:    return property
+        case .punctuation: return punctuation
+        case .tag:         return tag
+        case .attribute:   return attribute
+        case .escape:      return escape
+        case .builtin:     return builtin
+        case .namespace:   return namespace
+        case .parameter:   return parameter
+        case .constant:    return number
+        case .identifier:  return text
+        }
+    }
 
     public static func palette(for theme: String, systemIsDark: Bool) -> ThemePalette {
         switch theme {
