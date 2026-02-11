@@ -121,6 +121,11 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "copyBehavior") } }
     }
 
+    public var showSearchButton: Bool {
+        get { lock.withLock { defaults.object(forKey: "showSearchButton") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "showSearchButton") } }
+    }
+
     public var markdownPreviewMode: String {
         get { markdownDefaultMode }
         set { markdownDefaultMode = newValue }

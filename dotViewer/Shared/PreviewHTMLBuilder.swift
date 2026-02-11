@@ -25,6 +25,7 @@ public struct PreviewInfo {
     public let wordWrap: Bool
     public let markdownShowTOC: Bool
     public let copyBehavior: String
+    public let showSearchButton: Bool
     public let sourceDirectory: String
 
     public init(
@@ -52,6 +53,7 @@ public struct PreviewInfo {
         wordWrap: Bool = false,
         markdownShowTOC: Bool = false,
         copyBehavior: String = "autoCopy",
+        showSearchButton: Bool = false,
         sourceDirectory: String = ""
     ) {
         self.title = title
@@ -78,6 +80,7 @@ public struct PreviewInfo {
         self.wordWrap = wordWrap
         self.markdownShowTOC = markdownShowTOC
         self.copyBehavior = copyBehavior
+        self.showSearchButton = showSearchButton
         self.sourceDirectory = sourceDirectory
     }
 }
@@ -88,7 +91,8 @@ public enum PreviewHTMLBuilder {
         let defaultRendered = info.defaultMarkdownMode == "rendered"
         let rawStyle = info.renderedHTML != nil && defaultRendered ? " style=\"display:none;\"" : ""
         let renderedStyle = info.renderedHTML != nil && !defaultRendered ? " style=\"display:none;\"" : ""
-        let rawSection = "<div id=\"raw-view\" class=\"code-view\"\(rawStyle)>\(info.rawHTML)</div>"
+        let langAttr = " data-language=\"\(escapeHTML(info.language.lowercased()))\""
+        let rawSection = "<div id=\"raw-view\" class=\"code-view\"\(langAttr)\(rawStyle)>\(info.rawHTML)</div>"
         let renderedSection = info.renderedHTML != nil
             ? "<div id=\"rendered-view\" class=\"rendered-view\"\(renderedStyle)>\(info.renderedHTML!)</div>"
             : ""
@@ -121,8 +125,19 @@ public enum PreviewHTMLBuilder {
           \(buildCSS(info: info, palette: palette))
           </style>
         </head>
-        <body data-source-dir="\(escapeHTML(info.sourceDirectory))">
+        <body data-source-dir="\(escapeHTML(info.sourceDirectory))" data-print-title="\(escapeHTML(info.title)) — \(info.language)">
           \(header)
+          \(info.showSearchButton ? """
+          <div id="search-bar" class="search-bar">
+            <span id="search-query" class="search-query" title="Select text then click the search icon, or paste from clipboard">No query</span>
+            <button class="search-action-btn" id="search-selection" title="Use selection">Selection</button>
+            <button class="search-action-btn" id="search-paste" title="Paste from clipboard">Paste</button>
+            <span id="search-count" class="search-count"></span>
+            <button class="search-nav-btn" id="search-prev" title="Previous match" disabled>&#x25B2;</button>
+            <button class="search-nav-btn" id="search-next" title="Next match" disabled>&#x25BC;</button>
+            <button class="search-close-btn" id="search-close" title="Close">&times;</button>
+          </div>
+          """ : "")
           \(warnings)
           <div class="main-layout">
             \(tocSection)
@@ -155,6 +170,13 @@ public enum PreviewHTMLBuilder {
           <div class="header-right">
             \(markdownToggle)
             \(tocToggle)
+            \(info.showSearchButton ? """
+            <button class="icon-button" id="search-button" title="Find in preview" aria-label="Find in preview">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+              </svg>
+            </button>
+            """ : "")
             <button class="icon-button" id="copy-button" title="Copy to clipboard" aria-label="Copy to clipboard">
               <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                 <path d="M16 4a2 2 0 0 1 2 2v8.5a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h7zm0 1.5H9a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 .5-.5V6a.5.5 0 0 0-.5-.5z"/>
@@ -437,26 +459,37 @@ public enum PreviewHTMLBuilder {
           margin: 0;
         }
 
-        .tok-comment { color: var(--comment); }
-        .tok-keyword { color: var(--keyword); }
-        .tok-string { color: var(--string); }
-        .tok-number { color: var(--number); }
-        .tok-type { color: var(--type); }
-        .tok-function { color: var(--function); }
-        .tok-property { color: var(--property); }
-        .tok-constant { color: var(--number); }
-        .tok-identifier { color: var(--text); }
-        .tok-punctuation { color: var(--punctuation); }
-        .tok-tag { color: var(--tag); }
-        .tok-attribute { color: var(--attribute); }
-        .tok-escape { color: var(--escape); }
-        .tok-builtin { color: var(--builtin); font-style: italic; }
-        .tok-namespace { color: var(--namespace); }
-        .tok-parameter { color: var(--parameter); font-style: italic; }
+        /* Token classes generated from TokenType enum — see tokenCSSRules() */
+        \(tokenCSSRules())
+
+        /* Markdown RAW mode: size/weight differentiation */
+        .code-view[data-language="markdown"] .tok-keyword {
+          font-weight: 700;
+          font-size: 1.2em;
+          color: var(--heading);
+        }
+
+        .code-view[data-language="markdown"] .tok-string {
+          background: var(--surface);
+          border-radius: 3px;
+          padding: 0 3px;
+        }
+
+        .code-view[data-language="markdown"] .tok-punctuation {
+          opacity: 0.5;
+        }
+
+        .code-view[data-language="markdown"] .tok-escape {
+          font-weight: 600;
+        }
+
+        .code-view[data-language="markdown"] .tok-property {
+          font-style: italic;
+        }
 
         .rendered-view {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-          line-height: 1.7;
+          line-height: 1.6;
           font-size: \(renderFontSize)px;
           color: var(--text);
           background: transparent;
@@ -464,7 +497,15 @@ public enum PreviewHTMLBuilder {
           box-shadow: none;
           max-width: 900px;
           margin: 0 auto;
-          padding: 24px 32px;
+          padding: 20px 32px 40px;
+        }
+
+        .rendered-view > :first-child {
+          margin-top: 0 !important;
+        }
+
+        .rendered-view ::selection {
+          background: rgba(0, 122, 255, 0.2);
         }
 
         /* Typora-inspired Typography */
@@ -477,30 +518,28 @@ public enum PreviewHTMLBuilder {
           color: var(--heading);
           font-weight: 600;
           line-height: 1.25;
-          margin-top: 24px;
-          margin-bottom: 12px;
-          letter-spacing: -0.02em;
+          margin-top: 1.5em;
+          margin-bottom: 0.5em;
+          letter-spacing: -0.01em;
         }
 
         .rendered-view h1 {
           font-size: 2em;
           font-weight: 700;
-          margin-top: 0.67em;
+          margin-top: 0;
           padding-bottom: 0.3em;
           border-bottom: 1px solid var(--border);
         }
 
         .rendered-view h2 {
           font-size: 1.5em;
-          font-weight: 700;
-          margin-top: 1.5em;
-          padding-bottom: 0.3em;
+          font-weight: 600;
+          padding-bottom: 0.25em;
           border-bottom: 1px solid var(--border);
         }
 
         .rendered-view h3 {
           font-size: 1.25em;
-          margin-top: 1.25em;
         }
 
         .rendered-view h4 {
@@ -515,12 +554,12 @@ public enum PreviewHTMLBuilder {
         .rendered-view h6 {
           font-size: 0.85em;
           font-weight: 600;
-          opacity: 0.8;
+          color: var(--comment);
         }
 
         .rendered-view p {
           margin-top: 0;
-          margin-bottom: 12px;
+          margin-bottom: 16px;
         }
 
         .rendered-view a {
@@ -531,17 +570,17 @@ public enum PreviewHTMLBuilder {
 
         .rendered-view a:hover {
           text-decoration: underline;
-          opacity: 0.85;
         }
 
         /* Inline code */
         .rendered-view code {
           font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-          font-size: 0.9em;
-          background: var(--surface);
-          color: var(--accent);
-          padding: 0.2em 0.4em;
-          border-radius: 4px;
+          font-size: 0.875em;
+          background: var(--surface-strong);
+          color: var(--text);
+          padding: 0.15em 0.4em;
+          border-radius: 3px;
+          border: 1px solid var(--border);
         }
 
         /* Code blocks */
@@ -549,10 +588,10 @@ public enum PreviewHTMLBuilder {
           background: var(--surface);
           padding: 16px;
           border-radius: 6px;
-          border-left: 3px solid var(--accent);
+          border: 1px solid var(--border);
           overflow-x: auto;
           margin: 16px 0;
-          line-height: 1.45;
+          line-height: 1.5;
           position: relative;
         }
 
@@ -562,30 +601,28 @@ public enum PreviewHTMLBuilder {
           padding: 0;
           border-radius: 0;
           color: var(--text);
-          font-size: 0.875em;
+          font-size: 0.85em;
         }
 
         .rendered-view pre .code-lang {
           position: absolute;
           top: 6px;
           right: 10px;
-          font-size: 0.75em;
+          font-size: 0.7em;
           color: var(--comment);
           font-family: -apple-system, BlinkMacSystemFont, sans-serif;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           user-select: none;
-          opacity: 0.7;
+          opacity: 0.6;
         }
 
         /* Blockquotes */
         .rendered-view blockquote {
-          border-left: 4px solid var(--accent);
+          border-left: 3px solid var(--comment);
           margin: 16px 0;
-          padding: 4px 16px;
+          padding: 2px 0 2px 16px;
           color: var(--comment);
-          background: var(--surface);
-          border-radius: 0 4px 4px 0;
         }
 
         .rendered-view blockquote > :first-child {
@@ -605,15 +642,16 @@ public enum PreviewHTMLBuilder {
         }
 
         .rendered-view li {
-          margin-bottom: 2px;
+          margin-bottom: 4px;
         }
 
         .rendered-view li + li {
-          margin-top: 2px;
+          margin-top: 4px;
         }
 
         .rendered-view li > p {
-          margin-top: 16px;
+          margin-top: 8px;
+          margin-bottom: 8px;
         }
 
         .rendered-view ul ul,
@@ -639,15 +677,16 @@ public enum PreviewHTMLBuilder {
         /* Tables */
         .rendered-view table {
           border-collapse: collapse;
-          width: 100%;
+          width: auto;
+          min-width: 50%;
           margin: 16px 0;
-          overflow: auto;
+          font-size: 0.95em;
         }
 
         .rendered-view th,
         .rendered-view td {
           border: 1px solid var(--border);
-          padding: 8px 12px;
+          padding: 6px 13px;
           text-align: left;
         }
 
@@ -656,7 +695,7 @@ public enum PreviewHTMLBuilder {
           background: var(--surface);
         }
 
-        .rendered-view tr:nth-child(even) {
+        .rendered-view tr:nth-child(2n) {
           background: var(--surface);
         }
 
@@ -672,8 +711,10 @@ public enum PreviewHTMLBuilder {
         /* Horizontal rule */
         .rendered-view hr {
           border: none;
-          border-top: 1px solid var(--border);
-          margin: 24px 0;
+          height: 1px;
+          background: var(--border);
+          margin: 32px auto;
+          max-width: 80%;
         }
 
         /* Details/Summary */
@@ -688,7 +729,7 @@ public enum PreviewHTMLBuilder {
 
         /* Text formatting */
         .rendered-view strong {
-          font-weight: 700;
+          font-weight: 600;
           color: var(--text);
         }
 
@@ -864,6 +905,218 @@ public enum PreviewHTMLBuilder {
           background: var(--surface-strong);
           border-color: var(--border);
         }
+
+        /* MARK: - Search */
+        .search-bar {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          z-index: 10;
+          display: none;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 10px;
+          background: var(--header);
+          border-bottom: 1px solid var(--border);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          font-size: 13px;
+        }
+        .search-bar.open {
+          display: flex;
+        }
+        .search-bar .search-query {
+          flex: 1;
+          min-width: 80px;
+          max-width: 300px;
+          padding: 4px 8px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--bg);
+          color: var(--text);
+          font-size: 13px;
+          font-family: "SF Mono", Menlo, Monaco, monospace;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .search-bar .search-query.placeholder {
+          color: var(--comment);
+          font-family: inherit;
+          font-style: italic;
+        }
+        .search-bar .search-action-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          height: 24px;
+          padding: 0 8px;
+          border: 1px solid var(--border);
+          border-radius: 4px;
+          background: var(--surface);
+          color: var(--text);
+          cursor: pointer;
+          font-size: 11px;
+          font-family: inherit;
+          white-space: nowrap;
+        }
+        .search-bar .search-action-btn:hover {
+          background: var(--surface-strong);
+          border-color: var(--accent);
+        }
+        .search-bar .search-action-btn:active {
+          transform: scale(0.97);
+        }
+        .search-bar .search-nav-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          border: none;
+          border-radius: 4px;
+          background: transparent;
+          color: var(--text);
+          cursor: pointer;
+          padding: 0;
+          font-size: 14px;
+        }
+        .search-bar .search-nav-btn:hover {
+          background: var(--surface-strong);
+        }
+        .search-bar .search-nav-btn:disabled {
+          opacity: 0.3;
+          cursor: default;
+        }
+        .search-bar .search-count {
+          font-size: 11px;
+          color: var(--comment);
+          white-space: nowrap;
+          min-width: 50px;
+          text-align: center;
+        }
+        .search-bar .search-close-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 22px;
+          height: 22px;
+          border: none;
+          border-radius: 4px;
+          background: transparent;
+          color: var(--comment);
+          cursor: pointer;
+          padding: 0;
+          font-size: 16px;
+          line-height: 1;
+        }
+        .search-bar .search-close-btn:hover {
+          background: var(--surface-strong);
+          color: var(--text);
+        }
+        .search-highlight {
+          background: rgba(255, 200, 0, 0.35);
+          border-radius: 2px;
+        }
+        .search-highlight-current {
+          background: rgba(255, 150, 0, 0.6);
+          border-radius: 2px;
+          outline: 2px solid rgba(255, 150, 0, 0.8);
+        }
+
+        /* MARK: - Line Highlighting */
+        .ln {
+          cursor: pointer;
+          transition: opacity 0.1s ease;
+          border-radius: 2px;
+        }
+        .ln:hover {
+          opacity: 0.7;
+          background: var(--surface);
+        }
+        .line.line-highlighted {
+          background: rgba(0, 122, 255, 0.08);
+          border-radius: 2px;
+        }
+        .line.line-highlighted .ln {
+          color: var(--accent);
+          font-weight: 600;
+        }
+
+        /* MARK: - Print */
+        @media print {
+          body {
+            background: white !important;
+            color: #1a1a1a !important;
+            overflow: visible !important;
+            display: block !important;
+          }
+          .header, #search-bar, .toc-sidebar, .toc-resize-handle,
+          .toast, .float-copy-btn, #raw-source,
+          #copy-button, #search-button {
+            display: none !important;
+          }
+          .main-layout {
+            display: block !important;
+            overflow: visible !important;
+          }
+          .content {
+            overflow: visible !important;
+            padding: 0 !important;
+          }
+          .code-view, .rendered-view {
+            color: #1a1a1a !important;
+          }
+          /* Print header with file name */
+          body::before {
+            content: attr(data-print-title);
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: 11px;
+            color: #666;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #ccc;
+          }
+          /* Preserve syntax colors but darken for print */
+          .tok-keyword { color: #7b2d8b !important; }
+          .tok-string { color: #2e6b3a !important; }
+          .tok-comment { color: #6a737d !important; }
+          .tok-number { color: #8b4513 !important; }
+          .tok-type { color: #1a6b8a !important; }
+          .tok-function { color: #6f42c1 !important; }
+          .tok-property { color: #005cc5 !important; }
+          .tok-tag { color: #22863a !important; }
+          .tok-attribute { color: #b31d28 !important; }
+          .tok-escape { color: #d73a49 !important; }
+          .tok-builtin { color: #005cc5 !important; font-style: italic; }
+          .tok-namespace { color: #6f42c1 !important; }
+          .tok-parameter { color: #e36209 !important; font-style: italic; }
+          .tok-punctuation { color: #444 !important; }
+          .tok-accent { color: #005cc5 !important; }
+          .tok-constant { color: #8b4513 !important; }
+          .tok-identifier { color: #1a1a1a !important; }
+          .ln { color: #999 !important; }
+          /* Page break rules */
+          .line { page-break-inside: avoid; }
+          .rendered-view pre { page-break-inside: avoid; }
+          .rendered-view h1, .rendered-view h2, .rendered-view h3,
+          .rendered-view h4, .rendered-view h5, .rendered-view h6 {
+            page-break-after: avoid;
+          }
+          .rendered-view table { page-break-inside: avoid; }
+          .rendered-view blockquote { page-break-inside: avoid; }
+          /* Links: show URL */
+          .rendered-view a[href]::after {
+            content: " (" attr(href) ")";
+            font-size: 0.85em;
+            color: #666;
+          }
+          .rendered-view a[href^="#"]::after {
+            content: none;
+          }
+        }
         """
         if info.themeName == "auto" {
             let darkPalette = ThemePalette.atomOneDark
@@ -943,6 +1196,10 @@ public enum PreviewHTMLBuilder {
                 copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
               }
             });
+
+            \(buildLineHighlightScript())
+
+            \(buildSearchScript())
 
             \(buildCopyBehaviorScript(copyBehavior))
             """
@@ -1180,7 +1437,280 @@ public enum PreviewHTMLBuilder {
           });
         })();
 
+        \(buildLineHighlightScript())
+
+        \(buildSearchScript())
+
         \(buildCopyBehaviorScript(copyBehavior))
+        """
+    }
+
+    // MARK: - Line Highlighting
+    private static func buildLineHighlightScript() -> String {
+        """
+        (function() {
+          var HIGHLIGHTED = 'line-highlighted';
+          var lastClickedLine = -1;
+
+          function getLineElements() {
+            var codeView = document.querySelector('#raw-view');
+            if (!codeView || codeView.style.display === 'none') return [];
+            return codeView.querySelectorAll('.line');
+          }
+
+          function lineIndex(el) {
+            var lines = getLineElements();
+            for (var i = 0; i < lines.length; i++) {
+              if (lines[i] === el) return i;
+            }
+            return -1;
+          }
+
+          function setHighlight(lineEl, on) {
+            if (on) {
+              lineEl.classList.add(HIGHLIGHTED);
+            } else {
+              lineEl.classList.remove(HIGHLIGHTED);
+            }
+          }
+
+          document.addEventListener('click', function(e) {
+            var ln = e.target.closest('.ln');
+            if (!ln) return;
+            var line = ln.closest('.line');
+            if (!line) return;
+
+            var lines = getLineElements();
+            var idx = lineIndex(line);
+            if (idx === -1) return;
+
+            if (e.shiftKey && lastClickedLine >= 0 && lastClickedLine !== idx) {
+              var from = Math.min(lastClickedLine, idx);
+              var to = Math.max(lastClickedLine, idx);
+              for (var i = from; i <= to; i++) {
+                setHighlight(lines[i], true);
+              }
+              lastClickedLine = idx;
+            } else {
+              var wasHighlighted = line.classList.contains(HIGHLIGHTED);
+              if (!e.shiftKey) {
+                for (var j = 0; j < lines.length; j++) {
+                  setHighlight(lines[j], false);
+                }
+              }
+              setHighlight(line, !wasHighlighted);
+              lastClickedLine = wasHighlighted ? -1 : idx;
+            }
+
+            window.getSelection().removeAllRanges();
+          });
+        })();
+        """
+    }
+
+    // MARK: - Search
+    private static func buildSearchScript() -> String {
+        """
+        (function() {
+          var searchBar = document.getElementById('search-bar');
+          var searchQuery = document.getElementById('search-query');
+          var searchCount = document.getElementById('search-count');
+          var searchPrev = document.getElementById('search-prev');
+          var searchNext = document.getElementById('search-next');
+          var searchClose = document.getElementById('search-close');
+          var searchBtn = document.getElementById('search-button');
+          var searchPaste = document.getElementById('search-paste');
+          var searchSelection = document.getElementById('search-selection');
+          if (!searchBar || !searchQuery) return;
+
+          var highlights = [];
+          var currentIdx = -1;
+          var currentQuery = '';
+          var HIGHLIGHT_CLASS = 'search-highlight';
+          var CURRENT_CLASS = 'search-highlight-current';
+
+          function clearHighlights() {
+            for (var i = highlights.length - 1; i >= 0; i--) {
+              var mark = highlights[i];
+              var parent = mark.parentNode;
+              if (parent) {
+                while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+                parent.removeChild(mark);
+                parent.normalize();
+              }
+            }
+            highlights = [];
+            currentIdx = -1;
+            searchCount.textContent = '';
+            searchPrev.disabled = true;
+            searchNext.disabled = true;
+          }
+
+          function setQuery(text) {
+            currentQuery = text || '';
+            if (currentQuery) {
+              searchQuery.textContent = currentQuery;
+              searchQuery.classList.remove('placeholder');
+              searchQuery.title = currentQuery;
+            } else {
+              searchQuery.textContent = 'No query';
+              searchQuery.classList.add('placeholder');
+              searchQuery.title = 'Select text then click 🔍, or paste from clipboard';
+            }
+          }
+
+          function getSearchRoot() {
+            var content = document.querySelector('.content');
+            if (!content) return document.body;
+            var rendered = content.querySelector('#rendered-view');
+            var raw = content.querySelector('#raw-view');
+            if (rendered && rendered.style.display !== 'none') return rendered;
+            if (raw && raw.style.display !== 'none') return raw;
+            return content;
+          }
+
+          function findMatches(query) {
+            clearHighlights();
+            if (!query) return;
+
+            var root = getSearchRoot();
+            var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+            var textNodes = [];
+            var node;
+            while (node = walker.nextNode()) {
+              if (node.nodeValue && node.nodeValue.length > 0) {
+                var p = node.parentNode;
+                if (p && (p.tagName === 'SCRIPT' || p.tagName === 'STYLE' || p.tagName === 'TEXTAREA')) continue;
+                if (p && p.closest && p.closest('#search-bar')) continue;
+                textNodes.push(node);
+              }
+            }
+
+            var lowerQuery = query.toLowerCase();
+            for (var ti = 0; ti < textNodes.length; ti++) {
+              var textNode = textNodes[ti];
+              var text = textNode.nodeValue;
+              var lowerText = text.toLowerCase();
+              var startPos = 0;
+              var idx;
+              while ((idx = lowerText.indexOf(lowerQuery, startPos)) !== -1) {
+                var range = document.createRange();
+                range.setStart(textNode, idx);
+                range.setEnd(textNode, idx + query.length);
+                var mark = document.createElement('span');
+                mark.className = HIGHLIGHT_CLASS;
+                try {
+                  range.surroundContents(mark);
+                } catch(e) {
+                  startPos = idx + 1;
+                  continue;
+                }
+                highlights.push(mark);
+                textNode = mark.nextSibling;
+                if (!textNode) break;
+                text = textNode.nodeValue || '';
+                lowerText = text.toLowerCase();
+                startPos = 0;
+              }
+            }
+
+            if (highlights.length > 0) {
+              currentIdx = 0;
+              highlights[0].classList.add(CURRENT_CLASS);
+              highlights[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+              searchPrev.disabled = false;
+              searchNext.disabled = false;
+            }
+            updateCount();
+          }
+
+          function updateCount() {
+            if (highlights.length === 0) {
+              searchCount.textContent = currentQuery ? 'No results' : '';
+            } else {
+              searchCount.textContent = (currentIdx + 1) + ' of ' + highlights.length;
+            }
+          }
+
+          function goToMatch(idx) {
+            if (highlights.length === 0) return;
+            highlights[currentIdx].classList.remove(CURRENT_CLASS);
+            currentIdx = ((idx % highlights.length) + highlights.length) % highlights.length;
+            highlights[currentIdx].classList.add(CURRENT_CLASS);
+            highlights[currentIdx].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            updateCount();
+          }
+
+          function searchWithQuery(text) {
+            var trimmed = (text || '').trim();
+            setQuery(trimmed);
+            findMatches(trimmed);
+          }
+
+          function openSearch() {
+            var sel = window.getSelection().toString().trim();
+            searchBar.classList.add('open');
+            if (sel) {
+              searchWithQuery(sel);
+            } else if (!currentQuery) {
+              setQuery('');
+            }
+          }
+
+          function closeSearch() {
+            searchBar.classList.remove('open');
+            clearHighlights();
+          }
+
+          // "Selection" button — grab current selection into search
+          searchSelection.addEventListener('click', function() {
+            var sel = window.getSelection().toString().trim();
+            if (sel) {
+              searchWithQuery(sel);
+            }
+          });
+
+          // "Paste" button — read clipboard (requires trusted click gesture)
+          searchPaste.addEventListener('click', function() {
+            if (navigator.clipboard && navigator.clipboard.readText) {
+              navigator.clipboard.readText().then(function(text) {
+                if (text && text.trim()) {
+                  searchWithQuery(text.trim());
+                }
+              }).catch(function() {
+                if (typeof showToast === 'function') showToast('Clipboard access denied');
+              });
+            } else {
+              if (typeof showToast === 'function') showToast('Clipboard not available');
+            }
+          });
+
+          searchNext.addEventListener('click', function() { goToMatch(currentIdx + 1); });
+          searchPrev.addEventListener('click', function() { goToMatch(currentIdx - 1); });
+          searchClose.addEventListener('click', function() { closeSearch(); });
+
+          if (searchBtn) {
+            searchBtn.addEventListener('click', function() {
+              if (searchBar.classList.contains('open')) {
+                // If bar is open and there's a new selection, update the query
+                var sel = window.getSelection().toString().trim();
+                if (sel && sel !== currentQuery) {
+                  searchWithQuery(sel);
+                } else {
+                  closeSearch();
+                }
+              } else {
+                openSearch();
+              }
+            });
+          }
+
+          document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && searchBar.classList.contains('open')) {
+              closeSearch();
+            }
+          });
+        })();
         """
     }
 
@@ -1467,6 +1997,27 @@ public enum PreviewHTMLBuilder {
             // Unknown behavior, fall back to autoCopy
             return buildCopyBehaviorScript("autoCopy")
         }
+    }
+
+    /// Generates CSS token class rules from the TokenType enum.
+    /// Using the enum ensures new token types produce a compiler error in hex(for:)
+    /// and must be added here for CSS coverage.
+    static func tokenCSSRules() -> String {
+        // Extra per-token CSS (beyond just color)
+        let extraStyles: [TokenType: String] = [
+            .builtin: " font-style: italic;",
+            .parameter: " font-style: italic;",
+        ]
+        return TokenType.allCases.map { token in
+            let varName: String
+            switch token {
+            case .constant:   varName = "--number"
+            case .identifier: varName = "--text"
+            default:          varName = "--\(token.rawValue)"
+            }
+            let extra = extraStyles[token] ?? ""
+            return ".tok-\(token.rawValue) { color: var(\(varName));\(extra) }"
+        }.joined(separator: "\n        ")
     }
 
     private static func escapeHTML(_ string: String) -> String {

@@ -19,6 +19,7 @@ struct SettingsView: View {
     @State private var previewCacheMaxMB: Double = Double(SharedSettings.shared.previewCacheMaxMB)
     @State private var previewCacheTTLSeconds: Double = Double(SharedSettings.shared.previewCacheTTLSeconds)
     @State private var copyBehavior: String = SharedSettings.shared.copyBehavior
+    @State private var showSearchButton: Bool = SharedSettings.shared.showSearchButton
 
     private let copyBehaviors: [(String, String, String)] = [
         ("autoCopy", "Auto-copy", "Copies text to clipboard when you release the mouse after selecting."),
@@ -156,6 +157,17 @@ struct SettingsView: View {
                         }
 
                         Text(copyBehaviors.first(where: { $0.0 == copyBehavior })?.2 ?? "")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Divider()
+
+                        Toggle("Show Find in Preview", isOn: $showSearchButton)
+                            .onChange(of: showSearchButton) { _, newValue in
+                                SharedSettings.shared.showSearchButton = newValue
+                            }
+
+                        Text("Adds a search button to the preview header. Because Quick Look intercepts keyboard input, you cannot type in the search field directly. Instead, select text in the preview and click the search icon to find matches, or use the Paste button to search for clipboard contents.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 

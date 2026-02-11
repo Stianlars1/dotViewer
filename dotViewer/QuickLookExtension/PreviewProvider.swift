@@ -176,6 +176,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 wordWrap: SharedSettings.shared.wordWrap,
                 markdownShowTOC: SharedSettings.shared.markdownShowTOC,
                 copyBehavior: SharedSettings.shared.copyBehavior,
+                showSearchButton: SharedSettings.shared.showSearchButton,
                 sourceDirectory: url.deletingLastPathComponent().path
             )
 
@@ -292,6 +293,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             wordWrap: SharedSettings.shared.wordWrap,
             markdownShowTOC: SharedSettings.shared.markdownShowTOC,
             copyBehavior: SharedSettings.shared.copyBehavior,
+            showSearchButton: SharedSettings.shared.showSearchButton,
             sourceDirectory: url.deletingLastPathComponent().path
         )
 
