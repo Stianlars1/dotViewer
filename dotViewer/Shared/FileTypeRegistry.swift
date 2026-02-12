@@ -668,7 +668,7 @@ public final class FileTypeRegistry: @unchecked Sendable {
         }
 
         let customs = SharedSettings.shared.customExtensions
-        if customs.contains(where: { $0.extensionName == lowered }) {
+        if customs.contains(where: { $0.extensionName == lowered || $0.filenameMatch?.lowercased() == lowered }) {
             return true
         }
 
@@ -678,11 +678,30 @@ public final class FileTypeRegistry: @unchecked Sendable {
     public func highlightLanguage(for ext: String) -> String? {
         let lowered = ext.lowercased()
 
+        // Check custom extensions first — enables overrides and filename mappings
         if let custom = SharedSettings.shared.customExtensions.first(where: { $0.extensionName == lowered }) {
             return custom.highlightLanguage
         }
 
         return extensionToType[lowered]?.highlightLanguage
+    }
+
+    /// Look up highlight language by exact filename (e.g., "Jenkinsfile").
+    public func highlightLanguageByFilename(_ filename: String) -> String? {
+        let lowered = filename.lowercased()
+        if let custom = SharedSettings.shared.customExtensions.first(where: { $0.filenameMatch?.lowercased() == lowered }) {
+            return custom.highlightLanguage
+        }
+        return nil
+    }
+
+    /// Look up display name by exact filename (e.g., "Jenkinsfile").
+    public func displayNameByFilename(_ filename: String) -> String? {
+        let lowered = filename.lowercased()
+        if let custom = SharedSettings.shared.customExtensions.first(where: { $0.filenameMatch?.lowercased() == lowered }) {
+            return custom.displayName
+        }
+        return nil
     }
 
     public func fileType(for ext: String) -> SupportedFileType? {

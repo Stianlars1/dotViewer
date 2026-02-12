@@ -4018,5 +4018,48 @@
     ],
     "highlightLanguage": "yaml",
     "category": "dataFormats"
+  },
+  {
+    "id": "jenkinsfile",
+    "displayName": "Jenkinsfile",
+    "extensions": [],
+    "filenames": [
+      "Jenkinsfile"
+    ],
+    "highlightLanguage": "bash",
+    "category": "shellAndTerminal"
+  },
+  {
+    "id": "caddyfile",
+    "displayName": "Caddyfile",
+    "extensions": [],
+    "filenames": [
+      "Caddyfile"
+    ],
+    "highlightLanguage": "nginx",
+    "category": "dataFormats"
+  },
+  {
+    "id": "gruntfile",
+    "displayName": "Gruntfile",
+    "extensions": [],
+    "filenames": [
+      "Gruntfile.js",
+      "Gruntfile.coffee"
+    ],
+    "highlightLanguage": "javascript",
+    "category": "dataFormats"
+  },
+  {
+    "id": "gulpfile",
+    "displayName": "Gulpfile",
+    "extensions": [],
+    "filenames": [
+      "gulpfile.js",
+      "gulpfile.ts",
+      "gulpfile.babel.js"
+    ],
+    "highlightLanguage": "javascript",
+    "category": "dataFormats"
   }
 ]

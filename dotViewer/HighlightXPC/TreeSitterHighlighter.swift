@@ -310,6 +310,11 @@ private extension TreeSitterHighlighter {
             configs[id] = LanguageConfig(id: id, language: language, query: query)
         }
 
+        // Aliases so picker IDs resolve to compiled grammars
+        if let cSharp = configs["c_sharp"] { configs["csharp"] = cSharp }
+        if let make = configs["make"] { configs["makefile"] = make }
+        if let objc = configs["objc"] { configs["objectivec"] = objc }
+
         return configs
     }
 

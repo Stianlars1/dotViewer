@@ -43,7 +43,8 @@ struct FileTypesView: View {
         }
         return customExtensions.filter { ext in
             ext.displayName.localizedCaseInsensitiveContains(searchText) ||
-            ext.extensionName.localizedCaseInsensitiveContains(searchText)
+            ext.extensionName.localizedCaseInsensitiveContains(searchText) ||
+            (ext.filenameMatch?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
     }
 
@@ -146,7 +147,7 @@ struct FileTypesView: View {
                     }
                 }
 
-                Text("Custom extensions apply highlighting to files that already reach dotViewer. Most common developer file extensions are supported out of the box.")
+                Text("Custom mappings apply highlighting to files that already reach dotViewer. Most common developer file extensions are supported out of the box.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
@@ -248,27 +249,59 @@ private struct CustomExtensionRow: View {
     let onEdit: () -> Void
     let onDelete: () -> Void
 
+    private var isOverride: Bool {
+        !customExtension.isFilenameMapping &&
+        FileTypeRegistry.shared.fileType(for: customExtension.extensionName) != nil
+    }
+
+    private var overriddenTypeName: String? {
+        guard isOverride else { return nil }
+        return FileTypeRegistry.shared.fileType(for: customExtension.extensionName)?.displayName
+    }
+
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: "doc.badge.plus")
-                .foregroundStyle(.orange)
+            Image(systemName: customExtension.isFilenameMapping ? "doc.text" : "doc.badge.plus")
+                .foregroundStyle(isOverride ? .blue : .orange)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(customExtension.displayName)
                     .fontWeight(.medium)
 
                 HStack(spacing: 8) {
-                    Text(".\(customExtension.extensionName)")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    if let filename = customExtension.filenameMatch {
+                        Text(filename)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    } else {
+                        Text(".\(customExtension.extensionName)")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
 
-                    Text(customExtension.highlightLanguage.uppercased())
+                    if isOverride {
+                        Text("OVERRIDE")
+                            .font(.caption2)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.blue.opacity(0.1))
+                            .foregroundStyle(.blue)
+                            .clipShape(Capsule())
+                    } else {
+                        Text(customExtension.highlightLanguage.uppercased())
+                            .font(.caption2)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(.orange.opacity(0.1))
+                            .foregroundStyle(.orange)
+                            .clipShape(Capsule())
+                    }
+                }
+
+                if let overrideName = overriddenTypeName {
+                    Text("Overrides built-in: \(overrideName)")
                         .font(.caption2)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(.orange.opacity(0.1))
-                        .foregroundStyle(.orange)
-                        .clipShape(Capsule())
+                        .foregroundStyle(.secondary)
                 }
             }
 
@@ -298,6 +331,8 @@ private struct EditCustomExtensionSheet: View {
     @State private var extensionName: String
     @State private var displayName: String
     @State private var selectedLanguage: String
+    @State private var filenameName: String
+    @State private var isFilenameMode: Bool
 
     let customExtension: CustomExtension
     let onSave: (CustomExtension) -> Void
@@ -308,12 +343,14 @@ private struct EditCustomExtensionSheet: View {
         _extensionName = State(initialValue: customExtension.extensionName)
         _displayName = State(initialValue: customExtension.displayName)
         _selectedLanguage = State(initialValue: customExtension.highlightLanguage)
+        _filenameName = State(initialValue: customExtension.filenameMatch ?? "")
+        _isFilenameMode = State(initialValue: customExtension.isFilenameMapping)
     }
 
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Text("Edit Custom Extension")
+                Text(isFilenameMode ? "Edit Filename Mapping" : "Edit Custom Extension")
                     .font(.headline)
                 Spacer()
                 Button {
@@ -329,15 +366,24 @@ private struct EditCustomExtensionSheet: View {
             Divider()
 
             Form {
-                Section {
-                    HStack {
-                        Text(".")
-                            .foregroundStyle(.secondary)
-                        TextField("Extension", text: $extensionName)
+                if isFilenameMode {
+                    Section {
+                        TextField("Filename", text: $filenameName)
                             .textFieldStyle(.plain)
+                    } header: {
+                        Text("Filename")
                     }
-                } header: {
-                    Text("File Extension")
+                } else {
+                    Section {
+                        HStack {
+                            Text(".")
+                                .foregroundStyle(.secondary)
+                            TextField("Extension", text: $extensionName)
+                                .textFieldStyle(.plain)
+                        }
+                    } header: {
+                        Text("File Extension")
+                    }
                 }
 
                 Section {
@@ -349,7 +395,7 @@ private struct EditCustomExtensionSheet: View {
                 Section {
                     Picker("Language", selection: $selectedLanguage) {
                         ForEach(HighlightLanguage.all) { lang in
-                            Text(lang.displayName).tag(lang.id)
+                            Text(lang.pickerDisplayName).tag(lang.id)
                         }
                     }
                     .pickerStyle(.menu)
@@ -369,12 +415,24 @@ private struct EditCustomExtensionSheet: View {
                 Spacer()
 
                 Button("Save") {
-                    let updated = CustomExtension(
-                        id: customExtension.id,
-                        extensionName: extensionName,
-                        displayName: displayName,
-                        highlightLanguage: selectedLanguage
-                    )
+                    let updated: CustomExtension
+                    if isFilenameMode {
+                        let name = filenameName.trimmingCharacters(in: .whitespaces)
+                        updated = CustomExtension(
+                            id: customExtension.id,
+                            extensionName: name.lowercased(),
+                            displayName: displayName,
+                            highlightLanguage: selectedLanguage,
+                            filenameMatch: name
+                        )
+                    } else {
+                        updated = CustomExtension(
+                            id: customExtension.id,
+                            extensionName: extensionName,
+                            displayName: displayName,
+                            highlightLanguage: selectedLanguage
+                        )
+                    }
                     onSave(updated)
                     dismiss()
                 }
