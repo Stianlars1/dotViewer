@@ -15,7 +15,7 @@ on the next line (two trailing spaces).
 
 Visit [GitHub](https://github.com) for more info. Here's an image:
 
-![Placeholder](https://via.placeholder.com/400x100)
+![Placeholder](https://placehold.co/400x100)
 
 ## Blockquotes
 

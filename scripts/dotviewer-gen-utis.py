@@ -419,7 +419,9 @@ def main():
     total = len(system) + len(vendor) + len(already_custom) + len(needs_export)
     print(f"  Total:                           {total}")
 
-    # Build exports for ALL extensions needing them
+    # Build exports for ALL extensions needing them (including "already custom"
+    # entries that are in KNOWN_UTIS with our prefix but may be missing from
+    # UTExportedTypeDeclarations in project.yml)
     new_exports = []
     for ext, info in sorted(needs_export.items()):
         uti_name = make_uti_name(ext)
@@ -429,6 +431,15 @@ def main():
             "description": info["display"],
             "conforms_to": get_conformance(info["lang"]),
         })
+    for ext, uti in sorted(already_custom.items()):
+        info = extensions.get(ext, {"lang": "", "display": ext})
+        new_exports.append({
+            "ext": ext,
+            "identifier": uti,
+            "description": info["display"],
+            "conforms_to": get_conformance(info["lang"]),
+        })
+    new_exports.sort(key=lambda e: e["ext"])
 
     # Build complete QLSupportedContentTypes
     all_utis = set(BASE_CONTENT_TYPES)

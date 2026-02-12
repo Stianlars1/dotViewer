@@ -299,7 +299,7 @@ public struct ThemePalette: Equatable, Sendable {
         isDark: true,
         background: "#0E0E10",
         text: "#E0E0E0",
-        comment: "#5F5F5F",
+        comment: "#808080",
         keyword: "#C678DD",
         string: "#98C379",
         number: "#D19A66",

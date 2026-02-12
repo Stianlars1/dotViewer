@@ -123,13 +123,15 @@ public enum MarkdownRenderer {
                 && !trimmed.hasPrefix(">") && !isListItem(trimmed) {
                 let nextTrimmed = lines[i + 1].trimmingCharacters(in: .whitespaces)
                 if !nextTrimmed.isEmpty && nextTrimmed.allSatisfy({ $0 == "=" }) && nextTrimmed.count >= 2 {
-                    html += "<h1>\(processInline(trimmed))</h1>\n"
+                    let slug = generateSlug(trimmed)
+                    html += "<h1 id=\"\(slug)\">\(processInline(trimmed))</h1>\n"
                     i += 2
                     continue
                 }
                 if !nextTrimmed.isEmpty && nextTrimmed.allSatisfy({ $0 == "-" }) && nextTrimmed.count >= 2
                     && !isHorizontalRule(trimmed) {
-                    html += "<h2>\(processInline(trimmed))</h2>\n"
+                    let slug = generateSlug(trimmed)
+                    html += "<h2 id=\"\(slug)\">\(processInline(trimmed))</h2>\n"
                     i += 2
                     continue
                 }

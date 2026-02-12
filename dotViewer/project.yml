@@ -279,6 +279,15 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - basic
+          - UTTypeIdentifier: com.stianlars1.dotviewer.batch
+            UTTypeDescription: MS DOS Batch
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bat
+                - cmd
           - UTTypeIdentifier: com.stianlars1.dotviewer.bb
             UTTypeDescription: Blitz Basic
             UTTypeConformsTo:
@@ -741,6 +750,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - eml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.env
+            UTTypeDescription: Environment Variables
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - env
           - UTTypeIdentifier: com.stianlars1.dotviewer.ent
             UTTypeDescription: XML
             UTTypeConformsTo:
@@ -901,6 +917,16 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - frink
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fsharp
+            UTTypeDescription: F#
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fs
+                - fsx
+                - fsi
           - UTTypeIdentifier: com.stianlars1.dotviewer.fstab
             UTTypeDescription: fstab config file
             UTTypeConformsTo:
@@ -1249,6 +1275,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - jsp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jsx
+            UTTypeDescription: JSX
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jsx
           - UTTypeIdentifier: com.stianlars1.dotviewer.kdev3
             UTTypeDescription: INI
             UTTypeConformsTo:
@@ -2665,6 +2699,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - tsql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.typescript
+            UTTypeDescription: TypeScript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cts
           - UTTypeIdentifier: com.stianlars1.dotviewer.ttcn3
             UTTypeDescription: TTCN3
             UTTypeConformsTo:
@@ -2707,6 +2749,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - vala
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vb
+            UTTypeDescription: Visual Basic
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vb
           - UTTypeIdentifier: com.stianlars1.dotviewer.vbs
             UTTypeDescription: Visual Basic
             UTTypeConformsTo:

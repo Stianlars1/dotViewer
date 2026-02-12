@@ -27,14 +27,14 @@ final class MarkdownRendererTests: XCTestCase {
     func testSetextHeadingH1() {
         let md = "Title\n====="
         let html = MarkdownRenderer.renderHTML(from: md)
-        XCTAssertTrue(html.contains("<h1>"))
+        XCTAssertTrue(html.contains("<h1 id=\"title\">"))
         XCTAssertTrue(html.contains("Title"))
     }
 
     func testSetextHeadingH2() {
         let md = "Subtitle\n--------"
         let html = MarkdownRenderer.renderHTML(from: md)
-        XCTAssertTrue(html.contains("<h2>"))
+        XCTAssertTrue(html.contains("<h2 id=\"subtitle\">"))
         XCTAssertTrue(html.contains("Subtitle"))
     }
 

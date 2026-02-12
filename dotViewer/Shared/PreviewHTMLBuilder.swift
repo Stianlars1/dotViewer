@@ -109,6 +109,7 @@ public enum PreviewHTMLBuilder {
         <aside id="toc-panel" class="toc-sidebar" style="display:none;">
           <div class="toc-header">
             <span class="toc-title">Contents</span>
+            <span class="toc-close" id="toc-close">&times;</span>
           </div>
           <div class="toc-content">\(tocHTML)</div>
         </aside>
@@ -841,6 +842,9 @@ public enum PreviewHTMLBuilder {
         }
 
         .toc-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           padding: 10px 12px;
           font-size: 11px;
           font-weight: 600;
@@ -852,6 +856,14 @@ public enum PreviewHTMLBuilder {
           top: 0;
           background: var(--surface);
         }
+
+        .toc-close {
+          cursor: pointer;
+          font-size: 16px;
+          line-height: 1;
+          opacity: 0.6;
+        }
+        .toc-close:hover { opacity: 1; }
 
         .toc-content {
           padding: 6px 0;
@@ -1182,9 +1194,22 @@ public enum PreviewHTMLBuilder {
             });
 
             document.addEventListener('copy', function(e) {
-              const sel = window.getSelection().toString();
-              if (sel.length > 0) {
-                e.clipboardData.setData('text/plain', sel);
+              const sel = window.getSelection();
+              if (sel.rangeCount === 0 || sel.toString().length === 0) return;
+              const range = sel.getRangeAt(0);
+              const fragment = range.cloneContents();
+              const lines = fragment.querySelectorAll('.line');
+              let text;
+              if (lines.length > 0) {
+                text = Array.from(lines).map(function(line) {
+                  const codeLine = line.querySelector('.code-line');
+                  return codeLine ? codeLine.textContent : line.textContent;
+                }).join('\\n');
+              } else {
+                text = sel.toString();
+              }
+              if (text.length > 0) {
+                e.clipboardData.setData('text/plain', text);
                 e.preventDefault();
                 showToast('Copied selection');
               }
@@ -1290,6 +1315,15 @@ public enum PreviewHTMLBuilder {
             tocToggle.classList.toggle('active', !isVisible);
             if (!isVisible) updateActiveTOCLink();
           });
+
+          const tocClose = document.getElementById('toc-close');
+          if (tocClose) {
+            tocClose.addEventListener('click', function() {
+              tocPanel.style.display = 'none';
+              if (tocResizeHandle) tocResizeHandle.style.display = 'none';
+              tocToggle.classList.remove('active');
+            });
+          }
 
           tocPanel.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
@@ -1398,9 +1432,22 @@ public enum PreviewHTMLBuilder {
         });
 
         document.addEventListener('copy', function(e) {
-          const sel = window.getSelection().toString();
-          if (sel.length > 0) {
-            e.clipboardData.setData('text/plain', sel);
+          const sel = window.getSelection();
+          if (sel.rangeCount === 0 || sel.toString().length === 0) return;
+          const range = sel.getRangeAt(0);
+          const fragment = range.cloneContents();
+          const lines = fragment.querySelectorAll('.line');
+          let text;
+          if (lines.length > 0) {
+            text = Array.from(lines).map(function(line) {
+              const codeLine = line.querySelector('.code-line');
+              return codeLine ? codeLine.textContent : line.textContent;
+            }).join('\\n');
+          } else {
+            text = sel.toString();
+          }
+          if (text.length > 0) {
+            e.clipboardData.setData('text/plain', text);
             e.preventDefault();
             showToast('Copied selection');
           }

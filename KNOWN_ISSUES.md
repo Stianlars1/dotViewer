@@ -32,9 +32,11 @@
 
 **Progress (2026-02-09)**: Added `ThumbnailSyntaxColorizer` to `TextThumbnailRenderer.swift` — regex-based colorizer that identifies comments, strings, keywords (100+), numbers, and types (CamelCase heuristic) per token. Thumbnails now show multi-color syntax highlighting instead of single-color text, significantly improving visual parity with previews.
 
-**Remaining gap**: Regex-based colorizer is an approximation — it won't match tree-sitter accuracy for all languages. Color mapping uses ThemePalette but font weight/style differences remain.
+**Progress (2026-02-11)**: Added bold/italic font styling to thumbnails — keywords bold, builtins italic, types bold, etc. Thumbnails now match preview font weight/style. Dark mode fixed (KI-011).
 
-**Reproduction**: Compare a file's Finder column-view thumbnail with its spacebar Quick Look preview. Colors now match closely; fine rendering differences (anti-aliasing, font metrics) remain.
+**Remaining gap**: Regex-based colorizer is an approximation — it won't match tree-sitter accuracy for all languages. Anti-aliasing and fine font metric differences remain between CoreGraphics and WebKit rendering.
+
+**Reproduction**: Compare a file's Finder column-view thumbnail with its spacebar Quick Look preview. Colors and font weights now match closely; fine rendering differences (anti-aliasing, font metrics) remain.
 
 **Acceptance criteria**: Thumbnails should be visually consistent with preview output — same theme colors, proportional font sizing, and readable syntax highlighting at typical Finder thumbnail sizes.
 
@@ -44,8 +46,8 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | Medium |
-| **Status** | Partially Fixed |
+| **Priority** | Low |
+| **Status** | Mostly Fixed |
 
 **Impact**: When viewing markdown files in raw mode, the preview shows plain source text without meaningful visual structure. Headers, lists, and code blocks are not visually differentiated.
 
@@ -53,9 +55,11 @@
 
 **Progress (2026-02-09)**: Added text-semantic capture mappings in TreeSitterHighlighter.swift (`text.title` → keyword, `text.literal` → string, `text.uri` → link, `text.emphasis` → type, `text.strong` → keyword, `text.reference` → variable). Fixed markdown.scm to remove fenced_code_block from `@text.literal` group. Raw mode now shows basic structural differentiation via colors.
 
-**Remaining gap**: Structure is color-differentiated but not size/weight-differentiated. Headers aren't larger/bolder, code blocks don't have background. This would require CSS-level semantic targeting (e.g., `span.keyword` inside markdown getting different font-weight), which is outside the current token→CSS architecture.
+**Progress (2026-02-11)**: Added `data-language="markdown"` scoped CSS rules for RAW mode — headings get larger font sizes and bold weight, code spans get background + border, emphasis gets italic, strong gets bold. CSS is generated from TokenType enum via `tokenCSSRules()`. RAW mode now has both color AND size/weight differentiation.
 
-**Reproduction**: Preview any `.md` file with headers, lists, and code blocks → raw mode shows color-coded but not structurally distinct text.
+**Remaining gap**: Minor — fenced code block backgrounds and list indentation are not yet styled in RAW mode. Overall readability is good.
+
+**Reproduction**: Preview any `.md` file with headers, lists, and code blocks → raw mode shows structurally distinct text with size/weight hierarchy.
 
 **Acceptance criteria**: Raw mode should visually differentiate markdown structural elements (headers larger/bolder, code blocks with background, lists indented) while still showing the raw markdown syntax characters.
 
@@ -91,14 +95,16 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | High |
-| **Status** | Fixed |
+| **Priority** | Medium |
+| **Status** | Mostly Fixed |
 
 **Impact**: Text files with extensions not in our registry (or not mapped to a system UTI in QLSupportedContentTypes) show the generic white document icon instead of a syntax-highlighted thumbnail.
 
-**Root cause**: Quick Look matches on exact UTI, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called.
+**Root cause**: Quick Look matches on **exact UTI**, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called. Despite `public.data` being listed, it does NOT catch dynamic UTIs (`dyn.*`) — see KI-010.
 
-**Fix (2026-02-09)**: `public.data` already present in QLSupportedContentTypes for both preview and thumbnail extensions, serving as a catch-all. Combined with `looksTextual` binary gating, this ensures unknown text files get dotViewer previews while binary files are rejected.
+**Fix (2026-02-10)**: Exhaustive UTI coverage expansion — 396 custom UTI exports + ~64 system + ~63 vendor UTIs = 501 entries in QLSupportedContentTypes, covering all 561 extensions in DefaultFileTypes.json. Combined with `looksTextual` binary gating, this ensures all registered text files get dotViewer previews.
+
+**Remaining gap**: Files with extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) get `dyn.*` UTIs that don't match any entry. This is an inherent macOS Quick Look limitation — no `.appex` extension can catch truly unknown file types. See KI-010.
 
 ---
 
@@ -106,8 +112,8 @@
 
 | Field | Value |
 |-------|-------|
-| **Priority** | Medium |
-| **Status** | Partially Fixed |
+| **Priority** | Low |
+| **Status** | Mostly Fixed |
 
 **Impact**: The Quick Look spacebar preview and the Finder thumbnail for the same file may show different theme colors, font sizes, or layout. Changes to PreviewHTMLBuilder CSS don't automatically propagate to TextThumbnailRenderer.
 
@@ -115,9 +121,11 @@
 
 **Progress (2026-02-09)**: Added `ThumbnailSyntaxColorizer` — thumbnails now use per-token coloring (keywords, strings, comments, numbers, types) matching the same ThemePalette colors used in previews. Visual parity significantly improved.
 
-**Remaining gap**: Font weight/style (bold keywords, italic builtins) not replicated in thumbnail renderer. Regex-based colorizer may disagree with tree-sitter on token boundaries.
+**Progress (2026-02-11)**: Added bold/italic font styling to thumbnails — keywords bold, builtins italic, types bold, etc. via `NSFont.Weight` and `NSFontDescriptor.SymbolicTraits`. Thumbnails now respect dark mode via `UserDefaults.AppleInterfaceStyle` (see KI-011).
 
-**Reproduction**: Change theme in settings → compare spacebar preview colors with Finder thumbnail colors for the same file. Colors now match closely.
+**Remaining gap**: Regex-based colorizer may disagree with tree-sitter on token boundaries for complex syntax. CSS-specific features (search highlights, line highlighting) are inherently not available in thumbnails.
+
+**Reproduction**: Change theme in settings → compare spacebar preview colors with Finder thumbnail colors for the same file. Colors and font weights now match closely.
 
 **Acceptance criteria**: Both rendering paths should produce visually consistent output for the same file/theme combination.
 
@@ -245,6 +253,8 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 
 **Remaining gap**: Truly novel extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) still won't reach our extension. This is an inherent limitation of macOS Quick Look — there is no catch-all mechanism for `.appex` extensions. No Quick Look extension (sbarex, Peek, QLStephen) has solved this; QLStephen's `.qlgenerator` approach is dead on macOS 15.
 
+**User-facing limitation**: Custom file types added via Settings → File Types only work for the 561 extensions already in DefaultFileTypes.json. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug. See `docs/custom-file-types-design.md` for planned improvements (filename matching, override built-ins, multi-dot extensions).
+
 **Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 561 extensions in the registry. Only completely unknown extensions remain unroutable.
 
 ---
@@ -269,12 +279,83 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 | Field | Value |
 |-------|-------|
 | **Priority** | Medium |
-| **Status** | Fixed |
+| **Status** | Partially Fixed (macOS limitation) |
 
 **Impact**: Links in rendered markdown (e.g., `[KNOWN_ISSUES.md](KNOWN_ISSUES.md)`) are styled as links but clicking them does nothing. Both relative file links and absolute HTTP links are non-functional.
 
 **Root cause**: Data-based Quick Look previews load HTML into quicklookd's WKWebView without a base URL. Relative links can't resolve, and the default WKWebView doesn't handle navigation for data-based content.
 
-**Fix (2026-02-11)**: Added JavaScript click handler for `<a>` tags in the rendered view. The source file's parent directory is injected into the HTML via `data-source-dir` attribute. Relative links are resolved to `file://` URLs against this directory, and `window.open(url, '_blank')` is used to request the system open the URL. Absolute HTTP links open in the default browser. Anchor links (`#heading`) continue to work for in-page navigation (TOC).
+**Progress (2026-02-11)**: Added JavaScript click handler for `<a>` tags in the rendered view. The source file's parent directory is injected into the HTML via `data-source-dir` attribute. Relative links are resolved to `file://` URLs against this directory, and `window.open(url, '_blank')` is used to request the system open the URL. Absolute HTTP links open in the default browser. Anchor links (`#heading`) continue to work for in-page navigation (TOC).
 
-**Limitation**: `window.open()` depends on quicklookd's WKWebView allowing new window requests. If quicklookd blocks this, links will remain non-functional — this would be a macOS platform limitation.
+**Remaining gap**: `window.open()` is blocked by quicklookd's WKWebView — it does not allow new window requests from data-based previews. This is a macOS platform limitation. Links are correctly resolved and styled, but clicking them has no effect. Anchor links (`#heading`) for in-page TOC navigation DO work.
+
+---
+
+## KI-013 — TOC sidebar has no close button
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Low |
+| **Status** | Fixed |
+
+**Impact**: The Table of Contents sidebar in rendered markdown mode had a title span ("Contents") but no close button. Users had to use the header TOC toggle button to dismiss the sidebar.
+
+**Fix (2026-02-12)**: Added a close button (×) to the TOC sidebar header with flex layout. Click handler hides the sidebar and deactivates the header toggle button.
+
+---
+
+## KI-014 — Line numbers included when copying multi-line text selections
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Low |
+| **Status** | Fixed |
+
+**Impact**: When users drag-selected multiple lines in the preview, the copied text included line numbers despite them being styled with `user-select: none`.
+
+**Root cause**: WebKit does not honor `user-select: none` on elements that span a cross-line drag selection.
+
+**Fix (2026-02-12)**: Replaced the `copy` event handler with one that intercepts the clipboard write, extracts only `.code-line` content from the selection fragment (skipping `.ln` line-number spans), and writes clean text. Falls back to raw selection text for non-code content (e.g., rendered markdown).
+
+---
+
+## KI-015 — Missing UTI declarations for .bat, .jsx, .vb
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Fixed |
+
+**Impact**: Files with `.bat`, `.jsx`, and `.vb` extensions were not routed to dotViewer despite being listed in QLSupportedContentTypes. These extensions lacked corresponding `UTExportedTypeDeclarations` entries.
+
+**Root cause**: `scripts/dotviewer-gen-utis.py` classified these extensions as "already custom" (since they were in the `KNOWN_UTIS` map) but didn't generate export declarations for them.
+
+**Fix (2026-02-12)**: Fixed `dotviewer-gen-utis.py` to also generate export entries for "already custom" UTIs. Added `UTExportedTypeDeclarations` to `project.yml` for `batch` (.bat, .cmd), `jsx`, `vb`, `env`, `fsharp` (.fs, .fsx, .fsi), and `typescript` (.cts). Total custom exports: 402 (was 396).
+
+---
+
+## KI-016 — Blackout theme poor comment contrast
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Low |
+| **Status** | Fixed |
+
+**Impact**: Comments in the Blackout theme were difficult to read. The comment color (`#5F5F5F`) on the dark background (`#0E0E10`) had a contrast ratio of approximately 2.5:1, well below the WCAG AA minimum of 4.5:1.
+
+**Fix (2026-02-12)**: Changed Blackout comment color from `#5F5F5F` to `#808080`, raising contrast ratio to ~5.0:1 against `#0E0E10` (exceeds WCAG AA 4.5:1).
+
+---
+
+## KI-017 — TOC scroll spy / active heading tracking not working
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Fixed |
+
+**Impact**: The Table of Contents sidebar in rendered markdown mode did not highlight the currently visible heading as the user scrolled. Setext-style headings were invisible to the scroll spy.
+
+**Root cause**: Setext headings (underline with `===`/`---`) in `MarkdownRenderer.swift` were emitted without `id` attributes. The scroll spy JavaScript queries for `h1[id], h2[id]...` — headings without `id` were skipped.
+
+**Fix (2026-02-12)**: Added `id` attributes (via `generateSlug()`) to setext heading output in `MarkdownRenderer.swift`, matching the existing ATX heading behavior. TOC links and scroll spy now work for both heading styles.

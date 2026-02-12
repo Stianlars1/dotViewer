@@ -92,21 +92,24 @@ Settings UI for the extension (font size, theme). Source in `dotViewer/App/`.
 
 Canonical scope — what this product must support:
 
-- **Syntax highlighting**: tree-sitter grammars + heuristic fallback, 18-token color palette
-- **Markdown**: raw mode (structured/readable), rendered mode (Typora-quality HTML output)
-- **Thumbnails**: full-bleed Finder thumbnails, visually consistent with preview output
+- **Syntax highlighting**: tree-sitter grammars + heuristic fallback, 18-token color palette via `TokenType` enum
+- **Markdown**: raw mode (color + size/weight differentiation), rendered mode (Typora-quality HTML with clickable links)
+- **Thumbnails**: full-bleed Finder thumbnails with bold/italic token styling, dark mode aware
 - **Preview header**: file type badge, file size, copy-to-clipboard button, markdown mode toggle
+- **Search**: optional search bar with match highlighting and prev/next navigation (off by default)
+- **Line highlighting**: click line numbers to highlight, Shift+click for range selection
 - **Responsive sizing**: dynamic preview window dimensions based on content
 - **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
-- **Settings**: font size, theme, word wrap, line numbers, copy behavior (synced via App Group)
+- **Settings**: font size, theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
 - **File type coverage**: 388 definitions, 561 extensions, 283 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams
 - **Sensitive file detection**: warn on .env, credentials, keys
+- **Print**: @media print CSS with file title, syntax colors, page breaks
 
 ## Key Concepts
 
-- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 501 UTIs covering all 561 extensions in DefaultFileTypes.json: 396 custom exports (`com.stianlars1.dotviewer.*`), ~64 system UTIs, ~63 vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
+- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 502 UTIs covering all 561 extensions in DefaultFileTypes.json: 402 custom exports (`com.stianlars1.dotviewer.*`), ~64 system UTIs, ~63 vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
 - **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 561 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
 - **Multi-dot file resolution**: `FileTypeResolution.bestKey()` tries full name → progressive prefix stripping → bare extension → intermediate segment scanning. For `.claude.json.backup.xxx`, this resolves to `json`.
 - **XPC protocol**: `HighlightServiceProtocol` — the QuickLookExtension calls `highlight(code:language:theme:showLineNumbers:requestId:reply:)` on the XPC service. The reply returns HTML as `NSData`.
@@ -136,7 +139,20 @@ Log filtering examples:
 
 ## Testing
 
-No unit test target. Testing is manual + log-based:
+### Unit Tests
+
+`dotViewerTests` target with 7 test classes covering Shared framework code:
+- `FileTypeRegistryTests` — registry loading, extension/filename lookups
+- `FileTypeResolutionTests` — `bestKey()` resolution for dotfiles, multi-dot files
+- `ThemePaletteTests` — theme color retrieval, token type coverage
+- `MarkdownRendererTests` — rendered HTML output for various markdown constructs
+- `PlistConverterTests` — binary plist → XML conversion
+- `FileAttributesTests` — `looksTextual` heuristic, file metadata
+- `TransportStreamDetectorTests` — MPEG-TS binary detection
+
+Run via: `xcodebuild test -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests`
+
+### Manual / Log-Based Testing
 
 1. **Smoke test**: `./scripts/dotviewer-ql-smoke.sh TestFiles/test.json` — triggers `qlmanage -p`, captures logs, greps for "HTML built"
 2. **E2E test**: `./TestFiles/run_e2e_test.sh` — streams logs while you preview files in Finder

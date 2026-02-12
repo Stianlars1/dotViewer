@@ -1,6 +1,6 @@
 # Changelog
 
-## v2.5 (2026-02-09) — Current
+## v2.5 (2026-02-11) — Current
 
 The production release. Tree-sitter-powered syntax highlighting via XPC service.
 
@@ -36,6 +36,18 @@ The production release. Tree-sitter-powered syntax highlighting via XPC service.
 - Multi-dot file resolution: intermediate segment scanning (e.g., `.claude.json.backup.xxx` → JSON highlighting)
 - Custom extension display names now shown correctly in preview header
 - Fixed 5 missing primary extensions in DefaultFileTypes.json (xml, plist, jsonc, ini, log)
+- Search in preview: optional search bar with match highlighting and prev/next navigation (off by default, toggle in Settings)
+- Line highlighting: click line numbers to highlight, Shift+click for range selection
+- TokenType enum with exhaustive color mapping — single source of truth for token→CSS rules
+- Thumbnail bold/italic token styling (keywords bold, builtins italic, etc.)
+- C/C++ split into separate file types (C++ files now get proper cpp grammar)
+- Highlight language aliases for PostgreSQL procedural languages (plperl, plpython, pltcl) and MXML
+- Markdown RAW mode: size/weight differentiation via data-language scoped CSS
+- Enhanced @media print CSS with file title header, syntax colors, page breaks
+- Removed non-functional print button (window.print() is a no-op in Quick Look)
+- Fixed Finder thumbnails ignoring dark mode — switched to UserDefaults AppleInterfaceStyle (KI-011)
+- Clickable links in rendered markdown preview — relative links resolve against source directory (KI-012)
+- Unit test target with 7 test classes: FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector
 
 ### v2.5 development timeline
 
@@ -46,6 +58,7 @@ The production release. Tree-sitter-powered syntax highlighting via XPC service.
 - **2026-02-10**: Cmd+C CGEventTap helper (CopyHelper) attempted and reverted. Built unsandboxed background .app with CGEventTap + AXUIElement, embedded in Contents/Helpers/. Blocked by macOS TCC: sandbox inheritance from parent, "responsible process" attribution to sandboxed host app, Accessibility list registration failures. See KI-009 for full research findings and untried alternatives.
 - **2026-02-10**: Configurable copy behavior presets (KI-009 v2) — 8 selectable modes: auto-copy (default), floating copy button, toast with copy button, tap to confirm, hold-to-copy, shake to copy, auto-copy with undo, off. Setting in SharedSettings synced via App Group. JS generated per-preset via IIFEs in `PreviewHTMLBuilder.buildCopyBehaviorScript()`. Picker added to Settings → Preview UI with dynamic description text.
 - **2026-02-10**: Fixed app icon not showing — `project.yml` referenced `dotIcon` but actual asset catalog is `dotViewerIcon.xcassets` / `dotViewerIcon.appiconset`. Updated both `ASSETCATALOG_COMPILER_APPICON_NAME` and resources path.
+- **2026-02-11**: Split C/C++ into separate file types — C++ files now get cpp grammar instead of shared C grammar. Added highlight language aliases for plperl, plpython, pltcl, mxml. Added `TokenType` enum as single source of truth for token→CSS mapping — `tokenCSSRules()` generates all CSS from the enum. Thumbnail bold/italic token styling via `NSFont.Weight` and `NSFontDescriptor.SymbolicTraits`. Search in preview: optional search bar (off by default), uses text selection + paste since Quick Look intercepts keyboard input, highlights matches with prev/next navigation. Line highlighting: click line numbers to highlight lines, Shift+click for range selection. Markdown RAW mode now has size/weight differentiation via `data-language="markdown"` scoped CSS. Enhanced @media print: file title header, syntax colors, page breaks; removed non-functional print button. Fixed Finder thumbnail dark mode (KI-011): `systemIsDark()` reads `AppleInterfaceStyle` from UserDefaults instead of unreliable `effectiveAppearance`. Added clickable links in rendered markdown (KI-012): JS click handler resolves relative links against source directory via `data-source-dir`. Unit test target: 7 XCTestCase classes covering FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector.
 - **2026-02-10**: File type routing investigation and fixes. Confirmed Quick Look uses exact UTI matching (not conformance) — `public.data` does NOT act as a catch-all for dynamic UTIs. Fixed `bestKey()` to resolve multi-dot files (`.claude.json.backup.xxx` → `json`) via intermediate segment scanning. Added `displayName(for:)` to FileTypeRegistry so custom extensions show their user-specified name in the header. Fixed 5 missing primary extensions in DefaultFileTypes.json (`xml`, `plist`, `jsonc`, `ini`, `log`). Documented UTI routing limitation as KI-010.
 - **2026-02-10**: Exhaustive UTI coverage expansion (B-020 / KI-010). Built `scripts/dotviewer-gen-utis.py` to generate UTI declarations from DefaultFileTypes.json. Expanded from ~78 → 501 QLSupportedContentTypes: 396 `UTExportedTypeDeclarations` for extensions without system UTIs, ~64 system + ~63 vendor UTIs. Initial version included 313 pre-computed `dyn.*` fallback codes, but these were non-functional (0% match rate against macOS dynamic UTIs) and removed in v2. Added 63 new file types (Gleam, GraphQL, Astro, Prisma, Mojo + 58 from sbarex/SourceCodeSyntaxHighlight user requests: shaders, PL/SQL, Bazel, Razor, Liquid, JSON5, JSONL, KML, WSDL, XAML, Apple .strings, Svelte, Odin, Elvish, MQL, Gherkin, SRT, and more). Registry now covers 388 entries with 561 extensions. Clarified Settings toggle descriptions and added explanatory note in custom file types UI.
 

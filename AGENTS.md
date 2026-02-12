@@ -71,6 +71,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 | 2026-02-10 | Copy behavior fixes | Fixed shakeToCopy (per-event dx comparison replaced with extreme-point tracking for cumulative directional movement). Fixed autoCopyUndo (clipboard.readText() blocked in sandbox; added internal lastCopiedText fallback tracking). |
 | 2026-02-10 | App icon fix | project.yml referenced `dotIcon` but actual xcassets is `dotViewerIcon`. Updated ASSETCATALOG_COMPILER_APPICON_NAME and resources path. Icon now compiles into bundle correctly. |
 | 2026-02-10 | File type routing | Deep investigation of custom file types and Quick Look UTI routing. Key finding: Quick Look uses exact UTI matching (not conformance) — `public.data` in QLSupportedContentTypes does NOT catch dynamic UTIs. Fixed `bestKey()` multi-dot resolution (intermediate segment scanning), added `displayName(for:)` for custom extension display names, fixed 5 missing primary extensions in DefaultFileTypes.json (xml, plist, jsonc, ini, log). Documented as KI-010. |
+| 2026-02-11 | File types | Split C/C++ into separate file type entries — C++ files now get cpp tree-sitter grammar. Added highlight language aliases (plperl→perl, plpython→python, pltcl→tcl, mxml→xml). |
+| 2026-02-11 | Token system | Added `TokenType` enum as single source of truth for all token→CSS mapping. `tokenCSSRules()` generates CSS from enum cases. Exhaustive color mapping per theme via `ThemePalette`. |
+| 2026-02-11 | Thumbnails | Added bold/italic token styling — keywords bold, builtins italic, types bold, etc. via `NSFont.Weight` and `NSFontDescriptor.SymbolicTraits`. Fixed dark mode (KI-011): `systemIsDark()` reads `AppleInterfaceStyle` from UserDefaults. |
+| 2026-02-11 | Preview UI | Search bar: optional (off by default), text selection + paste workflow, highlights matches with prev/next navigation. Line highlighting: click line numbers, Shift+click for range. Markdown RAW CSS: size/weight differentiation. Print CSS: file title header, syntax colors, page breaks. Removed non-functional print button. Clickable markdown links (KI-012): JS handler resolves relative paths against source directory. |
+| 2026-02-11 | Testing | Added `dotViewerTests` unit test target with 7 XCTestCase classes: FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector. |
+| 2026-02-11 | Docs | Documentation audit: fixed KI-005/KI-010 contradiction, updated all docs to reflect 2026-02-11 state. |
 
 ## Notes
 
