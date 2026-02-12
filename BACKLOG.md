@@ -33,14 +33,16 @@ From v1 requirements and future direction.
 | B-021 | ~~Custom file types UX improvements~~ | ~~Done~~ | Completed 2026-02-10 — Added explanatory note in FileTypesView, clarified toggle descriptions in SettingsView. |
 | B-022 | Layout width customization / presets | Low | Allow users to choose preview content width (narrow, medium, wide, full) or set a custom max-width |
 | B-023 | Content alignment options | Low | Left-align vs centered content in preview, especially for narrow code files |
-| B-024 | Custom file types improvements (from design doc) | Medium | Override built-in types (confirmation dialog), filename-based mappings (Jenkinsfile, Dockerfile), multi-dot extensions (.env.local), language picker quality tiers. See `docs/custom-file-types-design.md` |
+| B-024 | ~~Custom file types improvements (from design doc)~~ | ~~Done~~ | Completed 2026-02-12 — Override built-in types with confirmation dialog, filename-based mappings (Jenkinsfile, Dockerfile), dots in extensions (.env.local), HighlightLanguage picker expanded 33→54 with quality tiers, shared `CustomExtensionValidation` enum, auto-suggest display name, override badges in file types list. See `docs/custom-file-types-design.md`. |
+| B-025 | ~~Markdown clickable links~~ | ~~Done~~ | Completed 2026-02-12 — Clicking links copies URL to clipboard with toast confirmation. Tooltip on hover. Relative links resolved to absolute file:// paths. KI-012. |
+| B-026 | ~~Synced font sizes~~ | ~~Done~~ | Completed 2026-02-12 — New `syncFontSizes` setting (default ON). Code and rendered markdown share one font size. Toggle in Settings > Appearance, disabled slider with note in Markdown settings when synced. |
 
 ## Technical Debt
 
 | ID | Title | Priority | Notes |
 |----|-------|----------|-------|
 | B-030 | 177 file types without tree-sitter grammar | Low | Fall back to heuristic highlighting; expected but could add more grammars over time |
-| B-031 | DefaultFileTypes.json full audit | Medium | Fixed 5 missing primary extensions (xml, plist, jsonc, ini, log). ~250 entries still unaudited. |
+| B-031 | ~~DefaultFileTypes.json full audit~~ | ~~Done~~ | Completed 2026-02-12 — 393 entries, all checks passed. Added 4 filename entries (Jenkinsfile, Caddyfile, Gruntfile, Gulpfile). Fixed 3 grammar aliases (csharp→c_sharp, makefile→make, objectivec→objc). |
 | B-032 | ~~ThemePalette ↔ CSS token sync~~ | ~~Mostly Done~~ | `TokenType` enum (2026-02-11) is now single source of truth — `tokenCSSRules()` generates CSS. TextThumbnailRenderer still uses separate mapping. |
 | B-033 | Thumbnail temp file cleanup | Low | PNG files written to NSTemporaryDirectory() with UUID filenames; OS cleans these but explicit cleanup would be cleaner |
 | B-034 | ~~Fix missing UTI declarations for .bat, .jsx, .vb~~ | ~~Done~~ | Completed 2026-02-12 — Fixed `dotviewer-gen-utis.py` to export "already custom" UTIs. Added 6 missing UTExportedTypeDeclarations (KI-015). |

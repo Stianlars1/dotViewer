@@ -253,7 +253,9 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 
 **Remaining gap**: Truly novel extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) still won't reach our extension. This is an inherent limitation of macOS Quick Look — there is no catch-all mechanism for `.appex` extensions. No Quick Look extension (sbarex, Peek, QLStephen) has solved this; QLStephen's `.qlgenerator` approach is dead on macOS 15.
 
-**User-facing limitation**: Custom file types added via Settings → File Types only work for the 561 extensions already in DefaultFileTypes.json. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug. See `docs/custom-file-types-design.md` for planned improvements (filename matching, override built-ins, multi-dot extensions).
+**Progress (2026-02-12)**: Custom file types now support overriding built-in types (with confirmation dialog), filename-based mappings (e.g., Jenkinsfile → groovy, Dockerfile → docker), and multi-dot extensions (e.g., `.env.local`). HighlightLanguage picker expanded from 33 to 54 entries with quality tiers. Shared `CustomExtensionValidation` logic ensures consistent validation across add/edit flows. Override badges shown in file types list. See `docs/custom-file-types-design.md`.
+
+**User-facing limitation**: Custom file types work for highlighting, display name, and override of any of the 561 extensions already in DefaultFileTypes.json. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug.
 
 **Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 561 extensions in the registry. Only completely unknown extensions remain unroutable.
 
@@ -279,15 +281,13 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 | Field | Value |
 |-------|-------|
 | **Priority** | Medium |
-| **Status** | Partially Fixed (macOS limitation) |
+| **Status** | Fixed (workaround — clipboard copy) |
 
 **Impact**: Links in rendered markdown (e.g., `[KNOWN_ISSUES.md](KNOWN_ISSUES.md)`) are styled as links but clicking them does nothing. Both relative file links and absolute HTTP links are non-functional.
 
-**Root cause**: Data-based Quick Look previews load HTML into quicklookd's WKWebView without a base URL. Relative links can't resolve, and the default WKWebView doesn't handle navigation for data-based content.
+**Root cause**: Data-based Quick Look previews load HTML into quicklookd's WKWebView without a base URL. Relative links can't resolve, and `window.open()` is blocked by quicklookd's WKWebView — it does not allow new window requests from data-based previews.
 
-**Progress (2026-02-11)**: Added JavaScript click handler for `<a>` tags in the rendered view. The source file's parent directory is injected into the HTML via `data-source-dir` attribute. Relative links are resolved to `file://` URLs against this directory, and `window.open(url, '_blank')` is used to request the system open the URL. Absolute HTTP links open in the default browser. Anchor links (`#heading`) continue to work for in-page navigation (TOC).
-
-**Remaining gap**: `window.open()` is blocked by quicklookd's WKWebView — it does not allow new window requests from data-based previews. This is a macOS platform limitation. Links are correctly resolved and styled, but clicking them has no effect. Anchor links (`#heading`) for in-page TOC navigation DO work.
+**Fix (2026-02-12)**: Clicking any link now copies the resolved URL to the clipboard and shows a toast confirmation ("Link copied to clipboard" for HTTP links, "Path copied to clipboard" for relative file links). Links also show a "Click to copy link" tooltip on hover. Relative links are resolved to absolute `file://` paths using the source file's directory. Anchor links (`#heading`) continue to work for in-page TOC navigation. `window.open()` is still attempted as a bonus (in case future macOS versions allow it).
 
 ---
 

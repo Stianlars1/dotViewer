@@ -100,7 +100,7 @@ Canonical scope — what this product must support:
 - **Line highlighting**: click line numbers to highlight, Shift+click for range selection
 - **Responsive sizing**: dynamic preview window dimensions based on content
 - **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
-- **Settings**: font size, theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
+- **Settings**: font size (synced between code and markdown by default), theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
 - **File type coverage**: 388 definitions, 561 extensions, 283 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams

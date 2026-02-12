@@ -7,6 +7,7 @@ struct MarkdownSettingsView: View {
     @State private var useSyntaxHighlightInRaw: Bool = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
     @State private var showTOC: Bool = SharedSettings.shared.markdownShowTOC
     @State private var renderFontSize: Double = SharedSettings.shared.markdownRenderFontSize
+    @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var customCSS: String = SharedSettings.shared.markdownCustomCSS
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
 
@@ -63,13 +64,23 @@ struct MarkdownSettingsView: View {
                         }
 
                         Slider(value: $renderFontSize, in: 10...24, step: 1)
+                            .disabled(syncFontSizes)
                             .onChange(of: renderFontSize) { _, newValue in
                                 SharedSettings.shared.markdownRenderFontSize = newValue
+                                if syncFontSizes {
+                                    SharedSettings.shared.fontSize = newValue
+                                }
                             }
 
-                        Text("Applies to rendered Markdown only.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        if syncFontSizes {
+                            Text("Synced with code font size — change in Settings > Appearance")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        } else {
+                            Text("Applies to rendered Markdown only.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
@@ -105,6 +116,10 @@ struct MarkdownSettingsView: View {
             .padding(32)
         }
         .navigationTitle("Markdown")
+        .onAppear {
+            syncFontSizes = SharedSettings.shared.syncFontSizes
+            renderFontSize = SharedSettings.shared.markdownRenderFontSize
+        }
     }
 }
 

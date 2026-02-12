@@ -131,6 +131,11 @@ public final class SharedSettings: @unchecked Sendable {
         set { markdownDefaultMode = newValue }
     }
 
+    public var syncFontSizes: Bool {
+        get { lock.withLock { defaults.object(forKey: "syncFontSizes") as? Bool ?? true } }
+        set { lock.withLock { defaults.set(newValue, forKey: "syncFontSizes") } }
+    }
+
     // MARK: - Markdown Settings
 
     public var markdownDefaultMode: String {
@@ -165,6 +170,10 @@ public final class SharedSettings: @unchecked Sendable {
     public var markdownRenderFontSize: Double {
         get {
             lock.withLock {
+                if defaults.object(forKey: "syncFontSizes") as? Bool ?? true {
+                    let codeFontSize = defaults.double(forKey: "fontSize")
+                    return codeFontSize > 0 ? codeFontSize : 13
+                }
                 let value = defaults.double(forKey: "markdownRenderFontSize")
                 return value > 0 ? value : 14
             }

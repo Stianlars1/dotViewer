@@ -6,6 +6,7 @@ struct SettingsView: View {
 
     @State private var selectedTheme: String = SharedSettings.shared.selectedTheme
     @State private var fontSize: Double = SharedSettings.shared.fontSize
+    @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var showLineNumbers: Bool = SharedSettings.shared.showLineNumbers
     @State private var wordWrap: Bool = SharedSettings.shared.wordWrap
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSizeBytes) / 1000.0
@@ -78,7 +79,22 @@ struct SettingsView: View {
                         Slider(value: $fontSize, in: 10...24, step: 1)
                             .onChange(of: fontSize) { _, newValue in
                                 SharedSettings.shared.fontSize = newValue
+                                if syncFontSizes {
+                                    SharedSettings.shared.markdownRenderFontSize = newValue
+                                }
                             }
+
+                        Toggle("Sync with Markdown Font Size", isOn: $syncFontSizes)
+                            .onChange(of: syncFontSizes) { _, newValue in
+                                SharedSettings.shared.syncFontSizes = newValue
+                                if newValue {
+                                    SharedSettings.shared.markdownRenderFontSize = fontSize
+                                }
+                            }
+
+                        Text("When enabled, code and rendered markdown use the same font size")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
 
                         Toggle("Show Line Numbers", isOn: $showLineNumbers)
                             .onChange(of: showLineNumbers) { _, newValue in

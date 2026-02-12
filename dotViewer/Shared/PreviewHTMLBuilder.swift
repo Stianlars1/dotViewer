@@ -1460,11 +1460,16 @@ public enum PreviewHTMLBuilder {
           }
         });
 
-        // Clickable links in rendered markdown
+        // Clickable links in rendered markdown — copies URL to clipboard
         (function() {
           const rv = document.getElementById('rendered-view');
           if (!rv) return;
           const sourceDir = document.body.getAttribute('data-source-dir') || '';
+          // Add tooltip hint to non-anchor links
+          rv.querySelectorAll('a[href]').forEach(function(a) {
+            var h = a.getAttribute('href');
+            if (h && !h.startsWith('#')) a.title = 'Click to copy link';
+          });
           rv.addEventListener('click', function(e) {
             const link = e.target.closest('a[href]');
             if (!link) return;
@@ -1473,14 +1478,22 @@ public enum PreviewHTMLBuilder {
             e.preventDefault();
             e.stopPropagation();
             let url = href;
+            let isFile = false;
             if (!/^https?:\\/\\//.test(href) && !/^file:\\/\\//.test(href)) {
               if (sourceDir) {
                 url = 'file://' + sourceDir + '/' + href;
+                isFile = true;
               } else {
                 return;
               }
             }
+            // Attempt direct open (may be blocked by quicklookd sandbox)
             window.open(url, '_blank');
+            // Copy URL to clipboard as reliable fallback
+            writeClipboard(url).then(function() {
+              var label = isFile ? 'Path' : 'Link';
+              showToast(label + ' copied to clipboard');
+            });
           });
         })();
 
