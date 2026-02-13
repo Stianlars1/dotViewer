@@ -1,0 +1,73 @@
+You are implementing a new Remotion composition for making a promotion video for dotViewer.
+
+Product source-of-truth repo (read-only data source for claims):
+- /Users/stian/Developer/macOS Apps/v2.5
+
+## Project root
+- ~/Developer/videos/dotViewer_claude_code_2
+
+Product source-of-truth repo (read-only data source for claims):
+- /Users/stian/Developer/macOS Apps/v2.5
+
+Goal:
+Generate and make a promo `DotViewerPromo` (16:9, 1920x1080, 40-50s, 60fps) with explicit coverage of ALL major product features and a higher-end visual style utilizing available components from Remotion Bits.
+
+Hard requirements:
+3) Must explicitly label every major feature on screen at least once:
+   - Syntax highlighting
+   - Markdown preview (RAW/RENDERED, TOC, links, task lists, tables)
+   - Quick Look integration
+   - Finder thumbnails
+   - Search
+   - Line highlighting
+   - 10+ themes
+   - Header UI
+   - Smart copy (8 behaviors)
+   - Configurable settings
+   - Custom file types
+   - Broad coverage stats
+   - Print support
+4) Use ayny of these Remotion Bits components:
+   - FlyingThroughWords
+   - ParticlesGrid
+   - CodeBlock
+   - WordByWord
+   - VariableSpeedTypewriter
+   - CursorFlyover
+   - AnimatedText
+- AnimatedCounter
+- TypeWriter
+- MatrixRain
+- ScrollingColumns
+- StaggeredMotion
+- GradientTransition
+- Particle System
+- Scene3D
+- StepResponsive
+But then make sure to read and leverage the skill at `~/.claude/skills/remotion-bits/SKILL.md`
+
+
+
+5) Visual direction: balanced hybrid (premium + energetic), not chaotic.
+6) Add voiceover + music tracks (use files from public/audio if present; gracefully fallback if missing).
+7) CTA must be tokenized, not final:
+   - Text: [CTA_TEXT]
+   - URL: [CTA_URL]
+
+Ensure all transitions are frame-driven Remotion animations (no CSS runtime animations).
+Ensure text readability and no overcrowding.
+
+Quality gates:
+- npm run lint passes
+- npx remotion render DotViewerPromoV2 succeeds
+- No stale hard-coded claims; claims must come from generated JSON
+- Include a short markdown file `PROMO_NOTES.md` summarizing:
+  - scene map
+  - feature coverage checklist
+  - claim source mapping
+  - asset gaps still needed
+
+When done:
+- Print changed files
+- Print exact render command
+- Print any missing asset filenames expected under public/**

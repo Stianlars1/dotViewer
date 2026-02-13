@@ -6,7 +6,7 @@ Derived from known issues — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md) for full de
 
 | ID | Title | Priority | Related |
 |----|-------|----------|---------|
-| B-001 | Markdown rendered mode — Typora-quality polish | Low | KI-004 — Parser rewritten, CSS polished, TOC sidebar added; minor typography refinements remain. KI-013 (TOC close button) and KI-017 (scroll spy) now fixed. |
+| B-001 | Markdown rendered mode — Typora-quality polish | Low | KI-004 — Parser rewritten, CSS polished, TOC sidebar added; minor typography refinements remain. KI-013 (TOC close button), KI-017 (scroll spy), KI-018 (TOC setting + JS TDZ) now fixed. TOC sidebar font syncs with render font size. |
 | B-002 | ~~Markdown raw mode — structural readability~~ | ~~Mostly Done~~ | KI-003 — Color + size/weight differentiation added 2026-02-11 via data-language scoped CSS. Minor polish remains. |
 | B-003 | ~~Thumbnail/preview visual parity~~ | ~~Done~~ | Completed 2026-02-11 — Per-token coloring + bold/italic styling + dark mode fix (KI-002, KI-006, KI-011) |
 | B-004 | ~~Catch-all UTI for unknown text extensions~~ | ~~Won't Fix~~ | Quick Look uses exact UTI matching (not conformance). `public.data` does NOT catch dynamic UTIs (`dyn.*`). No `.appex` mechanism exists to catch truly unknown extensions. Mitigated by exhaustive UTI coverage (501 entries). See KI-005, KI-010. |
@@ -20,7 +20,7 @@ From v1 requirements and future direction.
 | ID | Title | Priority | Notes |
 |----|-------|----------|-------|
 | B-010 | ~~Markdown rendered/raw toggle in preview header~~ | ~~Done~~ | Completed 2026-02-09 — toggle works for all markdown files including named files (README, CHANGELOG) |
-| B-019 | ~~Table of Contents for rendered markdown~~ | ~~Done~~ | Completed 2026-02-09 — sidebar TOC with heading navigation, toggle in header + settings, code-block-aware scanner |
+| B-019 | ~~Table of Contents for rendered markdown~~ | ~~Done~~ | Completed 2026-02-09 — sidebar TOC with heading navigation, toggle in header + settings, code-block-aware scanner. Fixed 2026-02-12: setting now fully gates feature (KI-018), font size syncs with render setting, Apple sidebar.left toggle icon. |
 | B-011 | ~~Automated test suite~~ | ~~Partial~~ | Completed 2026-02-11 — 7 unit test classes (FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector). XPC integration tests and snapshot tests remain. |
 | B-012 | App Store distribution | Medium | Requires sandboxing review, notarization, screenshots, listing |
 | B-013 | Print / export to PDF | Medium | From v1 PROJECT.md requirements |

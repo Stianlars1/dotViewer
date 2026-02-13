@@ -1,0 +1,117 @@
+[$remotion-best-practices](/Users/stian/.codex/skills/remotion-best-practices/SKILL.md)  
+Are you able to review / see / vision the remotion claude code generated video at this site? http://localhost:3123/DotViewerPromo
+
+or else: are you able to watch this rendered version? '/Users/stian/Developer/videos/dotViewer/out/DotViewerPromo.mp4'
+
+If not, check the code and udnerstand what it does here in this repo were at. 
+
+Then, once that is done. Give a review and feedback on it. 
+
+Then, Ask Me Questions afterwards so we can together come up with a plan on improvements. 
+
+my thoughts was to incorporate something more advanced. I checked out the examples on remotion's website, and i came over multiple example components that i really liked. Maybe you can do a thorough review of them as well and come up with a plan on composition for how we could upgrade our current video, and how we could imrpove it by incorporate the ones i liked from the remotion components and that you think will fit into our composition? 
+
+## Remotion components i liked
+### Flying through words
+- https://remotion-bits.dev/docs/bits/flying-through-words/
+These are cool, i could picture dotFiles and file-type extensions flying through the air. thoughts?
+
+### Word by word
+https://remotion-bits.dev/docs/bits/word-by-word/
+a nice little touch, "small details" which can make a big difference when used right. could we utilize it somehow? would it fit our marketing video?
+
+### variable-speed-typewriter
+https://remotion-bits.dev/docs/bits/variable-speed-typewriter/
+just cool, i have no thoughts on where it would fit us
+
+### Glitch In text effect
+https://remotion-bits.dev/docs/bits/glitch-in/
+cool, not sure where it would fit us?
+
+### blur-slide-word
+https://remotion-bits.dev/docs/bits/blur-slide-word/
+nice text effect
+
+### Remotion Bits
+https://remotion-bits.dev/docs/bits/remotion-bits/
+
+This way of showcasing features are seriously really cool and eye-catching. something we could compose and adopt? or ?
+
+### Counter
+https://remotion-bits.dev/docs/bits/counter-confetti/
+the counter is really cool, not the confetti tho.. 
+could we benefit from using this in any way? 
+
+###  paarticle grid (dot grid -> dotViewer)
+https://remotion-bits.dev/docs/bits/particles-grid/
+nice effect, not sure how we could be creative with this? 
+
+### cursor-flyover
+https://remotion-bits.dev/docs/bits/cursor-flyover/
+
+cool effect, again, not sure if it would fit our app? would be cool to showcase small cool detailed features which requires mouse moving tho
+
+### code-block
+https://remotion-bits.dev/docs/bits/code-block/
+
+cool
+
+
+## info
+i dont mean you need to use them all, but understand what each does, and come up with a improved plan for our marketing video for our dotViewer macOS app. and see if it coul dincorporate any of these for cooler and more eye-catching-pleasing. 
+
+fo rinfo on the macOS dotViewer app, see the repo here: 
+- Repo root: '/Users/stian/Developer/macOS Apps/v2.5'
+- dotViewer App: '/Users/stian/Developer/macOS Apps/v2.5/dotViewer'
+Theres a lot of docs inside '/Users/stian/Developer/macOS Apps/v2.5/dotViewer', feel free to gain insights. 
+
+
+## success criteria and response
+- new composition and storyline
+- improved setup
+- includes ALL FEATURES, not just a small selection
+- prompt for generating the new video
+
+The detailed prompt should be  sent to claude code inside the dotViewer video repo by me. AskMeQuestions to clarify, and keep me in the loop and let us together form the new marketing video.
+
+
+
+
+
+our first initial take prompt which gave stunning result:
+```markdown
+Make a promotion video in Apple presentation style for dotViewer. Check its docs, README, CHANGELOG, etc.. Basically deepdive the repo for the macOS App and understand what it does at its core, what problems it solves, who the intended customers might be, and what it looks like. 
+
+For visioning and understanding the style and design, ive attached screenshots for these scenarios: 
+- Apps main status landing page GUI view
+- Quick Look preview of a .tsx coding file
+- Quick Look preview of a markdown file with RAW rendering mode
+- Quick Look preview of a markdown file with RENDERED preview mode (styled HTML version of the raw markdown file)
+etc..
+
+<FILES>
+'/Users/stian/Screenshots/dot/Skjermbilde 2026-02-11 kl. 16.26.35.png' 
+/Users/stian/Screenshots/dot/GUI_MARKDOWN.png 
+/Users/stian/Screenshots/dot/GUI_FILETYPES.png 
+/Users/stian/Screenshots/dot/GUI_SETTINGS.png 
+/Users/stian/Screenshots/dot/GUI_STATUS_LANDING.png 
+/Users/stian/Screenshots/dot/COPIED.png /Users/stian/Screenshots/dot/MD_RENDERED_TOC_ACTIVE_HIGHLIGHT.png 
+/Users/stian/Screenshots/dot/MD_RENDERED_TOC.png 
+/Users/stian/Screenshots/dot/MD_RAW.png 
+/Users/stian/Screenshots/dot/MD_RENDERED.png 
+/Users/stian/Screenshots/dot/TSX.png
+</FILES>
+
+
+for details and assets like logo. Use nerd fonts and inter. Make it around 20 seconds.
+<REQUIREMENTS>
+- video should look exactly like the attached images. feel free to use the images
+</REQUIREMENTS>
+
+<macOS_APP_LOGO_ICON>
+'/Users/stian/Documents/dot_v1 copy2 Exports/dot_v1 copy2-macOS-Dark-1024x1024@1x.png' 
+'/Users/stian/Documents/dot_v1 copy2 Exports/dot_v1 copy2-macOS-Default-1024x1024@1x.png'
+</macOS_APP_LOGO_ICON>
+
+```
+

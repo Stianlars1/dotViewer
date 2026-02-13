@@ -81,7 +81,7 @@
 - **CSS overhaul**: PreviewHTMLBuilder.swift rendered-view CSS rebuilt with theme-aware variables (`--heading`, `--surface`, `--border`, `--link`), per-theme heading colors, table row striping, tighter list spacing, v1-matching heading sizes, code block styling, and task list checkbox support.
 - **Toggle routing fix**: `isMarkdown` check changed from key-based to `languageId == "markdown"`, fixing README.md, CHANGELOG.md, and other named markdown files that previously didn't show the RAW/RENDERED toggle.
 - **CSS polish pass**: Tightened line-height (1.6→1.7), heading margins, paragraph spacing (16→12px), list spacing (4→2px), blockquote with accent border + background, code blocks with accent left border, HR 2→1px.
-- **Table of Contents**: Sidebar TOC with heading navigation, toggleable from preview header. Properly skips fenced code blocks when scanning for headings. Hidden in RAW mode, only shown in RENDERED mode.
+- **Table of Contents**: Sidebar TOC with heading navigation, toggleable from preview header. Properly skips fenced code blocks when scanning for headings. Hidden in RAW mode, only shown in RENDERED mode. Settings toggle now fully gates feature (KI-018). Font size syncs with render setting. Apple sidebar.left toggle icon.
 
 **Remaining gap**: Minor typography refinements. Side-by-side with Typora shows dotViewer is now close but not pixel-identical.
 
@@ -359,3 +359,23 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 **Root cause**: Setext headings (underline with `===`/`---`) in `MarkdownRenderer.swift` were emitted without `id` attributes. The scroll spy JavaScript queries for `h1[id], h2[id]...` — headings without `id` were skipped.
 
 **Fix (2026-02-12)**: Added `id` attributes (via `generateSlug()`) to setext heading output in `MarkdownRenderer.swift`, matching the existing ATX heading behavior. TOC links and scroll spy now work for both heading styles.
+
+---
+
+## KI-018 — TOC setting non-functional + JavaScript crash when enabled
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Fixed |
+
+**Impact**: The "Show Table of Contents" toggle in Settings → Markdown had no effect on the preview. When OFF, the TOC toggle button still appeared in the preview header and the sidebar could be toggled freely. When ON, the TOC button, close button, and resize handle were all non-interactive — the sidebar appeared but couldn't be dismissed or resized.
+
+**Root cause (setting ignored)**: `markdownShowTOC` only controlled the initial CSS `active` class on the toggle button — it did not gate whether the TOC button or sidebar HTML were generated. The TOC elements were always in the DOM regardless of the setting.
+
+**Root cause (unresponsive when ON)**: A JavaScript **Temporal Dead Zone** crash. `setMode(currentMode)` was called before the outer-scope `const tocPanel` declaration was initialized. When `markdownShowTOC` was ON, the button had the `active` class, causing `setMode` to call `updateActiveTOCLink()`, which referenced the not-yet-initialized `tocPanel` → `ReferenceError`. This crashed the entire script, preventing all subsequent event listeners (toggle, close, resize, scroll spy) from binding. The bug was latent — it was never triggered when the setting was OFF because the button lacked the `active` class and `tocVisible` was `false`.
+
+**Fix (2026-02-12)**:
+1. Gated `hasTOC` on `info.markdownShowTOC` — when OFF, no TOC button, sidebar, or resize handle HTML is generated
+2. Moved outer-scope `const` declarations and event listener setup before the `setMode(currentMode)` call, eliminating the TDZ crash
+3. When ON, the button always starts `active` (auto-opens sidebar in rendered mode)

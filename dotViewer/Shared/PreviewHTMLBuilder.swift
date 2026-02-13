@@ -101,7 +101,7 @@ public enum PreviewHTMLBuilder {
         let tocHTML: String = info.renderedHTML != nil
             ? (MarkdownRenderer.generateTOC(from: info.rawText) ?? "")
             : ""
-        let hasTOC = !tocHTML.isEmpty
+        let hasTOC = !tocHTML.isEmpty && info.markdownShowTOC
 
         let header = info.showHeader ? buildHeader(info: info, palette: palette, hasTOC: hasTOC) : ""
 
@@ -161,7 +161,7 @@ public enum PreviewHTMLBuilder {
         let sizeText = ByteCountFormatter.string(fromByteCount: Int64(info.fileSizeBytes), countStyle: .file)
         let lineText = "\(info.lineCount) lines"
         let markdownToggle = info.renderedHTML != nil ? buildMarkdownToggle(defaultMode: info.defaultMarkdownMode) : ""
-        let tocToggle = hasTOC ? buildTOCToggle(showTOC: info.markdownShowTOC) : ""
+        let tocToggle = hasTOC ? buildTOCToggle() : ""
         return """
         <div class="header">
           <div class="header-left">
@@ -222,12 +222,12 @@ public enum PreviewHTMLBuilder {
         """
     }
 
-    private static func buildTOCToggle(showTOC: Bool) -> String {
-        let activeClass = showTOC ? " active" : ""
+    private static func buildTOCToggle() -> String {
         return """
-        <button class="icon-button toc-toggle\(activeClass)" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
+        <button class="icon-button toc-toggle active" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path d="M3 4h18v2H3V4zm0 7h12v2H3v-2zm0 7h18v2H3v-2zm14-7h4v2h-4v-2z"/>
+            <rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="9" y1="3" x2="9" y2="21" stroke="currentColor" stroke-width="1.5"/>
           </svg>
         </button>
         """
@@ -824,7 +824,7 @@ public enum PreviewHTMLBuilder {
           background: var(--surface);
           border-right: 1px solid var(--border);
           overflow-y: auto;
-          font-size: 13px;
+          font-size: \(max(renderFontSize - 2, 10))px;
           scrollbar-width: thin;
         }
 
@@ -846,7 +846,7 @@ public enum PreviewHTMLBuilder {
           justify-content: space-between;
           align-items: center;
           padding: 10px 12px;
-          font-size: 11px;
+          font-size: \(max(renderFontSize - 4, 9))px;
           font-weight: 600;
           color: var(--comment);
           text-transform: uppercase;
@@ -884,7 +884,7 @@ public enum PreviewHTMLBuilder {
           padding: 3px 10px 3px 12px;
           color: var(--comment);
           text-decoration: none;
-          font-size: 12px;
+          font-size: \(max(renderFontSize - 3, 10))px;
           line-height: 1.4;
           border-left: 2px solid transparent;
           transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
@@ -908,10 +908,10 @@ public enum PreviewHTMLBuilder {
         .toc-content .toc-h1 a { font-weight: 600; }
         .toc-content .toc-h1 a.active { font-weight: 700; }
         .toc-content .toc-h2 a { padding-left: 22px; }
-        .toc-content .toc-h3 a { padding-left: 34px; font-size: 11px; }
-        .toc-content .toc-h4 a { padding-left: 44px; font-size: 11px; opacity: 0.8; }
-        .toc-content .toc-h5 a { padding-left: 54px; font-size: 11px; opacity: 0.7; }
-        .toc-content .toc-h6 a { padding-left: 64px; font-size: 11px; opacity: 0.6; }
+        .toc-content .toc-h3 a { padding-left: 34px; font-size: \(max(renderFontSize - 4, 9))px; }
+        .toc-content .toc-h4 a { padding-left: 44px; font-size: \(max(renderFontSize - 4, 9))px; opacity: 0.8; }
+        .toc-content .toc-h5 a { padding-left: 54px; font-size: \(max(renderFontSize - 4, 9))px; opacity: 0.7; }
+        .toc-content .toc-h6 a { padding-left: 64px; font-size: \(max(renderFontSize - 4, 9))px; opacity: 0.6; }
 
         .toc-toggle.active {
           background: var(--surface-strong);
@@ -1296,12 +1296,6 @@ public enum PreviewHTMLBuilder {
           if (tocVisible) updateActiveTOCLink();
         }
 
-        buttons.forEach(btn => {
-          btn.addEventListener('click', () => setMode(btn.dataset.mode));
-        });
-
-        setMode(currentMode);
-
         const tocToggle = document.getElementById('toc-toggle');
         const tocPanel = document.getElementById('toc-panel');
         const tocResizeHandle = document.getElementById('toc-resize-handle');
@@ -1336,6 +1330,12 @@ public enum PreviewHTMLBuilder {
             }
           });
         }
+
+        buttons.forEach(btn => {
+          btn.addEventListener('click', () => setMode(btn.dataset.mode));
+        });
+
+        setMode(currentMode);
 
         // Scroll spy: highlight the current section in the TOC
         function updateActiveTOCLink() {
