@@ -15,7 +15,12 @@
 
 **Workaround**: TypeScript files with `.tsx`, `.cts`, and `.mts` extensions work correctly. The `.ts` extension specifically conflicts because it's also used for MPEG-2 transport streams.
 
-**Acceptance criteria**: N/A — macOS system limitation. Both `public.mpeg-2-transport-stream` and `com.stianlars1.dotviewer.typescript` remain in QLSupportedContentTypes in case future macOS versions allow override.
+**Additional notes (2026-02-16)**:
+- Setting Finder “Open With → dotViewer” defaults does **not** change Quick Look routing for `.ts`. It only affects double-click/open behavior.
+- An “Open With Assistant” (sample files + Finder automation) was tested and removed because it did not change Quick Look routing and Finder automation is blocked in sandboxed apps.
+- Open-with fallback UI/handling is not shipped in dotViewer (marked Won't Fix).
+
+**Acceptance criteria**: N/A — macOS system limitation. `public.mpeg-2-transport-stream` cannot be claimed without hijacking real video files, and Finder Open With defaults do not affect Quick Look routing.
 
 ---
 
