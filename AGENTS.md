@@ -78,6 +78,7 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 | 2026-02-11 | Testing | Added `dotViewerTests` unit test target with 7 XCTestCase classes: FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector. |
 | 2026-02-11 | Docs | Documentation audit: fixed KI-005/KI-010 contradiction, updated all docs to reflect 2026-02-11 state. |
 | 2026-02-16 | Open With | Attempted “Open With Assistant” for system-owned UTIs; removed after testing due to macOS limitations (Quick Look routing unchanged, Finder automation blocked in sandbox). Open-with fallback view/handling was subsequently removed and marked Won't Fix. Added TOC default open setting and optional line-numbers-in-copy. |
+| 2026-02-17 | Roadmap/Backlog triage | Deferred B-011 (test expansion) and B-012 (App Store distribution) to Post-v1; marked B-013 (print/export PDF) as Optional (Low) and non-next-up. Added explicit revisit criteria in BACKLOG. Verified via status consistency grep for B-011/B-012/B-013 across BACKLOG, KNOWN_ISSUES, README, CLAUDE. |
 
 ## Notes
 

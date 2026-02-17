@@ -21,9 +21,9 @@ From v1 requirements and future direction.
 |----|-------|----------|-------|
 | B-010 | ~~Markdown rendered/raw toggle in preview header~~ | ~~Done~~ | Completed 2026-02-09 — toggle works for all markdown files including named files (README, CHANGELOG) |
 | B-019 | ~~Table of Contents for rendered markdown~~ | ~~Done~~ | Completed 2026-02-09 — sidebar TOC with heading navigation, toggle in header + settings, code-block-aware scanner. Fixed 2026-02-12: setting now fully gates feature (KI-018), font size syncs with render setting, Apple sidebar.left toggle icon. |
-| B-011 | ~~Automated test suite~~ | ~~Partial~~ | Completed 2026-02-11 — 7 unit test classes (FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector). XPC integration tests and snapshot tests remain. |
-| B-012 | App Store distribution | Medium | Requires sandboxing review, notarization, screenshots, listing |
-| B-013 | Print / export to PDF | Medium | From v1 PROJECT.md requirements |
+| B-011 | Automated test suite expansion (XPC + snapshots) | Deferred (Post-v1) | Baseline unit suite is in place (7 test classes, added 2026-02-11). Remaining XPC integration and visual snapshot coverage is deferred until post-v1. |
+| B-012 | App Store distribution | Deferred (Post-v1) | Deferred until release channel strategy explicitly includes App Store distribution. Requires sandboxing review, notarization, screenshots, and listing work. |
+| B-013 | Print / export to PDF | Optional (Low) | Optional enhancement (not next-up). Existing print CSS covers title, syntax color tuning, and page-break handling; full export UX is deferred pending user demand. |
 | B-014 | ~~Line number highlighting / deep linking~~ | ~~Done~~ | Completed 2026-02-11 — Click line numbers to highlight, Shift+click for range selection. Deep linking via URL fragments not implemented. |
 | B-015 | ~~Search within preview~~ | ~~Done~~ | Completed 2026-02-11 — Optional search bar (off by default), uses text selection + paste workflow since Quick Look intercepts keyboard input. Highlights matches with prev/next navigation. |
 | B-016 | Additional tree-sitter grammars | Low | Cover more of the 177 entries currently using heuristic fallback |
@@ -37,6 +37,11 @@ From v1 requirements and future direction.
 | B-025 | ~~Markdown clickable links~~ | ~~Done~~ | Completed 2026-02-12 — Clicking links copies URL to clipboard with toast confirmation. Tooltip on hover. Relative links resolved to absolute file:// paths. KI-012. |
 | B-026 | ~~Synced font sizes~~ | ~~Done~~ | Completed 2026-02-12 — New `syncFontSizes` setting (default ON). Code and rendered markdown share one font size. Toggle in Settings > Appearance, disabled slider with note in Markdown settings when synced. |
 | B-027 | ~~Open With Assistant for system-owned UTIs~~ | ~~Won't Fix / Removed~~ | Tested 2026-02-16 — does not change Quick Look routing for system-owned UTIs; Finder automation blocked in sandboxed apps. |
+
+Revisit criteria:
+- `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.
+- `B-012`: Reopen when the product release strategy includes App Store as a target channel.
+- `B-013`: Reopen when explicit user demand or workflow requirements justify dedicated print/export UX.
 
 ## Technical Debt
 
