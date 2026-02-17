@@ -6,7 +6,10 @@ struct MarkdownSettingsView: View {
     @State private var showInlineImages: Bool = SharedSettings.shared.markdownShowInlineImages
     @State private var useSyntaxHighlightInRaw: Bool = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
     @State private var showTOC: Bool = SharedSettings.shared.markdownShowTOC
+    @State private var tocDefaultOpen: Bool = SharedSettings.shared.markdownTOCDefaultOpen
     @State private var renderFontSize: Double = SharedSettings.shared.markdownRenderFontSize
+    @State private var renderedWidthMode: String = SharedSettings.shared.markdownRenderedWidthMode
+    @State private var renderedCustomMaxWidth: Double = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
     @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var customCSS: String = SharedSettings.shared.markdownCustomCSS
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
@@ -38,14 +41,29 @@ struct MarkdownSettingsView: View {
                                 SharedSettings.shared.markdownUseSyntaxHighlightInRaw = newValue
                             }
 
-                        Toggle("Show Table of Contents", isOn: $showTOC)
+                        Toggle("Enable Table of Contents Button", isOn: $showTOC)
                             .onChange(of: showTOC) { _, newValue in
                                 SharedSettings.shared.markdownShowTOC = newValue
                             }
 
-                        Text("Show a collapsible table of contents in rendered previews")
+                        Text("Adds a TOC button to the rendered header. You can still hide the panel by default.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+
+                        if showTOC {
+                            Picker("TOC Default", selection: $tocDefaultOpen) {
+                                Text("Open").tag(true)
+                                Text("Hidden").tag(false)
+                            }
+                            .pickerStyle(.segmented)
+                            .onChange(of: tocDefaultOpen) { _, newValue in
+                                SharedSettings.shared.markdownTOCDefaultOpen = newValue
+                            }
+
+                            Text("Controls whether the table of contents opens by default in rendered previews.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
@@ -81,6 +99,35 @@ struct MarkdownSettingsView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
+
+                        Divider()
+
+                        Picker("Rendered Width", selection: $renderedWidthMode) {
+                            Text("Auto").tag("auto")
+                            Text("Custom").tag("custom")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: renderedWidthMode) { _, newValue in
+                            SharedSettings.shared.markdownRenderedWidthMode = newValue
+                        }
+
+                        if renderedWidthMode == "custom" {
+                            HStack {
+                                Text("Max Width")
+                                Spacer()
+                                Text("\(Int(renderedCustomMaxWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $renderedCustomMaxWidth, in: 480...2400, step: 10)
+                                .onChange(of: renderedCustomMaxWidth) { _, newValue in
+                                    SharedSettings.shared.markdownRenderedCustomMaxWidth = Int(newValue)
+                                }
+                        }
+
+                        Text("Auto uses the built-in rendered markdown layout width.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
@@ -119,6 +166,9 @@ struct MarkdownSettingsView: View {
         .onAppear {
             syncFontSizes = SharedSettings.shared.syncFontSizes
             renderFontSize = SharedSettings.shared.markdownRenderFontSize
+            renderedWidthMode = SharedSettings.shared.markdownRenderedWidthMode
+            renderedCustomMaxWidth = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
+            tocDefaultOpen = SharedSettings.shared.markdownTOCDefaultOpen
         }
     }
 }

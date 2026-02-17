@@ -19,9 +19,15 @@ public struct PreviewCacheKey: Hashable, Sendable {
         showHeader: Bool,
         markdownDefaultMode: String,
         markdownRenderFontSize: Double,
+        markdownRenderedWidthMode: String,
+        markdownRenderedCustomMaxWidth: Int,
         markdownShowInlineImages: Bool,
         markdownCustomCSS: String,
         markdownCustomCSSOverride: Bool,
+        markdownTOCDefaultOpen: Bool,
+        includeLineNumbersInCopy: Bool,
+        codeContentWidthMode: String,
+        codeContentCustomMaxWidth: Int,
         wordWrap: Bool = false
     ) {
         rawKey = [
@@ -38,9 +44,15 @@ public struct PreviewCacheKey: Hashable, Sendable {
             showHeader ? "hdr1" : "hdr0",
             markdownDefaultMode,
             String(format: "%.2f", markdownRenderFontSize),
+            markdownRenderedWidthMode,
+            "\(markdownRenderedCustomMaxWidth)",
             markdownShowInlineImages ? "mdimg1" : "mdimg0",
             markdownCustomCSSOverride ? "mdcss1" : "mdcss0",
             markdownCustomCSS,
+            markdownTOCDefaultOpen ? "toc1" : "toc0",
+            includeLineNumbersInCopy ? "lnc1" : "lnc0",
+            codeContentWidthMode,
+            "\(codeContentCustomMaxWidth)",
             wordWrap ? "ww1" : "ww0"
         ].joined(separator: "|")
     }

@@ -144,9 +144,15 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             showHeader: SharedSettings.shared.showFileInfoHeader,
             markdownDefaultMode: SharedSettings.shared.markdownDefaultMode,
             markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
+            markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
             markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
             markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
             markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
+            markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
+            includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
+            codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
+            codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
             wordWrap: SharedSettings.shared.wordWrap
         )
 
@@ -164,8 +170,12 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 rawHTML: cached.rawHTML,
                 renderedHTML: cached.renderedHTML,
                 codeFontSize: SharedSettings.shared.fontSize,
+                codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
+                codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
                 defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
                 markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+                markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
+                markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
                 markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
                 markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
                 markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
@@ -175,8 +185,10 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 systemIsDark: systemIsDark,
                 wordWrap: SharedSettings.shared.wordWrap,
                 markdownShowTOC: SharedSettings.shared.markdownShowTOC,
+                markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
                 copyBehavior: SharedSettings.shared.copyBehavior,
                 showSearchButton: SharedSettings.shared.showSearchButton,
+                includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
                 sourceDirectory: url.deletingLastPathComponent().path
             )
 
@@ -281,8 +293,12 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             rawHTML: rawHTML,
             renderedHTML: renderedHTML,
             codeFontSize: SharedSettings.shared.fontSize,
+            codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
+            codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
             defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
             markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
+            markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
             markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
             markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
             markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
@@ -292,8 +308,10 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             systemIsDark: systemIsDark,
             wordWrap: SharedSettings.shared.wordWrap,
             markdownShowTOC: SharedSettings.shared.markdownShowTOC,
+            markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
             copyBehavior: SharedSettings.shared.copyBehavior,
             showSearchButton: SharedSettings.shared.showSearchButton,
+            includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
             sourceDirectory: url.deletingLastPathComponent().path
         )
 

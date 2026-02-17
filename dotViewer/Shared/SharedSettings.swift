@@ -47,6 +47,21 @@ public final class SharedSettings: @unchecked Sendable {
         }
     }
 
+    public var appUIFontSizePreset: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "appUIFontSizePreset") ?? "system"
+                return Self.allowedAppUIFontSizePresets.contains(value) ? value : "system"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedAppUIFontSizePresets.contains(newValue) ? newValue : "system"
+                defaults.set(sanitized, forKey: "appUIFontSizePreset")
+            }
+        }
+    }
+
     public var showLineNumbers: Bool {
         get { lock.withLock { defaults.object(forKey: "showLineNumbers") as? Bool ?? false } }
         set { lock.withLock { defaults.set(newValue, forKey: "showLineNumbers") } }
@@ -126,6 +141,41 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "showSearchButton") } }
     }
 
+    public var includeLineNumbersInCopy: Bool {
+        get { lock.withLock { defaults.object(forKey: "includeLineNumbersInCopy") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "includeLineNumbersInCopy") } }
+    }
+
+    public var codeContentWidthMode: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "codeContentWidthMode") ?? "auto"
+                return Self.allowedWidthModes.contains(value) ? value : "auto"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedWidthModes.contains(newValue) ? newValue : "auto"
+                defaults.set(sanitized, forKey: "codeContentWidthMode")
+            }
+        }
+    }
+
+    public var codeContentCustomMaxWidth: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "codeContentCustomMaxWidth")
+                return value > 0 ? max(480, min(2400, value)) : 1200
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(480, min(2400, newValue))
+                defaults.set(clamped, forKey: "codeContentCustomMaxWidth")
+            }
+        }
+    }
+
     public var markdownPreviewMode: String {
         get { markdownDefaultMode }
         set { markdownDefaultMode = newValue }
@@ -199,6 +249,41 @@ public final class SharedSettings: @unchecked Sendable {
     public var markdownShowTOC: Bool {
         get { lock.withLock { defaults.object(forKey: "markdownShowTOC") as? Bool ?? true } }
         set { lock.withLock { defaults.set(newValue, forKey: "markdownShowTOC") } }
+    }
+
+    public var markdownTOCDefaultOpen: Bool {
+        get { lock.withLock { defaults.object(forKey: "markdownTOCDefaultOpen") as? Bool ?? true } }
+        set { lock.withLock { defaults.set(newValue, forKey: "markdownTOCDefaultOpen") } }
+    }
+
+    public var markdownRenderedWidthMode: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "markdownRenderedWidthMode") ?? "auto"
+                return Self.allowedWidthModes.contains(value) ? value : "auto"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedWidthModes.contains(newValue) ? newValue : "auto"
+                defaults.set(sanitized, forKey: "markdownRenderedWidthMode")
+            }
+        }
+    }
+
+    public var markdownRenderedCustomMaxWidth: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "markdownRenderedCustomMaxWidth")
+                return value > 0 ? max(480, min(2400, value)) : 900
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(480, min(2400, newValue))
+                defaults.set(clamped, forKey: "markdownRenderedCustomMaxWidth")
+            }
+        }
     }
 
     public var previewAllFileTypes: Bool {
@@ -302,6 +387,18 @@ public final class SharedSettings: @unchecked Sendable {
             }
         }
     }
+
+    private static let allowedWidthModes: Set<String> = ["auto", "custom"]
+    private static let allowedAppUIFontSizePresets: Set<String> = [
+        "system",
+        "xSmall",
+        "small",
+        "medium",
+        "large",
+        "xLarge",
+        "xxLarge",
+        "xxxLarge",
+    ]
 }
 
 private extension NSLock {

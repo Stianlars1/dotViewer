@@ -772,7 +772,8 @@
       "vxml",
       "wml",
       "xsd",
-      "xsl"
+      "xsl",
+      "iml"
     ],
     "filenames": [],
     "highlightLanguage": "xml"
@@ -1716,9 +1717,15 @@
     "displayName": "JSON",
     "extensions": [
       "jsonc",
-      "json"
+      "json",
+      "map",
+      "eslintcache",
+      "xcstrings",
+      "webmanifest"
     ],
-    "filenames": [],
+    "filenames": [
+      ".firebaserc"
+    ],
     "highlightLanguage": "json"
   },
   {
@@ -4061,5 +4068,83 @@
     ],
     "highlightLanguage": "javascript",
     "category": "dataFormats"
+  },
+  {
+    "id": "apache",
+    "displayName": "Apache Config",
+    "extensions": [
+      "htaccess",
+      "htpasswd"
+    ],
+    "filenames": [
+      ".htaccess",
+      ".htpasswd"
+    ],
+    "highlightLanguage": "ini"
+  },
+  {
+    "id": "backup",
+    "displayName": "Backup File",
+    "extensions": [
+      "backup",
+      "bak",
+      "old",
+      "orig",
+      "save"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
+  },
+  {
+    "id": "config-variant",
+    "displayName": "Config Variant",
+    "extensions": [
+      "secret",
+      "template",
+      "sample",
+      "default"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
+  },
+  {
+    "id": "cursorrules",
+    "displayName": "Cursor Rules",
+    "extensions": [
+      "cursorrules",
+      "cursorignore"
+    ],
+    "filenames": [
+      ".cursorrules",
+      ".cursorignore"
+    ],
+    "highlightLanguage": "markdown"
+  },
+  {
+    "id": "code-workspace",
+    "displayName": "VS Code Workspace",
+    "extensions": [
+      "code-workspace"
+    ],
+    "filenames": [],
+    "highlightLanguage": "json"
+  },
+  {
+    "id": "nushell",
+    "displayName": "Nushell Script",
+    "extensions": [
+      "nu"
+    ],
+    "filenames": [],
+    "highlightLanguage": "bash"
+  },
+  {
+    "id": "xcfilelist",
+    "displayName": "Xcode File List",
+    "extensions": [
+      "xcfilelist"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
   }
 ]

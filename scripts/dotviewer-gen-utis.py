@@ -53,7 +53,6 @@ KNOWN_UTIS = {
     "php4":     "public.php-script",
     "js":       "com.netscape.javascript-source",
     "mjs":      "com.netscape.javascript-source",
-    "cjs":      "com.netscape.javascript-source",
     "sh":       "public.shell-script",
     "bash":     "public.bash-script",
     "zsh":      "public.zsh-script",
@@ -61,7 +60,6 @@ KNOWN_UTIS = {
     "csh":      "public.csh-script",
     "tcsh":     "public.tcsh-script",
     "s":        "public.assembly-source",
-    "asm":      "public.assembly-source",
     "pas":      "public.pascal-source",
     "f":        "public.fortran-source",
     "for":      "public.fortran-source",
@@ -113,8 +111,7 @@ KNOWN_UTIS = {
     "clj":      "org.clojure",
     "cljc":     "org.clojure",
     "cljs":     "org.clojure",
-    "tex":      "org.tug.tex",
-    "latex":    "org.tug.tex",
+    "tex":      "org.tug",
     "org":      "org.orgmode",
     "adoc":     "org.asciidoc",
     "asciidoc": "org.asciidoc",
@@ -124,15 +121,12 @@ KNOWN_UTIS = {
     "v":        "com.coteditor.verilog",
     "svelte":   "dev.svelte",
     "fish":     "com.fishshell.script",
-    "gradle":   "com.sun.java-source",
-    "groovy":   "com.sun.java-source",
     "ini":      "com.microsoft.ini",
     "ps":       "com.adobe.postscript",
     "lsp":      "com.coteditor.lisp",
     "scm":      "com.coteditor.scheme",
     "ss":       "com.coteditor.scheme",
     "vhd":      "com.coteditor.vhdl",
-    "vhdl":     "com.coteditor.vhdl",
     "awk":      "com.coteditor.awk",
     "bib":      "org.bibtex",
     "rss":      "public.rss",
@@ -147,11 +141,8 @@ KNOWN_UTIS = {
     "cts":      "com.stianlars1.dotviewer.typescript",
     "env":      "com.stianlars1.dotviewer.env",
     "bat":      "com.stianlars1.dotviewer.batch",
-    "cmd":      "com.stianlars1.dotviewer.batch",
     "jsx":      "com.stianlars1.dotviewer.jsx",
     "fs":       "com.stianlars1.dotviewer.fsharp",
-    "fsx":      "com.stianlars1.dotviewer.fsharp",
-    "fsi":      "com.stianlars1.dotviewer.fsharp",
     "vb":       "com.stianlars1.dotviewer.vb",
 }
 
@@ -170,16 +161,6 @@ UTI_CONFLICTS = {
     "eml",       # com.apple.mail.email, we want email-as-text
     "applescript", # com.apple.applescript.text, we want text
     "jnlp",     # com.sun.java-web-start, we want XML
-}
-
-# Extensions to skip — filenames used as extensions, multi-part
-SKIP_EXTENSIONS = {
-    "config.ru", "appfile", "appraisals", "berksfile", "brewfile",
-    "capfile", "cheffile", "deliverfile", "fastfile", "gemfile",
-    "gemspec", "guardfile", "irbrc", "jbuilder", "podfile", "podspec",
-    "rakefile", "rantfile", "scanfile", "simplecov", "snapfile",
-    "thorfile", "vagrantfile", "gnumakefile", "sconstruct", "snakefile",
-    "wscript", "anacrontab", "jenkinsfile", "dockerfile",
 }
 
 # Base QLSupportedContentTypes — always included
@@ -260,6 +241,23 @@ BASE_CONTENT_TYPES = {
     # Third-party UTIs that may claim our extensions
     "org.khronos.glsl.fragment-shader",
     "com.coteditor.mojo",
+    # UTI_CONFLICTS: system UTIs for extensions we override with custom exports
+    # We still need these in QL list so macOS routes the system UTI to us too
+    "public.alembic",                          # .abc (we want ABC notation)
+    "com.apple.applescript.text",              # .applescript
+    "com.apple.applesingle-archive",           # .as (we want ActionScript)
+    "public.opencl-source",                    # .cl (we want Lisp)
+    "com.sun.java-class",                      # .class (we want Gambas)
+    "com.apple.clips-source",                  # .clp (we want Clips)
+    "com.microsoft.word.dot",                  # .dot (we want Graphviz)
+    "com.adobe.edn",                           # .edn (we want Clojure EDN)
+    "com.apple.mail.email",                    # .eml (we want email-as-text)
+    "com.apple.symbol-export",                 # .exp (we want Express)
+    "public.radiance",                         # .hdr (we want XML header)
+    "com.sun.java-web-start",                  # .jnlp (we want XML)
+    "public.avchd-mpeg-2-transport-stream",    # .mts (we want TypeScript)
+    "cz.wz.zuggy.subrip",                     # .srt (subtitle)
+    "org.tug",                                 # .tex (resolves to org.tug, not org.tug.tex)
     # Our existing custom exports
     "com.stianlars1.dotviewer.typescript",
     "com.stianlars1.dotviewer.env",
@@ -293,18 +291,46 @@ def get_conformance(lang):
 
 
 def load_extensions():
-    """Load all unique single-part extensions from DefaultFileTypes.json."""
+    """Load all unique extensions from DefaultFileTypes.json.
+
+    Pass 1: Read `extensions` arrays (skip compound like 'config.ru').
+    Pass 2: Read `filenames` arrays and extract implied tail extensions
+            (e.g. .env.local → 'local', .gitignore → 'gitignore').
+    """
     data = json.loads(DEFAULT_TYPES_JSON.read_text(encoding="utf-8"))
     extensions = {}
+
+    # Pass 1: explicit extensions arrays
     for entry in data:
         lang = entry.get("highlightLanguage", entry.get("id", ""))
         display = entry.get("displayName", "")
         for ext in entry.get("extensions", []):
             ext_lower = ext.lower()
-            if ext_lower in SKIP_EXTENSIONS or "." in ext:
-                continue
+            if "." in ext:
+                continue  # Skip compound extensions like config.ru
             if ext_lower not in extensions:
                 extensions[ext_lower] = {"lang": lang, "display": display}
+
+    # Pass 2: filenames arrays → implied tail extensions
+    for entry in data:
+        lang = entry.get("highlightLanguage", entry.get("id", ""))
+        display = entry.get("displayName", "")
+        for fn in entry.get("filenames", []):
+            fn_stripped = fn.lstrip(".").lower()
+            if not fn_stripped:
+                continue
+            if "." in fn_stripped:
+                # Compound: .env.local → tail ext 'local'
+                implied = fn_stripped.rsplit(".", 1)[1]
+            elif fn.startswith("."):
+                # Single-segment dotfile: .gitignore → ext 'gitignore'
+                implied = fn_stripped
+            else:
+                # Extensionless: Makefile, LICENSE → skip (pathExtension is "")
+                continue
+            if implied and implied not in extensions:
+                extensions[implied] = {"lang": lang, "display": display}
+
     return extensions
 
 
@@ -386,7 +412,7 @@ def classify_extensions(extensions, resolved_utis):
 
 def make_uti_name(ext):
     """Convert extension to safe UTI component name."""
-    return ext.replace("+", "plus").replace("#", "sharp")
+    return ext.replace("+", "plus").replace("#", "sharp").replace("-", "_")
 
 
 def main():
@@ -485,11 +511,13 @@ def main():
         print("# QLSupportedContentTypes — use for BOTH extensions")
         print(f"{'=' * 70}")
 
+        known_prefixes = {"public.", "com.", "org.", "net.", "dev."}
         public_utis = sorted(u for u in all_utis if u.startswith("public."))
         com_utis = sorted(u for u in all_utis if u.startswith("com."))
         org_utis = sorted(u for u in all_utis if u.startswith("org."))
         net_utis = sorted(u for u in all_utis if u.startswith("net."))
         dev_utis = sorted(u for u in all_utis if u.startswith("dev."))
+        other_utis = sorted(u for u in all_utis if not any(u.startswith(p) for p in known_prefixes))
 
         print("            QLSupportedContentTypes:")
         print("              # System UTIs")
@@ -508,6 +536,10 @@ def main():
         if dev_utis:
             print("              # Vendor UTIs (dev.*)")
             for u in dev_utis:
+                print(f"              - {u}")
+        if other_utis:
+            print("              # Other vendor UTIs")
+            for u in other_utis:
                 print(f"              - {u}")
 
     print(f"\n{'=' * 70}")

@@ -107,7 +107,7 @@
 
 **Root cause**: Quick Look matches on **exact UTI**, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called. Despite `public.data` being listed, it does NOT catch dynamic UTIs (`dyn.*`) — see KI-010.
 
-**Fix (2026-02-10)**: Exhaustive UTI coverage expansion — 396 custom UTI exports + ~64 system + ~63 vendor UTIs = 501 entries in QLSupportedContentTypes, covering all 561 extensions in DefaultFileTypes.json. Combined with `looksTextual` binary gating, this ensures all registered text files get dotViewer previews.
+**Fix (2026-02-10, expanded 2026-02-13)**: Exhaustive UTI coverage expansion — 563 custom UTI exports + system/vendor UTIs = 680 entries in `QLSupportedContentTypes` per extension target, covering all 582 extensions and 295 filename patterns in `DefaultFileTypes.json`. Combined with `looksTextual` binary gating, this ensures all registered text files get dotViewer previews.
 
 **Remaining gap**: Files with extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) get `dyn.*` UTIs that don't match any entry. This is an inherent macOS Quick Look limitation — no `.appex` extension can catch truly unknown file types. See KI-010.
 
@@ -248,10 +248,10 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 - Fixed `displayName(for:)` — custom extensions now show their user-specified display name in the preview header
 - Fixed `bestKey()` — multi-dot files resolve to intermediate known segments via right-to-left segment scanning
 - Fixed 5 missing primary extensions in DefaultFileTypes.json (`xml`, `plist`, `jsonc`, `ini`, `log`)
-- **Exhaustive UTI coverage expansion** — expanded from ~78 to 501 QLSupportedContentTypes:
-  - 396 `UTExportedTypeDeclarations` for extensions without system UTIs
-  - ~64 system UTIs + ~63 vendor UTIs
-  - 388 file type entries covering 561 extensions and 283 filenames
+- **Exhaustive UTI coverage expansion** — expanded from ~78 to 680 `QLSupportedContentTypes` per extension target:
+  - 563 `UTExportedTypeDeclarations` (`com.stianlars1.dotviewer.*`)
+  - System/vendor UTIs included for routing conflicts and known platform mappings
+  - 400 file type entries covering 582 extensions and 295 filenames
   - Script `scripts/dotviewer-gen-utis.py` generates declarations from DefaultFileTypes.json
   - Added 58 new file type entries sourced from sbarex/SourceCodeSyntaxHighlight user requests: shaders (GLSL, HLSL, WGSL, Unity), PL/SQL, Bazel/Starlark, Razor, Liquid, JSON5, JSONL, KML, WSDL, XAML, Apple .strings/.mobileconfig, Svelte, Odin, Elvish, MQL, Gherkin, SRT subtitles, and more
   - Removed 313 pre-computed `dyn.*` fallback codes that were non-functional (encoding mismatch with macOS)
@@ -260,9 +260,9 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 
 **Progress (2026-02-12)**: Custom file types now support overriding built-in types (with confirmation dialog), filename-based mappings (e.g., Jenkinsfile → groovy, Dockerfile → docker), and multi-dot extensions (e.g., `.env.local`). HighlightLanguage picker expanded from 33 to 54 entries with quality tiers. Shared `CustomExtensionValidation` logic ensures consistent validation across add/edit flows. Override badges shown in file types list. See `docs/custom-file-types-design.md`.
 
-**User-facing limitation**: Custom file types work for highlighting, display name, and override of any of the 561 extensions already in DefaultFileTypes.json. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug.
+**User-facing limitation**: Custom file types work for highlighting, display name, and override of any of the 582 extensions already in `DefaultFileTypes.json`. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug.
 
-**Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 561 extensions in the registry. Only completely unknown extensions remain unroutable.
+**Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 582 extensions in the registry. Only completely unknown extensions remain unroutable.
 
 ---
 

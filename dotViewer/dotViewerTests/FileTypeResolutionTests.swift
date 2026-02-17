@@ -54,10 +54,10 @@ final class FileTypeResolutionTests: XCTestCase {
 
     func testMultiDotFileResolvesToKnownSegment() {
         // .claude.json.backup.1770685742797 → try extension first (1770685742797 - unknown),
-        // then intermediate segments: "backup" (unknown), "json" (known!)
+        // then intermediate segments: "backup" (known!), so resolves to "backup"
         let url = URL(fileURLWithPath: "/tmp/.claude.json.backup.1770685742797")
         let key = FileTypeResolution.bestKey(for: url)
-        XCTAssertEqual(key, "json", "Multi-dot file should resolve to 'json' intermediate segment")
+        XCTAssertEqual(key, "backup", "Multi-dot file should resolve to 'backup' intermediate segment")
     }
 
     // MARK: - Filenames

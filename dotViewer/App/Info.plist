@@ -334,6 +334,41 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Generic config files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.anacrontab</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>anacrontab</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.appfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>appfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>AppleScript</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.applescript</string>
@@ -342,6 +377,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>applescript</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.appraisals</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>appraisals</string>
 				</array>
 			</dict>
 		</dict>
@@ -453,6 +506,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Generic Assembler</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.asm</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>asm</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Active Server Pages</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.aspx</string>
@@ -538,6 +608,57 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.babelrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>babelrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.backup</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>backup</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bak</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bak</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Ballerina</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.bal</string>
@@ -546,6 +667,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>bal</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bandit</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bandit</string>
 				</array>
 			</dict>
 		</dict>
@@ -564,6 +702,78 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>bas</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Profile</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bash_login</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bash_login</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bash_logout</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bash_logout</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bash_profile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bash_profile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bashrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bashrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -600,7 +810,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>bat</string>
-					<string>cmd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Bazel/Starlark</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.bazel</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>bazel</string>
 				</array>
 			</dict>
 		</dict>
@@ -669,6 +896,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>bdy</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.berksfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>berksfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -799,6 +1044,58 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.brewfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>brewfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Browserslist Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.browserslistrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>browserslistrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Meson</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.build</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>build</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Bazel/Starlark</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.bzl</string>
@@ -824,6 +1121,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>canvas</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.capfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>capfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -915,6 +1230,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cfignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cfignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -926,6 +1259,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cfm</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CF User Text Encoding</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cfusertextencoding</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cfusertextencoding</string>
 				</array>
 			</dict>
 		</dict>
@@ -986,6 +1336,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cheffile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cheffile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -1020,6 +1388,59 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Extra Env Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ci</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ci</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>CircleCI Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.circleci</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>circleci</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Javascript</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cjs</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cjs</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -1032,6 +1453,40 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Clang Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.clang_format</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>clang-format</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Clang Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.clang_tidy</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>clang-tidy</string>
 				</array>
 			</dict>
 		</dict>
@@ -1125,6 +1580,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>MS DOS Batch</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cmd</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cmd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -1136,6 +1609,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cob</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>VS Code Workspace</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.code_workspace</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>code-workspace</string>
 				</array>
 			</dict>
 		</dict>
@@ -1160,6 +1650,23 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.commitlintrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>commitlintrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -1172,6 +1679,41 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>comp</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Docker Ignore</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.containerignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>containerignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.coveragerc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>coveragerc</string>
 				</array>
 			</dict>
 		</dict>
@@ -1286,7 +1828,24 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>C and C++</string>
+			<string>TypeScript</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.typescript</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cts</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>C++</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.cu</string>
 			<key>UTTypeTagSpecification</key>
@@ -1294,6 +1853,57 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>cu</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>cURL Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.curlrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>curlrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Cursor Rules</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cursorignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cursorignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Cursor Rules</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.cursorrules</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>cursorrules</string>
 				</array>
 			</dict>
 		</dict>
@@ -1354,6 +1964,59 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Config Variant</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.default</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>default</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Extra Env Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.defaults</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>defaults</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.deliverfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>deliverfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>INI</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.desktop</string>
@@ -1362,6 +2025,41 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>desktop</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dockerfile</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dev</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dev</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.development</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>development</string>
 				</array>
 			</dict>
 		</dict>
@@ -1385,6 +2083,42 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dir Colors</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dir_colors</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dir_colors</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dir Colors</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dircolors</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dircolors</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -1396,6 +2130,41 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>do</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Docker</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dockerfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dockerfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Docker Ignore</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.dockerignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>dockerignore</string>
 				</array>
 			</dict>
 		</dict>
@@ -1702,23 +2471,6 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Environment Variables</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.env</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>env</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
 			<string>XML</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.ent</string>
@@ -1727,6 +2479,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>ent</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.env</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>env</string>
 				</array>
 			</dict>
 		</dict>
@@ -1762,6 +2532,58 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>erl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JSON</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.eslintcache</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>eslintcache</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.eslintignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>eslintignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.eslintrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>eslintrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -1831,6 +2653,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>exa</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.example</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>example</string>
 				</array>
 			</dict>
 		</dict>
@@ -1948,6 +2788,24 @@
 			<key>UTTypeDescription</key>
 			<string>Ruby</string>
 			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.fastfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fastfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.fcgi</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
@@ -2005,6 +2863,57 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>ff</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JSON</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.firebaserc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>firebaserc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.flake8</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>flake8</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Flow Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.flowconfig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>flowconfig</string>
 				</array>
 			</dict>
 		</dict>
@@ -2108,7 +3017,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>fs</string>
-					<string>fsx</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>F#</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.fsi</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
 					<string>fsi</string>
 				</array>
 			</dict>
@@ -2127,6 +3052,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>fstab</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>F#</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.fsx</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>fsx</string>
 				</array>
 			</dict>
 		</dict>
@@ -2168,6 +3111,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gcloudignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gcloudignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -2197,6 +3158,215 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>gdb</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gemfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gemfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gem Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gemrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gemrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gemspec</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gemspec</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitattributes</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitattributes</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Extra Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitblame_ignore_revs</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitblame-ignore-revs</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitconfig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitconfig</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Ignore</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitexclude</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitexclude</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Ignore</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitignore_global</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitignore_global</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitkeep</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitkeep</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitmessage</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitmessage</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gitmodules</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gitmodules</string>
 				</array>
 			</dict>
 		</dict>
@@ -2259,6 +3429,40 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Make</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gnumakefile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gnumakefile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Version Manager Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.go_version</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>go-version</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>GraphQL</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.gql</string>
@@ -2267,6 +3471,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>gql</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Java</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gradle</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gradle</string>
 				</array>
 			</dict>
 		</dict>
@@ -2313,6 +3535,24 @@
 			<key>UTTypeDescription</key>
 			<string>Java</string>
 			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.groovy</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>groovy</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Java</string>
+			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.grv</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
@@ -2337,6 +3577,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>gst</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.guardfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>guardfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -2482,6 +3740,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.helmignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>helmignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -2511,6 +3787,40 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>hrl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Apache Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.htaccess</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>htaccess</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Apache Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.htpasswd</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>htpasswd</string>
 				</array>
 			</dict>
 		</dict>
@@ -2562,6 +3872,41 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>hug</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Hush Login</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.hushlogin</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>hushlogin</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Husky Git Hooks</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.huskyrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>huskyrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -2690,6 +4035,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>XML</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.iml</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>iml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>fasm</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.inc</string>
@@ -2741,6 +4103,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Readline Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.inputrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>inputrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>IO</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.io</string>
@@ -2749,6 +4128,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>io</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.irbrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>irbrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -2801,6 +4198,42 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>j</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.jbuilder</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>jbuilder</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Java</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.jenkinsfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>jenkinsfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -2999,6 +4432,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>TeX and LaTeX</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.latex</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>latex</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Luban</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.lbn</string>
@@ -3067,6 +4517,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.lintstagedrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>lintstagedrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Liquid Template</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.liquid</string>
@@ -3075,6 +4542,77 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>liquid</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.local</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>local</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Cargo Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.lock</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>lock</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Profile</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.login</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>login</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Profile</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.logout</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>logout</string>
 				</array>
 			</dict>
 		</dict>
@@ -3195,6 +4733,57 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>m4</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Git Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.mailmap</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>mailmap</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>JSON</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.map</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>map</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Markdown Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.markdownlintrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>markdownlintrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -3740,6 +5329,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Netrc</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.netrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>netrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Nextflow</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.nf</string>
@@ -3818,6 +5424,92 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>nix</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Version Manager Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.node_version</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>node-version</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>No Jekyll</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nojekyll</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nojekyll</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nowignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nowignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.npmignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>npmignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Node Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.npmrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>npmrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -3909,6 +5601,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Nushell Script</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nu</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nu</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -3929,6 +5639,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Version Manager Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nvmrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nvmrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Not eXactly C</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.nxc</string>
@@ -3937,6 +5664,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>nxc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>NYC Coverage Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.nycrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>nycrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -3972,6 +5716,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>odin</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.old</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>old</string>
 				</array>
 			</dict>
 		</dict>
@@ -4023,6 +5784,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>opml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.orig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>orig</string>
 				</array>
 			</dict>
 		</dict>
@@ -4194,6 +5972,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>pddl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.pep8</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pep8</string>
 				</array>
 			</dict>
 		</dict>
@@ -4463,6 +6258,42 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.podfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>podfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.podspec</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>podspec</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -4584,6 +6415,41 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.prettierignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>prettierignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.prettierrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>prettierrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -4639,6 +6505,59 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Dockerfile</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.prod</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>prod</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.production</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>production</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.profile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>profile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>INI</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.properties</string>
@@ -4647,6 +6566,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>properties</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>IRB/Pry Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.pryrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pryrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -4718,6 +6655,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>psm1</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.psql_history</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>psql_history</string>
 				</array>
 			</dict>
 		</dict>
@@ -4866,6 +6821,58 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python Lint Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.pylintrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>pylintrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Version Manager Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.python_version</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>python-version</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.python_history</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>python_history</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -4990,6 +6997,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.rakefile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rakefile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -5001,6 +7026,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>raml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.rantfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rantfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -5104,6 +7147,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>rego</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>semantic-release Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.releaserc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>releaserc</string>
 				</array>
 			</dict>
 		</dict>
@@ -5287,6 +7347,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Version Manager Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.ruby_gemset</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>ruby-gemset</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>AMPL</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.run</string>
@@ -5407,6 +7484,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Config Variant</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.sample</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>sample</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>SAS</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.sas</string>
@@ -5415,6 +7509,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>sas</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Backup File</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.save</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>save</string>
 				</array>
 			</dict>
 		</dict>
@@ -5485,6 +7596,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>scad</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.scanfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>scanfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -5579,6 +7708,42 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.sconstruct</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>sconstruct</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>GNU Screen Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.screenrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>screenrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -5608,6 +7773,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>se</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Config Variant</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.secret</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>secret</string>
 				</array>
 			</dict>
 		</dict>
@@ -5683,6 +7865,42 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.shellcheckrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>shellcheckrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.simplecov</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>simplecov</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.source-code</string>
 				<string>public.plain-text</string>
 			</array>
@@ -5730,6 +7948,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>sls</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.slugignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>slugignore</string>
 				</array>
 			</dict>
 		</dict>
@@ -5798,6 +8034,42 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>sml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.snakefile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>snakefile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.snapfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>snapfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -6012,6 +8284,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.staging</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>staging</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -6023,6 +8313,93 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>styl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.stylelintignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>stylelintignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Project RC Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.stylelintrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>stylelintrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Go Module</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.sum</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>sum</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>SWC Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.swcrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>swcrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>SwiftFormat Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.swiftformat</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>swiftformat</string>
 				</array>
 			</dict>
 		</dict>
@@ -6094,6 +8471,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>tese</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Environment</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.test</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>test</string>
 				</array>
 			</dict>
 		</dict>
@@ -6182,6 +8577,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>thor</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.thorfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>thorfile</string>
 				</array>
 			</dict>
 		</dict>
@@ -6291,6 +8704,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Babel Config JS</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.tsbuildinfo</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>tsbuildinfo</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -6302,24 +8733,6 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>tsql</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.source-code</string>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>TypeScript</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.typescript</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>cts</string>
 				</array>
 			</dict>
 		</dict>
@@ -6411,6 +8824,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Ruby</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vagrantfile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vagrantfile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -6464,6 +8895,42 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vercelignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vercelignore</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>VHDL</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vhdl</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vhdl</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -6484,6 +8951,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Vim Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.viminfo</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>viminfo</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Vim Script</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.vimrc</string>
@@ -6492,6 +8976,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>vimrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Dev Ignore Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.vscodeignore</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>vscodeignore</string>
 				</array>
 			</dict>
 		</dict>
@@ -6588,6 +9090,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Watchman Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.watchmanconfig</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>watchmanconfig</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Workflow Description Language</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.wdl</string>
@@ -6605,6 +9124,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>JSON</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.webmanifest</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>webmanifest</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>PL/1</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.wf</string>
@@ -6613,6 +9149,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>wf</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Wget Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.wgetrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>wgetrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -6683,6 +9236,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>wml</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Go Module</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.work</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>work</string>
 				</array>
 			</dict>
 		</dict>
@@ -6768,6 +9339,24 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>wren</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.source-code</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Python</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.wscript</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>wscript</string>
 				</array>
 			</dict>
 		</dict>
@@ -6862,6 +9451,40 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>X Resources</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.xdefaults</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xdefaults</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>X Resources</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.xinitrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xinitrc</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>SuperX++</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.xpp</string>
@@ -6879,6 +9502,40 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>X Resources</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.xprofile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xprofile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>X Resources</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.xresources</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xresources</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>XML</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.xsd</string>
@@ -6887,6 +9544,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>xsd</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>X Resources</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.xsession</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>xsession</string>
 				</array>
 			</dict>
 		</dict>
@@ -6930,6 +9604,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>RC YAML Config Files</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.yamllint</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>yamllint</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Yang</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.yang</string>
@@ -6938,6 +9629,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>yang</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Node Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.yarnrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>yarnrc</string>
 				</array>
 			</dict>
 		</dict>
@@ -6973,6 +9681,114 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>znn</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zprofile</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zprofile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zsh_theme</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zsh-theme</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zsh_update</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zsh-update</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zsh_history</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zsh_history</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zshenv</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zshenv</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Shell Config</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.zshrc</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>zshrc</string>
 				</array>
 			</dict>
 		</dict>

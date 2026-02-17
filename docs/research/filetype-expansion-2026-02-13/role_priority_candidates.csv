@@ -1,0 +1,225 @@
+role,kind,value,source,note
+front-end development,filename,next.config.ts,nextjs.org/docs,Next.js config (TS)
+front-end development,filename,next.config.mts,nextjs.org/docs,Next.js ESM TypeScript config
+front-end development,filename,next.config.cts,nextjs.org/docs,Next.js CJS TypeScript config
+front-end development,filename,svelte.config.js,svelte.dev/docs/kit/configuration,SvelteKit config
+front-end development,filename,svelte.config.ts,svelte.dev/docs/kit/configuration,SvelteKit TS config
+front-end development,filename,astro.config.mjs,docs.astro.build,Astro config
+front-end development,filename,astro.config.ts,docs.astro.build,Astro TS config
+front-end development,filename,astro.config.js,docs.astro.build,Astro JS config
+front-end development,filename,astro.config.cjs,docs.astro.build,Astro CJS config
+front-end development,filename,nuxt.config.mjs,nuxt.com/docs,Nuxt ESM config
+front-end development,filename,angular.json,angular.dev,Angular workspace config
+front-end development,filename,vite.config.mts,vite.dev/config,Vite ESM TS config
+front-end development,filename,vite.config.cts,vite.dev/config,Vite CJS TS config
+front-end development,filename,webpack.config.mjs,webpack.js.org/configuration,Webpack config
+front-end development,filename,webpack.config.cts,webpack.js.org/configuration,Webpack config
+front-end development,filename,webpack.config.mts,webpack.js.org/configuration,Webpack config
+front-end development,filename,rollup.config.ts,rollupjs.org/configuration-options,Rollup config
+front-end development,filename,rollup.config.mjs,rollupjs.org/configuration-options,Rollup config
+front-end development,filename,rollup.config.cjs,rollupjs.org/configuration-options,Rollup config
+front-end development,filename,postcss.config.ts,postcss.org,PostCSS config
+front-end development,filename,postcss.config.mjs,postcss.org,PostCSS config
+front-end development,filename,tailwind.config.mjs,tailwindcss.com/docs/configuration,Tailwind config
+front-end development,filename,vitest.workspace.ts,vitest.dev/guide/workspace,Vitest workspace config
+front-end development,filename,playwright.config.ts,playwright.dev/docs/test-configuration,Playwright test config
+front-end development,filename,cypress.config.ts,docs.cypress.io,Cypress config
+front-end development,filename,eslint.config.ts,eslint.org/docs/latest/use/configure/configuration-files,Flat ESLint TS config
+front-end development,filename,eslint.config.mts,eslint.org/docs/latest/use/configure/configuration-files,Flat ESLint config
+front-end development,filename,eslint.config.cts,eslint.org/docs/latest/use/configure/configuration-files,Flat ESLint config
+front-end development,filename,.parcelrc,parceljs.org/features/plugins,Parcel config
+front-end development,filename,tsup.config.ts,tsup.egoist.dev,TSUP config
+front-end development,filename,unocss.config.ts,unocss.dev/guide/config-file,UnoCSS config
+front-end development,filename,windi.config.ts,windicss.org/guide/configuration,Windi CSS config
+backend development,filename,manage.py,docs.djangoproject.com,Django project entrypoint
+backend development,filename,alembic.ini,alembic.sqlalchemy.org,Alembic migration config
+backend development,filename,gunicorn.conf.py,docs.gunicorn.org,Gunicorn config
+backend development,filename,uwsgi.ini,uwsgi-docs.readthedocs.io,uWSGI config
+backend development,filename,celeryconfig.py,docs.celeryq.dev,Celery config module
+backend development,filename,poetry.lock,python-poetry.org/docs/basic-usage,Poetry lockfile
+backend development,filename,pipfile.lock,pipenv.pypa.io,Pipenv lockfile
+backend development,filename,uv.lock,docs.astral.sh/uv,uv lockfile
+backend development,filename,hatch.toml,hatch.pypa.io,Hatch config
+backend development,filename,.ruff.toml,docs.astral.sh/ruff/configuration,Ruff config
+backend development,filename,ruff.toml,docs.astral.sh/ruff/configuration,Ruff config
+backend development,filename,pyrightconfig.json,microsoft.github.io/pyright,Pyright config
+backend development,filename,noxfile.py,nox.thea.codes,nox config
+backend development,filename,pdm.lock,pdm-project.org,PDM lockfile
+backend development,filename,global.json,learn.microsoft.com/dotnet/core/tools/global-json,.NET SDK version pinning
+backend development,filename,directory.build.props,learn.microsoft.com/visualstudio/msbuild/customize-your-build,MSBuild common props
+backend development,filename,directory.build.targets,learn.microsoft.com/visualstudio/msbuild/customize-your-build,MSBuild common targets
+backend development,filename,directory.packages.props,learn.microsoft.com/nuget/consume-packages/central-package-management,Central NuGet package versions
+backend development,filename,nuget.config,learn.microsoft.com/nuget/reference/nuget-config-file,NuGet config
+backend development,filename,settings.gradle,docs.gradle.org,Gradle settings
+backend development,filename,settings.gradle.kts,docs.gradle.org,Gradle Kotlin settings
+backend development,filename,build.gradle,docs.gradle.org,Gradle build script
+backend development,filename,build.gradle.kts,docs.gradle.org,Gradle Kotlin build script
+backend development,filename,gradle.properties,docs.gradle.org,Gradle properties
+backend development,filename,gradlew,docs.gradle.org,Gradle wrapper script
+backend development,filename,gradlew.bat,docs.gradle.org,Gradle wrapper script
+backend development,filename,mvnw,maven.apache.org/wrapper,Maven wrapper script
+backend development,filename,mvnw.cmd,maven.apache.org/wrapper,Maven wrapper script
+backend development,filename,phpunit.xml,docs.phpunit.de,PHPUnit config
+backend development,filename,phpstan.neon,phpstan.org/config-reference,PHPStan config
+backend development,filename,rector.php,getrector.com/documentation,Rector config
+aws engineer,filename,template.yaml,docs.aws.amazon.com/serverless-application-model,AWS SAM template
+aws engineer,filename,template.yml,docs.aws.amazon.com/serverless-application-model,AWS SAM template
+aws engineer,filename,samconfig.toml,docs.aws.amazon.com/serverless-application-model,AWS SAM CLI config
+aws engineer,filename,cdk.json,docs.aws.amazon.com/cdk/v2/guide,AWS CDK app config
+aws engineer,filename,cdk.context.json,docs.aws.amazon.com/cdk/v2/guide,AWS CDK context cache
+aws engineer,filename,cdk.out,docs.aws.amazon.com/cdk/v2/guide,AWS CDK synth output dir name
+cloud engineer,filename,serverless.yml,www.serverless.com/framework/docs/providers/aws/guide/serverless.yml,Serverless Framework config
+cloud engineer,filename,serverless.yaml,www.serverless.com/framework/docs/providers/aws/guide/serverless.yml,Serverless Framework config
+cloud engineer,filename,serverless.ts,www.serverless.com/framework/docs/providers/aws/guide/serverless.yml,Serverless Framework TS config
+cloud engineer,filename,terraform.tfvars,developer.hashicorp.com/terraform/language/parameterize,Terraform variable values file
+cloud engineer,filename,terraform.tfvars.json,developer.hashicorp.com/terraform/language/parameterize,Terraform variable values JSON file
+cloud engineer,filename,.terraformrc,developer.hashicorp.com/terraform/cli/config/config-file,Terraform CLI config
+cloud engineer,filename,terraform.rc,developer.hashicorp.com/terraform/cli/config/config-file,Terraform CLI config (Windows)
+cloud engineer,filename,terragrunt.hcl,terragrunt.gruntwork.io/docs/reference/configuration,Terragrunt config
+cloud engineer,filename,terragrunt.hcl.json,terragrunt.gruntwork.io/docs/reference/configuration,Terragrunt JSON config
+cloud engineer,filename,kustomization.yaml,kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization,Kustomize config
+cloud engineer,filename,kustomization.yml,kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization,Kustomize config
+cloud engineer,filename,kustomization,kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization,Kustomize config (no extension)
+cloud engineer,filename,chart.yaml,helm.sh/docs/topics/charts,Helm chart metadata
+cloud engineer,filename,values.yaml,helm.sh/docs/topics/charts,Helm chart values
+cloud engineer,filename,values.schema.json,helm.sh/docs/topics/charts,Helm values schema
+cloud engineer,filename,skaffold.yaml,skaffold.dev/docs/references/yaml,Skaffold config
+cloud engineer,filename,skaffold.yml,skaffold.dev/docs/references/yaml,Skaffold config
+cloud engineer,filename,tiltfile,docs.tilt.dev/tiltfile_concepts.html,Tilt config script
+cloud engineer,filename,pulumi.yaml,www.pulumi.com/docs/iac/concepts/projects/project-file,Pulumi project file
+cloud engineer,filename,pulumi.yml,www.pulumi.com/docs/iac/concepts/projects/project-file,Pulumi project file
+cloud engineer,filename,pulumi.dev.yaml,www.pulumi.com/docs/iac/concepts/projects/stack-settings-file,Pulumi stack file example
+cloud engineer,filename,pulumi.prod.yaml,www.pulumi.com/docs/iac/concepts/projects/stack-settings-file,Pulumi stack file example
+cloud engineer,filename,pulumi.production.yaml,www.pulumi.com/docs/iac/concepts/projects/stack-settings-file,Pulumi stack file example
+cloud engineer,filename,pulumi.staging.yaml,www.pulumi.com/docs/iac/concepts/projects/stack-settings-file,Pulumi stack file example
+cloud engineer,filename,cloudbuild.yaml,cloud.google.com/build/docs/build-config-file-schema,Google Cloud Build config
+cloud engineer,filename,cloudbuild.yml,cloud.google.com/build/docs/build-config-file-schema,Google Cloud Build config
+cloud engineer,filename,app.yaml,cloud.google.com/appengine/docs/standard/reference/app-yaml,Google App Engine config
+cloud engineer,filename,app.yml,cloud.google.com/appengine/docs/standard/reference/app-yaml,Google App Engine config
+cloud engineer,filename,azure-pipelines.yml,learn.microsoft.com/azure/devops/pipelines/yaml-schema,Azure Pipelines config
+cloud engineer,filename,azure-pipelines.yaml,learn.microsoft.com/azure/devops/pipelines/yaml-schema,Azure Pipelines config
+cloud engineer,filename,bitbucket-pipelines.yml,support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml,Bitbucket Pipelines config
+cloud engineer,filename,.gitlab-ci.yml,docs.gitlab.com/ee/ci/yaml,GitLab CI config
+cloud engineer,filename,.drone.yml,docs.drone.io/pipeline/overview,Drone CI config
+cloud engineer,filename,.buildkite.yml,buildkite.com/docs/pipelines/configure,Buildkite pipeline config
+cloud engineer,filename,docker-bake.hcl,docs.docker.com/build/bake,Docker bake file
+cloud engineer,filename,docker-bake.json,docs.docker.com/build/bake,Docker bake file
+software architect,filename,workspace.json,nx.dev,Monorepo workspace config
+software architect,filename,project.json,nx.dev,Nx project config
+software architect,filename,nx.json,nx.dev/reference/nx-json,Nx workspace config
+software architect,filename,turbo.json,turborepo.com/docs/reference/configuration,Turborepo config
+software architect,filename,pnpm-workspace.yaml,pnpm.io/pnpm-workspace_yaml,pnpm workspace config
+software architect,filename,pnpm-workspace.yml,pnpm.io/pnpm-workspace_yaml,pnpm workspace config
+software architect,filename,bunfig.toml,bun.sh/docs/runtime/bunfig,Bun config
+software architect,filename,deno.json,docs.deno.com/runtime/fundamentals/configuration,Deno config
+software architect,filename,deno.jsonc,docs.deno.com/runtime/fundamentals/configuration,Deno config
+software architect,filename,module.bazel,bazel.build/external/module,Bazel bzlmod file
+software architect,filename,workspace.bzlmod,bazel.build/external/module,Legacy bzlmod naming
+software architect,filename,cmakepresets.json,cmake.org/cmake/help/latest/manual/cmake-presets.7.html,CMake presets
+software architect,filename,cmakeuserpresets.json,cmake.org/cmake/help/latest/manual/cmake-presets.7.html,CMake user presets
+software architect,filename,.envrc,direnv.net,direnv config
+software architect,filename,.mise.toml,mise.jdx.dev/configuration,mise config
+software architect,filename,.mise.local.toml,mise.jdx.dev/configuration,mise local config
+software architect,filename,.devcontainer.json,containers.dev/implementors/json_reference,Dev Container spec file
+software architect,filename,devcontainer.json,containers.dev/implementors/json_reference,Dev Container file name
+software architect,filename,.codeowners,docs.github.com/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners,Repository ownership rules
+machine learning engineer,extension,ipynb,jupyter.org/documentation,Jupyter Notebook
+machine learning engineer,filename,jupyter_notebook_config.py,jupyter-notebook.readthedocs.io/en/stable/config.html,Jupyter Notebook config
+machine learning engineer,filename,jupyter_server_config.py,jupyter-server.readthedocs.io/en/latest/operators/public-server.html,Jupyter Server config
+machine learning engineer,filename,ipython_config.py,ipython.readthedocs.io/en/stable/config/intro.html,IPython config
+machine learning engineer,filename,mlmodel,mlflow.org/docs/latest/model,MLflow model metadata file
+machine learning engineer,filename,dvc.yaml,dvc.org/doc/user-guide/project-structure/dvcyaml-files,DVC pipeline config
+machine learning engineer,filename,dvc.lock,dvc.org/doc/user-guide/project-structure/dvcyaml-files,DVC lock file
+machine learning engineer,filename,.dvcignore,dvc.org/doc/user-guide/project-structure/dvcignore-files,DVC ignore file
+machine learning engineer,filename,conda-lock.yml,conda.github.io/conda-lock,Conda lock file
+machine learning engineer,filename,conda-lock.yaml,conda.github.io/conda-lock,Conda lock file
+machine learning engineer,filename,environment.yml,docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html,Conda environment file
+machine learning engineer,filename,environment.yaml,docs.conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html,Conda environment file
+machine learning engineer,filename,accelerate_config.yaml,huggingface.co/docs/accelerate/package_reference/cli,HF Accelerate config
+machine learning engineer,filename,accelerate_config.yml,huggingface.co/docs/accelerate/package_reference/cli,HF Accelerate config
+AI profession,filename,model-index.yml,pytorch.org/serve,Model index manifest
+AI profession,filename,model-index.yaml,pytorch.org/serve,Model index manifest
+AI profession,filename,inference-config.json,platform.openai.com/docs,Inference config artifact
+AI profession,filename,promptfoo.yaml,promptfoo.dev/docs/configuration/guide,Prompt evaluation config
+AI profession,filename,promptfoo.yml,promptfoo.dev/docs/configuration/guide,Prompt evaluation config
+AI profession,filename,.aider.conf.yml,aider.chat/docs/config/aider_conf.html,Aider config
+AI profession,filename,.aider.conf.yaml,aider.chat/docs/config/aider_conf.html,Aider config
+software engineer,filename,.arcconfig,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.atomignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.babelignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.buckconfig,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.bzrignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.coffeelintignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.cvsignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.easignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.eleventyignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.env.dev,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.env.development.local,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.env.prod,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.env.testing,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.flaskenv,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.git-blame-ignore-revs,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.ignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.imgbotconfig,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.markdownlintignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.nodemonignore,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,.tern-config,github.com/github-linguist/linguist,high-signal filename from Linguist
+cloud engineer,filename,.xcompose,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,app.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,bun.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,cabal.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,deno.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,flake.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,gemfile.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,gitignore-global,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,gitignore_global,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,glide.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,gopkg.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,kcl.mod.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,language-configuration.json,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,mix.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,module.bazel.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+front-end development,filename,nextflow.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,nginx.conf,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,packages.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,pixi.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,rebar.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,rebar.config.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,rebar.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,requirements.lock.txt,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,riemann.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,settings.stylecop,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,ssh-config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,ssh_config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,sshconfig,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,sshconfig.snip,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,sshd-config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,sshd_config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,web.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,web.debug.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,web.release.config,github.com/github-linguist/linguist,high-signal filename from Linguist
+cloud engineer,filename,xcompose,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,yarn.lock,github.com/github-linguist/linguist,high-signal filename from Linguist
+software engineer,filename,zshenv,github.com/github-linguist/linguist,high-signal filename from Linguist
+cloud engineer,extension,bicep,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,cjsx,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,coffee.md,github.com/github-linguist/linguist,high-signal extension from Linguist
+cloud engineer,extension,cue,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,ddl,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,geojson,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,gltf,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,gradle.kts,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,http,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,livemd,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,mmd,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,mysql,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,overpassql,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,pgsql,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,plsql,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,proto,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,rest,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,rtf,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,textproto,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,topojson,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,tsconfig.json,github.com/github-linguist/linguist,high-signal extension from Linguist
+software engineer,extension,yml.mysql,github.com/github-linguist/linguist,high-signal extension from Linguist

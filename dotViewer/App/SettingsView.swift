@@ -6,9 +6,12 @@ struct SettingsView: View {
 
     @State private var selectedTheme: String = SharedSettings.shared.selectedTheme
     @State private var fontSize: Double = SharedSettings.shared.fontSize
+    @State private var appUIFontSizePreset: String = SharedSettings.shared.appUIFontSizePreset
     @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var showLineNumbers: Bool = SharedSettings.shared.showLineNumbers
     @State private var wordWrap: Bool = SharedSettings.shared.wordWrap
+    @State private var codeContentWidthMode: String = SharedSettings.shared.codeContentWidthMode
+    @State private var codeContentCustomMaxWidth: Double = Double(SharedSettings.shared.codeContentCustomMaxWidth)
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSizeBytes) / 1000.0
     @State private var showTruncationWarning: Bool = SharedSettings.shared.showTruncationWarning
     @State private var showPreviewHeader: Bool = SharedSettings.shared.showFileInfoHeader
@@ -21,6 +24,7 @@ struct SettingsView: View {
     @State private var previewCacheTTLSeconds: Double = Double(SharedSettings.shared.previewCacheTTLSeconds)
     @State private var copyBehavior: String = SharedSettings.shared.copyBehavior
     @State private var showSearchButton: Bool = SharedSettings.shared.showSearchButton
+    @State private var includeLineNumbersInCopy: Bool = SharedSettings.shared.includeLineNumbersInCopy
 
     private let copyBehaviors: [(String, String, String)] = [
         ("autoCopy", "Auto-copy", "Copies text to clipboard when you release the mouse after selecting."),
@@ -46,6 +50,8 @@ struct SettingsView: View {
         ("tokyoNight", "Tokyo Night"),
         ("blackout", "Blackout"),
     ]
+
+    private let appUIFontPresets: [AppUIFontSizePreset] = AppUIFontSizePreset.allCases
 
     private var palette: ThemePalette {
         ThemePalette.palette(for: selectedTheme, systemIsDark: colorScheme == .dark)
@@ -96,6 +102,22 @@ struct SettingsView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
+                        Divider()
+
+                        Picker("App UI Text Size", selection: $appUIFontSizePreset) {
+                            ForEach(appUIFontPresets) { preset in
+                                Text(preset.title).tag(preset.rawValue)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: appUIFontSizePreset) { _, newValue in
+                            SharedSettings.shared.appUIFontSizePreset = newValue
+                        }
+
+                        Text("System follows macOS text sizing. Other values override app UI text size.")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
                         Toggle("Show Line Numbers", isOn: $showLineNumbers)
                             .onChange(of: showLineNumbers) { _, newValue in
                                 SharedSettings.shared.showLineNumbers = newValue
@@ -107,6 +129,39 @@ struct SettingsView: View {
                             }
 
                         Text("Wrap long lines instead of horizontal scrolling")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Divider()
+
+                        Text("Code and RAW Content Width")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Picker("Code/RAW Width", selection: $codeContentWidthMode) {
+                            Text("Auto").tag("auto")
+                            Text("Custom").tag("custom")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: codeContentWidthMode) { _, newValue in
+                            SharedSettings.shared.codeContentWidthMode = newValue
+                        }
+
+                        if codeContentWidthMode == "custom" {
+                            HStack {
+                                Text("Max Width")
+                                Spacer()
+                                Text("\(Int(codeContentCustomMaxWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $codeContentCustomMaxWidth, in: 480...2400, step: 10)
+                                .onChange(of: codeContentCustomMaxWidth) { _, newValue in
+                                    SharedSettings.shared.codeContentCustomMaxWidth = Int(newValue)
+                                }
+                        }
+
+                        Text("Applies to all non-rendered views (code files and markdown RAW mode).")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
@@ -173,6 +228,15 @@ struct SettingsView: View {
                         }
 
                         Text(copyBehaviors.first(where: { $0.0 == copyBehavior })?.2 ?? "")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Toggle("Include Line Numbers in Copy", isOn: $includeLineNumbersInCopy)
+                            .onChange(of: includeLineNumbersInCopy) { _, newValue in
+                                SharedSettings.shared.includeLineNumbersInCopy = newValue
+                            }
+
+                        Text("When enabled, manual selection and the header copy button include line numbers.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 

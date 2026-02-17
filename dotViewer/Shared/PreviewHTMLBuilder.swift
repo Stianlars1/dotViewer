@@ -13,8 +13,12 @@ public struct PreviewInfo {
     public let rawHTML: String
     public let renderedHTML: String?
     public let codeFontSize: Double
+    public let codeContentWidthMode: String
+    public let codeContentCustomMaxWidth: Int
     public let defaultMarkdownMode: String
     public let markdownRenderFontSize: Double
+    public let markdownRenderedWidthMode: String
+    public let markdownRenderedCustomMaxWidth: Int
     public let markdownShowInlineImages: Bool
     public let markdownCustomCSS: String
     public let markdownCustomCSSOverride: Bool
@@ -24,8 +28,10 @@ public struct PreviewInfo {
     public let systemIsDark: Bool
     public let wordWrap: Bool
     public let markdownShowTOC: Bool
+    public let markdownTOCDefaultOpen: Bool
     public let copyBehavior: String
     public let showSearchButton: Bool
+    public let includeLineNumbersInCopy: Bool
     public let sourceDirectory: String
 
     public init(
@@ -41,8 +47,12 @@ public struct PreviewInfo {
         rawHTML: String,
         renderedHTML: String?,
         codeFontSize: Double,
+        codeContentWidthMode: String = "auto",
+        codeContentCustomMaxWidth: Int = 1200,
         defaultMarkdownMode: String,
         markdownRenderFontSize: Double,
+        markdownRenderedWidthMode: String = "auto",
+        markdownRenderedCustomMaxWidth: Int = 900,
         markdownShowInlineImages: Bool,
         markdownCustomCSS: String,
         markdownCustomCSSOverride: Bool,
@@ -52,8 +62,10 @@ public struct PreviewInfo {
         systemIsDark: Bool = false,
         wordWrap: Bool = false,
         markdownShowTOC: Bool = false,
+        markdownTOCDefaultOpen: Bool = true,
         copyBehavior: String = "autoCopy",
         showSearchButton: Bool = false,
+        includeLineNumbersInCopy: Bool = false,
         sourceDirectory: String = ""
     ) {
         self.title = title
@@ -68,8 +80,12 @@ public struct PreviewInfo {
         self.rawHTML = rawHTML
         self.renderedHTML = renderedHTML
         self.codeFontSize = codeFontSize
+        self.codeContentWidthMode = codeContentWidthMode
+        self.codeContentCustomMaxWidth = codeContentCustomMaxWidth
         self.defaultMarkdownMode = defaultMarkdownMode
         self.markdownRenderFontSize = markdownRenderFontSize
+        self.markdownRenderedWidthMode = markdownRenderedWidthMode
+        self.markdownRenderedCustomMaxWidth = markdownRenderedCustomMaxWidth
         self.markdownShowInlineImages = markdownShowInlineImages
         self.markdownCustomCSS = markdownCustomCSS
         self.markdownCustomCSSOverride = markdownCustomCSSOverride
@@ -79,8 +95,10 @@ public struct PreviewInfo {
         self.systemIsDark = systemIsDark
         self.wordWrap = wordWrap
         self.markdownShowTOC = markdownShowTOC
+        self.markdownTOCDefaultOpen = markdownTOCDefaultOpen
         self.copyBehavior = copyBehavior
         self.showSearchButton = showSearchButton
+        self.includeLineNumbersInCopy = includeLineNumbersInCopy
         self.sourceDirectory = sourceDirectory
     }
 }
@@ -150,7 +168,7 @@ public enum PreviewHTMLBuilder {
           <div id="toast" class="toast">Copied</div>
           <textarea id="raw-source" class="hidden">\(escapeHTML(info.rawText))</textarea>
           <script>
-          \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior))
+          \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior, includeLineNumbersInCopy: info.includeLineNumbersInCopy))
           </script>
         </body>
         </html>
@@ -161,7 +179,7 @@ public enum PreviewHTMLBuilder {
         let sizeText = ByteCountFormatter.string(fromByteCount: Int64(info.fileSizeBytes), countStyle: .file)
         let lineText = "\(info.lineCount) lines"
         let markdownToggle = info.renderedHTML != nil ? buildMarkdownToggle(defaultMode: info.defaultMarkdownMode) : ""
-        let tocToggle = hasTOC ? buildTOCToggle() : ""
+        let tocToggle = hasTOC ? buildTOCToggle(defaultOpen: info.markdownTOCDefaultOpen) : ""
         return """
         <div class="header">
           <div class="header-left">
@@ -222,9 +240,10 @@ public enum PreviewHTMLBuilder {
         """
     }
 
-    private static func buildTOCToggle() -> String {
+    private static func buildTOCToggle(defaultOpen: Bool) -> String {
+        let activeClass = defaultOpen ? " active" : ""
         return """
-        <button class="icon-button toc-toggle active" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
+        <button class="icon-button toc-toggle\(activeClass)" id="toc-toggle" title="Table of Contents" aria-label="Toggle table of contents">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="1.5"/>
             <line x1="9" y1="3" x2="9" y2="21" stroke="currentColor" stroke-width="1.5"/>
@@ -236,6 +255,15 @@ public enum PreviewHTMLBuilder {
     private static func buildCSS(info: PreviewInfo, palette: ThemePalette) -> String {
         let codeFontSize = Int(info.codeFontSize)
         let renderFontSize = Int(info.markdownRenderFontSize)
+        let codeMaxWidthRule = info.codeContentWidthMode == "custom"
+            ? "max-width: \(max(480, min(2400, info.codeContentCustomMaxWidth)))px;"
+            : "max-width: none;"
+        let codeMarginRule = info.codeContentWidthMode == "custom"
+            ? "margin: 0 auto;"
+            : "margin: 0;"
+        let renderedMaxWidth = info.markdownRenderedWidthMode == "custom"
+            ? "\(max(480, min(2400, info.markdownRenderedCustomMaxWidth)))px"
+            : "900px"
         let inlineImagesCSS = info.markdownShowInlineImages
             ? ""
             : ".rendered-view img { display: none; }"
@@ -433,6 +461,8 @@ public enum PreviewHTMLBuilder {
           font-size: \(codeFontSize)px;
           color: var(--text);
           line-height: 1.45;
+          \(codeMaxWidthRule)
+          \(codeMarginRule)
         }
 
         .line {
@@ -445,6 +475,8 @@ public enum PreviewHTMLBuilder {
           padding-right: 8px;
           color: var(--gutter);
           user-select: none;
+          -webkit-user-select: none;
+          -moz-user-select: none;
           font-size: 11px;
         }
 
@@ -496,7 +528,7 @@ public enum PreviewHTMLBuilder {
           background: transparent;
           border: none;
           box-shadow: none;
-          max-width: 900px;
+          max-width: \(renderedMaxWidth);
           margin: 0 auto;
           padding: 20px 32px 40px;
         }
@@ -1150,10 +1182,16 @@ public enum PreviewHTMLBuilder {
         return baseCSS
     }
 
-    private static func buildScript(defaultMode: String, hasRendered: Bool, copyBehavior: String) -> String {
+    private static func buildScript(
+        defaultMode: String,
+        hasRendered: Bool,
+        copyBehavior: String,
+        includeLineNumbersInCopy: Bool
+    ) -> String {
         guard hasRendered else {
             return """
             const copyButton = document.getElementById('copy-button');
+            const includeLineNumbers = \(includeLineNumbersInCopy ? "true" : "false");
             const toast = document.getElementById('toast');
             let toastTimer = null;
 
@@ -1183,13 +1221,19 @@ public enum PreviewHTMLBuilder {
               });
             }
 
+            function numberedText(text) {
+              const lines = text.split('\n');
+              return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\n');
+            }
+
             copyButton?.addEventListener('click', () => {
               const sel = window.getSelection().toString();
               if (sel.length > 0) {
                 writeClipboard(sel).then(() => showToast('Copied selection'));
               } else {
                 const text = document.getElementById('raw-source')?.value || '';
-                writeClipboard(text).then(() => showToast('Copied'));
+                const payload = includeLineNumbers ? numberedText(text) : text;
+                writeClipboard(payload).then(() => showToast('Copied'));
               }
             });
 
@@ -1202,11 +1246,14 @@ public enum PreviewHTMLBuilder {
               let text;
               if (lines.length > 0) {
                 text = Array.from(lines).map(function(line) {
+                  const lineNumber = line.querySelector('.ln')?.textContent?.trim();
+                  line.querySelectorAll('.ln').forEach(node => node.remove());
                   const codeLine = line.querySelector('.code-line');
-                  return codeLine ? codeLine.textContent : line.textContent;
+                  const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
+                  return prefix + (codeLine ? codeLine.textContent : line.textContent);
                 }).join('\\n');
               } else {
-                text = sel.toString();
+                text = fragment.textContent || sel.toString();
               }
               if (text.length > 0) {
                 e.clipboardData.setData('text/plain', text);
@@ -1235,6 +1282,7 @@ public enum PreviewHTMLBuilder {
         const renderedView = document.getElementById('rendered-view');
         const buttons = document.querySelectorAll('.toggle-button');
         const copyButton = document.getElementById('copy-button');
+        const includeLineNumbers = \(includeLineNumbersInCopy ? "true" : "false");
         const toast = document.getElementById('toast');
         let toastTimer = null;
         let currentMode = '\(defaultMode == "rendered" ? "rendered" : "raw")';
@@ -1416,6 +1464,11 @@ public enum PreviewHTMLBuilder {
           });
         }
 
+        function numberedText(text) {
+          const lines = text.split('\n');
+          return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\n');
+        }
+
         copyButton?.addEventListener('click', () => {
           const sel = window.getSelection().toString();
           if (sel.length > 0) {
@@ -1427,7 +1480,8 @@ public enum PreviewHTMLBuilder {
             } else {
               text = document.getElementById('raw-source')?.value || '';
             }
-            writeClipboard(text).then(() => showToast('Copied'));
+            const payload = includeLineNumbers && currentMode !== 'rendered' ? numberedText(text) : text;
+            writeClipboard(payload).then(() => showToast('Copied'));
           }
         });
 
@@ -1440,11 +1494,14 @@ public enum PreviewHTMLBuilder {
           let text;
           if (lines.length > 0) {
             text = Array.from(lines).map(function(line) {
+              const lineNumber = line.querySelector('.ln')?.textContent?.trim();
+              line.querySelectorAll('.ln').forEach(node => node.remove());
               const codeLine = line.querySelector('.code-line');
-              return codeLine ? codeLine.textContent : line.textContent;
+              const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
+              return prefix + (codeLine ? codeLine.textContent : line.textContent);
             }).join('\\n');
           } else {
-            text = sel.toString();
+            text = fragment.textContent || sel.toString();
           }
           if (text.length > 0) {
             e.clipboardData.setData('text/plain', text);
