@@ -28,6 +28,9 @@ public struct PreviewCacheKey: Hashable, Sendable {
         includeLineNumbersInCopy: Bool,
         codeContentWidthMode: String,
         codeContentCustomMaxWidth: Int,
+        codeContentAlignment: String,
+        markdownRawContentAlignment: String,
+        markdownRenderedContentAlignment: String,
         wordWrap: Bool = false
     ) {
         rawKey = [
@@ -53,6 +56,9 @@ public struct PreviewCacheKey: Hashable, Sendable {
             includeLineNumbersInCopy ? "lnc1" : "lnc0",
             codeContentWidthMode,
             "\(codeContentCustomMaxWidth)",
+            codeContentAlignment,
+            markdownRawContentAlignment,
+            markdownRenderedContentAlignment,
             wordWrap ? "ww1" : "ww0"
         ].joined(separator: "|")
     }

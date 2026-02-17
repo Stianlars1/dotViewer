@@ -14,7 +14,7 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
 
         XCTAssertTrue(html.contains("max-width: none;"))
-        XCTAssertTrue(html.contains("margin: 0;"))
+        XCTAssertTrue(html.contains("margin: 0 auto 0 0;"))
     }
 
     func testCodeViewCustomWidthAppliesConfiguredMaxWidth() {
@@ -29,7 +29,37 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
 
         XCTAssertTrue(html.contains("max-width: 1280px;"))
+        XCTAssertTrue(html.contains("margin: 0 auto 0 0;"))
+    }
+
+    func testCodeViewCenterAlignmentAppliesCenteredMargin() {
+        let info = makeInfo(
+            codeContentWidthMode: "custom",
+            codeContentCustomMaxWidth: 1280,
+            codeContentAlignment: "center",
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
         XCTAssertTrue(html.contains("margin: 0 auto;"))
+    }
+
+    func testCodeViewRightAlignmentAppliesRightAnchoredMargin() {
+        let info = makeInfo(
+            codeContentWidthMode: "custom",
+            codeContentCustomMaxWidth: 1280,
+            codeContentAlignment: "right",
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("margin: 0 0 0 auto;"))
     }
 
     func testRenderedViewAutoWidthUsesDefaultWidth() {
@@ -61,11 +91,154 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains("max-width: 1440px;"))
     }
 
+    func testRenderedViewLeftAlignmentAppliesLeftAnchoredMargin() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "custom",
+            markdownRenderedCustomMaxWidth: 1440,
+            markdownRenderedContentAlignment: "left",
+            renderedHTML: "<h1>Title</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains(".rendered-view"))
+        XCTAssertTrue(html.contains("margin: 0 auto 0 0;"))
+    }
+
+    func testMarkdownRawAlignmentOverridesCodeAlignment() {
+        let info = makeInfo(
+            codeContentWidthMode: "custom",
+            codeContentCustomMaxWidth: 1280,
+            codeContentAlignment: "center",
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            markdownRawContentAlignment: "right",
+            renderedHTML: "<h1>Title</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("#raw-view[data-language=\"markdown\"]"))
+        XCTAssertTrue(html.contains("margin: 0 0 0 auto;"))
+    }
+
+    func testRenderedBootstrapUsesSafeInitPhases() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1200,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 900,
+            renderedHTML: "<h1 id=\"title\">Title</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneDark)
+
+        XCTAssertTrue(html.contains("function safeInit(name, fn)"))
+        XCTAssertTrue(html.contains("window.__dotviewerInitErrors = window.__dotviewerInitErrors || [];"))
+        XCTAssertTrue(html.contains("safeInit('initCoreModeToggle', initCoreModeToggle);"))
+        XCTAssertTrue(html.contains("safeInit('initTOCControls', initTOCControls);"))
+        XCTAssertTrue(html.contains("safeInit('initCopyControls', initCopyControls);"))
+        XCTAssertTrue(html.contains("safeInit('initRenderedLinkCopy', initRenderedLinkCopy);"))
+        XCTAssertTrue(html.contains("safeInit('initLineHighlight', initLineHighlight);"))
+        XCTAssertTrue(html.contains("safeInit('initSearch', initSearch);"))
+        XCTAssertTrue(html.contains("safeInit('initCopyBehavior', initCopyBehavior);"))
+    }
+
+    func testRenderedBootstrapInitializesCoreModeBeforeOptionalPhases() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1200,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 900,
+            renderedHTML: "<h1 id=\"title\">Title</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneDark)
+
+        guard
+            let coreRange = html.range(of: "safeInit('initCoreModeToggle', initCoreModeToggle);"),
+            let tocRange = html.range(of: "safeInit('initTOCControls', initTOCControls);"),
+            let copyRange = html.range(of: "safeInit('initCopyControls', initCopyControls);")
+        else {
+            return XCTFail("Expected init phase markers to exist")
+        }
+
+        XCTAssertLessThan(coreRange.lowerBound, tocRange.lowerBound)
+        XCTAssertLessThan(tocRange.lowerBound, copyRange.lowerBound)
+        XCTAssertTrue(html.contains("function initCoreModeToggle()"))
+        XCTAssertTrue(html.contains("setMode(currentMode);"))
+    }
+
+    func testRenderedBootstrapContainsNoOptionalChainingToken() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1200,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 900,
+            renderedHTML: "<h1 id=\"title\">Title</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneDark)
+
+        XCTAssertFalse(html.contains("?."))
+    }
+
+    func testTOCDisabledOmitsTOCDOMButKeepsSafeBootstrap() {
+        let info = PreviewInfo(
+            title: "README.md",
+            language: "Markdown",
+            lineCount: 3,
+            fileSizeBytes: 100,
+            isTruncated: false,
+            showTruncationWarning: false,
+            showHeader: true,
+            isSensitive: false,
+            rawText: "# Title\n\n## Subtitle",
+            rawHTML: "<div class=\"line\"><span class=\"code-line\"># Title</span></div>",
+            renderedHTML: "<h1 id=\"title\">Title</h1><h2 id=\"subtitle\">Subtitle</h2>",
+            codeFontSize: 13,
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1200,
+            codeContentAlignment: "left",
+            defaultMarkdownMode: "rendered",
+            markdownRenderFontSize: 14,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 900,
+            markdownRawContentAlignment: "left",
+            markdownRenderedContentAlignment: "center",
+            markdownShowInlineImages: true,
+            markdownCustomCSS: "",
+            markdownCustomCSSOverride: false,
+            themeName: "githubDark",
+            showUnknownTextWarning: false,
+            showBinaryWarning: false,
+            systemIsDark: true,
+            wordWrap: false,
+            markdownShowTOC: false,
+            markdownTOCDefaultOpen: true,
+            copyBehavior: "off",
+            showSearchButton: false,
+            includeLineNumbersInCopy: false,
+            sourceDirectory: "/tmp"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.githubDark)
+
+        XCTAssertFalse(html.contains("id=\"toc-panel\""))
+        XCTAssertFalse(html.contains("id=\"toc-toggle\""))
+        XCTAssertTrue(html.contains("safeInit('initCoreModeToggle', initCoreModeToggle);"))
+    }
+
     private func makeInfo(
         codeContentWidthMode: String,
         codeContentCustomMaxWidth: Int,
+        codeContentAlignment: String = "left",
         markdownRenderedWidthMode: String,
         markdownRenderedCustomMaxWidth: Int,
+        markdownRawContentAlignment: String = "left",
+        markdownRenderedContentAlignment: String = "center",
         renderedHTML: String?
     ) -> PreviewInfo {
         PreviewInfo(
@@ -83,10 +256,13 @@ final class PreviewHTMLBuilderTests: XCTestCase {
             codeFontSize: 13,
             codeContentWidthMode: codeContentWidthMode,
             codeContentCustomMaxWidth: codeContentCustomMaxWidth,
+            codeContentAlignment: codeContentAlignment,
             defaultMarkdownMode: "raw",
             markdownRenderFontSize: 14,
             markdownRenderedWidthMode: markdownRenderedWidthMode,
             markdownRenderedCustomMaxWidth: markdownRenderedCustomMaxWidth,
+            markdownRawContentAlignment: markdownRawContentAlignment,
+            markdownRenderedContentAlignment: markdownRenderedContentAlignment,
             markdownShowInlineImages: true,
             markdownCustomCSS: "",
             markdownCustomCSSOverride: false,

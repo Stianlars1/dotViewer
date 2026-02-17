@@ -12,6 +12,9 @@ struct SettingsView: View {
     @State private var wordWrap: Bool = SharedSettings.shared.wordWrap
     @State private var codeContentWidthMode: String = SharedSettings.shared.codeContentWidthMode
     @State private var codeContentCustomMaxWidth: Double = Double(SharedSettings.shared.codeContentCustomMaxWidth)
+    @State private var codeContentAlignment: String = SharedSettings.shared.codeContentAlignment
+    @State private var markdownRawContentAlignment: String = SharedSettings.shared.markdownRawContentAlignment
+    @State private var showContentAlignmentAdvanced: Bool = false
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSizeBytes) / 1000.0
     @State private var showTruncationWarning: Bool = SharedSettings.shared.showTruncationWarning
     @State private var showPreviewHeader: Bool = SharedSettings.shared.showFileInfoHeader
@@ -164,6 +167,31 @@ struct SettingsView: View {
                         Text("Applies to all non-rendered views (code files and markdown RAW mode).")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+
+                        DisclosureGroup("Content Alignment (Advanced)", isExpanded: $showContentAlignmentAdvanced) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Picker("Code Alignment", selection: $codeContentAlignment) {
+                                    Text("Left").tag("left")
+                                    Text("Center").tag("center")
+                                    Text("Right").tag("right")
+                                }
+                                .pickerStyle(.segmented)
+                                .onChange(of: codeContentAlignment) { _, newValue in
+                                    SharedSettings.shared.codeContentAlignment = newValue
+                                }
+
+                                Picker("Markdown RAW Alignment", selection: $markdownRawContentAlignment) {
+                                    Text("Left").tag("left")
+                                    Text("Center").tag("center")
+                                    Text("Right").tag("right")
+                                }
+                                .pickerStyle(.segmented)
+                                .onChange(of: markdownRawContentAlignment) { _, newValue in
+                                    SharedSettings.shared.markdownRawContentAlignment = newValue
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))

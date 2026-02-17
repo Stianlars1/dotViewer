@@ -15,10 +15,13 @@ public struct PreviewInfo {
     public let codeFontSize: Double
     public let codeContentWidthMode: String
     public let codeContentCustomMaxWidth: Int
+    public let codeContentAlignment: String
     public let defaultMarkdownMode: String
     public let markdownRenderFontSize: Double
     public let markdownRenderedWidthMode: String
     public let markdownRenderedCustomMaxWidth: Int
+    public let markdownRawContentAlignment: String
+    public let markdownRenderedContentAlignment: String
     public let markdownShowInlineImages: Bool
     public let markdownCustomCSS: String
     public let markdownCustomCSSOverride: Bool
@@ -49,10 +52,13 @@ public struct PreviewInfo {
         codeFontSize: Double,
         codeContentWidthMode: String = "auto",
         codeContentCustomMaxWidth: Int = 1200,
+        codeContentAlignment: String = "left",
         defaultMarkdownMode: String,
         markdownRenderFontSize: Double,
         markdownRenderedWidthMode: String = "auto",
         markdownRenderedCustomMaxWidth: Int = 900,
+        markdownRawContentAlignment: String = "left",
+        markdownRenderedContentAlignment: String = "center",
         markdownShowInlineImages: Bool,
         markdownCustomCSS: String,
         markdownCustomCSSOverride: Bool,
@@ -82,10 +88,13 @@ public struct PreviewInfo {
         self.codeFontSize = codeFontSize
         self.codeContentWidthMode = codeContentWidthMode
         self.codeContentCustomMaxWidth = codeContentCustomMaxWidth
+        self.codeContentAlignment = codeContentAlignment
         self.defaultMarkdownMode = defaultMarkdownMode
         self.markdownRenderFontSize = markdownRenderFontSize
         self.markdownRenderedWidthMode = markdownRenderedWidthMode
         self.markdownRenderedCustomMaxWidth = markdownRenderedCustomMaxWidth
+        self.markdownRawContentAlignment = markdownRawContentAlignment
+        self.markdownRenderedContentAlignment = markdownRenderedContentAlignment
         self.markdownShowInlineImages = markdownShowInlineImages
         self.markdownCustomCSS = markdownCustomCSS
         self.markdownCustomCSSOverride = markdownCustomCSSOverride
@@ -255,15 +264,25 @@ public enum PreviewHTMLBuilder {
     private static func buildCSS(info: PreviewInfo, palette: ThemePalette) -> String {
         let codeFontSize = Int(info.codeFontSize)
         let renderFontSize = Int(info.markdownRenderFontSize)
+        func marginRule(for alignment: String) -> String {
+            switch alignment {
+            case "right":
+                return "margin: 0 0 0 auto;"
+            case "center":
+                return "margin: 0 auto;"
+            default:
+                return "margin: 0 auto 0 0;"
+            }
+        }
         let codeMaxWidthRule = info.codeContentWidthMode == "custom"
             ? "max-width: \(max(480, min(2400, info.codeContentCustomMaxWidth)))px;"
             : "max-width: none;"
-        let codeMarginRule = info.codeContentWidthMode == "custom"
-            ? "margin: 0 auto;"
-            : "margin: 0;"
+        let codeMarginRule = marginRule(for: info.codeContentAlignment)
+        let rawMarginRule = marginRule(for: info.markdownRawContentAlignment)
         let renderedMaxWidth = info.markdownRenderedWidthMode == "custom"
             ? "\(max(480, min(2400, info.markdownRenderedCustomMaxWidth)))px"
             : "900px"
+        let renderedMarginRule = marginRule(for: info.markdownRenderedContentAlignment)
         let inlineImagesCSS = info.markdownShowInlineImages
             ? ""
             : ".rendered-view img { display: none; }"
@@ -465,6 +484,10 @@ public enum PreviewHTMLBuilder {
           \(codeMarginRule)
         }
 
+        #raw-view[data-language="markdown"] {
+          \(rawMarginRule)
+        }
+
         .line {
           display: flex;
         }
@@ -529,7 +552,7 @@ public enum PreviewHTMLBuilder {
           border: none;
           box-shadow: none;
           max-width: \(renderedMaxWidth);
-          margin: 0 auto;
+          \(renderedMarginRule)
           padding: 20px 32px 40px;
         }
 
@@ -1190,6 +1213,20 @@ public enum PreviewHTMLBuilder {
     ) -> String {
         guard hasRendered else {
             return """
+            window.__dotviewerInitErrors = window.__dotviewerInitErrors || [];
+
+            function safeInit(name, fn) {
+              try {
+                fn();
+              } catch (err) {
+                const msg = (err && err.message) ? err.message : String(err);
+                window.__dotviewerInitErrors.push(name + ': ' + msg);
+                if (typeof console !== 'undefined' && console.error) {
+                  console.error('[dotViewer init]', name, err);
+                }
+              }
+            }
+
             const copyButton = document.getElementById('copy-button');
             const includeLineNumbers = \(includeLineNumbersInCopy ? "true" : "false");
             const toast = document.getElementById('toast');
@@ -1222,62 +1259,102 @@ public enum PreviewHTMLBuilder {
             }
 
             function numberedText(text) {
-              const lines = text.split('\n');
-              return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\n');
+              const lines = text.split('\\n');
+              return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\\n');
             }
 
-            copyButton?.addEventListener('click', () => {
-              const sel = window.getSelection().toString();
-              if (sel.length > 0) {
-                writeClipboard(sel).then(() => showToast('Copied selection'));
-              } else {
-                const text = document.getElementById('raw-source')?.value || '';
-                const payload = includeLineNumbers ? numberedText(text) : text;
-                writeClipboard(payload).then(() => showToast('Copied'));
-              }
-            });
+            function extractLineNumber(line) {
+              const ln = line.querySelector('.ln');
+              if (!ln) return '';
+              return (ln.textContent || '').trim();
+            }
 
-            document.addEventListener('copy', function(e) {
-              const sel = window.getSelection();
-              if (sel.rangeCount === 0 || sel.toString().length === 0) return;
-              const range = sel.getRangeAt(0);
-              const fragment = range.cloneContents();
-              const lines = fragment.querySelectorAll('.line');
-              let text;
-              if (lines.length > 0) {
-                text = Array.from(lines).map(function(line) {
-                  const lineNumber = line.querySelector('.ln')?.textContent?.trim();
-                  line.querySelectorAll('.ln').forEach(node => node.remove());
-                  const codeLine = line.querySelector('.code-line');
-                  const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
-                  return prefix + (codeLine ? codeLine.textContent : line.textContent);
-                }).join('\\n');
-              } else {
-                text = fragment.textContent || sel.toString();
+            function removeLineNumbers(line) {
+              const lns = line.querySelectorAll('.ln');
+              for (let i = 0; i < lns.length; i++) {
+                lns[i].remove();
               }
-              if (text.length > 0) {
-                e.clipboardData.setData('text/plain', text);
-                e.preventDefault();
-                showToast('Copied selection');
-              }
-            });
+            }
 
-            document.addEventListener('selectionchange', () => {
-              const sel = window.getSelection().toString();
+            function initCopyControls() {
               if (copyButton) {
-                copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
+                copyButton.addEventListener('click', () => {
+                  const sel = window.getSelection().toString();
+                  if (sel.length > 0) {
+                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                  } else {
+                    const rawSource = document.getElementById('raw-source');
+                    const text = rawSource ? (rawSource.value || '') : '';
+                    const payload = includeLineNumbers ? numberedText(text) : text;
+                    writeClipboard(payload).then(() => showToast('Copied'));
+                  }
+                });
               }
+
+              document.addEventListener('copy', function(e) {
+                const sel = window.getSelection();
+                if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) return;
+                const range = sel.getRangeAt(0);
+                const fragment = range.cloneContents();
+                const lines = fragment.querySelectorAll('.line');
+                let text;
+                if (lines.length > 0) {
+                  const values = [];
+                  for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    const lineNumber = extractLineNumber(line);
+                    removeLineNumbers(line);
+                    const codeLine = line.querySelector('.code-line');
+                    const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
+                    values.push(prefix + (codeLine ? codeLine.textContent : line.textContent));
+                  }
+                  text = values.join('\\n');
+                } else {
+                  text = fragment.textContent || sel.toString();
+                }
+                if (text.length > 0) {
+                  e.clipboardData.setData('text/plain', text);
+                  e.preventDefault();
+                  showToast('Copied selection');
+                }
+              });
+
+              document.addEventListener('selectionchange', () => {
+                const sel = window.getSelection().toString();
+                if (copyButton) {
+                  copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
+                }
+              });
+            }
+
+            safeInit('initCopyControls', initCopyControls);
+            safeInit('initLineHighlight', function() {
+              \(buildLineHighlightScript())
             });
-
-            \(buildLineHighlightScript())
-
-            \(buildSearchScript())
-
-            \(buildCopyBehaviorScript(copyBehavior))
+            safeInit('initSearch', function() {
+              \(buildSearchScript())
+            });
+            safeInit('initCopyBehavior', function() {
+              \(buildCopyBehaviorScript(copyBehavior))
+            });
             """
         }
 
         return """
+        window.__dotviewerInitErrors = window.__dotviewerInitErrors || [];
+
+        function safeInit(name, fn) {
+          try {
+            fn();
+          } catch (err) {
+            const msg = (err && err.message) ? err.message : String(err);
+            window.__dotviewerInitErrors.push(name + ': ' + msg);
+            if (typeof console !== 'undefined' && console.error) {
+              console.error('[dotViewer init]', name, err);
+            }
+          }
+        }
+
         const rawView = document.getElementById('raw-view');
         const renderedView = document.getElementById('rendered-view');
         const buttons = document.querySelectorAll('.toggle-button');
@@ -1286,6 +1363,9 @@ public enum PreviewHTMLBuilder {
         const toast = document.getElementById('toast');
         let toastTimer = null;
         let currentMode = '\(defaultMode == "rendered" ? "rendered" : "raw")';
+        let tocToggle = null;
+        let tocPanel = null;
+        let tocResizeHandle = null;
 
         function showToast(message, html) {
           if (!toast) return;
@@ -1313,12 +1393,76 @@ public enum PreviewHTMLBuilder {
           });
         }
 
+        function numberedText(text) {
+          const lines = text.split('\\n');
+          return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\\n');
+        }
+
+        function extractLineNumber(line) {
+          const ln = line.querySelector('.ln');
+          if (!ln) return '';
+          return (ln.textContent || '').trim();
+        }
+
+        function removeLineNumbers(line) {
+          const lns = line.querySelectorAll('.ln');
+          for (let i = 0; i < lns.length; i++) {
+            lns[i].remove();
+          }
+        }
+
+        // Scroll spy: highlight the current section in the TOC
+        function updateActiveTOCLink() {
+          try {
+            if (!tocPanel || tocPanel.style.display === 'none') return;
+            const content = document.querySelector('.content');
+            if (!content) return;
+
+            const headings = content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
+            const tocLinks = tocPanel.querySelectorAll('.toc-content a');
+            if (headings.length === 0) return;
+
+            const contentTop = content.getBoundingClientRect().top;
+            let activeHeading = headings[0];
+
+            for (let i = 0; i < headings.length; i++) {
+              const heading = headings[i];
+              if (heading.getBoundingClientRect().top - contentTop <= 30) {
+                activeHeading = heading;
+              } else {
+                break;
+              }
+            }
+
+            for (let i = 0; i < tocLinks.length; i++) {
+              tocLinks[i].classList.remove('active');
+            }
+            if (!activeHeading) return;
+            const href = '#' + activeHeading.id;
+            for (let i = 0; i < tocLinks.length; i++) {
+              const link = tocLinks[i];
+              if (link.getAttribute('href') === href) {
+                link.classList.add('active');
+                link.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+                break;
+              }
+            }
+          } catch (err) {
+            const msg = (err && err.message) ? err.message : String(err);
+            window.__dotviewerInitErrors.push('updateActiveTOCLink: ' + msg);
+            if (typeof console !== 'undefined' && console.error) {
+              console.error('[dotViewer init]', 'updateActiveTOCLink', err);
+            }
+          }
+        }
+
         function setMode(mode) {
           currentMode = mode;
-          buttons.forEach(btn => {
+          for (let i = 0; i < buttons.length; i++) {
+            const btn = buttons[i];
             const isActive = btn.dataset.mode === mode;
             btn.classList.toggle('active', isActive);
-          });
+          }
 
           if (mode === 'rendered') {
             if (rawView) rawView.style.display = 'none';
@@ -1328,27 +1472,36 @@ public enum PreviewHTMLBuilder {
             if (renderedView) renderedView.style.display = 'none';
           }
 
-          const tocPanel = document.getElementById('toc-panel');
-          const tocToggle = document.getElementById('toc-toggle');
-          const tocHandle = document.getElementById('toc-resize-handle');
           if (tocToggle) {
             tocToggle.style.display = mode === 'rendered' ? '' : 'none';
           }
-          const tocVisible = mode === 'rendered' && tocToggle?.classList.contains('active');
+          const tocVisible = mode === 'rendered' && tocToggle && tocToggle.classList.contains('active');
           if (tocPanel) {
             tocPanel.style.display = tocVisible ? 'block' : 'none';
           }
-          if (tocHandle) {
-            tocHandle.style.display = tocVisible ? 'block' : 'none';
+          if (tocResizeHandle) {
+            tocResizeHandle.style.display = tocVisible ? 'block' : 'none';
           }
-          if (tocVisible) updateActiveTOCLink();
+          if (tocVisible) {
+            updateActiveTOCLink();
+          }
         }
 
-        const tocToggle = document.getElementById('toc-toggle');
-        const tocPanel = document.getElementById('toc-panel');
-        const tocResizeHandle = document.getElementById('toc-resize-handle');
+        function initCoreModeToggle() {
+          for (let i = 0; i < buttons.length; i++) {
+            const btn = buttons[i];
+            btn.addEventListener('click', () => setMode(btn.dataset.mode));
+          }
+          setMode(currentMode);
+        }
 
-        if (tocToggle && tocPanel) {
+        function initTOCControls() {
+          tocToggle = document.getElementById('toc-toggle');
+          tocPanel = document.getElementById('toc-panel');
+          tocResizeHandle = document.getElementById('toc-resize-handle');
+
+          if (!(tocToggle && tocPanel)) return;
+
           tocToggle.addEventListener('click', function() {
             if (currentMode !== 'rendered') return;
             const isVisible = tocPanel.style.display !== 'none';
@@ -1370,71 +1523,30 @@ public enum PreviewHTMLBuilder {
           tocPanel.addEventListener('click', function(e) {
             if (e.target.tagName === 'A') {
               e.preventDefault();
-              const targetId = e.target.getAttribute('href').substring(1);
-              const target = document.getElementById(targetId);
+              const href = e.target.getAttribute('href');
+              if (!href || href.length < 2) return;
+              const target = document.getElementById(href.substring(1));
               if (target) {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }
             }
           });
-        }
 
-        buttons.forEach(btn => {
-          btn.addEventListener('click', () => setMode(btn.dataset.mode));
-        });
-
-        setMode(currentMode);
-
-        // Scroll spy: highlight the current section in the TOC
-        function updateActiveTOCLink() {
-          if (!tocPanel || tocPanel.style.display === 'none') return;
-          const content = document.querySelector('.content');
-          if (!content) return;
-
-          const headings = content.querySelectorAll('h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]');
-          const tocLinks = tocPanel.querySelectorAll('.toc-content a');
-          if (headings.length === 0) return;
-
-          const contentTop = content.getBoundingClientRect().top;
-          let activeHeading = headings[0];
-
-          for (const heading of headings) {
-            if (heading.getBoundingClientRect().top - contentTop <= 30) {
-              activeHeading = heading;
-            } else {
-              break;
-            }
-          }
-
-          tocLinks.forEach(link => link.classList.remove('active'));
-          if (activeHeading) {
-            const href = '#' + activeHeading.id;
-            for (const link of tocLinks) {
-              if (link.getAttribute('href') === href) {
-                link.classList.add('active');
-                link.scrollIntoView({ block: 'nearest', behavior: 'auto' });
-                break;
+          const contentEl = document.querySelector('.content');
+          if (contentEl) {
+            let scrollTicking = false;
+            contentEl.addEventListener('scroll', function() {
+              if (!scrollTicking) {
+                requestAnimationFrame(function() {
+                  updateActiveTOCLink();
+                  scrollTicking = false;
+                });
+                scrollTicking = true;
               }
-            }
+            });
           }
-        }
 
-        const contentEl = document.querySelector('.content');
-        if (contentEl) {
-          let scrollTicking = false;
-          contentEl.addEventListener('scroll', function() {
-            if (!scrollTicking) {
-              requestAnimationFrame(function() {
-                updateActiveTOCLink();
-                scrollTicking = false;
-              });
-              scrollTicking = true;
-            }
-          });
-        }
-
-        // Drag-to-resize TOC sidebar
-        if (tocResizeHandle && tocPanel) {
+          // Drag-to-resize TOC sidebar
           let isDragging = false;
           let startX = 0;
           let startWidth = 0;
@@ -1464,69 +1576,73 @@ public enum PreviewHTMLBuilder {
           });
         }
 
-        function numberedText(text) {
-          const lines = text.split('\n');
-          return lines.map((line, idx) => (idx + 1) + ' ' + line).join('\n');
+        function initCopyControls() {
+          if (copyButton) {
+            copyButton.addEventListener('click', () => {
+              const sel = window.getSelection().toString();
+              if (sel.length > 0) {
+                writeClipboard(sel).then(() => showToast('Copied selection'));
+              } else {
+                let text = '';
+                if (currentMode === 'rendered' && renderedView) {
+                  text = renderedView.innerText || '';
+                } else {
+                  const rawSource = document.getElementById('raw-source');
+                  text = rawSource ? (rawSource.value || '') : '';
+                }
+                const payload = includeLineNumbers && currentMode !== 'rendered' ? numberedText(text) : text;
+                writeClipboard(payload).then(() => showToast('Copied'));
+              }
+            });
+          }
+
+          document.addEventListener('copy', function(e) {
+            const sel = window.getSelection();
+            if (!sel || sel.rangeCount === 0 || sel.toString().length === 0) return;
+            const range = sel.getRangeAt(0);
+            const fragment = range.cloneContents();
+            const lines = fragment.querySelectorAll('.line');
+            let text;
+            if (lines.length > 0) {
+              const values = [];
+              for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const lineNumber = extractLineNumber(line);
+                removeLineNumbers(line);
+                const codeLine = line.querySelector('.code-line');
+                const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
+                values.push(prefix + (codeLine ? codeLine.textContent : line.textContent));
+              }
+              text = values.join('\\n');
+            } else {
+              text = fragment.textContent || sel.toString();
+            }
+            if (text.length > 0) {
+              e.clipboardData.setData('text/plain', text);
+              e.preventDefault();
+              showToast('Copied selection');
+            }
+          });
+
+          document.addEventListener('selectionchange', () => {
+            const sel = window.getSelection().toString();
+            if (copyButton) {
+              copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
+            }
+          });
         }
 
-        copyButton?.addEventListener('click', () => {
-          const sel = window.getSelection().toString();
-          if (sel.length > 0) {
-            writeClipboard(sel).then(() => showToast('Copied selection'));
-          } else {
-            let text = '';
-            if (currentMode === 'rendered' && renderedView) {
-              text = renderedView.innerText || '';
-            } else {
-              text = document.getElementById('raw-source')?.value || '';
-            }
-            const payload = includeLineNumbers && currentMode !== 'rendered' ? numberedText(text) : text;
-            writeClipboard(payload).then(() => showToast('Copied'));
-          }
-        });
-
-        document.addEventListener('copy', function(e) {
-          const sel = window.getSelection();
-          if (sel.rangeCount === 0 || sel.toString().length === 0) return;
-          const range = sel.getRangeAt(0);
-          const fragment = range.cloneContents();
-          const lines = fragment.querySelectorAll('.line');
-          let text;
-          if (lines.length > 0) {
-            text = Array.from(lines).map(function(line) {
-              const lineNumber = line.querySelector('.ln')?.textContent?.trim();
-              line.querySelectorAll('.ln').forEach(node => node.remove());
-              const codeLine = line.querySelector('.code-line');
-              const prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
-              return prefix + (codeLine ? codeLine.textContent : line.textContent);
-            }).join('\\n');
-          } else {
-            text = fragment.textContent || sel.toString();
-          }
-          if (text.length > 0) {
-            e.clipboardData.setData('text/plain', text);
-            e.preventDefault();
-            showToast('Copied selection');
-          }
-        });
-
-        document.addEventListener('selectionchange', () => {
-          const sel = window.getSelection().toString();
-          if (copyButton) {
-            copyButton.title = sel.length > 0 ? 'Copy selection' : 'Copy to clipboard';
-          }
-        });
-
-        // Clickable links in rendered markdown — copies URL to clipboard
-        (function() {
+        function initRenderedLinkCopy() {
           const rv = document.getElementById('rendered-view');
           if (!rv) return;
           const sourceDir = document.body.getAttribute('data-source-dir') || '';
           // Add tooltip hint to non-anchor links
-          rv.querySelectorAll('a[href]').forEach(function(a) {
+          const links = rv.querySelectorAll('a[href]');
+          for (let i = 0; i < links.length; i++) {
+            const a = links[i];
             var h = a.getAttribute('href');
             if (h && !h.startsWith('#')) a.title = 'Click to copy link';
-          });
+          }
           rv.addEventListener('click', function(e) {
             const link = e.target.closest('a[href]');
             if (!link) return;
@@ -1552,13 +1668,27 @@ public enum PreviewHTMLBuilder {
               showToast(label + ' copied to clipboard');
             });
           });
-        })();
+        }
 
-        \(buildLineHighlightScript())
+        function initLineHighlight() {
+          \(buildLineHighlightScript())
+        }
 
-        \(buildSearchScript())
+        function initSearch() {
+          \(buildSearchScript())
+        }
 
-        \(buildCopyBehaviorScript(copyBehavior))
+        function initCopyBehavior() {
+          \(buildCopyBehaviorScript(copyBehavior))
+        }
+
+        safeInit('initCoreModeToggle', initCoreModeToggle);
+        safeInit('initTOCControls', initTOCControls);
+        safeInit('initCopyControls', initCopyControls);
+        safeInit('initRenderedLinkCopy', initRenderedLinkCopy);
+        safeInit('initLineHighlight', initLineHighlight);
+        safeInit('initSearch', initSearch);
+        safeInit('initCopyBehavior', initCopyBehavior);
         """
     }
 
@@ -1945,12 +2075,15 @@ public enum PreviewHTMLBuilder {
                     toast.classList.add('show');
                     if (toastTimer) clearTimeout(toastTimer);
                     toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 4000);
-                    document.getElementById(btnId)?.addEventListener('click', () => {
-                      writeClipboard(captured).then(() => {
-                        toast.style.pointerEvents = '';
-                        showToast('Copied selection');
+                    const toastButton = document.getElementById(btnId);
+                    if (toastButton) {
+                      toastButton.addEventListener('click', () => {
+                        writeClipboard(captured).then(() => {
+                          toast.style.pointerEvents = '';
+                          showToast('Copied selection');
+                        });
                       });
-                    });
+                    }
                   }
                 }, 150);
               });
@@ -2093,13 +2226,16 @@ public enum PreviewHTMLBuilder {
                         toast.classList.add('show');
                         if (toastTimer) clearTimeout(toastTimer);
                         toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 3000);
-                        document.getElementById(btnId)?.addEventListener('click', () => {
-                          lastCopiedText = restoreTo;
-                          writeClipboard(restoreTo).then(() => {
-                            toast.style.pointerEvents = '';
-                            showToast('Clipboard restored');
+                        const undoButton = document.getElementById(btnId);
+                        if (undoButton) {
+                          undoButton.addEventListener('click', () => {
+                            lastCopiedText = restoreTo;
+                            writeClipboard(restoreTo).then(() => {
+                              toast.style.pointerEvents = '';
+                              showToast('Clipboard restored');
+                            });
                           });
-                        });
+                        }
                       } else {
                         showToast('Copied selection');
                       }
