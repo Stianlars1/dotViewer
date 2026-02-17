@@ -77,8 +77,27 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 | 2026-02-11 | Preview UI | Search bar: optional (off by default), text selection + paste workflow, highlights matches with prev/next navigation. Line highlighting: click line numbers, Shift+click for range. Markdown RAW CSS: size/weight differentiation. Print CSS: file title header, syntax colors, page breaks. Removed non-functional print button. Clickable markdown links (KI-012): JS handler resolves relative paths against source directory. |
 | 2026-02-11 | Testing | Added `dotViewerTests` unit test target with 7 XCTestCase classes: FileTypeRegistry, FileTypeResolution, ThemePalette, MarkdownRenderer, PlistConverter, FileAttributes, TransportStreamDetector. |
 | 2026-02-11 | Docs | Documentation audit: fixed KI-005/KI-010 contradiction, updated all docs to reflect 2026-02-11 state. |
+| 2026-02-16 | Open With | Attempted “Open With Assistant” for system-owned UTIs; removed after testing due to macOS limitations (Quick Look routing unchanged, Finder automation blocked in sandbox). Open-with fallback view/handling was subsequently removed and marked Won't Fix. Added TOC default open setting and optional line-numbers-in-copy. |
 
 ## Notes
 
 - XcodeGen regenerates `Info.plist` and `.entitlements` for all extension targets. Persistent changes live in `dotViewer/project.yml`.
 - The `.agents/skills/update-agents-md/SKILL.md` skill can be used to append work log entries.
+
+## 2026-02-14
+
+### Preview width + app UI text size controls
+- Outcome: Added per-mode preview width customization (separate controls for code/RAW and markdown rendered) and added host-app UI text size setting with a System-follow option.
+- Files: `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/Shared/PreviewCache.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/App/MarkdownSettingsView.swift`, `dotViewer/App/dotViewerApp.swift`, `dotViewer/App/AppUIFontSizing.swift`, `dotViewer/dotViewerTests/PreviewHTMLBuilderTests.swift`, `docs/research/preview-width-and-app-font-size-research.md`
+- Verified:
+  - `./scripts/dotviewer-refresh.sh` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (96 tests, 0 failures)
+  - `./scripts/dotviewer-ql-smoke.sh TestFiles/test.json` → pass (`HTML built for test.json`)
+- Follow-ups: Manual visual check in Finder Quick Look for preferred width values and app text-size presets.
+
+## 2026-02-16
+
+### Open With assistant removal + preview settings tweaks
+- Outcome: Removed the Open With Assistant (Finder automation + sample files) after real-world testing showed it doesn’t change Quick Look routing for system-owned UTIs and Finder automation is blocked in sandbox. Open-with fallback code path was later removed from the app and marked Won't Fix. Added Markdown TOC default open/hidden setting and optional “Include line numbers in copy”.
+- Files: `dotViewer/App/AssociationAssistant*` (removed), `dotViewer/App/dotViewerApp.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/App/MarkdownSettingsView.swift`, `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`
+- Verified: `./scripts/dotviewer-refresh.sh` → pass
