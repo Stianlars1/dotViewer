@@ -1,0 +1,10 @@
+// Test file for RTF experiment
+// Select this text and press Cmd+C to test native copy
+
+function helloWorld() {
+    console.log("Hello, World!");
+    return 42;
+}
+
+const result = helloWorld();
+console.log(`Result: ${result}`);

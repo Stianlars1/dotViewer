@@ -10,6 +10,8 @@ struct MarkdownSettingsView: View {
     @State private var renderFontSize: Double = SharedSettings.shared.markdownRenderFontSize
     @State private var renderedWidthMode: String = SharedSettings.shared.markdownRenderedWidthMode
     @State private var renderedCustomMaxWidth: Double = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
+    @State private var renderedContentAlignment: String = SharedSettings.shared.markdownRenderedContentAlignment
+    @State private var showRenderedAlignmentAdvanced: Bool = false
     @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var customCSS: String = SharedSettings.shared.markdownCustomCSS
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
@@ -128,6 +130,21 @@ struct MarkdownSettingsView: View {
                         Text("Auto uses the built-in rendered markdown layout width.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+
+                        DisclosureGroup("Content Alignment (Advanced)", isExpanded: $showRenderedAlignmentAdvanced) {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Picker("Rendered Alignment", selection: $renderedContentAlignment) {
+                                    Text("Left").tag("left")
+                                    Text("Center").tag("center")
+                                    Text("Right").tag("right")
+                                }
+                                .pickerStyle(.segmented)
+                                .onChange(of: renderedContentAlignment) { _, newValue in
+                                    SharedSettings.shared.markdownRenderedContentAlignment = newValue
+                                }
+                            }
+                            .padding(.top, 8)
+                        }
                     }
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
@@ -168,6 +185,7 @@ struct MarkdownSettingsView: View {
             renderFontSize = SharedSettings.shared.markdownRenderFontSize
             renderedWidthMode = SharedSettings.shared.markdownRenderedWidthMode
             renderedCustomMaxWidth = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
+            renderedContentAlignment = SharedSettings.shared.markdownRenderedContentAlignment
             tocDefaultOpen = SharedSettings.shared.markdownTOCDefaultOpen
         }
     }

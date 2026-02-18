@@ -176,6 +176,51 @@ public final class SharedSettings: @unchecked Sendable {
         }
     }
 
+    public var codeContentAlignment: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "codeContentAlignment") ?? "left"
+                return Self.allowedContentAlignments.contains(value) ? value : "left"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedContentAlignments.contains(newValue) ? newValue : "left"
+                defaults.set(sanitized, forKey: "codeContentAlignment")
+            }
+        }
+    }
+
+    public var markdownRawContentAlignment: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "markdownRawContentAlignment") ?? "left"
+                return Self.allowedContentAlignments.contains(value) ? value : "left"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedContentAlignments.contains(newValue) ? newValue : "left"
+                defaults.set(sanitized, forKey: "markdownRawContentAlignment")
+            }
+        }
+    }
+
+    public var markdownRenderedContentAlignment: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "markdownRenderedContentAlignment") ?? "center"
+                return Self.allowedContentAlignments.contains(value) ? value : "center"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedContentAlignments.contains(newValue) ? newValue : "center"
+                defaults.set(sanitized, forKey: "markdownRenderedContentAlignment")
+            }
+        }
+    }
+
     public var markdownPreviewMode: String {
         get { markdownDefaultMode }
         set { markdownDefaultMode = newValue }
@@ -389,6 +434,7 @@ public final class SharedSettings: @unchecked Sendable {
     }
 
     private static let allowedWidthModes: Set<String> = ["auto", "custom"]
+    private static let allowedContentAlignments: Set<String> = ["left", "center", "right"]
     private static let allowedAppUIFontSizePresets: Set<String> = [
         "system",
         "xSmall",

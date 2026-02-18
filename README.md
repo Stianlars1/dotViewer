@@ -193,6 +193,9 @@ Everything is configurable in the host app.
 - Show/hide in-preview search UI.
 - Allow preview of unknown file types.
 - Force text preview for unknown files when bytes look textual.
+- Code and RAW content width mode (`Auto`/`Custom`) with configurable custom max width.
+- Code content alignment (advanced): `Left`, `Center`, `Right`.
+- Markdown RAW content alignment (advanced): `Left`, `Center`, `Right`.
 
 ### Markdown
 - Default mode (`RAW` or `RENDERED`).
@@ -201,6 +204,8 @@ Everything is configurable in the host app.
 - Show/hide rendered TOC sidebar.
 - Set TOC default state (open/hidden) when TOC is enabled.
 - Markdown rendered font size.
+- Markdown rendered width mode (`Auto`/`Custom`) with configurable custom max width.
+- Markdown rendered content alignment (advanced): `Left`, `Center`, `Right`.
 - Custom CSS injection.
 - Optional built-in CSS override mode.
 
