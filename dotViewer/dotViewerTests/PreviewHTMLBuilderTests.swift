@@ -107,6 +107,45 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains("margin: 0 auto 0 0;"))
     }
 
+    func testRenderedViewIncludesFrontmatterStyles() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 1200,
+            renderedHTML: "<div class=\"frontmatter\" data-format=\"yaml\"></div>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains(".rendered-view .frontmatter {"))
+        XCTAssertTrue(html.contains(".rendered-view .frontmatter-row {"))
+        XCTAssertTrue(html.contains(".rendered-view .frontmatter-key {"))
+        XCTAssertTrue(html.contains(".rendered-view .frontmatter-value,"))
+    }
+
+    func testRenderedHorizontalRuleUsesContentWidth() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 1200,
+            renderedHTML: "<hr>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        guard let hrStart = html.range(of: ".rendered-view hr {") else {
+            return XCTFail("Missing rendered hr CSS block")
+        }
+        let hrBlock = String(html[hrStart.lowerBound...].prefix(220))
+
+        XCTAssertTrue(hrBlock.contains("margin: 32px 0;"))
+        XCTAssertTrue(hrBlock.contains("width: 100%;"))
+        XCTAssertTrue(hrBlock.contains("max-width: 100%;"))
+        XCTAssertFalse(html.contains("max-width: 80%;"))
+    }
+
     func testMarkdownRawAlignmentOverridesCodeAlignment() {
         let info = makeInfo(
             codeContentWidthMode: "custom",

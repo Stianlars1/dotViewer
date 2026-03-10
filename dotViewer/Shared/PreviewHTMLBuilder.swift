@@ -618,6 +618,47 @@ public enum PreviewHTMLBuilder {
           margin-bottom: 16px;
         }
 
+        /* YAML frontmatter */
+        .rendered-view .frontmatter {
+          margin: 0 0 24px;
+          padding: 12px 14px;
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          background: var(--surface);
+          font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+          font-size: 0.9em;
+        }
+
+        .rendered-view .frontmatter-row {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 8px;
+          align-items: start;
+          line-height: 1.5;
+        }
+
+        .rendered-view .frontmatter-row + .frontmatter-row {
+          margin-top: 4px;
+        }
+
+        .rendered-view .frontmatter-key {
+          color: var(--heading);
+          font-weight: 600;
+          white-space: nowrap;
+        }
+
+        .rendered-view .frontmatter-value,
+        .rendered-view .frontmatter-raw {
+          color: var(--text);
+          min-width: 0;
+          overflow-wrap: anywhere;
+        }
+
+        .rendered-view .frontmatter-raw {
+          grid-column: 1 / -1;
+          color: var(--comment);
+        }
+
         .rendered-view a {
           color: var(--link);
           text-decoration: none;
@@ -769,8 +810,9 @@ public enum PreviewHTMLBuilder {
           border: none;
           height: 1px;
           background: var(--border);
-          margin: 32px auto;
-          max-width: 80%;
+          margin: 32px 0;
+          width: 100%;
+          max-width: 100%;
         }
 
         /* Details/Summary */

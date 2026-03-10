@@ -185,6 +185,71 @@ final class MarkdownRendererTests: XCTestCase {
         XCTAssertTrue(html.contains("<hr>"))
     }
 
+    func testLeadingYAMLFrontmatterRendersMetadataRows() {
+        let md = """
+        ---
+        name: apple-promo
+        description: Create Apple-style product promo videos
+        unparsed line
+        ---
+
+        # Title
+        """
+        let html = MarkdownRenderer.renderHTML(from: md)
+
+        XCTAssertTrue(html.contains("<div class=\"frontmatter\" data-format=\"yaml\">"))
+        XCTAssertTrue(html.contains("<span class=\"frontmatter-key\">name:</span>"))
+        XCTAssertTrue(html.contains("<span class=\"frontmatter-value\">apple-promo</span>"))
+        XCTAssertTrue(html.contains("<span class=\"frontmatter-key\">description:</span>"))
+        XCTAssertTrue(html.contains("<span class=\"frontmatter-raw\">unparsed line</span>"))
+        XCTAssertTrue(html.contains("<h1 id=\"title\">Title</h1>"))
+
+        let rowCount = html.components(separatedBy: "class=\"frontmatter-row\"").count - 1
+        XCTAssertEqual(rowCount, 3)
+    }
+
+    func testLeadingYAMLFrontmatterDoesNotEmitHorizontalRuleDelimiters() {
+        let md = """
+        ---
+        name: sample
+        key: value
+        ---
+
+        Body text
+        """
+        let html = MarkdownRenderer.renderHTML(from: md)
+
+        XCTAssertTrue(html.contains("class=\"frontmatter\""))
+        XCTAssertFalse(html.contains("<hr>"))
+    }
+
+    func testNonLeadingTripleDashStillRendersHorizontalRule() {
+        let md = """
+        Intro paragraph
+
+        ---
+
+        After rule
+        """
+        let html = MarkdownRenderer.renderHTML(from: md)
+
+        XCTAssertTrue(html.contains("<hr>"))
+        XCTAssertFalse(html.contains("class=\"frontmatter\""))
+    }
+
+    func testUnclosedLeadingTripleDashFallsBackToNormalMarkdown() {
+        let md = """
+        ---
+        name: sample
+        # Heading
+        """
+        let html = MarkdownRenderer.renderHTML(from: md)
+
+        XCTAssertFalse(html.contains("class=\"frontmatter\""))
+        XCTAssertTrue(html.contains("<hr>"))
+        XCTAssertTrue(html.contains("<h1 id=\"heading\">Heading</h1>"))
+    }
+
     // MARK: - Paragraphs
 
     func testParagraph() {

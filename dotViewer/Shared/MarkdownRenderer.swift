@@ -62,8 +62,16 @@ public enum MarkdownRenderer {
 
     private static func convertMarkdownToHTML(_ markdown: String) -> String {
         var html = ""
-        let lines = markdown.components(separatedBy: "\n")
+        var lines = markdown.components(separatedBy: "\n")
+        if let firstLine = lines.first {
+            lines[0] = stripUTF8BOM(firstLine)
+        }
         var i = 0
+
+        if let (frontmatterHTML, nextIndex) = parseLeadingYAMLFrontmatter(lines: lines) {
+            html += frontmatterHTML
+            i = nextIndex
+        }
 
         while i < lines.count {
             let line = lines[i]
@@ -202,6 +210,63 @@ public enum MarkdownRenderer {
         }
 
         return html
+    }
+
+    private static func stripUTF8BOM(_ line: String) -> String {
+        guard line.hasPrefix("\u{FEFF}") else { return line }
+        return String(line.dropFirst())
+    }
+
+    private static func parseLeadingYAMLFrontmatter(lines: [String]) -> (String, Int)? {
+        guard !lines.isEmpty else { return nil }
+        guard lines[0].trimmingCharacters(in: .whitespaces) == "---" else { return nil }
+
+        var contentLines: [String] = []
+        var hasMetadataLikeLine = false
+        var closingIndex: Int?
+
+        var i = 1
+        while i < lines.count {
+            let trimmed = lines[i].trimmingCharacters(in: .whitespaces)
+            if trimmed == "---" || trimmed == "..." {
+                closingIndex = i
+                break
+            }
+            contentLines.append(lines[i])
+            if parseFrontmatterKeyValue(trimmed) != nil {
+                hasMetadataLikeLine = true
+            }
+            i += 1
+        }
+
+        guard let close = closingIndex, hasMetadataLikeLine else { return nil }
+
+        var html = "<div class=\"frontmatter\" data-format=\"yaml\">\n"
+        for contentLine in contentLines {
+            let trimmed = contentLine.trimmingCharacters(in: .whitespaces)
+            if trimmed.isEmpty { continue }
+
+            if let (key, value) = parseFrontmatterKeyValue(trimmed) {
+                html += "<div class=\"frontmatter-row\"><span class=\"frontmatter-key\">\(escapeHTML(key)):</span><span class=\"frontmatter-value\">\(escapeHTML(value))</span></div>\n"
+            } else {
+                html += "<div class=\"frontmatter-row\"><span class=\"frontmatter-raw\">\(escapeHTML(trimmed))</span></div>\n"
+            }
+        }
+        html += "</div>\n"
+        return (html, close + 1)
+    }
+
+    private static func parseFrontmatterKeyValue(_ line: String) -> (key: String, value: String)? {
+        guard let colonIndex = line.firstIndex(of: ":") else { return nil }
+        let rawKey = String(line[..<colonIndex]).trimmingCharacters(in: .whitespaces)
+        guard !rawKey.isEmpty else { return nil }
+        guard rawKey.range(of: #"^[A-Za-z0-9_.-]+$"#, options: .regularExpression) != nil else {
+            return nil
+        }
+
+        let valueStart = line.index(after: colonIndex)
+        let rawValue = String(line[valueStart...]).trimmingCharacters(in: .whitespaces)
+        return (rawKey, rawValue)
     }
 
     // MARK: - HTML block detection
