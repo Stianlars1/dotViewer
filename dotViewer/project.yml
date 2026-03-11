@@ -12,6 +12,7 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
+    ENABLE_HARDENED_RUNTIME: YES
     DEAD_CODE_STRIPPING: YES
     STRING_CATALOG_GENERATE_SYMBOLS: YES
 packages: {}
@@ -43,6 +44,7 @@ targets:
     info:
       path: App/Info.plist
       properties:
+        LSApplicationCategoryType: public.app-category.developer-tools
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: com.stianlars1.dotviewer.29k
             UTTypeDescription: Generic Assembler
@@ -4197,6 +4199,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer
         DEAD_CODE_STRIPPING: YES
         ASSETCATALOG_COMPILER_APPICON_NAME: dotViewerIcon
+        INFOPLIST_KEY_LSApplicationCategoryType: "public.app-category.developer-tools"
     resources:
       - path: App/dotViewerIcon.xcassets
     dependencies:

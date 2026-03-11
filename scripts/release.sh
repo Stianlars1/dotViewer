@@ -430,7 +430,24 @@ if [ "$CREATE_GITHUB_RELEASE" = true ] && [ -f "${DMG_PATH:-}" ]; then
     gh release create "v$VERSION" \
         "$DMG_PATH" \
         --title "$APP_NAME $VERSION" \
-        --notes "## $APP_NAME $VERSION\n\nQuick Look extension for source code and dotfiles."
+        --notes "$(cat <<NOTES
+## $APP_NAME $VERSION
+
+Quick Look extension for syntax-highlighted previews of source code, config files, and dotfiles.
+
+### Installation
+1. Download the DMG
+2. Open it and drag $APP_NAME to Applications
+3. Launch $APP_NAME once to register the Quick Look extension
+4. Press Space on any code file in Finder to preview
+
+### Requirements
+- macOS 15.0 or later
+
+---
+*Built and notarized with Apple Developer ID*
+NOTES
+)"
 
     print_success "GitHub release created: v$VERSION"
     GITHUB_URL=$(gh release view "v$VERSION" --json url --jq .url)
@@ -470,6 +487,25 @@ if [ -n "${GITHUB_URL:-}" ]; then
     echo ""
     echo -e "  ${GREEN}✓ GitHub release created${NC}"
     echo "    $GITHUB_URL"
+fi
+
+echo ""
+echo -e "${BOLD}  Quick Verification:${NC}"
+echo ""
+if [ "$SKIP_DMG" = false ] && [ -f "${DMG_PATH:-}" ]; then
+    echo "  # Mount and test DMG"
+    echo "  open \"$DMG_PATH\""
+    echo ""
+fi
+echo "  # Verify Gatekeeper"
+echo "  spctl --assess -v --type execute \"$APP_PATH\""
+echo ""
+
+if [ "$CREATE_GITHUB_RELEASE" = false ] && [ "$SKIP_DMG" = false ] && [ -f "${DMG_PATH:-}" ]; then
+    echo -e "${BOLD}  To create GitHub release later:${NC}"
+    echo ""
+    echo "  gh release create v$VERSION \"$DMG_PATH\" --title \"$APP_NAME $VERSION\""
+    echo ""
 fi
 
 echo ""
