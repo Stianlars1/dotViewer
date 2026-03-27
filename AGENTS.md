@@ -162,3 +162,19 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `vercel inspect dotviewer-f3xmz3irs-stians-applications.vercel.app` → production deployment ready and aliased to `https://dotviewer.app`
   - `vercel domains inspect dotviewer.app` + `dig +short dotviewer.app A` → domain attached in Vercel, but apex DNS still points to `162.255.119.12` instead of Vercel `76.76.21.21`
 - Follow-ups: Change the external apex A record for `dotviewer.app` to `76.76.21.21` or move nameservers to Vercel so the public custom domain resolves to the deployed site.
+
+### Secret purge + deployment fix
+- Outcome: Confirmed the leaked OpenAI key came from an old committed Xcode build artifact at `dotViewer/build/.../XCBuildData/.../task-store.msgpack`, created a local bundle backup, rewrote repository history to remove `dotViewer/build/` from all refs, force-pushed cleaned `main`, re-pointed tag `v2.5`, resolved GitHub secret-scanning alert `#1` as `revoked`, and fixed Vercel production serving by adding [site/vercel.json](/Users/stian/Developer/macOS%20Apps/v2.5/site/vercel.json) with a Next.js framework override before redeploying the prebuilt output.
+- Files: `AGENTS.md`, `site/README.md`, `site/vercel.json`
+- Verified:
+  - `git log --all -- dotViewer/build` → no reachable history left for tracked build artifacts
+  - `git rev-list --all | xargs -n 1 git grep -I -l -e 'sk-proj-' -- 2>/dev/null | wc -l` → `0`
+  - `git rev-list --all | xargs -n 1 git grep -I -l -e 'sk-' -- 2>/dev/null | wc -l` → `0`
+  - `git push --force origin main` + `git push --force origin refs/tags/v2.5` → cleaned history published on GitHub
+  - `gh api repos/Stianlars1/dotViewer/secret-scanning/alerts/1` → alert state `resolved` with resolution `revoked`
+  - `NEXT_PUBLIC_SITE_URL='https://dotviewer.app' GITHUB_REPO='Stianlars1/dotViewer' vercel build --prod` → produced full `.vercel/output` with functions/routes
+  - `vercel deploy --prebuilt --prod --yes` → deployed `dotviewer-r6ar61s3w-stians-applications.vercel.app`
+  - `curl -I -s https://dotviewer.app/` → `200`
+  - `curl -I -s https://dotviewer.app/download/latest` → `307` to the GitHub DMG asset
+  - `curl -s https://dotviewer.app/download` → served the GitHub-backed version history page
+- Follow-ups: Create a replacement OpenAI API key anywhere that old key was still configured locally; the leaked key itself is already disabled.

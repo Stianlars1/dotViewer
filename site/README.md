@@ -37,3 +37,5 @@ Set:
 Optional:
 
 - `GITHUB_TOKEN` for authenticated GitHub API requests
+
+The repo includes [vercel.json](/Users/stian/Developer/macOS%20Apps/v2.5/site/vercel.json) with `"framework": "nextjs"` so Vercel uses the correct Next.js preset even if the dashboard project was initially created as `Other`.
