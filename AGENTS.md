@@ -116,3 +116,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Browser check on `http://127.0.0.1:3101` → homepage rendered correctly
   - Browser check on `http://127.0.0.1:3101/download` → `307` fallback to `/#install` with no console errors
 - Follow-ups: Set `NEXT_PUBLIC_SITE_URL`, `GITHUB_REPO`, and optional `GITHUB_TOKEN` in deployment so `/download` resolves to the live latest DMG instead of the local install fallback.
+
+### Website layout refinement
+- Outcome: Reworked the homepage into a calmer, more spacious Apple-adjacent presentation with a centered hero, a single large showcase, fewer competing card grids, and more generous vertical rhythm after the first pass felt cramped.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - Browser check on `http://127.0.0.1:3101` → redesigned homepage rendered correctly with 0 console warnings/errors
+- Follow-ups: Deployment env wiring unchanged (`NEXT_PUBLIC_SITE_URL`, `GITHUB_REPO`, optional `GITHUB_TOKEN`).
