@@ -149,3 +149,16 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `./scripts/dotviewer-ql-status.sh` after reinstall → preview + thumbnail extensions registered from `/Applications/dotViewer.app`
   - `./scripts/dotviewer-logs.sh --preview --last 10m | rg 'Preview request|Routing check|Preview route'` → markdown preview request confirmed from the installed release build
 - Follow-ups: Push `main` to GitHub, publish the DMG/checksum as a GitHub Release, then verify the live website against that release source.
+
+### GitHub release + Vercel deployment
+- Outcome: Pushed the current `main` to `Stianlars1/dotViewer`, preserved the old remote `main` on `v1-legacy`, published GitHub Release `v2.5` with the signed/notarized DMG plus checksum, deployed the site to Vercel project `dotviewer`, attached `dotviewer.app`, and saved production env vars so `/download` and `/download/latest` resolve against GitHub Releases automatically.
+- Files: `AGENTS.md`
+- Verified:
+  - `gh release view v2.5 --repo Stianlars1/dotViewer --json tagName,name,url,isDraft,isPrerelease,publishedAt,assets` → release published with `dotViewer-2.5.dmg` + `.sha256`
+  - `curl -I -L -s https://github.com/Stianlars1/dotViewer/releases/download/v2.5/dotViewer-2.5.dmg` → `200 OK` asset download endpoint reachable
+  - `curl -I -s http://127.0.0.1:3101/download/latest` → `307` to the GitHub DMG asset
+  - `curl -s http://127.0.0.1:3101/download` → rendered release-aware download page with GitHub-backed version history
+  - `vercel env ls production` → `NEXT_PUBLIC_SITE_URL` and `GITHUB_REPO` saved on project `dotviewer`
+  - `vercel inspect dotviewer-f3xmz3irs-stians-applications.vercel.app` → production deployment ready and aliased to `https://dotviewer.app`
+  - `vercel domains inspect dotviewer.app` + `dig +short dotviewer.app A` → domain attached in Vercel, but apex DNS still points to `162.255.119.12` instead of Vercel `76.76.21.21`
+- Follow-ups: Change the external apex A record for `dotviewer.app` to `76.76.21.21` or move nameservers to Vercel so the public custom domain resolves to the deployed site.
