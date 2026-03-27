@@ -63,7 +63,7 @@ export default function OpenGraphImage() {
                 fontWeight: 700,
               }}
             >
-              Preview markdown, config, and code files Finder doesn&apos;t handle well.
+              Preview dotfiles, config files, markdown, and code in Quick Look.
             </div>
             <div
               style={{
@@ -74,7 +74,7 @@ export default function OpenGraphImage() {
                 maxWidth: 620,
               }}
             >
-              Inspect technical files instantly in Quick Look instead of opening an editor.
+              Inspect technical files in Finder without opening an editor for every small check.
             </div>
           </div>
 

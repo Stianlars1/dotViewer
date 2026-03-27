@@ -42,3 +42,5 @@ Packages/
 Package.resolved
 
 # Dev logs
+.vercel
+.env*.local

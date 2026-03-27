@@ -4,7 +4,8 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "dotViewer",
     short_name: "dotViewer",
-    description: "Preview markdown, config, and code files Finder does not handle well.",
+    description:
+      "Preview dotfiles, config files, markdown, plain text documents, logs, and code files in Finder Quick Look on macOS.",
     start_url: "/",
     scope: "/",
     display: "standalone",

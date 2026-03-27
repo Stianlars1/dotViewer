@@ -51,7 +51,11 @@
   right: -120px;
   width: 420px;
   height: 420px;
-  background: radial-gradient(circle, rgba(184, 212, 255, 0.3), transparent 74%);
+  background: radial-gradient(
+    circle,
+    rgba(184, 212, 255, 0.3),
+    transparent 74%
+  );
 }
 
 .shell {
@@ -166,7 +170,7 @@
 }
 
 .main {
-  padding: 28px 0 140px;
+  padding-bottom: 140px;
 }
 
 .hero {
@@ -196,10 +200,25 @@
   text-transform: uppercase;
 }
 
+.eyebrow {
+  position: relative;
+  width: 300px;
+  height: 34px;
+  display: block;
+}
+
+.beamWrapper {
+}
+.borderBeam {
+  position: relative;
+  width: 500px;
+  height: 100px;
+}
+
 .heroTitle {
   max-width: 940px;
   margin: 26px auto 0;
-  font-size: clamp(45px, 7vw, 98px);
+  font-size: clamp(45px, 6vw, 72px);
   line-height: 0.93;
   letter-spacing: -0.08em;
   font-weight: 900;
@@ -444,7 +463,11 @@
   border-radius: 38px;
   border: 1px solid var(--line);
   background:
-    radial-gradient(circle at top right, rgba(160, 205, 255, 0.18), transparent 30%),
+    radial-gradient(
+      circle at top right,
+      rgba(160, 205, 255, 0.18),
+      transparent 30%
+    ),
     var(--surface);
   box-shadow: var(--shadow);
 }
@@ -573,8 +596,16 @@
   border-radius: 36px;
   border: 1px solid var(--line);
   background:
-    radial-gradient(circle at top right, rgba(123, 176, 255, 0.16), transparent 30%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(247, 250, 255, 0.84));
+    radial-gradient(
+      circle at top right,
+      rgba(123, 176, 255, 0.16),
+      transparent 30%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.86),
+      rgba(247, 250, 255, 0.84)
+    );
   box-shadow: var(--shadow);
 }
 
@@ -599,6 +630,15 @@
   color: var(--muted);
   font-size: 14px;
   line-height: 1.7;
+}
+
+.footerCopy a {
+  color: var(--foreground);
+}
+
+.footerCopy a:hover,
+.footerCopy a:focus-visible {
+  color: #0453f4;
 }
 
 @media (max-width: 1180px) {

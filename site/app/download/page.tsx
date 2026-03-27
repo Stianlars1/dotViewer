@@ -3,13 +3,17 @@ import { DownloadTrigger } from "./download-trigger";
 import styles from "./page.module.css";
 import { getGitHubReleases } from "../../lib/github-release";
 import { getSiteConfig } from "../../lib/site-config";
+import { buildDownloadSchema } from "../../lib/structured-data";
 
 export const runtime = "nodejs";
 
 export const metadata = {
-  title: "Download dotViewer",
+  title: "Download dotViewer for macOS",
   description:
-    "Download the latest notarized dotViewer DMG and browse the release history from GitHub Releases.",
+    "Download the notarized dotViewer DMG for macOS and browse version history for the Quick Look app that previews dotfiles, config files, markdown, logs, plain text, and code.",
+  alternates: {
+    canonical: "/download",
+  },
 };
 
 function formatDate(value: string | null) {
@@ -55,24 +59,33 @@ export default async function DownloadPage() {
   const latestDmg = latestRelease?.dmgAsset ?? null;
   const latestChecksum = latestRelease?.checksumAsset ?? null;
   const downloadHref = config.directDownloadUrl ?? latestDmg?.browser_download_url ?? null;
-  const history = releases.slice(1);
+  const schema = buildDownloadSchema(config, releases, downloadHref);
+  const releaseCount = releases.length;
 
   return (
     <div className={styles.page}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      />
       <DownloadTrigger downloadUrl={downloadHref} />
 
       <main className={styles.main}>
         <section className={styles.hero}>
-          <div className={styles.eyebrow}>GitHub Releases</div>
+          <div className={styles.eyebrow}>Direct macOS download</div>
           <h1 className={styles.title}>
             {downloadHref
-              ? "Your dotViewer download should start automatically."
+              ? "Download dotViewer for macOS."
               : "dotViewer download will appear here once the release is published."}
           </h1>
           <p className={styles.body}>
             {downloadHref
-              ? "This page keeps the direct macOS download stable while the actual DMG asset and version change release to release. If the download does not start on its own, use the button below."
+              ? "Get the notarized DMG for the Quick Look app that previews `.gitignore`, `.env`, markdown, config files, plain text documents, logs, and source code in Finder. If the download does not start automatically, use the button below."
               : "The website is already wired for GitHub Releases. As soon as the notarized DMG is attached to the latest release, this page becomes the public download handoff and version history."}
+          </p>
+          <p className={styles.body}>
+            This page exists so the public download link can stay stable while the actual DMG asset
+            and version change release to release.
           </p>
 
           <div className={styles.actions}>
@@ -90,7 +103,9 @@ export default async function DownloadPage() {
             <div className={styles.releaseHeader}>
               <div>
                 <div className={styles.kicker}>Latest release</div>
-                <h2 className={styles.releaseTitle}>{latestRelease?.name ?? "Awaiting first GitHub release"}</h2>
+                <h2 className={styles.releaseTitle}>
+                  {latestRelease?.name ?? "Awaiting first GitHub release"}
+                </h2>
               </div>
               <div className={styles.releaseMeta}>
                 <span>{latestRelease?.tagName ?? "No tag yet"}</span>
@@ -124,6 +139,13 @@ export default async function DownloadPage() {
 
           <aside className={styles.sidePanel}>
             <div className={styles.sideItem}>
+              <div className={styles.sideLabel}>Best for previewing</div>
+              <p>
+                Dotfiles, config files, markdown, logs, plain text documents, and source code in
+                Finder Quick Look.
+              </p>
+            </div>
+            <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Direct download URL</div>
               <code>{downloadHref ?? "/download/latest"}</code>
             </div>
@@ -133,7 +155,7 @@ export default async function DownloadPage() {
             </div>
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Installer format</div>
-              <p>Notarized macOS DMG with checksum asset published alongside the release.</p>
+              <p>Developer ID signed and notarized macOS DMG with checksum asset published alongside the release.</p>
             </div>
           </aside>
         </section>
@@ -143,15 +165,18 @@ export default async function DownloadPage() {
             <div className={styles.kicker}>Version history</div>
             <h2 className={styles.historyTitle}>Fetched directly from GitHub Releases.</h2>
             <p className={styles.historyBody}>
-              Every published version can appear here automatically. That keeps the website in sync
-              with the release source instead of maintaining a second manual changelog just for
-              downloads.
+              Every published version can appear here automatically. That keeps the download page in
+              sync with the release source instead of maintaining a second manual changelog just for
+              installers.
+            </p>
+            <p className={styles.historyBody}>
+              Current published versions available on this page: {releaseCount}.
             </p>
           </div>
 
           <div className={styles.historyList}>
-            {(latestRelease ? [latestRelease, ...history] : []).length > 0 ? (
-              (latestRelease ? [latestRelease, ...history] : []).map((release) => (
+            {releases.length > 0 ? (
+              releases.map((release) => (
                 <article className={styles.historyCard} key={release.tagName}>
                   <div className={styles.historyTop}>
                     <div>

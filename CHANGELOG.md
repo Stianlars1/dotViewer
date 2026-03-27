@@ -1,5 +1,20 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- Product marketing context document for dotViewer positioning, audience, competitors, proof points, and creator references.
+- Expanded website structured data with `SoftwareApplication`, `Organization`, `WebSite`, `CollectionPage`, `BreadcrumbList`, and release-history markup.
+- Search-facing site copy for dotfiles, config files, markdown, logs, plain text documents, and source code preview use cases.
+
+### Changed
+
+- Rewrote the homepage messaging to position dotViewer as the all-in-one Quick Look upgrade instead of a narrow code-only preview tool.
+- Strengthened `/download` copy so it clearly describes the notarized macOS DMG, direct download flow, and GitHub-backed version history.
+- Refreshed `site/README.md` with badges, launch positioning, release flow, deployment notes, SEO intent, creator link, and `dbHost` mention.
+- Updated sitemap, robots, manifest, and metadata to reinforce `dotviewer.app` and `/download` as the canonical public entry points.
+
 ## v2.5 (2026-02-11) — Current
 
 The production release. Tree-sitter-powered syntax highlighting via XPC service.

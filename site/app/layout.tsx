@@ -1,22 +1,55 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
-import {dmSans, geistMono, geistSans} from "../lib/fonts";
+import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
+import { dmSans, geistMono, geistSans } from "../lib/fonts";
 
 const { siteUrl } = getSiteConfig();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "dotViewer — Preview markdown, config, and code files in Quick Look",
+  title: {
+    default: "dotViewer for macOS - Preview dotfiles, config files, markdown, and code in Quick Look",
+    template: "%s | dotViewer",
+  },
   description:
-    "Preview markdown, config, and code files Finder does not handle well. Inspect technical files instantly in Quick Look instead of opening an editor.",
+    "Preview `.gitignore`, `.env`, markdown, config files, plain text documents, logs, and source code in Finder Quick Look with dotViewer for macOS.",
+  keywords: [
+    "dotViewer",
+    "macOS Quick Look extension",
+    "preview dotfiles on macOS",
+    "preview config files in Finder",
+    "markdown Quick Look macOS",
+    "preview .gitignore",
+    "preview .env file",
+    "Finder code preview",
+    "plain text document preview macOS",
+    "Quick Look source code",
+  ],
+  authors: [{ name: CREATOR_NAME, url: CREATOR_URL }],
+  creator: CREATOR_NAME,
+  publisher: CREATOR_NAME,
+  category: "developer tools",
+  applicationName: "dotViewer",
   alternates: {
     canonical: "/",
   },
+  manifest: "/manifest.webmanifest",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "dotViewer",
+    title: "dotViewer for macOS",
     description:
-      "A better Quick Look experience for markdown, config, logs, and code files on macOS.",
+      "Preview dotfiles, config files, markdown, plain text documents, logs, and code files in Finder Quick Look.",
     url: siteUrl,
     siteName: "dotViewer",
     type: "website",
@@ -31,19 +64,19 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "dotViewer",
+    title: "dotViewer for macOS",
     description:
-      "Preview markdown, config, and code files Finder does not handle well.",
+      "Preview dotfiles, config files, markdown, plain text documents, logs, and code files in Finder Quick Look.",
     images: ["/opengraph-image"],
   },
-  applicationName: "dotViewer",
-  category: "developer tools",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistMono.variable} ${geistSans.variable} ${dmSans.variable}`}>{children}</body>
+      <body className={`${geistMono.variable} ${geistSans.variable} ${dmSans.variable}`}>
+        {children}
+      </body>
     </html>
   );
 }

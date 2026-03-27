@@ -136,6 +136,17 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Browser console on `http://127.0.0.1:3101` → 0 errors, 0 warnings
 - Follow-ups: Replace the local install fallback links with the real GitHub Releases source during deployment env setup.
 
+### Website SEO + launch docs polish
+- Outcome: Added an inferred product marketing context, rewrote the homepage and download page copy around dotfiles/config/markdown/plain-text/code preview intent, expanded JSON-LD for software/release discovery, refreshed `site/README.md` with badges and launch documentation, and added changelog entries for the search/docs work. Also linked the creator site and `dbHost` in the website/footer and docs.
+- Files: `.agents/product-marketing-context.md`, `site/app/page.tsx`, `site/app/layout.tsx`, `site/app/download/page.tsx`, `site/app/opengraph-image.tsx`, `site/app/manifest.ts`, `site/app/sitemap.ts`, `site/app/robots.ts`, `site/app/page.module.css`, `site/lib/structured-data.ts`, `site/README.md`, `CHANGELOG.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
+  - `curl http://127.0.0.1:3200/` grep checks for updated title/keywords/JSON-LD/creator/footer text → pass
+  - `curl http://127.0.0.1:3200/download` grep checks for updated download metadata and `CollectionPage`/`BreadcrumbList` JSON-LD → pass
+- Follow-ups: Keep Vercel env wired with `NEXT_PUBLIC_SITE_URL` and `GITHUB_REPO` so the deployed `/download` page renders live release history instead of local no-env fallback output.
+
 ### Release download flow + DMG packaging
 - Outcome: Replaced the old `/download` redirect with a release-aware `/download` landing page plus `/download/latest` direct asset route, added GitHub release history fetching, fixed site font barrel imports, and hardened `scripts/release.sh` with an `hdiutil` DMG fallback when DropDMG automation permissions are unavailable. Built/exported `dotViewer 2.5`, notarized/stapled the app, packaged a signed DMG manually, notarized/stapled the DMG, generated a SHA-256 checksum, mounted the installer, reinstalled `/Applications/dotViewer.app`, and verified Quick Look registration plus markdown/code smoke-launch coverage from the release build.
 - Files: `site/app/download/*`, `site/lib/github-release.ts`, `site/lib/fonts/*`, `site/app/layout.tsx`, `site/app/globals.css`, `site/README.md`, `site/next-env.d.ts`, `scripts/release.sh`
