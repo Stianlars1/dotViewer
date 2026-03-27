@@ -1,0 +1,102 @@
+:root {
+  color-scheme: light;
+  --background: #f8fbff;
+  --surface: rgba(255, 255, 255, 0.7);
+  --surface-strong: rgba(255, 255, 255, 0.88);
+  --surface-border: rgba(15, 23, 42, 0.09);
+  --foreground: #0f172a;
+  --muted: rgba(15, 23, 42, 0.68);
+  --muted-strong: rgba(15, 23, 42, 0.52);
+  --accent: #1762ff;
+  --accent-soft: rgba(23, 98, 255, 0.12);
+  --accent-border: rgba(23, 98, 255, 0.2);
+  --shadow: 0 24px 80px rgba(15, 23, 42, 0.12);
+  --shadow-soft: 0 16px 40px rgba(15, 23, 42, 0.08);
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 14px;
+  --page-width: 1180px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 120px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at top left, rgba(106, 169, 255, 0.18), transparent 28%),
+    radial-gradient(circle at 90% 14%, rgba(255, 255, 255, 0.9), transparent 18%),
+    linear-gradient(180deg, #f9fbff 0%, #eef4fb 50%, #f7fbff 100%);
+  color: var(--foreground);
+  font-family:
+    "SF Pro Display",
+    "SF Pro Text",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+::selection {
+  background: rgba(23, 98, 255, 0.16);
+}
+
+:focus-visible {
+  outline: 3px solid rgba(23, 98, 255, 0.38);
+  outline-offset: 4px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

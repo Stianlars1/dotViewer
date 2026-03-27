@@ -104,3 +104,15 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Outcome: Removed the Open With Assistant (Finder automation + sample files) after real-world testing showed it doesn’t change Quick Look routing for system-owned UTIs and Finder automation is blocked in sandbox. Open-with fallback code path was later removed from the app and marked Won't Fix. Added Markdown TOC default open/hidden setting and optional “Include line numbers in copy”.
 - Files: `dotViewer/App/AssociationAssistant*` (removed), `dotViewer/App/dotViewerApp.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/App/MarkdownSettingsView.swift`, `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`
 - Verified: `./scripts/dotviewer-refresh.sh` → pass
+
+## 2026-03-27
+
+### dotViewer launch website
+- Outcome: Added a polished Next.js marketing site in `site/` for `dotViewer.app` with a balanced single-page launch layout, live `/download` route, real product coverage stats, install guidance, FAQ, metadata, manifest, sitemap, robots, and JSON-LD.
+- Files: `site/app/*`, `site/lib/*`, `site/public/brand/dotviewer-icon-light.png`, `site/package.json`, `site/README.md`, `.gitignore`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - Browser check on `http://127.0.0.1:3101` → homepage rendered correctly
+  - Browser check on `http://127.0.0.1:3101/download` → `307` fallback to `/#install` with no console errors
+- Follow-ups: Set `NEXT_PUBLIC_SITE_URL`, `GITHUB_REPO`, and optional `GITHUB_TOKEN` in deployment so `/download` resolves to the live latest DMG instead of the local install fallback.

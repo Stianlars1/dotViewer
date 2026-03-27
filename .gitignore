@@ -28,6 +28,14 @@ xcuserdata/
 dist/
 *.dmg
 
+# Website
+.superpowers/
+site/node_modules/
+site/.next/
+site/.env.local
+site/.vercel/
+site/*.tsbuildinfo
+
 # Swift Package Manager
 .build/
 Packages/
