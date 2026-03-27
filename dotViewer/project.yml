@@ -10,6 +10,8 @@ settings:
     CODE_SIGN_IDENTITY: "Apple Development"
     "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development"
     SWIFT_VERSION: "6.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
     ENABLE_HARDENED_RUNTIME: YES
@@ -44,6 +46,8 @@ targets:
     info:
       path: App/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.developer-tools
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: com.stianlars1.dotviewer.29k
@@ -4216,6 +4220,8 @@ targets:
     info:
       path: QuickLookExtension/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.quicklook.preview
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).PreviewProvider
@@ -4932,6 +4938,8 @@ targets:
     info:
       path: QuickLookThumbnailExtension/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
           NSExtensionPointIdentifier: com.apple.quicklook.thumbnail
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ThumbnailProvider
@@ -5903,6 +5911,8 @@ targets:
     info:
       path: HighlightXPC/Info.plist
       properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         XPCService:
           ServiceType: Application
     entitlements:
@@ -5948,6 +5958,9 @@ targets:
       - path: Shared/DefaultFileTypes.json
     info:
       path: Shared/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.Shared

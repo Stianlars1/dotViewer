@@ -68,6 +68,44 @@ create_manual_dmg() {
     rm -rf "$staging_dir"
 }
 
+sign_dmg_if_needed() {
+    if codesign --verify --verbose=2 "$DMG_PATH" >/dev/null 2>&1; then
+        print_success "DMG signature already present"
+        return
+    fi
+
+    local signing_identity
+    local signing_hash
+    signing_identity=$(codesign -dvvv "$APP_PATH" 2>&1 \
+        | sed -n 's/^Authority=//p' \
+        | grep '^Developer ID Application:' \
+        | head -1 || true)
+
+    if [ -z "$signing_identity" ]; then
+        print_error "Could not determine Developer ID Application identity for DMG signing"
+        exit 1
+    fi
+
+    signing_hash=$(security find-identity -v -p codesigning \
+        | awk -v subject="$signing_identity" 'index($0, "\"" subject "\"") { print $2; exit }')
+
+    if [ -z "$signing_hash" ]; then
+        print_error "Could not resolve a codesigning fingerprint for: $signing_identity"
+        exit 1
+    fi
+
+    print_step "Signing DMG installer..."
+    codesign --force --sign "$signing_hash" --timestamp "$DMG_PATH"
+    print_success "DMG signed: $signing_identity ($signing_hash)"
+
+    if codesign --verify --verbose=2 "$DMG_PATH" >/dev/null 2>&1; then
+        print_success "DMG signature verification passed"
+    else
+        print_error "DMG signature verification failed"
+        exit 1
+    fi
+}
+
 print_help() {
     cat <<USAGE
 
@@ -405,6 +443,7 @@ if [ "$SKIP_DMG" = false ]; then
     fi
 
     DMG_SIZE=$(du -h "$DMG_PATH" | cut -f1)
+    sign_dmg_if_needed
     echo "    Size: $DMG_SIZE"
 
     if [ "$SKIP_NOTARIZE" = false ]; then

@@ -189,3 +189,18 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `curl -I -s https://dotviewer.app/download/latest` → `307` to the GitHub DMG asset
   - `curl -s https://dotviewer.app/download` → served the GitHub-backed version history page
 - Follow-ups: Create a replacement OpenAI API key anywhere that old key was still configured locally; the leaked key itself is already disabled.
+
+### Release version normalization + fallback DMG signing
+- Outcome: Moved shipped bundle versions to XcodeGen-managed `MARKETING_VERSION`/`CURRENT_PROJECT_VERSION` so `1.0.0` propagates into all app/extension/framework bundles, and fixed `scripts/release.sh` so the `hdiutil` fallback DMG is explicitly Developer ID signed before notarization when DropDMG automation is blocked. Rebuilt via `./scripts/release.sh 1.0.0`, then replaced the live GitHub `v1.0.0` release assets with the verified script-built DMG and checksum.
+- Files: `dotViewer/project.yml`, `dotViewer/App/Info.plist`, `dotViewer/Shared/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/HighlightXPC/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, `scripts/release.sh`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `./scripts/release.sh 1.0.0` → pass (`App notarized and stapled`, `DMG notarized and stapled`, `DMG Gatekeeper verification passed`)
+  - `defaults read dotViewer/build/export/dotViewer.app/Contents/Info CFBundleShortVersionString` → `1.0.0`
+  - `spctl --assess --verbose=4 --type execute dotViewer/build/export/dotViewer.app` → accepted (`source=Notarized Developer ID`)
+  - `spctl --assess --verbose=4 --type install dotViewer/build/export/dotViewer-1.0.0.dmg` → accepted (`source=Notarized Developer ID`)
+  - `shasum -a 256 dotViewer/build/export/dotViewer-1.0.0.dmg` + `cat dotViewer/build/export/dotViewer-1.0.0.dmg.sha256` → matching checksum `cd0e9bc1e509e845d94acf38fac460de9651f68f51782097b049c709a6d4fb8c`
+  - `gh release upload v1.0.0 ... --clobber --repo Stianlars1/dotViewer` → replaced release assets
+  - `gh release view v1.0.0 --json assets` → GitHub DMG digest matches local checksum
+  - `curl -I -L -s https://dotviewer.app/download/latest` → `200` to the updated `dotViewer-1.0.0.dmg` asset
+- Follow-ups: DropDMG itself is still blocked by macOS Automation permissions in this environment (`errAEEventNotPermitted`), so the script currently falls back to a correctly signed/notarized `hdiutil` DMG instead of the styled DropDMG layout unless Automation access is granted.

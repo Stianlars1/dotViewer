@@ -178,8 +178,12 @@ export default function HomePage() {
             <div className={styles.heroInner}>
               <div className={styles.eyebrow}>
                 Finder preview for technical files on macOS
+                <BorderBeam
+                  size={100}
+                  colorFrom={"#1762ff"}
+                  colorTo={"transparent"}
+                />
               </div>
-              <BorderBeam className={styles.borderBeam} />
 
               <h1 className={styles.heroTitle}>
                 Preview dotfiles, config files, markdown, logs, plain text, and

@@ -1,0 +1,180 @@
+Script started on Fri Mar 27 21:32:54 2026
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5]1;..cOS Apps/v2.5]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5\]0;~/Developer/macOS Apps/v2.5
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5[39m
+[35m❯[39m [K[?1h=[?2004h[A[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5[39m [38;5;242mmain[38;5;218m[39m
+[35m❯[39m [K[A[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[32mscript[39m[4m[32ms[4m[32mc[4m[32mr[4m[32mi[4m[32mp[4m[32mt[4m[32ms[24m[39m[?1l>[?2004l
+]2;scripts]1;scripts]0;v2.5: scripts]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h[32ml[39m[32ml[32ms[39m[?1l>[?2004l
+]2;ls -G]1;ls]0;scripts: ls -Gdotviewer-aliases.zsh
+[31mdotviewer-gen-default-filetypes.py[39;49m[0m
+[31mdotviewer-gen-ql-content-types.sh[39;49m[0m
+[31mdotviewer-gen-utis.py[39;49m[0m
+dotviewer-generate-dot-wordmark.py
+[31mdotviewer-logs.sh[39;49m[0m
+[31mdotviewer-nuke.sh[39;49m[0m
+[31mdotviewer-ql-smoke.sh[39;49m[0m
+[31mdotviewer-ql-status.sh[39;49m[0m
+[31mdotviewer-refresh.sh[39;49m[0m
+dotviewer-test-uti-coverage.py
+[31mnotarize_app.sh[39;49m[0m
+[31mrelease.sh[39;49m[0m
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h[32mr[39m[39m[4mr[4me[24m[4mr[4me[4ml[24m
+[0m__zplug::utils::releases::get       
+__zplug::utils::releases::get_latest
+__zplug::utils::releases::get_state 
+__zplug::utils::releases::get_url   
+__zplug::utils::releases::index     
+__zplug::utils::releases::is_64     
+__zplug::utils::releases::is_arm    
+_omz::reload                        
+corelist                            
+corelist5.34                        
+pamshadedrelief                     
+ppmrelief                           
+[JWirelessRadioManagerd               [J[13A[0m[27m[24m[39m[2C[4mrel[24m[K[39m[4ml[4me[24m[4me[4ma[24m[4ma[4ms[24m[4ms[4me[24m[4me[4m.[24m[4m.[4ms[24m[9D[24m[32mr[24m[32me[24m[32ml[24m[32me[24m[32ma[24m[32ms[24m[32me[24m[32m.[24m[32ms[32mh[39m[?1l>[?2004l
+[J]2;release.sh]1;release.sh]0;scripts: release.shzsh: command not found: release.sh
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[31m❯[39m [K[?1h=[?2004h[32m.[39m[4m[32m.[4m[32m/[24m[39m[39m[4m.[39m[4m/[4mr[24m[4mr[4me[24m[4me[4ml[24m[4ml[4me[24m[24m[32m.[24m[32m/[24m[32mr[24m[32me[24m[32ml[24m[32me[32mase.sh[39m[1m [0m[0m [?1l>[?2004l
+]2;./release.sh]1;./release.sh]0;scripts: ./release.sh[0;31mError: Version number required[0m
+
+Usage: ./release.sh [version] [options]
+
+Arguments:
+  version           Version number (e.g., 2.5, 2.5.1)
+
+Options:
+  --app-store       Build for App Store submission
+  --skip-notarize   Skip notarization (testing only)
+  --skip-dmg        Build app only, skip DMG creation
+  --github          Create GitHub release after build
+  --help            Show this help message
+
+Examples:
+  ./release.sh 2.5
+  ./release.sh 2.5.1 --app-store
+  ./release.sh 2.5 --github
+
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[31m❯[39m [K[?1h=[?2004h[32m./release.sh[39m 1.0.0[?1l>[?2004l
+]2;./release.sh 1.0.0]1;./release.sh]0;scripts: ./release.sh 1.0.0
+[0;36m══════════════════════════════════════════════════════════════[0m
+[1m  dotViewer Release Build v1.0.0[0m
+[0;36m══════════════════════════════════════════════════════════════[0m
+
+  Mode:    Developer ID
+  Version: 1.0.0
+
+[0;34m▶[0m [1mStep 1/8: Checking prerequisites...[0m
+[0;32m✓[0m All prerequisites satisfied
+[0;34m▶[0m [1mStep 2/8: Cleaning build directory...[0m
+[0;32m✓[0m Build directory cleaned
+[0;34m▶[0m [1mStep 3/8: Creating archive...[0m
+
+[1m/Users/stian/Developer/macOS Apps/v2.5/dotViewer/TreeSitterVendor/tree-sitter-awk/src/scanner.c:136:8: [0m[0;1;35mwarning: [0m[1m
+      unused variable 'had_whitespace' [-Wunused-variable][0m
+  136 |   bool had_whitespace = tsawk_skip_whitespace(lexer, f...[0m
+      | [0;1;32m       ^~~~~~~~~~~~~~
+[0m1 warning generated.
+[1m/Users/stian/Developer/macOS Apps/v2.5/dotViewer/TreeSitterVendor/tree-sitter-awk/src/scanner.c:136:8: [0m[0;1;35mwarning: [0m[1m
+      unused variable 'had_whitespace' [-Wunused-variable][0m
+  136 |   bool had_whitespace = tsawk_skip_whitespace(lexer, f...[0m
+      | [0;1;32m       ^~~~~~~~~~~~~~
+[0m1 warning generated.
+[0;32m✓[0m Archive created: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/dotViewer.xcarchive
+[0;34m▶[0m [1mStep 4/8: Exporting for Developer ID distribution...[0m
+2026-03-27 21:33:52.741 xcodebuild[49896:12605880] [MT] IDEDistribution: -[IDEDistributionLogging _createLoggingBundleAtPath:]: Created bundle at path "/var/folders/h1/82t44wr13fj06v4fr9mkkfk40000gn/T/dotViewer_2026-03-27_21-33-52.741.xcdistributionlogs".
+Exported dotViewer to: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export
+[0;32m✓[0m Exported: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer.app
+[0;34m▶[0m [1mStep 5/8: Verifying code signature...[0m
+[0;32m✓[0m Code signature valid
+[0;34m▶[0m [1mStep 6/8: Notarizing app...[0m
+    Created ZIP for submission: dotViewer-1.0.0-app.zip
+    Submitting to Apple notary service...
+
+[0;32m✓[0m Notarization accepted
+    Stapling notarization ticket...
+Processing: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer.app
+Processing: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer.app
+The staple and validate action worked!
+[0;32m✓[0m Notarization ticket stapled
+[0;32m✓[0m Gatekeeper verification passed
+[0;34m▶[0m [1mStep 7/8: Creating DMG installer...[0m
+    Using DropDMG profile: dotviewer
+[0;32m✓[0m DMG created: dotViewer-1.0.0.dmg
+    Size:  54M
+[0;34m▶[0m [1mStep 8/8: Notarizing DMG...[0m
+
+
+
+[0;32m✓[0m DMG notarization accepted
+    Stapling notarization ticket to DMG...
+Processing: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg
+Processing: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg
+The staple and validate action worked!
+[0;32m✓[0m DMG notarization ticket stapled
+[0;32m✓[0m DMG Gatekeeper verification passed
+[0;32m✓[0m Checksum generated: dotViewer-1.0.0.dmg.sha256
+
+[0;36m══════════════════════════════════════════════════════════════[0m
+[1m  Release Build Complete![0m
+[0;36m══════════════════════════════════════════════════════════════[0m
+
+  Version:  1.0.0
+  Duration: 4m 43s
+
+[1m  Build Outputs:[0m
+
+  Archive:  /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/dotViewer.xcarchive
+  App:      /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer.app
+  DMG:      /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg
+  Checksum: /Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg.sha256
+
+  [0;32m✓ App notarized and stapled[0m
+  [0;32m✓ DMG notarized and stapled[0m
+
+[1m  Quick Verification:[0m
+
+  # Mount and test DMG
+  open "/Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg"
+
+  # Verify Gatekeeper
+  spctl --assess -v --type execute "/Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer.app"
+
+[1m  To create GitHub release later:[0m
+
+  gh release create v1.0.0 "/Users/stian/Developer/macOS Apps/v2.5/dotViewer/build/export/dotViewer-1.0.0.dmg" --title "dotViewer 1.0.0"
+
+
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m [33m4m 43s[39m
+[35m❯[39m [K[?1h=[?2004h[?1l>[?2004l
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h[?1l>[?2004l
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h[?1l>[?2004l
+]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/scripts]1;../v2.5/scripts]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/scripts\]0;~/Developer/macOS Apps/v2.5/scripts
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/scripts[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h[7m  cd "/Users/stian/Developer/macOS Apps/v2.5/site" && npm ru[7mn[7m dev[27m[K[A[27m [27m [27m[32mc[27m[32md[39m[27m [27m[33m"[27m[33m/[27m[33mU[27m[33ms[27m[33me[27m[33mr[27m[33ms[27m[33m/[27m[33ms[27m[33mt[27m[33mi[27m[33ma[27m[33mn[27m[33m/[27m[33mD[27m[33me[27m[33mv[27m[33me[27m[33ml[27m[33mo[27m[33mp[27m[33me[27m[33mr[27m[33m/[27m[33mm[27m[33ma[27m[33mc[27m[33mO[27m[33mS[27m[33m [27m[33mA[27m[33mp[27m[33mp[27m[33ms[27m[33m/[27m[33mv[27m[33m2[27m[33m.[27m[33m5[27m[33m/[27m[33ms[27m[33mi[27m[33mt[27m[33me[27m[33m"[24m[39m[27m [27m&[27m&[27m [27m[32mn[27m[32mp[27m[32mm[39m[27m [27mr[27mun[27m [27md[27me[27mv[?1l>[?2004l
+]2;cd "/Users/stian/Developer/macOS Apps/v2.5/site" && npm run dev]1;cd]0;scripts: cd "/Users/stian/D[7m  cd "/Users/stian/Developer/macOS Apps/v2.5/site" && npm ru[7mn[7m dev[27m[K[A[27m [27m [27m[32mc[27m[32md[39m[27m [27m[33m"[27m[33m/[27m[33mU[27m[33ms[27m[33me[27m[33mr[27m[33ms[27m[33m/[27m[33ms[27m[33mt[27m[33mi[27m[33ma[27m[33mn[27m[33m/[27m[33mD[27m[33me[27m[33mv[27m[33me[27m[33ml[27m[33mo[27m[33mp[27m[33me[27m[33mr[27m[33m/[27m[33mm[27m[33ma[27m[33mc[27m[33mO[27m[33mS[27m[33m [27m[33mA[27m[33mp[27m[33mp[27m[33ms[27m[33m/[27m[33mv[27m[33m2[27m[33m.[27m[33m5[27m[33m/[27m[33ms[27m[33mi[27m[33mt[27m[33me[27m[33m"[24m[39m[27m [27m&[27m&[27m [27m[32mn[27m[32mp[27m[32mm[39m[27m [27mr[27mun[27m [27md[27me[27mv[?1l>[?2004l
+]2;cd "/Users/stian/Developer/macOS Apps/v2.5/site" && npm run dev]1;cd]0;scripts: cd "/Users/stian/Developer/macOS Apps/v2.5/site" && npm run dev
+> dotviewer-site@0.1.0 dev
+> next dev
+
+[33m[1m⚠[22m[39m Port 3000 is in use by process 33855, using available port 3001 instead.
+[1m[38;2;173;127;168m▲ Next.js 16.2.1[39m[22m (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.68.61:3001
+[32m[1m✓[22m[39m Ready in 367ms
+
+^C[?25h
+⠙[1G[0K]2;stian@MacBook-Pro-von-Stian:~/Developer/macOS Apps/v2.5/site]1;..pps/v2.5/site]7;file://MacBook-Pro-von-Stian.local/Users/stian/Developer/macOS%20Apps/v2.5/site\]0;~/Developer/macOS Apps/v2.5/site
+[0m[27m[24m[J[34m~/Developer/macOS Apps/v2.5/site[39m [38;5;242mmain[38;5;218m*[39m
+[35m❯[39m [K[?1h=[?2004h
