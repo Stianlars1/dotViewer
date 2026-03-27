@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
+import {dmSans, geistMono, geistSans} from "../lib/fonts";
 
 const { siteUrl } = getSiteConfig();
 
@@ -42,7 +43,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${geistMono.variable} ${geistSans.variable} ${dmSans.variable}`}>{children}</body>
     </html>
   );
 }

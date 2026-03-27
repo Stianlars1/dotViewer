@@ -37,6 +37,37 @@ SKIP_DMG=false
 APP_STORE=false
 CREATE_GITHUB_RELEASE=false
 
+create_manual_dmg() {
+    local staging_dir="$BUILD_DIR/dmg-staging"
+    local temp_dmg="$BUILD_DIR/$APP_NAME-$VERSION-temp.dmg"
+
+    rm -rf "$staging_dir" "$temp_dmg" "$DMG_PATH"
+    mkdir -p "$staging_dir"
+
+    ditto "$APP_PATH" "$staging_dir/$APP_NAME.app"
+    ln -s /Applications "$staging_dir/Applications"
+
+    print_warning "Using hdiutil fallback to create DMG"
+
+    hdiutil create \
+        -volname "$APP_NAME" \
+        -srcfolder "$staging_dir" \
+        -fs HFS+ \
+        -format UDRW \
+        "$temp_dmg" \
+        -quiet
+
+    hdiutil convert \
+        "$temp_dmg" \
+        -format UDZO \
+        -imagekey zlib-level=9 \
+        -o "$DMG_PATH" \
+        -quiet
+
+    rm -f "$temp_dmg"
+    rm -rf "$staging_dir"
+}
+
 print_help() {
     cat <<USAGE
 
@@ -159,11 +190,10 @@ check_prerequisites() {
     fi
 
     if [ "$SKIP_DMG" = false ] && [ "$APP_STORE" = false ]; then
-        if ! command -v dropdmg >/dev/null 2>&1; then
-            print_error "dropdmg not found."
-            echo "    Install: DropDMG app -> Advanced -> Install dropdmg Tool"
-            missing=true
-        fi
+    if ! command -v dropdmg >/dev/null 2>&1 && ! command -v hdiutil >/dev/null 2>&1; then
+        print_error "Neither dropdmg nor hdiutil is available for DMG creation."
+        missing=true
+    fi
     fi
 
     if [ "$CREATE_GITHUB_RELEASE" = true ]; then
@@ -335,44 +365,43 @@ fi
 
 if [ "$SKIP_DMG" = false ]; then
     print_step "Step 7/8: Creating DMG installer..."
-    echo "    Using DropDMG profile: $DROPDMG_PROFILE"
+    if command -v dropdmg >/dev/null 2>&1; then
+        echo "    Using DropDMG profile: $DROPDMG_PROFILE"
 
-    DROPDMG_OUTPUT=$(dropdmg \
-        --config-name="$DROPDMG_PROFILE" \
-        --destination="$EXPORT_PATH" \
-        --base-name="$APP_NAME-$VERSION" \
-        "$APP_PATH" 2>&1) || {
-        print_error "DropDMG failed:"
-        echo "$DROPDMG_OUTPUT"
-        if echo "$DROPDMG_OUTPUT" | grep -q "errAEEventNotPermitted"; then
-            echo ""
-            echo "    Fix:"
-            echo "      1. Open System Settings -> Privacy & Security -> Automation"
-            echo "      2. Allow your terminal app to control DropDMG"
-            echo "      3. Re-run the release command from that terminal"
-        fi
-        exit 1
-    }
+        DROPDMG_OUTPUT=$(dropdmg \
+            --config-name="$DROPDMG_PROFILE" \
+            --destination="$EXPORT_PATH" \
+            --base-name="$APP_NAME-$VERSION" \
+            "$APP_PATH" 2>&1) || {
+            print_warning "DropDMG failed:"
+            echo "$DROPDMG_OUTPUT"
+            create_manual_dmg
+        }
 
-    CREATED_DMG=$(echo "$DROPDMG_OUTPUT" | tail -1)
+        CREATED_DMG=$(echo "${DROPDMG_OUTPUT:-}" | tail -1)
 
-    if [ -f "$CREATED_DMG" ]; then
-        DMG_PATH="$CREATED_DMG"
-        DMG_FILENAME=$(basename "$DMG_PATH")
-        print_success "DMG created: $DMG_FILENAME"
-    elif [ -f "$DMG_PATH" ]; then
-        print_success "DMG created: $DMG_FILENAME"
-    else
-        FOUND_DMG=$(find "$EXPORT_PATH" -name "*.dmg" -type f 2>/dev/null | head -1)
-        if [ -n "$FOUND_DMG" ]; then
-            DMG_PATH="$FOUND_DMG"
+        if [ -f "$CREATED_DMG" ]; then
+            DMG_PATH="$CREATED_DMG"
             DMG_FILENAME=$(basename "$DMG_PATH")
             print_success "DMG created: $DMG_FILENAME"
+        elif [ -f "$DMG_PATH" ]; then
+            print_success "DMG created: $DMG_FILENAME"
         else
-            print_error "DMG creation failed - no DMG file found"
-            echo "$DROPDMG_OUTPUT"
-            exit 1
+            FOUND_DMG=$(find "$EXPORT_PATH" -name "*.dmg" -type f 2>/dev/null | head -1)
+            if [ -n "$FOUND_DMG" ]; then
+                DMG_PATH="$FOUND_DMG"
+                DMG_FILENAME=$(basename "$DMG_PATH")
+                print_success "DMG created: $DMG_FILENAME"
+            elif [ -f "$DMG_PATH" ]; then
+                print_success "DMG created: $DMG_FILENAME"
+            else
+                create_manual_dmg
+                print_success "DMG created: $DMG_FILENAME"
+            fi
         fi
+    else
+        create_manual_dmg
+        print_success "DMG created: $DMG_FILENAME"
     fi
 
     DMG_SIZE=$(du -h "$DMG_PATH" | cut -f1)

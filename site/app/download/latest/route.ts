@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getLatestDmgAssetUrl } from "../../lib/github-release";
-import { getSiteConfig } from "../../lib/site-config";
+import { getLatestDmgAssetUrl } from "../../../lib/github-release";
+import { getSiteConfig } from "../../../lib/site-config";
 
 export const runtime = "nodejs";
 

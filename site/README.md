@@ -18,7 +18,12 @@ The site resolves the latest macOS installer in this order:
 2. `GITHUB_REPO` via GitHub Releases
 3. Vercel Git repo env vars (`VERCEL_GIT_REPO_OWNER` + `VERCEL_GIT_REPO_SLUG`)
 
-If no download source is configured, `/download` falls back to the install section.
+The public download flow uses:
+
+- `/download` as the release-aware landing page with auto-start download + version history
+- `/download/latest` as the stable direct-download redirect
+
+If no download source is configured, `/download/latest` falls back to GitHub Releases or the home page install section.
 
 ## Deployment
 

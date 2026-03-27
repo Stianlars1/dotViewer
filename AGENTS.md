@@ -135,3 +135,17 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Browser checks on `http://127.0.0.1:3101` at desktop and mobile widths → pass
   - Browser console on `http://127.0.0.1:3101` → 0 errors, 0 warnings
 - Follow-ups: Replace the local install fallback links with the real GitHub Releases source during deployment env setup.
+
+### Release download flow + DMG packaging
+- Outcome: Replaced the old `/download` redirect with a release-aware `/download` landing page plus `/download/latest` direct asset route, added GitHub release history fetching, fixed site font barrel imports, and hardened `scripts/release.sh` with an `hdiutil` DMG fallback when DropDMG automation permissions are unavailable. Built/exported `dotViewer 2.5`, notarized/stapled the app, packaged a signed DMG manually, notarized/stapled the DMG, generated a SHA-256 checksum, mounted the installer, reinstalled `/Applications/dotViewer.app`, and verified Quick Look registration plus markdown/code smoke-launch coverage from the release build.
+- Files: `site/app/download/*`, `site/lib/github-release.ts`, `site/lib/fonts/*`, `site/app/layout.tsx`, `site/app/globals.css`, `site/README.md`, `site/next-env.d.ts`, `scripts/release.sh`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `codesign --verify --deep --strict dotViewer/build/export/dotViewer.app` → pass
+  - `spctl --assess --verbose=4 --type execute dotViewer/build/export/dotViewer.app` → accepted (`source=Notarized Developer ID`)
+  - `spctl --assess --verbose=4 --type install dotViewer/build/export/dotViewer-2.5.dmg` → accepted (`source=Notarized Developer ID`)
+  - Mounted DMG contents showed `dotViewer.app` + `Applications` symlink
+  - `./scripts/dotviewer-ql-status.sh` after reinstall → preview + thumbnail extensions registered from `/Applications/dotViewer.app`
+  - `./scripts/dotviewer-logs.sh --preview --last 10m | rg 'Preview request|Routing check|Preview route'` → markdown preview request confirmed from the installed release build
+- Follow-ups: Push `main` to GitHub, publish the DMG/checksum as a GitHub Release, then verify the live website against that release source.

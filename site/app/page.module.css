@@ -199,9 +199,10 @@
 .heroTitle {
   max-width: 940px;
   margin: 26px auto 0;
-  font-size: clamp(3.8rem, 7vw, 6.9rem);
+  font-size: clamp(45px, 7vw, 98px);
   line-height: 0.93;
   letter-spacing: -0.08em;
+  font-weight: 900;
 }
 
 .heroBody {
