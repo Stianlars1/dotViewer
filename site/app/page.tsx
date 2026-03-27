@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 import { getProductStats } from "../lib/product-stats";
 import { getSiteConfig } from "../lib/site-config";
 
-const heroMeta = ["Free download", "Notarized DMG workflow", "macOS 15+"];
+const heroMeta = ["Actual app screenshots", "Free download", "Notarized DMG", "macOS 15+"];
 
 const limitations = [
   "Some file types are still claimed by macOS system preview handlers. For example, `.html` stays with the native HTML Quick Look renderer.",
@@ -52,9 +52,24 @@ const faqs = [
       "Download the DMG, drag dotViewer into Applications, launch it once, and then use Quick Look in Finder. That first launch registers the extension and makes the preview flow available.",
   },
   {
-    question: "Why use this instead of opening an editor?",
+    question: "Can I tune the preview and app UI?",
     answer:
-      "Because many file checks do not deserve a full context switch. dotViewer is built for the small, frequent inspections that happen while browsing files, reviewing project structure, or checking technical documents in Finder.",
+      "Yes. dotViewer includes built-in themes, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+  },
+];
+
+const proofMessages = [
+  {
+    title: "Real code previews",
+    body: "Syntax highlighting, file badges, line counts, and copy actions from the actual Quick Look UI.",
+  },
+  {
+    title: "Markdown your way",
+    body: "Raw and rendered modes, optional table of contents, and layouts that match the app instead of a website mockup.",
+  },
+  {
+    title: "Configurable behavior",
+    body: "Themes, width, font size, copy behavior, file types, markdown defaults, and status live in the app you install.",
   },
 ];
 
@@ -134,8 +149,8 @@ export default function HomePage() {
             </Link>
 
             <div className={styles.navLinks}>
-              <a href="#features">Features</a>
-              <a href="#coverage">Coverage</a>
+              <a href="#previews">Previews</a>
+              <a href="#controls">Controls</a>
               <a href="#install">Install</a>
               <a href="#faq">FAQ</a>
             </div>
@@ -151,15 +166,16 @@ export default function HomePage() {
         <div className={styles.shell}>
           <section className={styles.hero}>
             <div className={styles.heroInner}>
-              <div className={styles.eyebrow}>Better Quick Look for technical files</div>
+              <div className={styles.eyebrow}>The screenshots below are from the actual app</div>
 
               <h1 className={styles.heroTitle}>
                 Preview markdown, config, and code files Finder doesn&apos;t handle well.
               </h1>
 
               <p className={styles.heroBody}>
-                dotViewer keeps small file checks small. Inspect technical files instantly in Quick
-                Look instead of opening an editor every time you need to verify one detail.
+                dotViewer keeps small file checks small. Raw and rendered markdown. Optional table
+                of contents. Auto-copy on text selection. Built-in themes and UI controls. What you
+                see here is the product as it actually ships on macOS.
               </p>
 
               <div className={styles.heroActions}>
@@ -181,171 +197,242 @@ export default function HomePage() {
             </div>
           </section>
 
-          <section className={styles.showcaseSection} aria-label="Product preview">
-            <div className={styles.showcaseFrame}>
-              <div className={styles.showcaseBar}>
-                <div className={styles.windowDots}>
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className={styles.showcaseLabel}>Finder Quick Look</div>
-                <div className={styles.showcaseLabel}>dotViewer</div>
-              </div>
+          <section className={styles.showcaseSection} id="previews" aria-label="Actual product screenshots">
+            <div className={styles.heroGallery}>
+              <figure className={styles.galleryLead}>
+                <Image
+                  src="/product/markdown-rendered-toc.jpeg"
+                  alt="dotViewer rendered markdown preview with the table of contents open"
+                  width={3680}
+                  height={2224}
+                  priority
+                  sizes="(max-width: 1100px) 100vw, 70vw"
+                />
+              </figure>
 
-              <div className={styles.showcaseGrid}>
-                <div className={styles.codePanel}>
-                  <div className={styles.panelHeader}>
-                    <span>settings.production.json</span>
-                    <span>JSON</span>
-                  </div>
-                  <div className={styles.codeBody}>
-                    <div className={styles.lineNumbers}>1{"\n"}2{"\n"}3{"\n"}4{"\n"}5{"\n"}6</div>
-                    <div className={styles.codeLines}>
-                      {"{"}
-                      {"\n"}  <span className={styles.tokenString}>"theme"</span>:{" "}
-                      <span className={styles.tokenString}>"finder-light"</span>,
-                      {"\n"}  <span className={styles.tokenString}>"markdown"</span>: {"{"}
-                      {"\n"}    <span className={styles.tokenString}>"rendered"</span>:{" "}
-                      <span className={styles.tokenKeyword}>true</span>
-                      {"\n"}  {"},"}
-                      {"\n"}  <span className={styles.tokenComment}>// Quick check, no editor launch</span>
-                      {"\n"}
-                      {"}"}
-                    </div>
-                  </div>
-                </div>
+              <div className={styles.galleryStack}>
+                <figure className={styles.galleryCard}>
+                  <Image
+                    src="/product/markdown-raw.jpeg"
+                    alt="dotViewer markdown raw preview with syntax highlighting"
+                    width={1644}
+                    height={1676}
+                    sizes="(max-width: 1100px) 100vw, 28vw"
+                  />
+                </figure>
 
-                <div className={styles.sideStack}>
-                  <div className={styles.renderedPanel}>
-                    <div className={styles.panelHeader}>
-                      <span>README.md</span>
-                      <span>Rendered Markdown</span>
-                    </div>
-                    <div className={styles.renderedBody}>
-                      <h2>Release Notes</h2>
-                      <p>Readable headings, spacing, and lists directly inside Finder.</p>
-                      <ul>
-                        <li>Preview docs without context switching</li>
-                        <li>Read structure instead of raw clutter</li>
-                        <li>Keep moving after the check</li>
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className={styles.showcaseNote}>
-                    Built for markdown, configs, logs, dotfiles, and code that deserve more than a
-                    generic icon or a plain text dump.
-                  </div>
-                </div>
+                <figure className={styles.galleryCard}>
+                  <Image
+                    src="/product/code-c.jpeg"
+                    alt="dotViewer C source file preview in Quick Look"
+                    width={1644}
+                    height={770}
+                    sizes="(max-width: 1100px) 100vw, 28vw"
+                  />
+                </figure>
               </div>
             </div>
           </section>
 
-          <section className={styles.proofStrip} aria-label="Coverage summary">
-            {proofStats.map((item) => (
-              <article className={styles.proofItem} key={item.label}>
-                <div className={styles.proofValue}>{item.value}</div>
-                <div className={styles.proofLabel}>{item.label}</div>
+          <section className={styles.proofStrip} aria-label="Product summary">
+            {proofMessages.map((item) => (
+              <article className={styles.proofMessage} key={item.title}>
+                <h2 className={styles.proofMessageTitle}>{item.title}</h2>
+                <p className={styles.proofMessageBody}>{item.body}</p>
               </article>
             ))}
           </section>
 
-          <section className={styles.section} id="features">
+          <section className={styles.statsStrip} aria-label="Coverage summary">
+            {proofStats.map((item) => (
+              <article className={styles.statItem} key={item.label}>
+                <div className={styles.statValue}>{item.value}</div>
+                <div className={styles.statLabel}>{item.label}</div>
+              </article>
+            ))}
+          </section>
+
+          <section className={styles.section}>
             <div className={styles.sectionIntro}>
-              <div className={styles.kicker}>Features</div>
-              <h2 className={styles.sectionTitle}>Readable previews with more space and less friction.</h2>
+              <div className={styles.kicker}>Preview Modes</div>
+              <h2 className={styles.sectionTitle}>
+                Code, markdown, and technical files shown the way dotViewer actually renders them.
+              </h2>
               <p className={styles.sectionBody}>
-                The goal is not to turn Finder into a full IDE. The goal is to make the files you
-                check constantly feel legible, fast, and calm enough to trust at a glance.
+                The website now uses the real preview UI language: dark Quick Look surfaces, file
+                badges, top-bar actions, raw versus rendered markdown, and the larger markdown
+                layout with TOC support when that mode is enabled.
               </p>
             </div>
 
-            <div className={styles.story}>
-              <div className={styles.storyCopy}>
-                <div className={styles.storyKicker}>Preview source</div>
-                <h3 className={styles.storyTitle}>Syntax highlighting that makes technical files readable at a glance.</h3>
+            <div className={styles.featureRow}>
+              <div className={styles.featureCopy}>
+                <div className={styles.storyKicker}>Code and config</div>
+                <h3 className={styles.storyTitle}>
+                  Syntax-highlighted previews for the files you inspect constantly.
+                </h3>
                 <p className={styles.storyBody}>
-                  Code, configs, and structured text are presented with theme-aware highlighting so
-                  the preview feels intentionally designed for Quick Look instead of dumped into a
-                  browser-shaped box.
+                  Source code, shell scripts, XML, dotfiles, configs, and other technical files are
+                  presented with the actual Quick Look chrome from dotViewer rather than invented
+                  browser-like mockups.
                 </p>
               </div>
 
-              <div className={styles.storyVisual}>
-                <div className={styles.miniWindow}>
-                  <div className={styles.panelHeader}>
-                    <span>.env.production</span>
-                    <span>Environment</span>
-                  </div>
-                  <div className={styles.miniBody}>
-                    <div>APP_ENV=production</div>
-                    <div>FEATURE_MARKDOWN_RENDERED=true</div>
-                    <div>THEME=glass-light</div>
-                    <div>PREVIEW_WIDTH=comfortable</div>
-                  </div>
-                </div>
+              <div className={styles.imagePair}>
+                <figure className={styles.shotWide}>
+                  <Image
+                    src="/product/code-c.jpeg"
+                    alt="C file preview in dotViewer"
+                    width={1644}
+                    height={770}
+                    sizes="(max-width: 1100px) 100vw, 42vw"
+                  />
+                </figure>
+
+                <figure className={styles.shotWide}>
+                  <Image
+                    src="/product/code-swift.jpeg"
+                    alt="Swift file preview in dotViewer"
+                    width={2134}
+                    height={1768}
+                    sizes="(max-width: 1100px) 100vw, 42vw"
+                  />
+                </figure>
               </div>
             </div>
 
-            <div className={styles.story}>
-              <div className={styles.storyVisual}>
-                <div className={styles.markdownCard}>
-                  <div className={styles.panelHeader}>
-                    <span>Project Notes</span>
-                    <span>Markdown</span>
-                  </div>
-                  <div className={styles.markdownCardBody}>
-                    <h3>Rendered when you want it.</h3>
-                    <p>
-                      Review notes, install steps, tables, or project docs without leaving Finder.
-                    </p>
-                  </div>
-                </div>
+            <div className={styles.featureRow}>
+              <div className={styles.imageStack}>
+                <figure className={styles.shotLarge}>
+                  <Image
+                    src="/product/markdown-rendered-toc.jpeg"
+                    alt="Rendered markdown preview with table of contents open in dotViewer"
+                    width={3680}
+                    height={2224}
+                    sizes="(max-width: 1100px) 100vw, 46vw"
+                  />
+                </figure>
+
+                <figure className={styles.shotLarge}>
+                  <Image
+                    src="/product/markdown-raw.jpeg"
+                    alt="Raw markdown preview in dotViewer"
+                    width={1644}
+                    height={1676}
+                    sizes="(max-width: 1100px) 100vw, 46vw"
+                  />
+                </figure>
               </div>
 
-              <div className={styles.storyCopy}>
-                <div className={styles.storyKicker}>Preview markdown</div>
-                <h3 className={styles.storyTitle}>Read markdown as source or rendered output.</h3>
+              <div className={styles.featureCopy}>
+                <div className={styles.storyKicker}>Markdown</div>
+                <h3 className={styles.storyTitle}>
+                  Raw or rendered, with optional table of contents.
+                </h3>
                 <p className={styles.storyBody}>
-                  dotViewer is useful when you want to inspect the actual file and when you just
-                  want to read the content. That switch matters for READMEs, notes, changelogs, and
-                  project documentation.
+                  dotViewer supports the two markdown states people actually care about: inspecting
+                  the source and reading the document. When rendered mode is active, the table of
+                  contents can stay hidden or open by default depending on the user’s setting.
                 </p>
               </div>
             </div>
 
-            <div className={styles.story}>
-              <div className={styles.storyCopy}>
-                <div className={styles.storyKicker}>Coverage</div>
-                <h3 className={styles.storyTitle}>Broader support for the files Quick Look often leaves awkward.</h3>
+            <div className={styles.featureRow}>
+              <div className={styles.featureCopy}>
+                <div className={styles.storyKicker}>Copy behavior</div>
+                <h3 className={styles.storyTitle}>
+                  Selection can copy automatically, because Quick Look needs pragmatic controls.
+                </h3>
                 <p className={styles.storyBody}>
-                  dotViewer is aimed at the files technical users actually touch every day:
-                  extensions, filename-based mappings, and highlighting rules that make Finder more
-                  useful without pretending macOS allows third-party previews to override everything.
+                  The app includes configurable copy behavior for preview selection. The site should
+                  reflect that real capability, including the small “Copied selection” feedback
+                  rather than pretending the preview is passive.
                 </p>
               </div>
 
-              <div className={styles.storyVisual}>
-                <div className={styles.coverageCard}>
-                  <div className={styles.coverageRow}>
-                    <span>Markdown and docs</span>
-                    <strong>Readable</strong>
-                  </div>
-                  <div className={styles.coverageRow}>
-                    <span>Configs and dotfiles</span>
-                    <strong>Highlighted</strong>
-                  </div>
-                  <div className={styles.coverageRow}>
-                    <span>Logs and plain text</span>
-                    <strong>Scannable</strong>
-                  </div>
-                  <div className={styles.coverageRow}>
-                    <span>System-owned types</span>
-                    <strong>Called out honestly</strong>
-                  </div>
-                </div>
-              </div>
+              <figure className={styles.shotHero}>
+                <Image
+                  src="/product/markdown-copy-toast.jpeg"
+                  alt="dotViewer rendered markdown preview showing copied selection feedback"
+                  width={3680}
+                  height={2224}
+                  sizes="(max-width: 1100px) 100vw, 48vw"
+                />
+              </figure>
+            </div>
+          </section>
+
+          <section className={styles.section} id="controls">
+            <div className={styles.sectionIntro}>
+              <div className={styles.kicker}>App Controls</div>
+              <h2 className={styles.sectionTitle}>
+                Themes, typography, width, copy behavior, markdown defaults, and file type
+                management live in the app.
+              </h2>
+              <p className={styles.sectionBody}>
+                dotViewer is not only a Quick Look extension. The companion app lets people change
+                themes, tune code and markdown widths, control copy behavior, manage file types, and
+                inspect extension status with a UI that matches the product screenshots below.
+              </p>
+            </div>
+
+            <div className={styles.controlGrid}>
+              <figure className={styles.controlCard}>
+                <Image
+                  src="/product/settings-theme.jpeg"
+                  alt="dotViewer theme selection settings"
+                  width={2024}
+                  height={1528}
+                  sizes="(max-width: 1100px) 100vw, 31vw"
+                />
+                <figcaption>Built-in themes including GitHub, Xcode, Solarized, Tokyo Night, and Blackout.</figcaption>
+              </figure>
+
+              <figure className={styles.controlCard}>
+                <Image
+                  src="/product/settings-appearance.jpeg"
+                  alt="dotViewer appearance and preview layout settings"
+                  width={2024}
+                  height={1528}
+                  sizes="(max-width: 1100px) 100vw, 31vw"
+                />
+                <figcaption>Appearance controls for font size, app UI text size, line numbers, word wrap, and content width.</figcaption>
+              </figure>
+
+              <figure className={styles.controlCard}>
+                <Image
+                  src="/product/settings-copy.jpeg"
+                  alt="dotViewer copy behavior and preview UI settings"
+                  width={2024}
+                  height={1528}
+                  sizes="(max-width: 1100px) 100vw, 31vw"
+                />
+                <figcaption>Preview UI controls including auto-copy, line numbers in copy, and preview behavior for unknown files.</figcaption>
+              </figure>
+            </div>
+
+            <div className={styles.appGrid}>
+              <figure className={styles.appCard}>
+                <Image
+                  src="/product/file-types.jpeg"
+                  alt="dotViewer file type registry screen"
+                  width={2024}
+                  height={1528}
+                  sizes="(max-width: 1100px) 100vw, 46vw"
+                />
+                <figcaption>Manage built-in and custom file type mappings from the app.</figcaption>
+              </figure>
+
+              <figure className={styles.appCard}>
+                <Image
+                  src="/product/status.jpeg"
+                  alt="dotViewer status screen showing extension enabled and quick stats"
+                  width={2024}
+                  height={1528}
+                  sizes="(max-width: 1100px) 100vw, 46vw"
+                />
+                <figcaption>Status, quick stats, and extension health are visible in the companion app.</figcaption>
+              </figure>
             </div>
           </section>
 
@@ -450,8 +537,8 @@ export default function HomePage() {
             </div>
 
             <div className={styles.footerLinks}>
-              <a href="#features">Features</a>
-              <a href="#coverage">Coverage</a>
+              <a href="#previews">Previews</a>
+              <a href="#controls">Controls</a>
               <a href="#install">Install</a>
               <a href="#faq">FAQ</a>
               <a href={releasesHref}>Releases</a>

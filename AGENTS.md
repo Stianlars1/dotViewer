@@ -125,3 +125,13 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run build` → pass
   - Browser check on `http://127.0.0.1:3101` → redesigned homepage rendered correctly with 0 console warnings/errors
 - Follow-ups: Deployment env wiring unchanged (`NEXT_PUBLIC_SITE_URL`, `GITHUB_REPO`, optional `GITHUB_TOKEN`).
+
+### Website screenshot alignment
+- Outcome: Rebuilt the homepage around actual dotViewer screenshots so the site now reflects the real Quick Look chrome, markdown raw/rendered states, TOC layout, copy toast, theme controls, file type manager, and status UI instead of invented product mockups.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`, `site/public/product/*`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - Browser checks on `http://127.0.0.1:3101` at desktop and mobile widths → pass
+  - Browser console on `http://127.0.0.1:3101` → 0 errors, 0 warnings
+- Follow-ups: Replace the local install fallback links with the real GitHub Releases source during deployment env setup.
