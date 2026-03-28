@@ -204,3 +204,21 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `gh release view v1.0.0 --json assets` → GitHub DMG digest matches local checksum
   - `curl -I -L -s https://dotviewer.app/download/latest` → `200` to the updated `dotViewer-1.0.0.dmg` asset
 - Follow-ups: DropDMG itself is still blocked by macOS Automation permissions in this environment (`errAEEventNotPermitted`), so the script currently falls back to a correctly signed/notarized `hdiutil` DMG instead of the styled DropDMG layout unless Automation access is granted.
+
+## 2026-03-28
+
+### Download page click-to-download behavior
+- Outcome: Removed the automatic download trigger from the website `/download` page so visiting the page no longer starts a DMG download; downloads now begin only from explicit button clicks while `/download/latest` remains the direct asset handoff route.
+- Files: `site/app/download/page.tsx`, `site/app/download/download-trigger.tsx`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+- Follow-ups: Deploy the updated `site/` build when you want the live `/download` page to stop auto-downloading on visit.
+
+### Download page release-title update
+- Outcome: Updated the visible `/download` page H1 so a live release now renders as `Download dotViewer 1.0.0 for macOS.` instead of the generic `Download dotViewer for macOS.` title.
+- Files: `site/app/download/page.tsx`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run build` → pass
+  - `cd site && npm run typecheck` → pass
+- Follow-ups: Deploy the updated `site/` build when you want the live download page title to reflect the current release name.

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { DownloadTrigger } from "./download-trigger";
 import styles from "./page.module.css";
 import { getGitHubReleases } from "../../lib/github-release";
 import { getSiteConfig } from "../../lib/site-config";
@@ -54,45 +53,69 @@ function summarizeBody(body: string) {
 
 export default async function DownloadPage() {
   const config = getSiteConfig();
-  const releases = config.githubRepo ? await getGitHubReleases(config.githubRepo, 16) : [];
+  const releases = config.githubRepo
+    ? await getGitHubReleases(config.githubRepo, 16)
+    : [];
   const latestRelease = releases[0] ?? null;
   const latestDmg = latestRelease?.dmgAsset ?? null;
   const latestChecksum = latestRelease?.checksumAsset ?? null;
-  const downloadHref = config.directDownloadUrl ?? latestDmg?.browser_download_url ?? null;
+  const downloadHref =
+    config.directDownloadUrl ?? latestDmg?.browser_download_url ?? null;
   const schema = buildDownloadSchema(config, releases, downloadHref);
   const releaseCount = releases.length;
 
   return (
     <div className={styles.page}>
+      <Link href={"/"} className={styles.backLink + ` ${styles.goBack}`}>
+        Go back
+      </Link>
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
-      <DownloadTrigger downloadUrl={downloadHref} />
 
       <main className={styles.main}>
+        <video
+          src={"/test.mov"}
+          autoPlay={true}
+          muted={true}
+          controls={false}
+          loop={true}
+          className={styles.testVideo}
+        />
         <section className={styles.hero}>
           <div className={styles.eyebrow}>Direct macOS download</div>
           <h1 className={styles.title}>
             {downloadHref
-              ? "Download dotViewer for macOS."
+              ? latestRelease?.name
+                ? `Download ${latestRelease.name} for macOS.`
+                : "Download dotViewer for macOS."
               : "dotViewer download will appear here once the release is published."}
           </h1>
           <p className={styles.body}>
             {downloadHref
-              ? "Get the notarized DMG for the Quick Look app that previews `.gitignore`, `.env`, markdown, config files, plain text documents, logs, and source code in Finder. If the download does not start automatically, use the button below."
+              ? "Get the notarized DMG for the Quick Look app that previews `.gitignore`, `.env`, markdown, config files, plain text documents, logs, and source code in Finder. Use the button below to download the current release."
               : "The website is already wired for GitHub Releases. As soon as the notarized DMG is attached to the latest release, this page becomes the public download handoff and version history."}
           </p>
           <p className={styles.body}>
-            This page exists so the public download link can stay stable while the actual DMG asset
-            and version change release to release.
+            This page exists so the public download link can stay stable while
+            the actual DMG asset and version change release to release.
           </p>
 
           <div className={styles.actions}>
-            <a className={styles.primaryAction} href={downloadHref ?? "/download/latest"}>
-              {latestRelease?.name ? `Download ${latestRelease.name}` : "Download latest DMG"}
+            <a
+              className={styles.primaryAction}
+              href={downloadHref ?? "/download/latest"}
+            >
+              {latestRelease?.name
+                ? `Download ${latestRelease.name}`
+                : "Download latest DMG"}
             </a>
-            <a className={styles.secondaryAction} href={config.releasesUrl ?? "/#install"}>
+            <a
+              className={styles.secondaryAction}
+              href={config.releasesUrl ?? "/#install"}
+            >
               View GitHub releases
             </a>
           </div>
@@ -121,16 +144,25 @@ export default async function DownloadPage() {
             </p>
 
             <div className={styles.releaseActions}>
-              <a className={styles.primaryAction} href={downloadHref ?? "/download/latest"}>
+              <a
+                className={styles.primaryAction}
+                href={downloadHref ?? "/download/latest"}
+              >
                 Download DMG
               </a>
               {latestChecksum ? (
-                <a className={styles.secondaryAction} href={latestChecksum.browser_download_url}>
+                <a
+                  className={styles.secondaryAction}
+                  href={latestChecksum.browser_download_url}
+                >
                   Checksum
                 </a>
               ) : null}
               {latestRelease ? (
-                <a className={styles.secondaryAction} href={latestRelease.htmlUrl}>
+                <a
+                  className={styles.secondaryAction}
+                  href={latestRelease.htmlUrl}
+                >
                   Release notes
                 </a>
               ) : null}
@@ -141,8 +173,8 @@ export default async function DownloadPage() {
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Best for previewing</div>
               <p>
-                Dotfiles, config files, markdown, logs, plain text documents, and source code in
-                Finder Quick Look.
+                Dotfiles, config files, markdown, logs, plain text documents,
+                and source code in Finder Quick Look.
               </p>
             </div>
             <div className={styles.sideItem}>
@@ -151,11 +183,18 @@ export default async function DownloadPage() {
             </div>
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Source of truth</div>
-              <p>{config.githubRepo ? `${config.githubRepo} GitHub Releases` : "GitHub repo not configured yet"}</p>
+              <p>
+                {config.githubRepo
+                  ? `${config.githubRepo} GitHub Releases`
+                  : "GitHub repo not configured yet"}
+              </p>
             </div>
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Installer format</div>
-              <p>Developer ID signed and notarized macOS DMG with checksum asset published alongside the release.</p>
+              <p>
+                Developer ID signed and notarized macOS DMG with checksum asset
+                published alongside the release.
+              </p>
             </div>
           </aside>
         </section>
@@ -163,11 +202,13 @@ export default async function DownloadPage() {
         <section className={styles.historySection}>
           <div className={styles.historyIntro}>
             <div className={styles.kicker}>Version history</div>
-            <h2 className={styles.historyTitle}>Fetched directly from GitHub Releases.</h2>
+            <h2 className={styles.historyTitle}>
+              Fetched directly from GitHub Releases.
+            </h2>
             <p className={styles.historyBody}>
-              Every published version can appear here automatically. That keeps the download page in
-              sync with the release source instead of maintaining a second manual changelog just for
-              installers.
+              Every published version can appear here automatically. That keeps
+              the download page in sync with the release source instead of
+              maintaining a second manual changelog just for installers.
             </p>
             <p className={styles.historyBody}>
               Current published versions available on this page: {releaseCount}.
@@ -183,17 +224,23 @@ export default async function DownloadPage() {
                       <h3 className={styles.historyVersion}>{release.name}</h3>
                       <div className={styles.historyTag}>{release.tagName}</div>
                     </div>
-                    <div className={styles.historyDate}>{formatDate(release.publishedAt)}</div>
+                    <div className={styles.historyDate}>
+                      {formatDate(release.publishedAt)}
+                    </div>
                   </div>
 
-                  <p className={styles.historySummary}>{summarizeBody(release.body)}</p>
+                  <p className={styles.historySummary}>
+                    {summarizeBody(release.body)}
+                  </p>
 
                   <div className={styles.historyLinks}>
                     {release.dmgAsset ? (
                       <a href={release.dmgAsset.browser_download_url}>DMG</a>
                     ) : null}
                     {release.checksumAsset ? (
-                      <a href={release.checksumAsset.browser_download_url}>Checksum</a>
+                      <a href={release.checksumAsset.browser_download_url}>
+                        Checksum
+                      </a>
                     ) : null}
                     <a href={release.htmlUrl}>GitHub</a>
                   </div>
@@ -203,8 +250,8 @@ export default async function DownloadPage() {
               <article className={styles.historyEmpty}>
                 <h3>No GitHub releases yet</h3>
                 <p>
-                  Publish the first notarized DMG and this page will start listing versions
-                  automatically.
+                  Publish the first notarized DMG and this page will start
+                  listing versions automatically.
                 </p>
               </article>
             )}
