@@ -244,3 +244,13 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
   - Playwright browser verification on `http://127.0.0.1:3200/` and `http://127.0.0.1:3200/download` → inline code rendering updated in the visible copy on both pages, no console errors
 - Follow-ups: Deploy the updated `site/` build so production reflects the expanded inline code treatment.
+
+### Hero copy tightening
+- Outcome: Reduced repetition in the homepage hero by trimming the repeated file-type list from the main support copy, keeping the benefit statement shorter, and rendering the “Common examples” row as actual inline code items instead of one plain joined text string.
+- Files: `site/app/page.tsx`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run build` → pass
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
+  - Playwright browser verification on `http://127.0.0.1:3200/` → hero copy rendered with the shorter text and code-styled common examples, no console errors
+- Follow-ups: Deploy the updated `site/` build so production reflects the tightened hero copy.

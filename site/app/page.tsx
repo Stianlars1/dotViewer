@@ -315,20 +315,15 @@ export default function HomePage() {
 
               <p className={styles.heroBody}>
                 dotViewer turns Finder into a better technical file viewer.
-                Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
-                <Code>README.md</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
-                <Code>XML</Code>, <Code>shell scripts</Code>,{" "}
-                <Code>log files</Code>, and <Code>source code</Code> without
-                opening <Code>VS Code</Code>, <Code>Xcode</Code>,{" "}
-                <Code>Typora</Code>, or <Code>Terminal</Code> just to inspect
-                one file.
+                Preview technical text files like <Code>.gitignore</Code>,{" "}
+                <Code>.env</Code>, and <Code>README.md</Code> without opening
+                a full editor for a quick check.
               </p>
 
               <p className={styles.heroBody}>
-                It is the all-in-one alternative to installing separate Quick
-                Look tools for markdown viewing, config files, code
-                highlighting, and plain text documents. What you see below is
-                the real macOS product, not a web-only mockup.
+                It replaces the usual patchwork of Quick Look add-ons with one
+                native app. The screenshots below are from the real macOS
+                product, not a web-only mockup.
               </p>
 
               <div className={styles.heroActions}>
@@ -349,7 +344,13 @@ export default function HomePage() {
               </div>
 
               <p className={styles.heroBody}>
-                Common examples: {coverageExamples.join(" \u2022 ")}
+                Common examples:{" "}
+                {coverageExamples.map((item, index) => (
+                  <span key={item}>
+                    {index > 0 ? " \u2022 " : null}
+                    <Code>{item}</Code>
+                  </span>
+                ))}
               </p>
             </div>
           </section>
