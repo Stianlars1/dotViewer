@@ -37,15 +37,23 @@ function Code({ children }: { children: ReactNode }) {
 const suiteBenefits = [
   {
     title: "One install instead of Finder plugin stacking",
-    body: "dotViewer covers markdown, config files, logs, dotfiles, plain text documents, and source code in one package instead of making you combine separate Quick Look tools.",
+    body: (
+      <>
+        dotViewer covers markdown, config files, logs, dotfiles, plain text
+        documents, and <Code>source code</Code> in one package instead of
+        making you combine separate Quick Look tools.
+      </>
+    ),
   },
   {
     title: "Preview the file, not the workaround",
     body: (
       <>
-        Open <Code>.gitignore</Code>, <Code>.env</Code>, README files, shell
-        scripts, JSON, YAML, XML, and code directly in Finder Quick Look
-        instead of bouncing into editors and Terminal windows.
+        Open <Code>.gitignore</Code>, <Code>.env</Code>, README files,{" "}
+        <Code>shell scripts</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
+        <Code>XML</Code>, and <Code>source code</Code> directly in Finder Quick
+        Look instead of bouncing into editors and <Code>Terminal</Code>{" "}
+        windows.
       </>
     ),
   },
@@ -67,8 +75,10 @@ const comparisonPoints = [
       <>
         Preview common developer files such as <Code>.gitignore</Code>,{" "}
         <Code>.env</Code>, <Code>.editorconfig</Code>,{" "}
-        <Code>README.md</Code>, JSON, YAML, XML, INI, shell scripts, logs, and
-        source code from the same Quick Look flow.
+        <Code>README.md</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
+        <Code>XML</Code>, <Code>INI</Code>, <Code>shell scripts</Code>,{" "}
+        <Code>log files</Code>, and <Code>source code</Code> from the same
+        Quick Look flow.
       </>
     ),
   },
@@ -143,8 +153,13 @@ const faqs = [
   {
     id: "built-for",
     question: "What files is dotViewer built for?",
-    answer:
-      "dotViewer is built for the technical text files people keep checking in Finder: dotfiles, config files, markdown documents, logs, plain text documents, and source code.",
+    answer: (
+      <>
+        dotViewer is built for the technical text files people keep checking in
+        Finder: dotfiles, config files, markdown documents, logs, plain text
+        documents, and <Code>source code</Code>.
+      </>
+    ),
     schemaQuestion: "What files is dotViewer built for?",
     schemaAnswer:
       "dotViewer is built for the technical text files people keep checking in Finder: dotfiles, config files, markdown documents, logs, plain text documents, and source code.",
@@ -154,15 +169,17 @@ const faqs = [
     question: (
       <>
         Can dotViewer preview dotfiles like <Code>.gitignore</Code> and config
-        files like JSON, YAML, XML, and INI?
+        files like <Code>JSON</Code>, <Code>YAML</Code>, <Code>XML</Code>, and{" "}
+        <Code>INI</Code>?
       </>
     ),
     answer: (
       <>
         Yes. The app is designed around exactly that workflow, including common
         files such as <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
-        <Code>.editorconfig</Code>, <Code>package.json</Code>, YAML, XML,
-        plist, log files, and many other text-based formats.
+        <Code>.editorconfig</Code>, <Code>package.json</Code>,{" "}
+        <Code>YAML</Code>, <Code>XML</Code>, <Code>plist</Code>,{" "}
+        <Code>log files</Code>, and many other text-based formats.
       </>
     ),
     schemaQuestion:
@@ -299,9 +316,12 @@ export default function HomePage() {
               <p className={styles.heroBody}>
                 dotViewer turns Finder into a better technical file viewer.
                 Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
-                <Code>README.md</Code>, JSON, YAML, XML, shell scripts, log
-                files, and source code without opening VS Code, Xcode, Typora,
-                or Terminal just to inspect one file.
+                <Code>README.md</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
+                <Code>XML</Code>, <Code>shell scripts</Code>,{" "}
+                <Code>log files</Code>, and <Code>source code</Code> without
+                opening <Code>VS Code</Code>, <Code>Xcode</Code>,{" "}
+                <Code>Typora</Code>, or <Code>Terminal</Code> just to inspect
+                one file.
               </p>
 
               <p className={styles.heroBody}>
@@ -405,8 +425,8 @@ export default function HomePage() {
                   Many Finder workflows break because the right preview tool
                   depends on the file in front of you. dotViewer is built to
                   reduce that fragmentation. Install one app, then preview
-                  markdown, config files, dotfiles, logs, plain text, and source
-                  code from the same macOS Quick Look flow.
+                  markdown, config files, dotfiles, logs, plain text, and{" "}
+                  <Code>source code</Code> from the same macOS Quick Look flow.
                 </p>
               </div>
 
@@ -437,14 +457,18 @@ export default function HomePage() {
               <div className={styles.featureCopy}>
                 <div className={styles.storyKicker}>Code and config files</div>
                 <h3 className={styles.storyTitle}>
-                  Preview <Code>.gitignore</Code>, <Code>.env</Code>, scripts,
-                  XML, JSON, YAML, and source files with syntax-aware rendering.
+                  Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
+                  <Code>shell scripts</Code>, <Code>XML</Code>, <Code>JSON</Code>,{" "}
+                  <Code>YAML</Code>, and <Code>source code</Code> with
+                  syntax-aware rendering.
                 </h3>
                 <p className={styles.storyBody}>
                   dotViewer is made for the technical files Finder often handles
-                  badly by default: source code, shell scripts, dotfiles, XML,
-                  config files, logs, and plain text documents. The preview
-                  stays in Quick Look, so a small inspection stays small.
+                  badly by default: <Code>source code</Code>,{" "}
+                  <Code>shell scripts</Code>, dotfiles, <Code>XML</Code>,
+                  config files, <Code>log files</Code>, and plain text
+                  documents. The preview stays in Quick Look, so a small
+                  inspection stays small.
                 </p>
               </div>
 
@@ -562,8 +586,8 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Built-in themes including GitHub, Xcode, Solarized, Tokyo
-                  Night, and Blackout.
+                  Built-in themes including GitHub, <Code>Xcode</Code>,
+                  Solarized, Tokyo Night, and Blackout.
                 </figcaption>
               </figure>
 

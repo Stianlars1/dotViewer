@@ -104,8 +104,9 @@ export default async function DownloadPage() {
           <p className={styles.body}>
             Get the notarized DMG for the Quick Look app that previews{" "}
             <Code>.gitignore</Code>, <Code>.env</Code>, markdown, config files,
-            plain text documents, logs, and source code in Finder. Use the
-            button below to download the current release.
+            plain text documents, <Code>log files</Code>, and{" "}
+            <Code>source code</Code> in Finder. Use the button below to
+            download the current release.
           </p>
           <p className={styles.body}>
             This page exists so the public download link can stay stable while
@@ -184,8 +185,9 @@ export default async function DownloadPage() {
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Best for previewing</div>
               <p>
-                Dotfiles, config files, markdown, logs, plain text documents,
-                and source code in Finder Quick Look.
+                Dotfiles, config files, markdown, <Code>log files</Code>, plain
+                text documents, and <Code>source code</Code> in Finder Quick
+                Look.
               </p>
             </div>
             <div className={styles.sideItem}>

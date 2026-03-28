@@ -234,3 +234,13 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Playwright JSON-LD evaluation on `/` and `/download` → homepage graph includes `FAQPage`; download page graph includes `CollectionPage`, `BreadcrumbList`, `ItemList`, `softwareVersion: 1.0.0`, and the live DMG `downloadUrl`
   - `curl -I -s http://127.0.0.1:3200/download/latest` → `307` redirect to the GitHub `dotViewer-1.0.0.dmg` asset
 - Follow-ups: Deploy the updated `site/` build so production picks up the copy/link/fallback cleanup.
+
+### Inline code coverage sweep
+- Outcome: Expanded the homepage and download-page inline code treatment so the remaining visible file-format and tool-name mentions now render as styled code too, including `JSON`, `YAML`, `XML`, `INI`, `shell scripts`, `log files`, `source code`, `VS Code`, `Xcode`, `Typora`, and `Terminal`.
+- Files: `site/app/page.tsx`, `site/app/download/page.tsx`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
+  - Playwright browser verification on `http://127.0.0.1:3200/` and `http://127.0.0.1:3200/download` → inline code rendering updated in the visible copy on both pages, no console errors
+- Follow-ups: Deploy the updated `site/` build so production reflects the expanded inline code treatment.
