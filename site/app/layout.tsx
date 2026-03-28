@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
-import { dmSans, geistMono, geistSans } from "../lib/fonts";
+import { geistMono, geistSans } from "../lib/fonts/geist/geist";
+import { inter } from "../lib/fonts/inter/inter";
 
 const { siteUrl } = getSiteConfig();
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
     template: "%s | dotViewer",
   },
   description:
-    "Preview `.gitignore`, `.env`, markdown, config files, plain text documents, logs, and source code in Finder Quick Look with dotViewer for macOS.",
+    "Preview dotfiles like .gitignore and .env, plus markdown, config files, plain text documents, logs, and source code in Finder Quick Look with dotViewer for macOS.",
   keywords: [
     "dotViewer",
     "macOS Quick Look extension",
@@ -74,7 +75,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geistMono.variable} ${geistSans.variable} ${dmSans.variable}`}>
+      <body className={`${geistMono.variable} ${geistSans.variable} ${inter.variable}`}>
         {children}
       </body>
     </html>

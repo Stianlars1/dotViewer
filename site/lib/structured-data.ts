@@ -28,6 +28,14 @@ function absoluteUrl(siteUrl: string, pathname: string) {
   return new URL(pathname, siteUrl).toString();
 }
 
+function normalizeVersion(tagName: string | null | undefined) {
+  if (!tagName) {
+    return undefined;
+  }
+
+  return tagName.replace(/^v/i, "");
+}
+
 function buildBaseGraph(config: SiteConfig) {
   const homeUrl = absoluteUrl(config.siteUrl, "/");
   const downloadPageUrl = absoluteUrl(config.siteUrl, "/download");
@@ -186,7 +194,7 @@ export function buildDownloadSchema(
 
   const software = {
     ...base.software,
-    softwareVersion: latestRelease?.tagName ?? undefined,
+    softwareVersion: normalizeVersion(latestRelease?.tagName),
     releaseNotes: latestRelease?.htmlUrl ?? undefined,
     downloadUrl: downloadHref ?? base.latestDownloadUrl,
     offers: {

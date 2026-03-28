@@ -43,7 +43,7 @@ That is why the site copy repeatedly emphasizes:
 ### Pages
 
 - `/` - launch homepage with real product screenshots, install flow, feature proof, FAQ, and CTA
-- `/download` - live download landing page with auto-start handoff, checksum link, and version history
+- `/download` - live download landing page with the public installer CTA, checksum link, and version history
 - `/download/latest` - stable redirect to the newest DMG asset
 
 ### Data Sources
@@ -80,8 +80,8 @@ npm run build
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Yes in deployment | Public canonical site URL, usually `https://dotviewer.app` |
-| `GITHUB_REPO` | Recommended | GitHub repo used for release history and latest DMG resolution |
-| `NEXT_PUBLIC_GITHUB_REPO` | Optional fallback | Public repo slug fallback for client-visible config |
+| `GITHUB_REPO` | Optional override | GitHub repo used for release history and latest DMG resolution. Defaults to `Stianlars1/dotViewer`. |
+| `NEXT_PUBLIC_GITHUB_REPO` | Optional override | Public repo slug fallback for client-visible config |
 | `GITHUB_TOKEN` | Optional | Raises GitHub API rate limits for release fetches |
 | `DIRECT_DOWNLOAD_URL` | Optional override | Forces the download CTA to a specific installer URL |
 
@@ -90,7 +90,7 @@ npm run build
 The site resolves the latest macOS installer in this order:
 
 1. `DIRECT_DOWNLOAD_URL`
-2. `GITHUB_REPO` via GitHub Releases
+2. `GITHUB_REPO` or the built-in `Stianlars1/dotViewer` default via GitHub Releases
 3. Vercel Git environment variables: `VERCEL_GIT_REPO_OWNER` and `VERCEL_GIT_REPO_SLUG`
 
 Public download behavior:

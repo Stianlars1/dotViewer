@@ -1,4 +1,5 @@
 const DEFAULT_SITE_URL = "https://dotviewer.app";
+const DEFAULT_GITHUB_REPO = "Stianlars1/dotViewer";
 
 function normalizeUrl(value: string | undefined): string | null {
   if (!value) {
@@ -51,7 +52,8 @@ export function getSiteConfig(): SiteConfig {
   const githubRepo =
     normalizeRepo(process.env.GITHUB_REPO) ??
     normalizeRepo(process.env.NEXT_PUBLIC_GITHUB_REPO) ??
-    inferRepoFromVercel();
+    inferRepoFromVercel() ??
+    DEFAULT_GITHUB_REPO;
   const repoUrl = githubRepo ? `https://github.com/${githubRepo}` : null;
   const releasesUrl = githubRepo ? `${repoUrl}/releases` : null;
   const siteUrl = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? DEFAULT_SITE_URL;

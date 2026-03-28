@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
@@ -29,6 +30,10 @@ const coverageExamples = [
   "app.log",
 ];
 
+function Code({ children }: { children: ReactNode }) {
+  return <code>{children}</code>;
+}
+
 const suiteBenefits = [
   {
     title: "One install instead of Finder plugin stacking",
@@ -36,7 +41,13 @@ const suiteBenefits = [
   },
   {
     title: "Preview the file, not the workaround",
-    body: "Open `.gitignore`, `.env`, README files, shell scripts, JSON, YAML, XML, and code directly in Finder Quick Look instead of bouncing into editors and Terminal windows.",
+    body: (
+      <>
+        Open <Code>.gitignore</Code>, <Code>.env</Code>, README files, shell
+        scripts, JSON, YAML, XML, and code directly in Finder Quick Look
+        instead of bouncing into editors and Terminal windows.
+      </>
+    ),
   },
   {
     title: "Real controls built into the app",
@@ -45,23 +56,76 @@ const suiteBenefits = [
 ];
 
 const comparisonPoints = [
-  "Use one macOS app instead of separate markdown previewers, plain-text viewers, and syntax-highlighting plugins.",
-  "Preview common developer files such as `.gitignore`, `.env`, `.editorconfig`, `README.md`, JSON, YAML, XML, INI, shell scripts, logs, and source code from the same Quick Look flow.",
-  "Switch markdown between RAW and rendered views without changing tools or leaving Finder.",
-  "Tune themes, line numbers, width, copy behavior, file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
+  {
+    id: "one-app",
+    content:
+      "Use one macOS app instead of separate markdown previewers, plain-text viewers, and syntax-highlighting plugins.",
+  },
+  {
+    id: "developer-files",
+    content: (
+      <>
+        Preview common developer files such as <Code>.gitignore</Code>,{" "}
+        <Code>.env</Code>, <Code>.editorconfig</Code>,{" "}
+        <Code>README.md</Code>, JSON, YAML, XML, INI, shell scripts, logs, and
+        source code from the same Quick Look flow.
+      </>
+    ),
+  },
+  {
+    id: "markdown-toggle",
+    content:
+      "Switch markdown between RAW and rendered views without changing tools or leaving Finder.",
+  },
+  {
+    id: "built-in-controls",
+    content:
+      "Tune themes, line numbers, width, copy behavior, file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
+  },
 ];
 
 const limitations = [
-  "Some file types are still claimed by macOS system preview handlers. For example, `.html` stays with the native HTML Quick Look renderer.",
-  "TypeScript `.ts` can still be routed by macOS as MPEG-2 transport stream video in some situations, which is a platform routing limitation rather than a dotViewer bug.",
-  "dotViewer improves Quick Look where third-party extensions are allowed. It does not override every system-owned preview path in macOS.",
+  {
+    id: "html-routing",
+    content: (
+      <>
+        Some file types are still claimed by macOS system preview handlers. For
+        example, <Code>.html</Code> stays with the native HTML Quick Look
+        renderer.
+      </>
+    ),
+  },
+  {
+    id: "ts-routing",
+    content: (
+      <>
+        TypeScript <Code>.ts</Code> can still be routed by macOS as MPEG-2
+        transport stream video in some situations, which is a platform routing
+        limitation rather than a dotViewer bug.
+      </>
+    ),
+  },
+  {
+    id: "macos-owned",
+    content:
+      "dotViewer improves Quick Look where third-party extensions are allowed. It does not override every system-owned preview path in macOS.",
+  },
 ];
 
 const installSteps = [
   {
     step: "01",
     title: "Download the latest DMG",
-    body: "Use the stable `/download` page and you always land on the current installer, checksum, and version history without hunting through release assets manually.",
+    body: (
+      <>
+        Use the stable{" "}
+        <Link className={styles.inlineLink} href="/download">
+          <Code>/download</Code>
+        </Link>{" "}
+        page and you always land on the current installer, checksum, and
+        version history without hunting through release assets manually.
+      </>
+    ),
   },
   {
     step: "02",
@@ -77,36 +141,73 @@ const installSteps = [
 
 const faqs = [
   {
+    id: "built-for",
     question: "What files is dotViewer built for?",
     answer:
       "dotViewer is built for the technical text files people keep checking in Finder: dotfiles, config files, markdown documents, logs, plain text documents, and source code.",
+    schemaQuestion: "What files is dotViewer built for?",
+    schemaAnswer:
+      "dotViewer is built for the technical text files people keep checking in Finder: dotfiles, config files, markdown documents, logs, plain text documents, and source code.",
   },
   {
-    question:
-      "Can dotViewer preview dotfiles like `.gitignore` and config files like JSON, YAML, XML, and INI?",
-    answer:
-      "Yes. The app is designed around exactly that workflow, including common files such as `.gitignore`, `.env`, `.editorconfig`, `package.json`, YAML, XML, plist, log files, and many other text-based formats.",
+    id: "dotfiles",
+    question: (
+      <>
+        Can dotViewer preview dotfiles like <Code>.gitignore</Code> and config
+        files like JSON, YAML, XML, and INI?
+      </>
+    ),
+    answer: (
+      <>
+        Yes. The app is designed around exactly that workflow, including common
+        files such as <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
+        <Code>.editorconfig</Code>, <Code>package.json</Code>, YAML, XML,
+        plist, log files, and many other text-based formats.
+      </>
+    ),
+    schemaQuestion:
+      "Can dotViewer preview dotfiles like .gitignore and config files like JSON, YAML, XML, and INI?",
+    schemaAnswer:
+      "Yes. The app is designed around exactly that workflow, including common files such as .gitignore, .env, .editorconfig, package.json, YAML, XML, plist, log files, and many other text-based formats.",
   },
   {
+    id: "why-one-app",
     question:
       "Why use dotViewer instead of separate markdown or code preview extensions?",
     answer:
       "Because dotViewer is meant to be the all-in-one Quick Look upgrade. Instead of installing one utility for markdown, another for plain text, and another for syntax highlighting, you get a single macOS app with one settings surface and one install flow.",
+    schemaQuestion:
+      "Why use dotViewer instead of separate markdown or code preview extensions?",
+    schemaAnswer:
+      "Because dotViewer is meant to be the all-in-one Quick Look upgrade. Instead of installing one utility for markdown, another for plain text, and another for syntax highlighting, you get a single macOS app with one settings surface and one install flow.",
   },
   {
+    id: "system-handlers",
     question:
       "Does it replace Finder's built-in Quick Look for every file type?",
     answer:
       "No. Some file types are owned by system handlers in macOS, and those still take priority. dotViewer is designed to improve the technical file cases where third-party Quick Look extensions can realistically help.",
+    schemaQuestion:
+      "Does it replace Finder's built-in Quick Look for every file type?",
+    schemaAnswer:
+      "No. Some file types are owned by system handlers in macOS, and those still take priority. dotViewer is designed to improve the technical file cases where third-party Quick Look extensions can realistically help.",
   },
   {
+    id: "signed",
     question: "Is the app signed and notarized?",
     answer:
       "Yes. The public download flow is built around a Developer ID signed, notarized DMG so installation feels trustworthy and Gatekeeper-friendly for normal macOS users.",
+    schemaQuestion: "Is the app signed and notarized?",
+    schemaAnswer:
+      "Yes. The public download flow is built around a Developer ID signed, notarized DMG so installation feels trustworthy and Gatekeeper-friendly for normal macOS users.",
   },
   {
+    id: "tuning",
     question: "Can I tune the preview and app UI?",
     answer:
+      "Yes. dotViewer includes built-in themes, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+    schemaQuestion: "Can I tune the preview and app UI?",
+    schemaAnswer:
       "Yes. dotViewer includes built-in themes, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
   },
 ];
@@ -116,9 +217,14 @@ export default function HomePage() {
   const config = getSiteConfig();
   const releasesHref = config.releasesUrl ?? "#install";
   const repoHref = config.repoUrl ?? releasesHref;
-  const showDevNotice =
-    !config.hasDownloadSource && process.env.NODE_ENV !== "production";
-  const schema = buildHomeSchema(config, stats, faqs);
+  const schema = buildHomeSchema(
+    config,
+    stats,
+    faqs.map((item) => ({
+      question: item.schemaQuestion,
+      answer: item.schemaAnswer,
+    })),
+  );
   const proofStats = [
     { value: stats.fileTypes, label: "built-in file types" },
     { value: stats.extensions, label: "registered extensions" },
@@ -192,9 +298,10 @@ export default function HomePage() {
 
               <p className={styles.heroBody}>
                 dotViewer turns Finder into a better technical file viewer.
-                Preview `.gitignore`, `.env`, `README.md`, JSON, YAML, XML,
-                shell scripts, log files, and source code without opening VS
-                Code, Xcode, Typora, or Terminal just to inspect one file.
+                Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
+                <Code>README.md</Code>, JSON, YAML, XML, shell scripts, log
+                files, and source code without opening VS Code, Xcode, Typora,
+                or Terminal just to inspect one file.
               </p>
 
               <p className={styles.heroBody}>
@@ -305,7 +412,7 @@ export default function HomePage() {
 
               <ul className={styles.limitationsList}>
                 {comparisonPoints.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item.id}>{item.content}</li>
                 ))}
               </ul>
             </div>
@@ -330,8 +437,8 @@ export default function HomePage() {
               <div className={styles.featureCopy}>
                 <div className={styles.storyKicker}>Code and config files</div>
                 <h3 className={styles.storyTitle}>
-                  Preview `.gitignore`, `.env`, scripts, XML, JSON, YAML, and
-                  source files with syntax-aware rendering.
+                  Preview <Code>.gitignore</Code>, <Code>.env</Code>, scripts,
+                  XML, JSON, YAML, and source files with syntax-aware rendering.
                 </h3>
                 <p className={styles.storyBody}>
                   dotViewer is made for the technical files Finder often handles
@@ -538,7 +645,7 @@ export default function HomePage() {
 
               <ul className={styles.limitationsList}>
                 {limitations.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item.id}>{item.content}</li>
                 ))}
               </ul>
             </div>
@@ -568,20 +675,10 @@ export default function HomePage() {
             </div>
 
             <div className={styles.installNote}>
-              Free download in the current public release phase. One notarized
-              DMG, one launch, and then you can use Space in Finder to preview
-              markdown, config files, dotfiles, plain text documents, logs, and
-              code.
+              Free public download. One notarized DMG, one launch, and then you
+              can use Space in Finder to preview markdown, config files,
+              dotfiles, plain text documents, logs, and code.
             </div>
-
-            {showDevNotice ? (
-              <p className={styles.devNotice}>
-                Local preview note: no GitHub repo slug or direct download URL
-                is configured in this environment yet, so the latest-release
-                download route will fall back to the install section until
-                deployment is wired up.
-              </p>
-            ) : null}
           </section>
 
           <section className={styles.section} id="faq">
@@ -595,7 +692,7 @@ export default function HomePage() {
             <div className={styles.faqShell}>
               <div className={styles.faqList}>
                 {faqs.map((item) => (
-                  <details className={styles.faqItem} key={item.question}>
+                  <details className={styles.faqItem} key={item.id}>
                     <summary>{item.question}</summary>
                     <div className={styles.faqContent}>{item.answer}</div>
                   </details>
@@ -646,7 +743,7 @@ export default function HomePage() {
               <a href="#coverage">Coverage</a>
               <a href="#install">Install</a>
               <a href="#faq">FAQ</a>
-              <a href="/download">Download</a>
+              <Link href="/download">Download</Link>
               <a href={releasesHref}>Releases</a>
               <a href={repoHref}>GitHub</a>
             </div>

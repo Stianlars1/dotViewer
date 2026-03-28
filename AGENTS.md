@@ -222,3 +222,15 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run build` → pass
   - `cd site && npm run typecheck` → pass
 - Follow-ups: Deploy the updated `site/` build when you want the live download page title to reflect the current release name.
+
+### Website copy and live-release cleanup
+- Outcome: Replaced raw backtick-wrapped filename and route mentions on the homepage and download page with styled inline code, linked the homepage install copy to the real `/download` route, removed pre-launch/fallback wording from the public site, hardened release fetching around the official GitHub repo with stable live fallbacks, and normalized the download-page JSON-LD/software version and release summaries for the shipped `v1.0.0` release.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`, `site/app/download/page.tsx`, `site/app/download/page.module.css`, `site/app/layout.tsx`, `site/app/globals.css`, `site/lib/site-config.ts`, `site/lib/github-release.ts`, `site/lib/structured-data.ts`, `site/README.md`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
+  - Playwright browser verification on `http://127.0.0.1:3200/` and `http://127.0.0.1:3200/download` → pages rendered, internal `/download` link present, no console errors
+  - Playwright JSON-LD evaluation on `/` and `/download` → homepage graph includes `FAQPage`; download page graph includes `CollectionPage`, `BreadcrumbList`, `ItemList`, `softwareVersion: 1.0.0`, and the live DMG `downloadUrl`
+  - `curl -I -s http://127.0.0.1:3200/download/latest` → `307` redirect to the GitHub `dotViewer-1.0.0.dmg` asset
+- Follow-ups: Deploy the updated `site/` build so production picks up the copy/link/fallback cleanup.

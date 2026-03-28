@@ -71,32 +71,39 @@ export async function getGitHubReleases(
   githubRepo: string,
   limit = 12,
 ): Promise<ReleaseRecord[]> {
-  const response = await fetch(`https://api.github.com/repos/${githubRepo}/releases?per_page=${limit}`, {
-    headers: buildHeaders(),
-    next: { revalidate: 300 },
-    signal: AbortSignal.timeout(4000),
-  });
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${githubRepo}/releases?per_page=${limit}`,
+      {
+        headers: buildHeaders(),
+        next: { revalidate: 300 },
+        signal: AbortSignal.timeout(4000),
+      },
+    );
 
-  if (!response.ok) {
+    if (!response.ok) {
+      return [];
+    }
+
+    const releases = (await response.json()) as GitHubReleaseResponse[];
+
+    return releases
+      .filter((release) => !release.draft && !release.prerelease)
+      .map((release) => {
+        const assets = release.assets ?? [];
+
+        return {
+          body: release.body?.trim() ?? "",
+          checksumAsset: pickChecksumAsset(assets),
+          dmgAsset: pickDmgAsset(assets),
+          htmlUrl: release.html_url ?? `https://github.com/${githubRepo}/releases`,
+          isPrerelease: Boolean(release.prerelease),
+          name: release.name?.trim() || release.tag_name?.trim() || "Untitled release",
+          publishedAt: release.published_at ?? null,
+          tagName: release.tag_name?.trim() ?? "untagged",
+        };
+      });
+  } catch {
     return [];
   }
-
-  const releases = (await response.json()) as GitHubReleaseResponse[];
-
-  return releases
-    .filter((release) => !release.draft)
-    .map((release) => {
-      const assets = release.assets ?? [];
-
-      return {
-        body: release.body?.trim() ?? "",
-        checksumAsset: pickChecksumAsset(assets),
-        dmgAsset: pickDmgAsset(assets),
-        htmlUrl: release.html_url ?? `https://github.com/${githubRepo}/releases`,
-        isPrerelease: Boolean(release.prerelease),
-        name: release.name?.trim() || release.tag_name?.trim() || "Untitled release",
-        publishedAt: release.published_at ?? null,
-        tagName: release.tag_name?.trim() ?? "untagged",
-      };
-    });
 }

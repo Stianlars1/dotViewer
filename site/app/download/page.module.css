@@ -203,7 +203,11 @@
 .sideItem code {
   display: block;
   margin-top: 10px;
+  padding: 12px 14px;
   overflow-wrap: anywhere;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.9);
   color: var(--foreground);
   font-family: "SF Mono", "JetBrains Mono", "Menlo", monospace;
   font-size: 13px;
