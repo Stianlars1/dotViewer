@@ -4,6 +4,7 @@ import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
 import { geistMono, geistSans } from "../lib/fonts/geist/geist";
 import { inter } from "../lib/fonts/inter/inter";
+import { Analytics } from "@vercel/analytics/next";
 
 const { siteUrl } = getSiteConfig();
 
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${geistMono.variable} ${geistSans.variable} ${inter.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
