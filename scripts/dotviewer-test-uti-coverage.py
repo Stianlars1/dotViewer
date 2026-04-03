@@ -116,6 +116,33 @@ def load_exported_utis():
     return exports
 
 
+def find_unquoted_numeric_extensions():
+    """Catch YAML numeric scalars under public.filename-extension before XcodeGen turns them into plist integers."""
+    offenders = []
+    in_ext_spec = False
+
+    for line_number, line in enumerate(PROJECT_YML.read_text(encoding="utf-8").splitlines(), start=1):
+        stripped = line.strip()
+
+        if stripped == "public.filename-extension:":
+            in_ext_spec = True
+            continue
+
+        if not in_ext_spec:
+            continue
+
+        if stripped.startswith("- "):
+            value = stripped[2:].strip()
+            if value.isdigit():
+                offenders.append((line_number, value))
+            continue
+
+        if stripped and not stripped.startswith("#"):
+            in_ext_spec = False
+
+    return offenders
+
+
 def resolve_utis_batch(extensions):
     """Use Swift to resolve each extension to its actual macOS UTI."""
     ext_list = sorted(extensions)
@@ -167,10 +194,18 @@ def main():
     extensions = load_all_extensions()
     ql_types = load_ql_supported_content_types()
     exported = load_exported_utis()
+    numeric_scalar_issues = find_unquoted_numeric_extensions()
 
     print(f"\nExtensions to test:          {len(extensions)}")
     print(f"QLSupportedContentTypes:     {len(ql_types)}")
     print(f"UTExportedTypeDeclarations:  {len(exported)}")
+
+    if numeric_scalar_issues:
+        print("\nERROR: numeric filename extensions in project.yml must be quoted strings.")
+        for line_number, value in numeric_scalar_issues:
+            print(f"  line {line_number}: {value}")
+        print("XcodeGen will otherwise emit plist integers, and LaunchServices will ignore the tag.")
+        return 1
 
     # Resolve all extensions via macOS
     print("\nResolving UTIs via macOS UTType API...")
@@ -291,4 +326,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main() or 0)

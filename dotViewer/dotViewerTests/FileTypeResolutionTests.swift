@@ -17,6 +17,18 @@ final class FileTypeResolutionTests: XCTestCase {
         XCTAssertEqual(key, "json")
     }
 
+    func testCueExtension() {
+        let url = URL(fileURLWithPath: "/tmp/disc.cue")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "cue")
+    }
+
+    func testManpageSectionOneExtension() {
+        let url = URL(fileURLWithPath: "/tmp/dotviewer.1")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "1")
+    }
+
     // MARK: - Dotfiles
 
     func testDotGitignore() {

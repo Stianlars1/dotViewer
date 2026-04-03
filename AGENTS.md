@@ -254,3 +254,18 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run start -- --hostname 127.0.0.1 --port 3200` → pass
   - Playwright browser verification on `http://127.0.0.1:3200/` → hero copy rendered with the shorter text and code-styled common examples, no console errors
 - Follow-ups: Deploy the updated `site/` build so production reflects the tightened hero copy.
+
+## 2026-04-03
+
+### Custom file-type routing for `.cue` and manpages
+- Outcome: Fixed shipped Quick Look routing for Victor’s reported `.cue` and numeric manpage extensions `.1`-`.9`, and clarified in the custom-mapping UI that runtime mappings only affect files that already reach dotViewer.
+- Files: `dotViewer/project.yml`, `dotViewer/App/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, `dotViewer/Shared/DefaultFileTypes.json`, `dotViewer/App/AddCustomExtensionSheet.swift`, `dotViewer/App/FileTypesView.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/dotViewerTests/FileTypeRegistryTests.swift`, `dotViewer/dotViewerTests/FileTypeResolutionTests.swift`, `scripts/dotviewer-test-uti-coverage.py`, `BACKLOG.md`, `CHANGELOG.md`, `AGENTS.md`
+- Verified:
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass
+  - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 700/700 (100.0%)`)
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`113 tests, 0 failures`)
+  - `./scripts/dotviewer-ql-smoke.sh /tmp/victor.cue` → pass (`HTML built for victor.cue`)
+  - `./scripts/dotviewer-ql-smoke.sh /tmp/victor.1` → pass (`HTML built for victor.1`)
+  - manual `qlmanage -p /tmp/victor.2` + log capture → pass (`HTML built for victor.2`)
+  - `mdls -name kMDItemContentType -name kMDItemContentTypeTree /tmp/victor.cue /tmp/victor.1 /tmp/victor.2 /tmp/victor.9` → pass (all resolve to shipped `com.stianlars1.dotviewer.*` UTIs)
+- Follow-ups: Truly novel extensions still need a shipped UTI update because Quick Look routing remains exact-match only.

@@ -147,7 +147,7 @@ struct FileTypesView: View {
                     }
                 }
 
-                Text("Custom mappings apply highlighting to files that already reach dotViewer. Most common developer file extensions are supported out of the box.")
+                Text("Custom mappings change highlighting for files that already reach dotViewer. Most common developer file extensions are built in, but completely unknown extensions may still need a shipped file-type update before macOS routes them here.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)

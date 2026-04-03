@@ -17,6 +17,16 @@ final class FileTypeRegistryTests: XCTestCase {
         XCTAssertEqual(registry.highlightLanguage(for: "md"), "markdown")
     }
 
+    func testCustomerReportedDynamicExtensionsResolveToBuiltIns() {
+        XCTAssertEqual(registry.highlightLanguage(for: "cue"), "plaintext")
+        XCTAssertEqual(registry.displayName(for: "cue"), "CUE / Cue Sheet")
+
+        XCTAssertEqual(registry.highlightLanguage(for: "1"), "plaintext")
+        XCTAssertEqual(registry.highlightLanguage(for: "2"), "plaintext")
+        XCTAssertEqual(registry.highlightLanguage(for: "9"), "plaintext")
+        XCTAssertEqual(registry.displayName(for: "1"), "Man Page")
+    }
+
     func testCaseInsensitiveExtensionLookup() {
         XCTAssertEqual(registry.highlightLanguage(for: "Swift"), "swift")
         XCTAssertEqual(registry.highlightLanguage(for: "PY"), "python")
