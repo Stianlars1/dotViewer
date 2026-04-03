@@ -241,6 +241,18 @@ These numbers are from the current codebase.
 | UTExportedTypeDeclarations in `project.yml` | `563` |
 | QLSupportedContentTypes per extension target | `680` |
 
+## Website And Download Analytics
+
+The marketing site in `site/` now records visitor and download intent in three layers:
+
+- Vercel Analytics for aggregated site traffic and custom events
+- Optional Google Analytics / Google tag instrumentation when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set
+- First-party PostgreSQL analytics tables, written through Drizzle, for raw `analytics_page_views` and `analytics_downloads` data
+
+This means download CTA clicks, checksum clicks, and stable `/download/latest` redirects can all be inspected in the database alongside Vercel's hosted analytics views.
+
+Site-specific setup and query examples live in [site/README.md](/Users/stian/Developer/macOS%20Apps/v2.5/site/README.md).
+
 ## Known macOS Platform Limitations
 
 These are not dotViewer defects; they are Quick Look routing/host constraints.

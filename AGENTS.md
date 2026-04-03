@@ -287,3 +287,15 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`125 tests, 0 failures`)
   - `./scripts/dotviewer-refresh.sh --no-open` → pass
 - Follow-ups: This controls the initial size hint sent to Quick Look. It does not attempt to persist ad-hoc manual window drags from the system Quick Look panel.
+
+### Website analytics stack
+- Outcome: Added Vercel Analytics, env-driven Google tag support, and dbHost-backed first-party analytics for the marketing site, then synced the `1.1.0` release metadata and docs around that new tracking stack. Page views, checksum clicks, release-history downloads, and stable `/download/latest` DMG redirects now carry source-tagged analytics data into PostgreSQL while Vercel Analytics remains active in parallel.
+- Files: `site/app/layout.tsx`, `site/app/download/page.tsx`, `site/app/download/latest/route.ts`, `site/app/api/analytics/route.ts`, `site/components/site-analytics.tsx`, `site/components/tracked-download-link.tsx`, `site/lib/analytics/client.ts`, `site/lib/analytics/server.ts`, `site/lib/db/client.ts`, `site/lib/db/schema.ts`, `site/drizzle.config.ts`, `site/package.json`, `site/README.md`, `README.md`, `CHANGELOG.md`, `dotViewer/project.yml`, `scripts/release.sh`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `DATABASE_URL=postgresql://... npx drizzle-kit push --force` → pass
+  - `curl -X POST http://127.0.0.1:3400/api/analytics ...` for `page_view` and `download` payloads → pass
+  - `curl -I http://127.0.0.1:3400/download/latest?source=verification_download_latest` → pass (`307`)
+  - PostgreSQL verification query via `pg` client → pass (rows persisted in `analytics_page_views` and `analytics_downloads`)
+- Follow-ups: Set `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` in production to activate the Google layer live. Vercel Analytics and PostgreSQL persistence are already wired.

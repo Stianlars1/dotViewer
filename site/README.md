@@ -49,6 +49,8 @@ That is why the site copy repeatedly emphasizes:
 ### Data Sources
 
 - GitHub Releases API for DMG assets, checksums, tags, and release history
+- Vercel Analytics for aggregated traffic and custom event reporting
+- `dbHost` PostgreSQL storage for raw page-view and download events via Drizzle
 - Local repo product stats for file type and grammar counts
 - Static screenshot assets from `site/public/product`
 
@@ -59,6 +61,28 @@ That is why the site copy repeatedly emphasizes:
 - `sitemap.xml` including the homepage and `/download`
 - `robots.txt` with sitemap and host
 - crawlable internal links that reinforce the `/download` page as the public install destination
+
+## Analytics Stack
+
+The site now tracks traffic and installer intent in three layers:
+
+- Vercel Analytics, mounted once in the root layout through `@vercel/analytics/next`
+- Google Analytics / Google tag, enabled only when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present
+- First-party PostgreSQL analytics tables populated through the app's own `/api/analytics` route and the `/download/latest` redirect handler
+
+Tracked first-party events:
+
+- Page views for route changes, including `path`, `url`, `title`, `referrer`, `visitor_id`, `session_id`, geo headers, and UTM fields
+- Download events for checksum clicks, release-history DMG clicks, and stable `/download/latest` redirects, including `source`, `release_tag`, `asset_kind`, and target URL
+
+Relevant implementation files:
+
+- [site/components/site-analytics.tsx](/Users/stian/Developer/macOS%20Apps/v2.5/site/components/site-analytics.tsx)
+- [site/lib/analytics/client.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/lib/analytics/client.ts)
+- [site/lib/analytics/server.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/lib/analytics/server.ts)
+- [site/app/api/analytics/route.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/api/analytics/route.ts)
+- [site/app/download/latest/route.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/download/latest/route.ts)
+- [site/lib/db/schema.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/lib/db/schema.ts)
 
 ## Local Development
 
@@ -84,6 +108,53 @@ npm run build
 | `NEXT_PUBLIC_GITHUB_REPO` | Optional override | Public repo slug fallback for client-visible config |
 | `GITHUB_TOKEN` | Optional | Raises GitHub API rate limits for release fetches |
 | `DIRECT_DOWNLOAD_URL` | Optional override | Forces the download CTA to a specific installer URL |
+| `DATABASE_URL` | Required for first-party analytics persistence | PostgreSQL connection string used by Drizzle and the runtime analytics route |
+| `NEXT_PUBLIC_GOOGLE_TAG_ID` | Optional | Google tag / GA measurement ID (`G-...` or `GT-...`) for client-side Google tracking |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional legacy alias | Backward-compatible alias for the same Google tag ID |
+
+Google tracking stays off unless one of the Google ID variables is set. No measurement ID is hard-coded in the repo.
+
+## Database Bootstrap
+
+Create or update the analytics tables in the configured PostgreSQL database:
+
+```bash
+cd site
+DATABASE_URL=postgresql://... npm run db:push
+```
+
+The current schema creates:
+
+- `analytics_page_views`
+- `analytics_downloads`
+
+## Querying The Custom Analytics Data
+
+Example page-view query:
+
+```sql
+select
+  date_trunc('day', created_at) as day,
+  path,
+  count(*) as page_views
+from analytics_page_views
+group by 1, 2
+order by 1 desc, 3 desc;
+```
+
+Example download query:
+
+```sql
+select
+  date_trunc('day', created_at) as day,
+  source,
+  asset_kind,
+  release_tag,
+  count(*) as downloads
+from analytics_downloads
+group by 1, 2, 3, 4
+order by 1 desc, 5 desc;
+```
 
 ## Download Resolution Order
 
@@ -118,6 +189,8 @@ Important details:
 - The Vercel **Root Directory** should be `site`
 - The Vercel **Production Branch** should be `main`
 - The project should use the **Next.js** framework preset
+- Add `DATABASE_URL` to the production environment before relying on the first-party analytics tables at runtime
+- Add `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` if you want the Google tracking layer enabled in production
 
 The repo includes [vercel.json](/Users/stian/Developer/macOS%20Apps/v2.5/site/vercel.json) with `"framework": "nextjs"` so Vercel uses the correct framework even if the project was originally created from a CLI deployment.
 

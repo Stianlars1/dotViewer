@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+No unreleased changes yet.
+
+## v1.1.0 (2026-04-03) — Current
+
 ### Added
 
 - Product marketing context document for dotViewer positioning, audience, competitors, proof points, and creator references.
@@ -10,20 +14,25 @@
 - Shipped Quick Look routing for `.cue` and common manpage extensions `.1` through `.9`.
 - Added system-following theme choices for GitHub, Xcode, and Solarized alongside the existing Atom One system theme.
 - Added an initial Quick Look window size preference with `Auto` and `Fixed` modes plus shared width/height controls.
+- Added Vercel Web Analytics to the public website and download flow.
+- Added env-driven Google Analytics / Google tag support for page views and download clicks via `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID`.
+- Added first-party analytics storage in PostgreSQL via Drizzle for site page views and download events, including visitor/session IDs, referrers, UTM fields, release tags, and download sources.
 
 ### Changed
 
 - Rewrote the homepage messaging to position dotViewer as the all-in-one Quick Look upgrade instead of a narrow code-only preview tool.
 - Strengthened `/download` copy so it clearly describes the notarized macOS DMG, direct download flow, and GitHub-backed version history.
-- Refreshed `site/README.md` with badges, launch positioning, release flow, deployment notes, SEO intent, creator link, and `dbHost` mention.
+- Refreshed `site/README.md` with badges, launch positioning, release flow, deployment notes, SEO intent, creator link, `dbHost` mention, analytics env vars, and Drizzle/Postgres setup notes.
 - Updated sitemap, robots, manifest, and metadata to reinforce `dotviewer.app` and `/download` as the canonical public entry points.
 - Clarified the custom file-type UI so it warns when a runtime mapping can only change highlighting after Finder is already routing that extension to dotViewer.
 - Unified Quick Look preview and thumbnail appearance detection so system-following themes resolve from the same macOS interface-style signal.
 - Moved preview window sizing out of content-only heuristics when the user chooses a fixed starting size, while keeping auto sizing available.
+- Updated `/download/latest` to record server-side DMG handoffs before redirecting to the current GitHub release asset.
+- Updated the release script to respect the XcodeGen-managed build number instead of forcing `CURRENT_PROJECT_VERSION=1`.
 
-## v2.5 (2026-02-11) — Current
+## v2.5 (2026-02-11) — Development milestone
 
-The production release. Tree-sitter-powered syntax highlighting via XPC service.
+A major pre-1.0 development milestone. Tree-sitter-powered syntax highlighting via XPC service.
 
 - 53 tree-sitter grammars compiled and bundled (C sources in XPC target)
 - 388 file type definitions with 561 extensions and 283 filename patterns
