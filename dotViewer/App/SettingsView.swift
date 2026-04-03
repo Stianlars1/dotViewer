@@ -239,8 +239,8 @@ struct SettingsView: View {
                             .fontWeight(.semibold)
 
                         Picker("Window Size", selection: $previewWindowSizeMode) {
-                            Text("Auto").tag("auto")
-                            Text("Fixed").tag("fixed")
+                            Text("Per File").tag("auto")
+                            Text("Same for All Files").tag("fixed")
                         }
                         .pickerStyle(.segmented)
                         .onChange(of: previewWindowSizeMode) { _, newValue in
@@ -273,7 +273,7 @@ struct SettingsView: View {
                                 }
                         }
 
-                        Text("Auto sizes the Quick Look window from file content. Fixed uses the same starting size for all dotViewer previews. You can still resize the window manually after it opens.")
+                        Text("Per File sizes the Quick Look window from each preview's content. Same for All Files uses one shared starting size across dotViewer previews, including different file types. You can still resize the window manually after it opens.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 

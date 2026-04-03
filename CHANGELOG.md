@@ -27,6 +27,7 @@ No unreleased changes yet.
 - Clarified the custom file-type UI so it warns when a runtime mapping can only change highlighting after Finder is already routing that extension to dotViewer.
 - Unified Quick Look preview and thumbnail appearance detection so system-following themes resolve from the same macOS interface-style signal.
 - Moved preview window sizing out of content-only heuristics when the user chooses a fixed starting size, while keeping auto sizing available.
+- Clarified the preview window size setting so it explicitly means one shared starting size across dotViewer previews instead of per-file content sizing.
 - Updated `/download/latest` to record server-side DMG handoffs before redirecting to the current GitHub release asset.
 - Updated the release script to respect the XcodeGen-managed build number instead of forcing `CURRENT_PROJECT_VERSION=1`.
 

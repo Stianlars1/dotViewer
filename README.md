@@ -176,7 +176,7 @@ Copy actions that always remain available (regardless of preset):
 Everything is configurable in the host app.
 
 ### Appearance
-- Theme (`11` options: Auto + 10 named palettes).
+- Theme (`14` options: 4 system-following choices + 10 fixed palettes).
 - Font size (`10-24pt`).
 - Sync code + markdown render font sizes.
 - Show/hide line numbers.
@@ -188,6 +188,7 @@ Everything is configurable in the host app.
 
 ### Preview UI
 - Show/hide file info header.
+- Initial preview window size (`Per File` or `Same for All Files`) with configurable shared width/height.
 - Choose one of 8 copy behaviors.
 - Include line numbers in copy (manual selection + header copy button).
 - Show/hide in-preview search UI.
@@ -229,17 +230,17 @@ These numbers are from the current codebase.
 
 | Metric | Value |
 |---|---:|
-| Built-in file type entries (`DefaultFileTypes.json`) | `400` |
-| Explicit extensions in registry | `582` |
+| Built-in file type entries (`DefaultFileTypes.json`) | `402` |
+| Explicit extensions in registry | `592` |
 | Filename patterns in registry | `295` |
 | Tree-sitter grammar integrations (`TreeSitterHighlighter`) | `53` |
 | Tree-sitter query files (`TreeSitterQueries/*.scm`) | `53` |
 | Highlight language picker options | `55` |
 | Picker options with tree-sitter grammar label | `52` |
 | Copy behavior presets | `8` |
-| Themes (including Auto) | `11` |
-| UTExportedTypeDeclarations in `project.yml` | `563` |
-| QLSupportedContentTypes per extension target | `680` |
+| Themes (including system-following pairs) | `14` |
+| UTExportedTypeDeclarations in `project.yml` | `573` |
+| QLSupportedContentTypes per extension target | `690` |
 
 ## Website And Download Analytics
 
