@@ -299,3 +299,14 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `curl -I http://127.0.0.1:3400/download/latest?source=verification_download_latest` → pass (`307`)
   - PostgreSQL verification query via `pg` client → pass (rows persisted in `analytics_page_views` and `analytics_downloads`)
 - Follow-ups: Set `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` in production to activate the Google layer live. Vercel Analytics and PostgreSQL persistence are already wired.
+
+## 2026-04-04
+
+### Preview window size wording clarification
+- Outcome: Re-reviewed Victor’s feedback and kept the existing shared-size implementation, but clarified the host-app settings copy so the choice reads as `Per File` versus `Same for All Files`. This makes the intent explicit: dotViewer can provide one persistent starting size across previews and file types, but it is not trying to capture ad-hoc manual Quick Look panel drags.
+- Files: `dotViewer/App/SettingsView.swift`, `README.md`, `CHANGELOG.md`, `dotViewer/dotViewer.xcodeproj/project.pbxproj`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`125 tests, 0 failures`)
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass
+- Follow-ups: If you later want true last-manual-size restoration, that needs a different design and likely host-side panel control rather than only the Quick Look extension’s initial `contentSize` hint.
