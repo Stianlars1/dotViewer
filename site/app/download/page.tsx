@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import { getGitHubReleases } from "../../lib/github-release";
 import { getSiteConfig } from "../../lib/site-config";
 import { buildDownloadSchema } from "../../lib/structured-data";
+import { TrackedDownloadLink } from "../../components/tracked-download-link";
 
 export const runtime = "nodejs";
 
@@ -70,7 +71,7 @@ export default async function DownloadPage() {
   const latestChecksum = latestRelease?.checksumAsset ?? null;
   const downloadHref =
     config.directDownloadUrl ?? latestDmg?.browser_download_url ?? null;
-  const stableDownloadHref = downloadHref ?? "/download/latest";
+  const stableDownloadHref = "/download/latest";
   const schema = buildDownloadSchema(config, releases, downloadHref);
   const releaseCount = releases.length;
 
@@ -116,14 +117,17 @@ export default async function DownloadPage() {
           </p>
 
           <div className={styles.actions}>
-            <a
+            <TrackedDownloadLink
+              assetKind="dmg"
               className={styles.primaryAction}
-              href={stableDownloadHref}
+              releaseTag={latestRelease?.tagName ?? null}
+              source="download_page_hero"
+              targetUrl={`${stableDownloadHref}?source=download_page_hero`}
             >
               {latestRelease?.name
                 ? `Download ${latestRelease.name}`
                 : "Download latest DMG"}
-            </a>
+            </TrackedDownloadLink>
             <a
               className={styles.secondaryAction}
               href={config.releasesUrl ?? "/#install"}
@@ -156,12 +160,15 @@ export default async function DownloadPage() {
             </p>
 
             <div className={styles.releaseActions}>
-              <a
+              <TrackedDownloadLink
+                assetKind="dmg"
                 className={styles.primaryAction}
-                href={stableDownloadHref}
+                releaseTag={latestRelease?.tagName ?? null}
+                source="download_page_latest_release"
+                targetUrl={`${stableDownloadHref}?source=download_page_latest_release`}
               >
                 Download DMG
-              </a>
+              </TrackedDownloadLink>
               {latestChecksum ? (
                 <a
                   className={styles.secondaryAction}
@@ -250,7 +257,14 @@ export default async function DownloadPage() {
 
                   <div className={styles.historyLinks}>
                     {release.dmgAsset ? (
-                      <a href={release.dmgAsset.browser_download_url}>DMG</a>
+                      <TrackedDownloadLink
+                        assetKind="dmg"
+                        releaseTag={release.tagName}
+                        source="download_page_release_history"
+                        targetUrl={release.dmgAsset.browser_download_url}
+                      >
+                        DMG
+                      </TrackedDownloadLink>
                     ) : null}
                     {release.checksumAsset ? (
                       <a href={release.checksumAsset.browser_download_url}>
