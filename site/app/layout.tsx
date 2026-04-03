@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
