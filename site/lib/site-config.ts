@@ -27,6 +27,23 @@ function normalizeRepo(value: string | undefined): string | null {
   return trimmed;
 }
 
+function normalizeTagId(value: string | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+
+  const trimmed = value.trim().toUpperCase();
+  if (!trimmed) {
+    return null;
+  }
+
+  if (/^(G|GT)-[A-Z0-9]+$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  return null;
+}
+
 function inferRepoFromVercel(): string | null {
   const owner = process.env.VERCEL_GIT_REPO_OWNER?.trim();
   const slug = process.env.VERCEL_GIT_REPO_SLUG?.trim();
@@ -41,6 +58,7 @@ function inferRepoFromVercel(): string | null {
 export type SiteConfig = {
   directDownloadUrl: string | null;
   githubRepo: string | null;
+  googleAnalyticsId: string | null;
   hasDownloadSource: boolean;
   releasesUrl: string | null;
   repoUrl: string | null;
@@ -54,6 +72,9 @@ export function getSiteConfig(): SiteConfig {
     normalizeRepo(process.env.NEXT_PUBLIC_GITHUB_REPO) ??
     inferRepoFromVercel() ??
     DEFAULT_GITHUB_REPO;
+  const googleAnalyticsId =
+    normalizeTagId(process.env.NEXT_PUBLIC_GOOGLE_TAG_ID) ??
+    normalizeTagId(process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID);
   const repoUrl = githubRepo ? `https://github.com/${githubRepo}` : null;
   const releasesUrl = githubRepo ? `${repoUrl}/releases` : null;
   const siteUrl = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? DEFAULT_SITE_URL;
@@ -61,6 +82,7 @@ export function getSiteConfig(): SiteConfig {
   return {
     directDownloadUrl,
     githubRepo,
+    googleAnalyticsId,
     hasDownloadSource: Boolean(directDownloadUrl || githubRepo),
     releasesUrl,
     repoUrl,

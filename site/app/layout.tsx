@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
+import { Suspense } from "react";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
 import { geistMono, geistSans } from "../lib/fonts/geist/geist";
 import { inter } from "../lib/fonts/inter/inter";
-import { Analytics } from "@vercel/analytics/next";
+import { SiteAnalytics } from "../components/site-analytics";
 
-const { siteUrl } = getSiteConfig();
+const { googleAnalyticsId, siteUrl } = getSiteConfig();
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -79,7 +79,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${geistMono.variable} ${geistSans.variable} ${inter.variable}`}>
         {children}
-        <Analytics />
+        <Suspense fallback={null}>
+          <SiteAnalytics googleAnalyticsId={googleAnalyticsId} />
+        </Suspense>
       </body>
     </html>
   );
