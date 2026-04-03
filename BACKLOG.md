@@ -37,6 +37,9 @@ From v1 requirements and future direction.
 | B-025 | ~~Markdown clickable links~~ | ~~Done~~ | Completed 2026-02-12 — Clicking links copies URL to clipboard with toast confirmation. Tooltip on hover. Relative links resolved to absolute file:// paths. KI-012. |
 | B-026 | ~~Synced font sizes~~ | ~~Done~~ | Completed 2026-02-12 — New `syncFontSizes` setting (default ON). Code and rendered markdown share one font size. Toggle in Settings > Appearance, disabled slider with note in Markdown settings when synced. |
 | B-027 | ~~Open With Assistant for system-owned UTIs~~ | ~~Won't Fix / Removed~~ | Tested 2026-02-16 — does not change Quick Look routing for system-owned UTIs; Finder automation blocked in sandboxed apps. |
+| B-038 | Custom mapping routing for common unknown text extensions | High | Victor feedback (2026-04-03). Add built-in UTI coverage for concrete missing cases like `.cue` and `.1`, and clarify that runtime custom mappings still cannot mint new Quick Look-routable UTIs for arbitrary unknown extensions. |
+| B-039 | Theme appearance modes for paired palettes | High | Victor feedback (2026-04-03). Let paired themes follow system light/dark instead of limiting auto mode to Atom One, and make preview auto detection reliable in the Quick Look preview extension. |
+| B-040 | Preview window size controls | Medium | Victor feedback (2026-04-03). Add a predictable initial Quick Look window size option instead of always sizing the preview from line count/content length. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.
