@@ -1,14 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 type FileTypeEntry = {
   extensions?: string[];
   filenames?: string[];
 };
-
-function repoPath(...segments: string[]) {
-  return path.resolve(process.cwd(), "..", ...segments);
-}
 
 export type ProductStats = {
   extensions: number;
@@ -16,6 +13,11 @@ export type ProductStats = {
   filenameMappings: number;
   grammars: number;
 };
+
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
+const repoRoot = path.resolve(moduleDir, "..", "..");
+const defaultFileTypesPath = path.join(repoRoot, "dotViewer", "Shared", "DefaultFileTypes.json");
+const treeSitterQueriesPath = path.join(repoRoot, "dotViewer", "HighlightXPC", "TreeSitterQueries");
 
 function safeReadJson(filePath: string): FileTypeEntry[] {
   try {
@@ -34,7 +36,7 @@ function safeCountScmFiles(dirPath: string): number {
 }
 
 export function getProductStats(): ProductStats {
-  const entries = safeReadJson(repoPath("dotViewer", "Shared", "DefaultFileTypes.json"));
+  const entries = safeReadJson(defaultFileTypesPath);
   const extensions = new Set<string>();
   const filenames = new Set<string>();
 
@@ -52,6 +54,6 @@ export function getProductStats(): ProductStats {
     extensions: extensions.size,
     fileTypes: entries.length,
     filenameMappings: filenames.size,
-    grammars: safeCountScmFiles(repoPath("dotViewer", "HighlightXPC", "TreeSitterQueries")),
+    grammars: safeCountScmFiles(treeSitterQueriesPath),
   };
 }
