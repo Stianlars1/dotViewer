@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ============================================================================
-#  dotViewer Release Script (v2.5)
+#  dotViewer Release Script
 # ============================================================================
 #
 #  Build, sign, notarize, and package dotViewer for release.
@@ -112,7 +112,7 @@ print_help() {
 Usage: $0 [version] [options]
 
 Arguments:
-  version           Version number (e.g., 2.5, 2.5.1)
+  version           Version number (e.g., 1.1.0, 1.1.1)
 
 Options:
   --app-store       Build for App Store submission
@@ -122,9 +122,9 @@ Options:
   --help            Show this help message
 
 Examples:
-  $0 2.5
-  $0 2.5.1 --app-store
-  $0 2.5 --github
+  $0 1.1.0
+  $0 1.1.1 --app-store
+  $0 1.1.0 --github
 
 USAGE
 }
@@ -289,7 +289,6 @@ xcodebuild -project "$PROJECT_DIR/$APP_NAME.xcodeproj" \
     -allowProvisioningUpdates \
     archive \
     MARKETING_VERSION="$VERSION" \
-    CURRENT_PROJECT_VERSION="1" \
     -destination "generic/platform=macOS" \
     -quiet
 
