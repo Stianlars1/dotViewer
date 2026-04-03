@@ -43,6 +43,7 @@
 		2487835A8004A6F250F5B43E /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = B2762C2D8151DFE6EC73D30C /* scanner.c */; };
 		261A36DF54E12305042A5734 /* icon.json in Resources */ = {isa = PBXBuildFile; fileRef = 6F9077EFF915EC26969F08A8 /* icon.json */; };
 		297EE7E6A5EA61A0DAC785ED /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AC6C5AF5824DE36A10CC0676 /* scanner.c */; };
+		2A60298B793C7B6982263F41 /* PreviewSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */; };
 		2C8C728D22D503D38E72A81A /* subtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 2528870C1075C47DFE5C7466 /* subtree.c */; };
 		2DA6FF4E72C9E18EFA5C6D36 /* zig.scm in Resources */ = {isa = PBXBuildFile; fileRef = 48E275897CAC520C94CBD5DA /* zig.scm */; };
 		2DFA3D2861FD7B79BBCCA618 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = E8332DEF18E8165ECBC6A5DE /* scanner.c */; };
@@ -171,6 +172,7 @@
 		BAE8F201DAD91F654AE3134B /* yaml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 782445C0DE57BC5CC590D29E /* yaml.scm */; };
 		BB0DAE10E181BD8BEB2DEB56 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F8ADCB9D1451BDF312E01869 /* README.md */; };
 		BBAE975323777DE74BF2498C /* HighlightXPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C683E94C18AC3CDF1A81579 /* HighlightXPCClient.swift */; };
+		BC4DE0C7687255897B7DDC25 /* PreviewSizingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */; };
 		BDA91D3FEAC9B1410FD0C19F /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C30C14D3BCA470BF35CD9DE2 /* scanner.c */; };
 		BE03690EC5C4E5F2FE9017CC /* HighlightXPC.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		BF54717C42E2BD14505D91EE /* go.scm in Resources */ = {isa = PBXBuildFile; fileRef = D1C78368E91D4E3D142CCC94 /* go.scm */; };
@@ -490,6 +492,7 @@
 		43100DF81AA53AD10D3DACC9 /* julia.scm */ = {isa = PBXFileReference; path = julia.scm; sourceTree = "<group>"; };
 		431F8D8AAB869C90A5936DB3 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		431FA0AD1A85B076C5513EDB /* xml.scm */ = {isa = PBXFileReference; path = xml.scm; sourceTree = "<group>"; };
+		43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSizing.swift; sourceTree = "<group>"; };
 		44990FF975DD30251C33B1F6 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		44FC4E8F74643B61D4453119 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		46EFF0A37F2C13A2E8B9CE92 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -638,6 +641,7 @@
 		9FC7B5C906FB93ADCAA40CF6 /* SVG Image 8.svg */ = {isa = PBXFileReference; path = "SVG Image 8.svg"; sourceTree = "<group>"; };
 		A05C85FCC252B3A37BFB8D44 /* FileTypeRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistry.swift; sourceTree = "<group>"; };
 		A0F02435AA4DD508314E68A8 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSizingTests.swift; sourceTree = "<group>"; };
 		A243CB0C0AE3E36D3B19AC47 /* ExtensionHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionHelper.swift; sourceTree = "<group>"; };
 		A4AFFDC210FC64E76CC16547 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		A4C9131A0F7ED7186D00AF8F /* html.scm */ = {isa = PBXFileReference; path = html.scm; sourceTree = "<group>"; };
@@ -2348,6 +2352,7 @@
 				6D5952297DC3E4D2120AF205 /* PlistConverter.swift */,
 				2600D325717411A861AF988C /* PreviewCache.swift */,
 				C5674B9E0B9E4C97F61A127B /* PreviewHTMLBuilder.swift */,
+				43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */,
 				96A047E488D85AE0D46E8913 /* SensitiveFileDetector.swift */,
 				6940AFE74BA00A6F1216F5CC /* SharedSettings.swift */,
 				C6D1737DE776C7A4799BDAC7 /* SystemAppearance.swift */,
@@ -2525,6 +2530,7 @@
 				F5410DBEA3E116BEFCBABB57 /* MarkdownRendererTests.swift */,
 				7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */,
 				1553062A87D77F723DD6AF7A /* PreviewHTMLBuilderTests.swift */,
+				A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */,
 				4273283E6FC90DB807240AD4 /* SystemAppearanceTests.swift */,
 				277499091785BDC9F34389EB /* ThemePaletteTests.swift */,
 				8E3F4565FD7F0473F6ED1A91 /* TransportStreamDetectorTests.swift */,
@@ -3172,6 +3178,7 @@
 				22DC449F89D9DCF1FF4BE7D1 /* PlistConverter.swift in Sources */,
 				E12AC9EC174DB042AE4C51D8 /* PreviewCache.swift in Sources */,
 				B0903BC7487008819C4B71B2 /* PreviewHTMLBuilder.swift in Sources */,
+				2A60298B793C7B6982263F41 /* PreviewSizing.swift in Sources */,
 				487D7C642139D91E56D2E181 /* SensitiveFileDetector.swift in Sources */,
 				E70997370B4707A8B314017E /* SharedSettings.swift in Sources */,
 				9D758D832916E0C7A49CABCB /* SystemAppearance.swift in Sources */,
@@ -3190,6 +3197,7 @@
 				D98056158B68EDA24EE8B06C /* MarkdownRendererTests.swift in Sources */,
 				514C7EABD3596631DC98DEFC /* PlistConverterTests.swift in Sources */,
 				990442FDC16503E0AA3639DA /* PreviewHTMLBuilderTests.swift in Sources */,
+				BC4DE0C7687255897B7DDC25 /* PreviewSizingTests.swift in Sources */,
 				3C2C7EAD38244DEEFF78F3B3 /* SystemAppearanceTests.swift in Sources */,
 				CA5B017C8816649C55AC08D3 /* ThemePaletteTests.swift in Sources */,
 				F08BC543B10FF27724A34975 /* TransportStreamDetectorTests.swift in Sources */,

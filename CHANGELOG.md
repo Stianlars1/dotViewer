@@ -9,6 +9,7 @@
 - Search-facing site copy for dotfiles, config files, markdown, logs, plain text documents, and source code preview use cases.
 - Shipped Quick Look routing for `.cue` and common manpage extensions `.1` through `.9`.
 - Added system-following theme choices for GitHub, Xcode, and Solarized alongside the existing Atom One system theme.
+- Added an initial Quick Look window size preference with `Auto` and `Fixed` modes plus shared width/height controls.
 
 ### Changed
 
@@ -18,6 +19,7 @@
 - Updated sitemap, robots, manifest, and metadata to reinforce `dotviewer.app` and `/download` as the canonical public entry points.
 - Clarified the custom file-type UI so it warns when a runtime mapping can only change highlighting after Finder is already routing that extension to dotViewer.
 - Unified Quick Look preview and thumbnail appearance detection so system-following themes resolve from the same macOS interface-style signal.
+- Moved preview window sizing out of content-only heuristics when the user chooses a fixed starting size, while keeping auto sizing available.
 
 ## v2.5 (2026-02-11) — Current
 
