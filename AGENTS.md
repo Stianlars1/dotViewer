@@ -278,3 +278,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`121 tests, 0 failures`)
   - `./scripts/dotviewer-refresh.sh --no-open` → pass
 - Follow-ups: The next preview-window sizing change will stay separate; the theme work only covers palette selection and auto light/dark resolution.
+
+### Initial preview window size setting
+- Outcome: Added a persistent initial Quick Look window size preference with `Auto` and `Fixed` modes. `Fixed` applies one shared width/height pair across all dotViewer previews instead of re-deriving the window size from each file’s content.
+- Files: `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewSizing.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/dotViewer.xcodeproj/project.pbxproj`, `dotViewer/dotViewerTests/PreviewSizingTests.swift`, `BACKLOG.md`, `CHANGELOG.md`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`125 tests, 0 failures`)
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass
+- Follow-ups: This controls the initial size hint sent to Quick Look. It does not attempt to persist ad-hoc manual window drags from the system Quick Look panel.

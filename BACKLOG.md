@@ -39,7 +39,7 @@ From v1 requirements and future direction.
 | B-027 | ~~Open With Assistant for system-owned UTIs~~ | ~~Won't Fix / Removed~~ | Tested 2026-02-16 — does not change Quick Look routing for system-owned UTIs; Finder automation blocked in sandboxed apps. |
 | B-038 | ~~Custom mapping routing for common unknown text extensions~~ | ~~Done~~ | Completed 2026-04-03 — Added shipped routing for `.cue` and `.1`-`.9`, plus clearer UI copy that runtime custom mappings only affect files that already reach dotViewer. |
 | B-039 | ~~Theme appearance modes for paired palettes~~ | ~~Done~~ | Completed 2026-04-03 — Added system-following variants for Atom One, GitHub, Xcode, and Solarized, and unified preview/thumbnail appearance detection around the system interface style. |
-| B-040 | Preview window size controls | Medium | Victor feedback (2026-04-03). Add a predictable initial Quick Look window size option instead of always sizing the preview from line count/content length. |
+| B-040 | ~~Preview window size controls~~ | ~~Done~~ | Completed 2026-04-03 — Added a persistent initial Quick Look window size setting (`Auto` or `Fixed` with width/height sliders) that applies across all dotViewer previews. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.

@@ -366,16 +366,16 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         fontSize: Double = 14,
         showHeader: Bool = true
     ) -> QLPreviewReply {
-        let lineHeight = fontSize * 1.45
-        let headerHeight: CGFloat = showHeader ? 48 : 0
-        let padding: CGFloat = 32
-        let contentHeight = CGFloat(lineCount) * lineHeight
-        let estimatedHeight = contentHeight + headerHeight + padding
+        let contentSize = PreviewSizing.initialContentSize(
+            lineCount: lineCount,
+            fontSize: fontSize,
+            showHeader: showHeader,
+            windowSizeMode: SharedSettings.shared.previewWindowSizeMode,
+            fixedWidth: SharedSettings.shared.previewWindowFixedWidth,
+            fixedHeight: SharedSettings.shared.previewWindowFixedHeight
+        )
 
-        let height = min(max(estimatedHeight, 160), 1000)
-        let width: CGFloat = lineCount <= 5 ? 420 : 700
-
-        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: CGSize(width: width, height: height)) { _ in
+        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: contentSize) { _ in
             html.data(using: .utf8) ?? Data()
         }
         reply.stringEncoding = .utf8
@@ -420,11 +420,16 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         logger.log("Experiment 1: RTF data generated, \(rtfData.count) bytes")
 
-        let lineHeight = fontSize * 1.45
-        let height = min(max(CGFloat(lineCount) * lineHeight + 32, 160), 1000)
-        let width: CGFloat = lineCount <= 5 ? 420 : 700
+        let contentSize = PreviewSizing.initialContentSize(
+            lineCount: lineCount,
+            fontSize: fontSize,
+            showHeader: false,
+            windowSizeMode: SharedSettings.shared.previewWindowSizeMode,
+            fixedWidth: SharedSettings.shared.previewWindowFixedWidth,
+            fixedHeight: SharedSettings.shared.previewWindowFixedHeight
+        )
 
-        let reply = QLPreviewReply(dataOfContentType: .rtf, contentSize: CGSize(width: width, height: height)) { _ in
+        let reply = QLPreviewReply(dataOfContentType: .rtf, contentSize: contentSize) { _ in
             rtfData
         }
         return reply

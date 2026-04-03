@@ -18,6 +18,9 @@ struct SettingsView: View {
     @State private var maxFileSize: Double = Double(SharedSettings.shared.maxFileSizeBytes) / 1000.0
     @State private var showTruncationWarning: Bool = SharedSettings.shared.showTruncationWarning
     @State private var showPreviewHeader: Bool = SharedSettings.shared.showFileInfoHeader
+    @State private var previewWindowSizeMode: String = SharedSettings.shared.previewWindowSizeMode
+    @State private var previewWindowFixedWidth: Double = Double(SharedSettings.shared.previewWindowFixedWidth)
+    @State private var previewWindowFixedHeight: Double = Double(SharedSettings.shared.previewWindowFixedHeight)
     @State private var previewUnknownFiles: Bool = SharedSettings.shared.previewAllFileTypes
     @State private var forceTextForUnknown: Bool = SharedSettings.shared.previewForceTextForUnknown
 
@@ -226,6 +229,51 @@ struct SettingsView: View {
                             }
 
                         Text("Shows filename, language, line count, and file size in preview")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        Divider()
+
+                        Text("Initial Preview Window Size")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Picker("Window Size", selection: $previewWindowSizeMode) {
+                            Text("Auto").tag("auto")
+                            Text("Fixed").tag("fixed")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: previewWindowSizeMode) { _, newValue in
+                            SharedSettings.shared.previewWindowSizeMode = newValue
+                        }
+
+                        if previewWindowSizeMode == "fixed" {
+                            HStack {
+                                Text("Width")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
+                                .onChange(of: previewWindowFixedWidth) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
+                                }
+
+                            HStack {
+                                Text("Height")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedHeight))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
+                                .onChange(of: previewWindowFixedHeight) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
+                                }
+                        }
+
+                        Text("Auto sizes the Quick Look window from file content. Fixed uses the same starting size for all dotViewer previews. You can still resize the window manually after it opens.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 

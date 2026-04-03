@@ -141,6 +141,51 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "showSearchButton") } }
     }
 
+    public var previewWindowSizeMode: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "previewWindowSizeMode") ?? "auto"
+                return Self.allowedPreviewWindowSizeModes.contains(value) ? value : "auto"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedPreviewWindowSizeModes.contains(newValue) ? newValue : "auto"
+                defaults.set(sanitized, forKey: "previewWindowSizeMode")
+            }
+        }
+    }
+
+    public var previewWindowFixedWidth: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "previewWindowFixedWidth")
+                return value > 0 ? max(420, min(1600, value)) : 700
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(420, min(1600, newValue))
+                defaults.set(clamped, forKey: "previewWindowFixedWidth")
+            }
+        }
+    }
+
+    public var previewWindowFixedHeight: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "previewWindowFixedHeight")
+                return value > 0 ? max(220, min(1400, value)) : 560
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(220, min(1400, newValue))
+                defaults.set(clamped, forKey: "previewWindowFixedHeight")
+            }
+        }
+    }
+
     public var includeLineNumbersInCopy: Bool {
         get { lock.withLock { defaults.object(forKey: "includeLineNumbersInCopy") as? Bool ?? false } }
         set { lock.withLock { defaults.set(newValue, forKey: "includeLineNumbersInCopy") } }
@@ -435,6 +480,7 @@ public final class SharedSettings: @unchecked Sendable {
 
     private static let allowedWidthModes: Set<String> = ["auto", "custom"]
     private static let allowedContentAlignments: Set<String> = ["left", "center", "right"]
+    private static let allowedPreviewWindowSizeModes: Set<String> = ["auto", "fixed"]
     private static let allowedAppUIFontSizePresets: Set<String> = [
         "system",
         "xSmall",
