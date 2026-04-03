@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
@@ -77,6 +78,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${geistMono.variable} ${geistSans.variable} ${inter.variable}`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
