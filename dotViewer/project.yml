@@ -50,6 +50,69 @@ targets:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.developer-tools
         UTExportedTypeDeclarations:
+          - UTTypeIdentifier: com.stianlars1.dotviewer.1
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "1"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.2
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "2"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.3
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "3"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.4
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "4"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.5
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "5"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.6
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "6"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.7
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "7"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.8
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "8"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.9
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - "9"
           - UTTypeIdentifier: com.stianlars1.dotviewer.29k
             UTTypeDescription: Generic Assembler
             UTTypeConformsTo:
@@ -826,6 +889,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - cu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cue
+            UTTypeDescription: CUE / Cue Sheet
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cue
           - UTTypeIdentifier: com.stianlars1.dotviewer.curlrc
             UTTypeDescription: cURL Config
             UTTypeConformsTo:
@@ -4316,6 +4386,15 @@ targets:
               - com.microsoft.typescript
               - com.microsoft.word.dot
               - com.netscape.javascript-source
+              - com.stianlars1.dotviewer.1
+              - com.stianlars1.dotviewer.2
+              - com.stianlars1.dotviewer.3
+              - com.stianlars1.dotviewer.4
+              - com.stianlars1.dotviewer.5
+              - com.stianlars1.dotviewer.6
+              - com.stianlars1.dotviewer.7
+              - com.stianlars1.dotviewer.8
+              - com.stianlars1.dotviewer.9
               - com.stianlars1.dotviewer.29k
               - com.stianlars1.dotviewer.4gl
               - com.stianlars1.dotviewer.68s
@@ -4421,6 +4500,7 @@ targets:
               - com.stianlars1.dotviewer.cshtml
               - com.stianlars1.dotviewer.csproj
               - com.stianlars1.dotviewer.cu
+              - com.stianlars1.dotviewer.cue
               - com.stianlars1.dotviewer.curlrc
               - com.stianlars1.dotviewer.cursorignore
               - com.stianlars1.dotviewer.cursorrules
@@ -5033,6 +5113,15 @@ targets:
               - com.microsoft.typescript
               - com.microsoft.word.dot
               - com.netscape.javascript-source
+              - com.stianlars1.dotviewer.1
+              - com.stianlars1.dotviewer.2
+              - com.stianlars1.dotviewer.3
+              - com.stianlars1.dotviewer.4
+              - com.stianlars1.dotviewer.5
+              - com.stianlars1.dotviewer.6
+              - com.stianlars1.dotviewer.7
+              - com.stianlars1.dotviewer.8
+              - com.stianlars1.dotviewer.9
               - com.stianlars1.dotviewer.29k
               - com.stianlars1.dotviewer.4gl
               - com.stianlars1.dotviewer.68s
@@ -5138,6 +5227,7 @@ targets:
               - com.stianlars1.dotviewer.cshtml
               - com.stianlars1.dotviewer.csproj
               - com.stianlars1.dotviewer.cu
+              - com.stianlars1.dotviewer.cue
               - com.stianlars1.dotviewer.curlrc
               - com.stianlars1.dotviewer.cursorignore
               - com.stianlars1.dotviewer.cursorrules

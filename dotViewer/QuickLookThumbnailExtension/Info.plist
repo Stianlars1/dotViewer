@@ -110,6 +110,15 @@
 				<string>com.microsoft.typescript</string>
 				<string>com.microsoft.word.dot</string>
 				<string>com.netscape.javascript-source</string>
+				<string>com.stianlars1.dotviewer.1</string>
+				<string>com.stianlars1.dotviewer.2</string>
+				<string>com.stianlars1.dotviewer.3</string>
+				<string>com.stianlars1.dotviewer.4</string>
+				<string>com.stianlars1.dotviewer.5</string>
+				<string>com.stianlars1.dotviewer.6</string>
+				<string>com.stianlars1.dotviewer.7</string>
+				<string>com.stianlars1.dotviewer.8</string>
+				<string>com.stianlars1.dotviewer.9</string>
 				<string>com.stianlars1.dotviewer.29k</string>
 				<string>com.stianlars1.dotviewer.4gl</string>
 				<string>com.stianlars1.dotviewer.68s</string>
@@ -215,6 +224,7 @@
 				<string>com.stianlars1.dotviewer.cshtml</string>
 				<string>com.stianlars1.dotviewer.csproj</string>
 				<string>com.stianlars1.dotviewer.cu</string>
+				<string>com.stianlars1.dotviewer.cue</string>
 				<string>com.stianlars1.dotviewer.curlrc</string>
 				<string>com.stianlars1.dotviewer.cursorignore</string>
 				<string>com.stianlars1.dotviewer.cursorrules</string>

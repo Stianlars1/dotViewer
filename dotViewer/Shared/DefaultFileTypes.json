@@ -1503,6 +1503,15 @@
     "highlightLanguage": "critic"
   },
   {
+    "id": "cue",
+    "displayName": "CUE / Cue Sheet",
+    "extensions": [
+      "cue"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
+  },
+  {
     "id": "css",
     "displayName": "CSS",
     "extensions": [
@@ -2950,6 +2959,23 @@
       "Makefile",
       "GNUmakefile"
     ]
+  },
+  {
+    "id": "manpage",
+    "displayName": "Man Page",
+    "extensions": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
   },
   {
     "id": "dockerfile-file",

@@ -281,12 +281,12 @@ struct SettingsView: View {
 
                         Divider()
 
-                        Toggle("Preview All File Types", isOn: $previewUnknownFiles)
+                        Toggle("Preview Routed Unknown Files", isOn: $previewUnknownFiles)
                             .onChange(of: previewUnknownFiles) { _, newValue in
                                 SharedSettings.shared.previewAllFileTypes = newValue
                             }
 
-                        Text("Preview files with extensions not in the built-in registry")
+                        Text("Try to preview files that already open in dotViewer even when their extension is not in the built-in registry.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 
@@ -295,7 +295,7 @@ struct SettingsView: View {
                                 SharedSettings.shared.previewForceTextForUnknown = newValue
                             }
 
-                        Text("Treat files without a text MIME type as plain text if they contain readable bytes")
+                        Text("If a routed unknown file has readable bytes but no useful text MIME type, treat it as plain text.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }

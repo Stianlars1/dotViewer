@@ -37,6 +37,12 @@ struct AddCustomExtensionSheet: View {
         matchMode == .extensionMode ? cleanedExtension : cleanedFilename
     }
 
+    private var showsRoutingWarning: Bool {
+        guard matchMode == .extensionMode else { return false }
+        let ext = cleanedExtension
+        return !ext.isEmpty && FileTypeRegistry.shared.fileType(for: ext) == nil
+    }
+
     private var isValid: Bool {
         let trimmedDisplay = displayName.trimmingCharacters(in: .whitespaces)
         guard !trimmedDisplay.isEmpty else { return false }
@@ -99,9 +105,17 @@ struct AddCustomExtensionSheet: View {
                     } header: {
                         Text("File Extension")
                     } footer: {
-                        Text("Enter the extension without the leading dot. Dots are allowed (e.g. env.local).")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Enter the extension without the leading dot. Dots are allowed (e.g. env.local).")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            if showsRoutingWarning {
+                                Text("Quick Look can only use custom mappings for extensions dotViewer already ships with routing support for. Brand-new extensions may still need a dotViewer update before Finder sends them to the extension.")
+                                    .font(.caption)
+                                    .foregroundStyle(.orange)
+                            }
+                        }
                     }
                 } else {
                     Section {

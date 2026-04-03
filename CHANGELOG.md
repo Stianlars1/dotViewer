@@ -7,6 +7,7 @@
 - Product marketing context document for dotViewer positioning, audience, competitors, proof points, and creator references.
 - Expanded website structured data with `SoftwareApplication`, `Organization`, `WebSite`, `CollectionPage`, `BreadcrumbList`, and release-history markup.
 - Search-facing site copy for dotfiles, config files, markdown, logs, plain text documents, and source code preview use cases.
+- Shipped Quick Look routing for `.cue` and common manpage extensions `.1` through `.9`.
 
 ### Changed
 
@@ -14,6 +15,7 @@
 - Strengthened `/download` copy so it clearly describes the notarized macOS DMG, direct download flow, and GitHub-backed version history.
 - Refreshed `site/README.md` with badges, launch positioning, release flow, deployment notes, SEO intent, creator link, and `dbHost` mention.
 - Updated sitemap, robots, manifest, and metadata to reinforce `dotviewer.app` and `/download` as the canonical public entry points.
+- Clarified the custom file-type UI so it warns when a runtime mapping can only change highlighting after Finder is already routing that extension to dotViewer.
 
 ## v2.5 (2026-02-11) — Current
 
