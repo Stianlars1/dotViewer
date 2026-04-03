@@ -320,8 +320,8 @@ public enum PreviewHTMLBuilder {
             """
         }
 
-        let basePalette = info.themeName == "auto"
-            ? (info.systemIsDark ? ThemePalette.atomOneDark : ThemePalette.atomOneLight)
+        let basePalette = ThemePalette.followsSystemAppearance(theme: info.themeName)
+            ? ThemePalette.lightPalette(for: info.themeName)
             : palette
         var baseCSS = """
         :root {
@@ -1227,8 +1227,8 @@ public enum PreviewHTMLBuilder {
           }
         }
         """
-        if info.themeName == "auto" {
-            let darkPalette = ThemePalette.atomOneDark
+        if let darkPalette = ThemePalette.darkPalette(for: info.themeName),
+           ThemePalette.followsSystemAppearance(theme: info.themeName) {
             baseCSS += """
 
             @media (prefers-color-scheme: dark) {

@@ -40,20 +40,6 @@ struct SettingsView: View {
         ("off", "Off", "No automatic copy behavior. Use the header button or right-click to copy."),
     ]
 
-    private let themes: [(String, String)] = [
-        ("auto", "Auto (System)"),
-        ("atomOneLight", "Atom One Light"),
-        ("atomOneDark", "Atom One Dark"),
-        ("githubLight", "GitHub Light"),
-        ("githubDark", "GitHub Dark"),
-        ("xcodeLight", "Xcode Light"),
-        ("xcodeDark", "Xcode Dark"),
-        ("solarizedLight", "Solarized Light"),
-        ("solarizedDark", "Solarized Dark"),
-        ("tokyoNight", "Tokyo Night"),
-        ("blackout", "Blackout"),
-    ]
-
     private let appUIFontPresets: [AppUIFontSizePreset] = AppUIFontSizePreset.allCases
 
     private var palette: ThemePalette {
@@ -69,8 +55,8 @@ struct SettingsView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         Picker("Theme", selection: $selectedTheme) {
-                            ForEach(themes, id: \.0) { theme in
-                                Text(theme.1).tag(theme.0)
+                            ForEach(ThemePalette.selectableThemes) { theme in
+                                Text(theme.title).tag(theme.id)
                             }
                         }
                         .pickerStyle(.menu)

@@ -23,6 +23,16 @@ public enum TokenType: String, CaseIterable, Sendable {
     case identifier  // uses text color
 }
 
+public struct ThemeChoice: Identifiable, Equatable, Sendable {
+    public let id: String
+    public let title: String
+
+    public init(id: String, title: String) {
+        self.id = id
+        self.title = title
+    }
+}
+
 public struct ThemePalette: Equatable, Sendable {
     public let name: String
     public let isDark: Bool
@@ -67,10 +77,63 @@ public struct ThemePalette: Equatable, Sendable {
         }
     }
 
-    public static func palette(for theme: String, systemIsDark: Bool) -> ThemePalette {
+    public static let selectableThemes: [ThemeChoice] = [
+        ThemeChoice(id: "auto", title: "Atom One (System)"),
+        ThemeChoice(id: "atomOneLight", title: "Atom One Light"),
+        ThemeChoice(id: "atomOneDark", title: "Atom One Dark"),
+        ThemeChoice(id: "githubAuto", title: "GitHub (System)"),
+        ThemeChoice(id: "githubLight", title: "GitHub Light"),
+        ThemeChoice(id: "githubDark", title: "GitHub Dark"),
+        ThemeChoice(id: "xcodeAuto", title: "Xcode (System)"),
+        ThemeChoice(id: "xcodeLight", title: "Xcode Light"),
+        ThemeChoice(id: "xcodeDark", title: "Xcode Dark"),
+        ThemeChoice(id: "solarizedAuto", title: "Solarized (System)"),
+        ThemeChoice(id: "solarizedLight", title: "Solarized Light"),
+        ThemeChoice(id: "solarizedDark", title: "Solarized Dark"),
+        ThemeChoice(id: "tokyoNight", title: "Tokyo Night"),
+        ThemeChoice(id: "blackout", title: "Blackout"),
+    ]
+
+    public static func followsSystemAppearance(theme: String) -> Bool {
+        systemThemePair(for: theme) != nil
+    }
+
+    public static func lightPalette(for theme: String) -> ThemePalette {
+        if let pair = systemThemePair(for: theme) {
+            return pair.light
+        }
+        return palette(for: theme, systemIsDark: false)
+    }
+
+    public static func darkPalette(for theme: String) -> ThemePalette? {
+        if let pair = systemThemePair(for: theme) {
+            return pair.dark
+        }
+        let palette = palette(for: theme, systemIsDark: true)
+        return palette.isDark ? palette : nil
+    }
+
+    public static func systemThemePair(for theme: String) -> (light: ThemePalette, dark: ThemePalette)? {
         switch theme {
         case "auto":
-            return systemIsDark ? .atomOneDark : .atomOneLight
+            return (.atomOneLight, .atomOneDark)
+        case "githubAuto":
+            return (.githubLight, .githubDark)
+        case "xcodeAuto":
+            return (.xcodeLight, .xcodeDark)
+        case "solarizedAuto":
+            return (.solarizedLight, .solarizedDark)
+        default:
+            return nil
+        }
+    }
+
+    public static func palette(for theme: String, systemIsDark: Bool) -> ThemePalette {
+        if let pair = systemThemePair(for: theme) {
+            return systemIsDark ? pair.dark : pair.light
+        }
+
+        switch theme {
         case "atomOneLight":
             return .atomOneLight
         case "atomOneDark":

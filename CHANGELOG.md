@@ -8,6 +8,7 @@
 - Expanded website structured data with `SoftwareApplication`, `Organization`, `WebSite`, `CollectionPage`, `BreadcrumbList`, and release-history markup.
 - Search-facing site copy for dotfiles, config files, markdown, logs, plain text documents, and source code preview use cases.
 - Shipped Quick Look routing for `.cue` and common manpage extensions `.1` through `.9`.
+- Added system-following theme choices for GitHub, Xcode, and Solarized alongside the existing Atom One system theme.
 
 ### Changed
 
@@ -16,6 +17,7 @@
 - Refreshed `site/README.md` with badges, launch positioning, release flow, deployment notes, SEO intent, creator link, and `dbHost` mention.
 - Updated sitemap, robots, manifest, and metadata to reinforce `dotviewer.app` and `/download` as the canonical public entry points.
 - Clarified the custom file-type UI so it warns when a runtime mapping can only change highlighting after Finder is already routing that extension to dotViewer.
+- Unified Quick Look preview and thumbnail appearance detection so system-following themes resolve from the same macOS interface-style signal.
 
 ## v2.5 (2026-02-11) — Current
 
