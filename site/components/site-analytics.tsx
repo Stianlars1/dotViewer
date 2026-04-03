@@ -3,8 +3,8 @@
 import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import { trackGooglePageView } from "../lib/analytics/client";
+import { useEffect, useRef } from "react";
+import { trackCustomPageView, trackGooglePageView } from "../lib/analytics/client";
 
 type SiteAnalyticsProps = {
   googleAnalyticsId: string | null;
@@ -13,15 +13,20 @@ type SiteAnalyticsProps = {
 export function SiteAnalytics({ googleAnalyticsId }: SiteAnalyticsProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const previousUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!googleAnalyticsId) {
-      return;
-    }
-
     const query = searchParams.toString();
     const pagePath = query ? `${pathname}?${query}` : pathname;
-    trackGooglePageView(pagePath);
+    const currentUrl = window.location.href;
+    const referrer = previousUrlRef.current ?? (document.referrer || null);
+
+    trackCustomPageView(pagePath, referrer);
+    previousUrlRef.current = currentUrl;
+
+    if (googleAnalyticsId) {
+      trackGooglePageView(pagePath);
+    }
   }, [googleAnalyticsId, pathname, searchParams]);
 
   return (

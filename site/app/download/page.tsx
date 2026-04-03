@@ -120,6 +120,7 @@ export default async function DownloadPage() {
             <TrackedDownloadLink
               assetKind="dmg"
               className={styles.primaryAction}
+              persistCustomEvent={false}
               releaseTag={latestRelease?.tagName ?? null}
               source="download_page_hero"
               targetUrl={`${stableDownloadHref}?source=download_page_hero`}
@@ -163,6 +164,7 @@ export default async function DownloadPage() {
               <TrackedDownloadLink
                 assetKind="dmg"
                 className={styles.primaryAction}
+                persistCustomEvent={false}
                 releaseTag={latestRelease?.tagName ?? null}
                 source="download_page_latest_release"
                 targetUrl={`${stableDownloadHref}?source=download_page_latest_release`}
@@ -170,12 +172,15 @@ export default async function DownloadPage() {
                 Download DMG
               </TrackedDownloadLink>
               {latestChecksum ? (
-                <a
+                <TrackedDownloadLink
+                  assetKind="checksum"
                   className={styles.secondaryAction}
-                  href={latestChecksum.browser_download_url}
+                  releaseTag={latestRelease?.tagName ?? null}
+                  source="download_page_latest_checksum"
+                  targetUrl={latestChecksum.browser_download_url}
                 >
                   Checksum
-                </a>
+                </TrackedDownloadLink>
               ) : null}
               {latestRelease ? (
                 <a
@@ -267,9 +272,14 @@ export default async function DownloadPage() {
                       </TrackedDownloadLink>
                     ) : null}
                     {release.checksumAsset ? (
-                      <a href={release.checksumAsset.browser_download_url}>
+                      <TrackedDownloadLink
+                        assetKind="checksum"
+                        releaseTag={release.tagName}
+                        source="download_page_release_history_checksum"
+                        targetUrl={release.checksumAsset.browser_download_url}
+                      >
                         Checksum
-                      </a>
+                      </TrackedDownloadLink>
                     ) : null}
                     <a href={release.htmlUrl}>GitHub</a>
                   </div>

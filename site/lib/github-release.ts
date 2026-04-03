@@ -47,6 +47,11 @@ export async function getLatestDmgAssetUrl(githubRepo: string): Promise<string |
   return releases[0]?.dmgAsset?.browser_download_url ?? null;
 }
 
+export async function getLatestRelease(githubRepo: string): Promise<ReleaseRecord | null> {
+  const releases = await getGitHubReleases(githubRepo, 1);
+  return releases[0] ?? null;
+}
+
 function pickDmgAsset(assets: GitHubAsset[]): GitHubAsset | null {
   const dmgAssets = assets.filter((asset) => asset.name.toLowerCase().endsWith(".dmg"));
 

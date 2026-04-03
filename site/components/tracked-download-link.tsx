@@ -12,6 +12,7 @@ export function TrackedDownloadLink({
   assetKind,
   children,
   className,
+  persistCustomEvent,
   releaseTag,
   source,
   targetUrl,
@@ -23,6 +24,7 @@ export function TrackedDownloadLink({
       onClick={() =>
         trackDownloadClick({
           assetKind,
+          persistCustomEvent,
           releaseTag,
           source,
           targetUrl,
