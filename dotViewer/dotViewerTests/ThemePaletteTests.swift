@@ -98,11 +98,44 @@ final class ThemePaletteTests: XCTestCase {
         XCTAssertEqual(palette.name, ThemePalette.atomOneLight.name)
     }
 
+    func testPaletteForGitHubAutoThemeDark() {
+        let palette = ThemePalette.palette(for: "githubAuto", systemIsDark: true)
+        XCTAssertTrue(palette.isDark)
+        XCTAssertEqual(palette.name, ThemePalette.githubDark.name)
+    }
+
+    func testPaletteForGitHubAutoThemeLight() {
+        let palette = ThemePalette.palette(for: "githubAuto", systemIsDark: false)
+        XCTAssertFalse(palette.isDark)
+        XCTAssertEqual(palette.name, ThemePalette.githubLight.name)
+    }
+
+    func testPaletteForXcodeAutoThemeDark() {
+        let palette = ThemePalette.palette(for: "xcodeAuto", systemIsDark: true)
+        XCTAssertTrue(palette.isDark)
+        XCTAssertEqual(palette.name, ThemePalette.xcodeDark.name)
+    }
+
+    func testPaletteForSolarizedAutoThemeLight() {
+        let palette = ThemePalette.palette(for: "solarizedAuto", systemIsDark: false)
+        XCTAssertFalse(palette.isDark)
+        XCTAssertEqual(palette.name, ThemePalette.solarizedLight.name)
+    }
+
     func testPaletteForSpecificTheme() {
         for name in Self.themeNames {
             let palette = ThemePalette.palette(for: name, systemIsDark: false)
             XCTAssertFalse(palette.name.isEmpty, "Theme '\(name)' returned empty palette name")
         }
+    }
+
+    func testSystemThemeDetection() {
+        XCTAssertTrue(ThemePalette.followsSystemAppearance(theme: "auto"))
+        XCTAssertTrue(ThemePalette.followsSystemAppearance(theme: "githubAuto"))
+        XCTAssertTrue(ThemePalette.followsSystemAppearance(theme: "xcodeAuto"))
+        XCTAssertTrue(ThemePalette.followsSystemAppearance(theme: "solarizedAuto"))
+        XCTAssertFalse(ThemePalette.followsSystemAppearance(theme: "githubDark"))
+        XCTAssertFalse(ThemePalette.followsSystemAppearance(theme: "tokyoNight"))
     }
 
     func testPaletteForUnknownThemeFallsBack() {

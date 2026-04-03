@@ -126,7 +126,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
                 }
             }
 
-            let systemIsDark = await MainActor.run { ThumbnailProvider.systemIsDark() }
+            let systemIsDark = ThumbnailProvider.systemIsDark()
             let palette = ThemePalette.palette(for: settings.selectedTheme, systemIsDark: systemIsDark)
             let badgeText = ThumbnailProvider.badgeText(for: url, key: key, languageName: languageName)
             let reply = TextThumbnailRenderer.makeReply(
@@ -148,15 +148,8 @@ final class ThumbnailProvider: QLThumbnailProvider {
         }
     }
 
-    @MainActor
     private static func systemIsDark() -> Bool {
-        // NSApplication.shared.effectiveAppearance is unreliable in headless
-        // extension contexts (thumbnail provider has no window/visual context).
-        // Read the system preference directly instead.
-        if let style = UserDefaults.standard.string(forKey: "AppleInterfaceStyle") {
-            return style.lowercased() == "dark"
-        }
-        return false
+        SystemAppearance.isDark()
     }
 
     private static func badgeText(for url: URL, key: String, languageName: String) -> String {

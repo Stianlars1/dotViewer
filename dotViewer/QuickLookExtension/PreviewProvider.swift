@@ -17,7 +17,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
     @available(macOSApplicationExtension 12.0, *)
     func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
-        let systemIsDark = await MainActor.run { Self.systemIsDark() }
+        let systemIsDark = Self.systemIsDark()
         return await Self.buildPreviewReply(for: request.fileURL, systemIsDark: systemIsDark)
     }
 
@@ -356,13 +356,8 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         )
     }
 
-    @MainActor
     private static func systemIsDark() -> Bool {
-        let appearance = NSApplication.shared.effectiveAppearance
-        if let match = appearance.bestMatch(from: [.darkAqua, .aqua]) {
-            return match == .darkAqua
-        }
-        return false
+        SystemAppearance.isDark()
     }
 
     private static func makeHTMLReply(

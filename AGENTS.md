@@ -269,3 +269,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - manual `qlmanage -p /tmp/victor.2` + log capture → pass (`HTML built for victor.2`)
   - `mdls -name kMDItemContentType -name kMDItemContentTypeTree /tmp/victor.cue /tmp/victor.1 /tmp/victor.2 /tmp/victor.9` → pass (all resolve to shipped `com.stianlars1.dotviewer.*` UTIs)
 - Follow-ups: Truly novel extensions still need a shipped UTI update because Quick Look routing remains exact-match only.
+
+### Theme auto-follow variants
+- Outcome: Added system-following theme variants for GitHub, Xcode, and Solarized, kept Atom One as the default system theme, and made preview + thumbnail appearance detection use the same macOS interface-style signal so light/dark auto behavior is consistent.
+- Files: `dotViewer/Shared/ThemePalette.swift`, `dotViewer/Shared/SystemAppearance.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/QuickLookThumbnailExtension/ThumbnailProvider.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/dotViewer.xcodeproj/project.pbxproj`, `dotViewer/dotViewerTests/ThemePaletteTests.swift`, `dotViewer/dotViewerTests/SystemAppearanceTests.swift`, `dotViewer/dotViewerTests/PreviewHTMLBuilderTests.swift`, `BACKLOG.md`, `CHANGELOG.md`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`121 tests, 0 failures`)
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass
+- Follow-ups: The next preview-window sizing change will stay separate; the theme work only covers palette selection and auto light/dark resolution.

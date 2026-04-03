@@ -270,6 +270,23 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains("safeInit('initCoreModeToggle', initCoreModeToggle);"))
     }
 
+    func testSystemThemeIncludesDarkMediaQueryForPairedPalette() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1200,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 900,
+            themeName: "githubAuto",
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.githubLight)
+
+        XCTAssertTrue(html.contains("@media (prefers-color-scheme: dark)"))
+        XCTAssertTrue(html.contains("--bg: #FFFFFF;"))
+        XCTAssertTrue(html.contains("--bg: #0D1117;"))
+    }
+
     private func makeInfo(
         codeContentWidthMode: String,
         codeContentCustomMaxWidth: Int,
@@ -278,6 +295,7 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         markdownRenderedCustomMaxWidth: Int,
         markdownRawContentAlignment: String = "left",
         markdownRenderedContentAlignment: String = "center",
+        themeName: String = "atomOneLight",
         renderedHTML: String?
     ) -> PreviewInfo {
         PreviewInfo(
@@ -305,7 +323,7 @@ final class PreviewHTMLBuilderTests: XCTestCase {
             markdownShowInlineImages: true,
             markdownCustomCSS: "",
             markdownCustomCSSOverride: false,
-            themeName: "atomOneLight",
+            themeName: themeName,
             showUnknownTextWarning: false,
             showBinaryWarning: false,
             systemIsDark: false,

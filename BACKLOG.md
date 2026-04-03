@@ -38,7 +38,7 @@ From v1 requirements and future direction.
 | B-026 | ~~Synced font sizes~~ | ~~Done~~ | Completed 2026-02-12 — New `syncFontSizes` setting (default ON). Code and rendered markdown share one font size. Toggle in Settings > Appearance, disabled slider with note in Markdown settings when synced. |
 | B-027 | ~~Open With Assistant for system-owned UTIs~~ | ~~Won't Fix / Removed~~ | Tested 2026-02-16 — does not change Quick Look routing for system-owned UTIs; Finder automation blocked in sandboxed apps. |
 | B-038 | ~~Custom mapping routing for common unknown text extensions~~ | ~~Done~~ | Completed 2026-04-03 — Added shipped routing for `.cue` and `.1`-`.9`, plus clearer UI copy that runtime custom mappings only affect files that already reach dotViewer. |
-| B-039 | Theme appearance modes for paired palettes | High | Victor feedback (2026-04-03). Let paired themes follow system light/dark instead of limiting auto mode to Atom One, and make preview auto detection reliable in the Quick Look preview extension. |
+| B-039 | ~~Theme appearance modes for paired palettes~~ | ~~Done~~ | Completed 2026-04-03 — Added system-following variants for Atom One, GitHub, Xcode, and Solarized, and unified preview/thumbnail appearance detection around the system interface style. |
 | B-040 | Preview window size controls | Medium | Victor feedback (2026-04-03). Add a predictable initial Quick Look window size option instead of always sizing the preview from line count/content length. |
 
 Revisit criteria:
