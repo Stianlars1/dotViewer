@@ -7,6 +7,7 @@ import { buildDownloadSchema } from "../../lib/structured-data";
 import { TrackedDownloadLink } from "../../components/tracked-download-link";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Download dotViewer for macOS",

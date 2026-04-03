@@ -80,9 +80,9 @@ export async function getGitHubReleases(
     const response = await fetch(
       `https://api.github.com/repos/${githubRepo}/releases?per_page=${limit}`,
       {
+        cache: "no-store",
         headers: buildHeaders(),
-        next: { revalidate: 300 },
-        signal: AbortSignal.timeout(4000),
+        signal: AbortSignal.timeout(8000),
       },
     );
 
