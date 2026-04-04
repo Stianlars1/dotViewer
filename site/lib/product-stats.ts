@@ -1,6 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  getRoutingLimitationsForExtensions,
+  type SupportedFileRoutingLimitation,
+} from "./support-limitations";
 
 type FileTypeEntry = {
   displayName?: string;
@@ -21,6 +25,7 @@ export type SupportedFileTypeRecord = {
   extensions: string[];
   filenames: string[];
   mappingCount: number;
+  routingLimitations: SupportedFileRoutingLimitation[];
 };
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
@@ -82,6 +87,7 @@ export function getSupportedFileTypes(): SupportedFileTypeRecord[] {
         extensions,
         filenames,
         mappingCount: extensions.length + filenames.length,
+        routingLimitations: getRoutingLimitationsForExtensions(extensions),
       };
     })
     .sort((left, right) => {

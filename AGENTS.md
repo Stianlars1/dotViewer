@@ -328,3 +328,13 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run build` → pass
   - `curl -s http://127.0.0.1:3301/` grep checks for custom-mapping limitation copy, GitHub issue CTA, and support accordion content → pass
 - Follow-ups: Deploy the updated `site/` build when you want production to show the new limitation copy and full support list.
+
+### Homepage file-type support checker
+- Outcome: Added a new support-checker module directly under the homepage hero so visitors can type an extension, exact filename, or file-type name and see whether dotViewer ships a matching mapping. Follow-up refinement made the checker routing-aware for macOS-owned cases like `.ts` and HTML-family files, so those now resolve to a caveat state instead of a false “Supported” result. The coverage accordion and FAQ copy were updated to distinguish shipped mappings from actual Finder routing, and routing caveats are now called out inline from shared site data.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`, `site/components/support-checker.tsx`, `site/components/support-checker.module.css`, `site/lib/product-stats.ts`, `site/lib/support-checker-data.ts`, `site/lib/support-limitations.ts`, `site/next-env.d.ts`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `node` verification against the shared support-checker logic + live `DefaultFileTypes.json` confirmed: `ts` → `TypeScript` + `typescript-ts` limitation, `index.html` → `HTML` + `html-native-preview` limitation, `.cue` → exact supported match with no limitation, `typescript` → supported type match with `.ts` caveat carried on the record
+  - `curl -s http://127.0.0.1:3303/` grep checks for the support-checker intro copy and “already ships today” accordion wording → pass
+- Follow-ups: Playwright browser automation was unavailable in this environment because the MCP browser could not create its working directory, so final interaction verification here relied on code review, shared-logic execution, and rendered HTML checks instead of browser-driven typing.
