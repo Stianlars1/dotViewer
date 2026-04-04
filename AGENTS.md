@@ -326,5 +326,5 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Verified:
   - `cd site && npm run typecheck` → pass
   - `cd site && npm run build` → pass
-  - `curl -s http://127.0.0.1:3300/` grep checks for custom-mapping limitation copy, GitHub issue CTA, and support accordion content → pass
+  - `curl -s http://127.0.0.1:3301/` grep checks for custom-mapping limitation copy, GitHub issue CTA, and support accordion content → pass
 - Follow-ups: Deploy the updated `site/` build when you want production to show the new limitation copy and full support list.
