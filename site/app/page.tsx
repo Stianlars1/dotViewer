@@ -426,6 +426,11 @@ export default function HomePage() {
                   priority
                   sizes="(max-width: 1100px) 100vw, 70vw"
                 />
+                <figcaption>
+                  Rendered markdown mode turns a README-style document into a
+                  readable page with a sidebar table of contents, task list
+                  checkboxes, and styled code blocks inside Quick Look.
+                </figcaption>
               </figure>
 
               <div className={styles.galleryStack}>
@@ -437,6 +442,11 @@ export default function HomePage() {
                     height={1676}
                     sizes="(max-width: 1100px) 100vw, 28vw"
                   />
+                  <figcaption>
+                    RAW markdown keeps the source visible while still
+                    highlighting headings, checkboxes, fenced code, and inline
+                    syntax for quick inspection.
+                  </figcaption>
                 </figure>
 
                 <figure className={styles.galleryCard}>
@@ -447,6 +457,11 @@ export default function HomePage() {
                     height={770}
                     sizes="(max-width: 1100px) 100vw, 28vw"
                   />
+                  <figcaption>
+                    A compact C file preview shows syntax colors, line numbers,
+                    file metadata, and the copy control in the same Quick Look
+                    frame.
+                  </figcaption>
                 </figure>
               </div>
             </div>
@@ -558,6 +573,11 @@ export default function HomePage() {
                     height={770}
                     sizes="(max-width: 1100px) 100vw, 42vw"
                   />
+                  <figcaption>
+                    Short code snippets stay readable in the floating Quick Look
+                    panel, with the language badge, file details, and copy
+                    action visible above the source.
+                  </figcaption>
                 </figure>
 
                 <figure className={styles.shotWide}>
@@ -568,6 +588,11 @@ export default function HomePage() {
                     height={1768}
                     sizes="(max-width: 1100px) 100vw, 42vw"
                   />
+                  <figcaption>
+                    Longer Swift files keep their structure with token-aware
+                    coloring, line numbers, and the handoff button back to
+                    <Code>Xcode</Code>.
+                  </figcaption>
                 </figure>
               </div>
             </div>
@@ -582,6 +607,11 @@ export default function HomePage() {
                     height={2224}
                     sizes="(max-width: 1100px) 100vw, 46vw"
                   />
+                  <figcaption>
+                    Rendered mode is for reading: headings, task lists, and
+                    fenced code blocks are laid out like a document, with the
+                    table of contents open on the left.
+                  </figcaption>
                 </figure>
 
                 <figure className={styles.shotLarge}>
@@ -592,6 +622,11 @@ export default function HomePage() {
                     height={1676}
                     sizes="(max-width: 1100px) 100vw, 46vw"
                   />
+                  <figcaption>
+                    RAW mode is for checking the actual markdown source, while
+                    still making the structure readable through syntax-aware
+                    styling.
+                  </figcaption>
                 </figure>
               </div>
 
@@ -633,6 +668,11 @@ export default function HomePage() {
                   height={2224}
                   sizes="(max-width: 1100px) 100vw, 48vw"
                 />
+                <figcaption>
+                  After you select text, dotViewer can confirm the copy action
+                  with a small toast so copying from Quick Look feels explicit
+                  instead of ambiguous.
+                </figcaption>
               </figure>
             </div>
           </section>
@@ -664,9 +704,10 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Built-in themes include Atom One, GitHub, <Code>Xcode</Code>,
-                  and Solarized in system-following pairs, plus fixed dark
-                  themes such as Tokyo Night and Blackout.
+                  The theme picker exposes the shipped palette set, including
+                  system-following Atom One, GitHub, <Code>Xcode</Code>, and
+                  Solarized pairs plus fixed dark themes such as Tokyo Night and
+                  Blackout.
                 </figcaption>
               </figure>
 
@@ -679,9 +720,9 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Appearance controls for font size, app UI text size, line
-                  numbers, word wrap, content width, and the initial Quick Look
-                  window size.
+                  Appearance settings let people tune font size, app UI text
+                  size, line numbers, word wrap, content width, and the initial
+                  Quick Look window size from one screen.
                 </figcaption>
               </figure>
 
@@ -694,8 +735,9 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Preview UI controls including auto-copy, line numbers in copy,
-                  and preview behavior for unknown files.
+                  Preview UI settings cover copy behavior, line numbers in
+                  copied text, find-in-preview, and how dotViewer handles files
+                  outside the built-in registry.
                 </figcaption>
               </figure>
             </div>
@@ -710,10 +752,10 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  Manage built-in and custom mappings for the {stats.fileTypes}{" "}
-                  shipped file types, {stats.extensions} routed extensions, and{" "}
-                  {stats.filenameMappings} exact filename mappings from the app
-                  instead of editing scattered plugin settings.
+                  The File Types screen groups the {stats.fileTypes} shipped
+                  file types, {stats.extensions} routed extensions, and{" "}
+                  {stats.filenameMappings} filename mappings so overrides and
+                  custom additions stay in one place.
                 </figcaption>
               </figure>
 
@@ -726,8 +768,8 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  Status, quick stats, and extension health are visible in the
-                  companion app.
+                  The status view confirms the extension is enabled and surfaces
+                  quick counts for built-in, custom, and disabled mappings.
                 </figcaption>
               </figure>
             </div>

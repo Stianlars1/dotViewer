@@ -346,3 +346,32 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Reviewed current project config and preview path: `QLIsDataBasedPreview: true`, `PreviewProvider` -> `QLPreviewReply(contentSize:)`
   - Verified official SDK headers for `QLPreviewReply`, `QLPreviewProvider`, `QLPreviewPanel`, `QLPreviewItem`, `NSViewController`, and `NSWindow`
 - Follow-ups: If you want to pursue this, do it as a Phase-0 spike only. Do not start by wiring a “save current size” button into the existing HTML/data-based preview path.
+
+### Landing-page screenshot captions
+- Outcome: Added figure captions to every product screenshot on the homepage and tightened the existing settings/status captions so each image now explains the visible preview state instead of relying on adjacent marketing copy alone.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `curl -s http://127.0.0.1:3200/ | rg -n "Rendered markdown mode turns|RAW markdown keeps the source visible|A compact C file preview|Short code snippets stay readable|Longer Swift files keep their structure|Rendered mode is for reading|RAW mode is for checking the actual markdown source|After you select text|The theme picker exposes|Appearance settings let people tune|Preview UI settings cover|The File Types screen groups|The status view confirms"` → pass
+  - `cd site && npx playwright screenshot --browser=chromium --full-page http://127.0.0.1:3200/ /tmp/dotviewer-home-captions.png` → pass
+- Follow-ups: Deploy the updated `site/` build when you want production to show the new homepage screenshot captions live.
+
+### Website heading typography reset
+- Outcome: Reworked the site-wide heading scale to be calmer and more readable: global `h1`-`h6` rules now use lighter weight, looser line-height, and less aggressive tracking; homepage, download-page, and support-checker display titles were reduced and aligned to a shared scale; narrow copy columns got a bit more width so headlines wrap less awkwardly.
+- Files: `site/app/globals.css`, `site/app/page.module.css`, `site/app/download/page.module.css`, `site/components/support-checker.module.css`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `cd site && npx playwright screenshot --browser=chromium --viewport-size='1440,1400' http://127.0.0.1:3200/ /tmp/dotviewer-home-top.png` → pass
+  - `cd site && npx playwright screenshot --browser=chromium --viewport-size='1440,1800' --full-page http://127.0.0.1:3200/download /tmp/dotviewer-download-headings.png` → pass
+- Follow-ups: If you want the typography to move even further away from the Apple-adjacent feel, the next pass should target copy measure and section rhythm, not only type sizes.
+
+### Homepage figcaption styling polish
+- Outcome: Upgraded the homepage screenshot captions from plain text blocks into distinct caption cards with pill labels, softer surfaces, stronger contrast, and small-code styling so the preview screenshots and companion-app screenshots feel intentionally annotated rather than loosely described.
+- Files: `site/app/page.module.css`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `cd site && npx playwright screenshot --browser=chromium --viewport-size='1440,3000' 'http://127.0.0.1:3200/#previews' /tmp/dotviewer-previews-captions-tall.png` → pass
+- Follow-ups: Deploy the updated `site/` build when you want production to show the refined caption cards live.

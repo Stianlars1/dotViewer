@@ -54,9 +54,10 @@
 .title,
 .historyTitle {
   margin: 18px 0 0;
-  font-size: clamp(2.9rem, 5.5vw, 5.8rem);
-  line-height: 0.94;
-  letter-spacing: -0.075em;
+  font-size: clamp(2.75rem, 4.6vw, 4.3rem);
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  font-weight: 680;
 }
 
 .body,
@@ -155,9 +156,10 @@
 .releaseTitle,
 .historyVersion {
   margin: 14px 0 0;
-  font-size: clamp(2rem, 3vw, 3rem);
-  line-height: 0.98;
-  letter-spacing: -0.055em;
+  font-size: clamp(1.7rem, 2.2vw, 2.35rem);
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  font-weight: 660;
 }
 
 .releaseMeta {
@@ -286,8 +288,9 @@
 
 .historyEmpty h3 {
   margin: 0;
-  font-size: 1.5rem;
-  letter-spacing: -0.04em;
+  font-size: 1.35rem;
+  line-height: 1.16;
+  letter-spacing: -0.028em;
 }
 
 .historyEmpty p {
@@ -316,7 +319,7 @@
   .title,
   .historyTitle,
   .releaseTitle {
-    letter-spacing: -0.06em;
+    letter-spacing: -0.032em;
   }
 
   .body,
