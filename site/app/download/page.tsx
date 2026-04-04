@@ -108,8 +108,8 @@ export default async function DownloadPage() {
             <Code>.gitignore</Code>, <Code>.env</Code>, markdown, config files,
             plain text documents, <Code>log files</Code>, and{" "}
             <Code>source code</Code> in Finder, with companion-app controls for
-            themes, file mappings, and preview sizing. Use the button below to
-            download the current release.
+            themes, supported file mappings, and preview sizing. Use the
+            button below to download the current release.
           </p>
           <p className={styles.body}>
             This page exists so the public download link can stay stable while
