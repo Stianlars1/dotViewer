@@ -235,10 +235,10 @@ const faqs = [
         Yes, but only for file types dotViewer already ships mappings for. You
         can override highlighting for supported extensions and exact filenames
         in the app, while a small number of shipped mappings still have
-        macOS-owned preview paths. Sorry, but dotViewer cannot teach macOS
-        Quick Look completely brand-new file types at runtime. If a file type
-        is not in the shipped support list, it needs a dotViewer update and a
-        GitHub issue request.
+        macOS-owned preview paths. Sorry, but dotViewer cannot teach macOS Quick
+        Look completely brand-new file types at runtime. If a file type is not
+        in the shipped support list, it needs a dotViewer update and a GitHub
+        issue request.
       </>
     ),
     schemaQuestion: "Can I add my own file types in dotViewer?",
@@ -340,8 +340,26 @@ export default function HomePage() {
               </div>
 
               <h1 className={styles.heroTitle}>
-                Preview dotfiles, config files, markdown, logs, plain text, and
-                code in Quick Look.
+                Preview{" "}
+                <NoWhitespace>
+                  <span className={styles.code}>dotfiles</span>,{" "}
+                </NoWhitespace>{" "}
+                <NoWhitespace>
+                  <span className={styles.code}> config files</span>,
+                </NoWhitespace>{" "}
+                <NoWhitespace>
+                  <span className={styles.code}> markdown</span>,{" "}
+                </NoWhitespace>{" "}
+                <NoWhitespace>
+                  <span className={styles.code}> logs</span>,{" "}
+                </NoWhitespace>{" "}
+                <NoWhitespace>
+                  <span className={styles.code}> plain text</span>, and{" "}
+                </NoWhitespace>
+                <NoWhitespace>
+                  <span className={styles.code}> code</span>
+                </NoWhitespace>{" "}
+                in Quick Look.
               </h1>
 
               <p className={styles.heroBody}>
@@ -755,8 +773,8 @@ export default function HomePage() {
                   Most of it routes directly to dotViewer in Finder Quick Look,
                   but a small number of mappings still stay with macOS system
                   previewers and are marked inline. If a type is missing from
-                  that list, users will not be able to add it themselves until
-                  a future shipped dotViewer version includes it.
+                  that list, users will not be able to add it themselves until a
+                  future shipped dotViewer version includes it.
                 </p>
               </div>
 
@@ -837,13 +855,15 @@ export default function HomePage() {
                               <div className={styles.supportCaveatHeader}>
                                 <strong>{limitation.title}</strong>
                                 <div className={styles.supportCaveatTokens}>
-                                  {limitation.matchedExtensions.map((extension) => (
-                                    <code
-                                      key={`${type.id}-${limitation.id}-${extension}`}
-                                    >
-                                      .{extension}
-                                    </code>
-                                  ))}
+                                  {limitation.matchedExtensions.map(
+                                    (extension) => (
+                                      <code
+                                        key={`${type.id}-${limitation.id}-${extension}`}
+                                      >
+                                        .{extension}
+                                      </code>
+                                    ),
+                                  )}
                                 </div>
                               </div>
                               <p>{limitation.summary}</p>

@@ -207,10 +207,17 @@
 .heroTitle {
   max-width: 940px;
   margin: 26px auto 0;
-  font-size: clamp(45px, 6vw, 72px);
-  line-height: 0.93;
+  font-size: clamp(45px, 5.5vw, 60px);
+  line-height: 1.5;
   letter-spacing: -0.08em;
   font-weight: 900;
+
+  .code {
+    font-size: inherit;
+    position: relative;
+    color: var(--accent);
+    white-space: nowrap;
+  }
 }
 
 .heroBody {

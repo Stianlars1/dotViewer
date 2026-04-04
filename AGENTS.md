@@ -338,3 +338,11 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `node` verification against the shared support-checker logic + live `DefaultFileTypes.json` confirmed: `ts` → `TypeScript` + `typescript-ts` limitation, `index.html` → `HTML` + `html-native-preview` limitation, `.cue` → exact supported match with no limitation, `typescript` → supported type match with `.ts` caveat carried on the record
   - `curl -s http://127.0.0.1:3303/` grep checks for the support-checker intro copy and “already ships today” accordion wording → pass
 - Follow-ups: Playwright browser automation was unavailable in this environment because the MCP browser could not create its working directory, so final interaction verification here relied on code review, shared-logic execution, and rendered HTML checks instead of browser-driven typing.
+
+### Remember-last preview size research
+- Outcome: Researched the requested “remember the last manually resized Finder Quick Look window size” flow. Conclusion: this is not available in dotViewer’s current data-based `QLPreviewReply(contentSize:)` architecture because Apple only exposes an initial size hint there, not the final resized panel frame. The only plausible path is a separate feasibility spike that migrates the preview extension to a view-based `QLPreviewingController` and verifies whether Finder-hosted resize notifications plus `preferredContentSize` restoration actually work.
+- Files: `docs/research/remember-last-preview-window-size-research.md`, `AGENTS.md`
+- Verified:
+  - Reviewed current project config and preview path: `QLIsDataBasedPreview: true`, `PreviewProvider` -> `QLPreviewReply(contentSize:)`
+  - Verified official SDK headers for `QLPreviewReply`, `QLPreviewProvider`, `QLPreviewPanel`, `QLPreviewItem`, `NSViewController`, and `NSWindow`
+- Follow-ups: If you want to pursue this, do it as a Phase-0 spike only. Do not start by wiring a “save current size” button into the existing HTML/data-based preview path.
