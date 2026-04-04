@@ -11,6 +11,7 @@ import {
 } from "../lib/structured-data";
 import { getSiteConfig } from "../lib/site-config";
 import { BorderBeam } from "@stianlarsen/border-beam";
+import { NoWhitespace } from "../components/NoWhitespace";
 
 const heroMeta = [
   "One install",
@@ -40,8 +41,8 @@ const suiteBenefits = [
     body: (
       <>
         dotViewer covers markdown, config files, logs, dotfiles, plain text
-        documents, and <Code>source code</Code> in one package instead of
-        making you combine separate Quick Look tools.
+        documents, and <Code>source code</Code> in one package instead of making
+        you combine separate Quick Look tools.
       </>
     ),
   },
@@ -52,8 +53,7 @@ const suiteBenefits = [
         Open <Code>.gitignore</Code>, <Code>.env</Code>, README files,{" "}
         <Code>shell scripts</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
         <Code>XML</Code>, and <Code>source code</Code> directly in Finder Quick
-        Look instead of bouncing into editors and <Code>Terminal</Code>{" "}
-        windows.
+        Look instead of bouncing into editors and <Code>Terminal</Code> windows.
       </>
     ),
   },
@@ -74,11 +74,10 @@ const comparisonPoints = [
     content: (
       <>
         Preview common developer files such as <Code>.gitignore</Code>,{" "}
-        <Code>.env</Code>, <Code>.editorconfig</Code>,{" "}
-        <Code>README.md</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
-        <Code>XML</Code>, <Code>INI</Code>, <Code>shell scripts</Code>,{" "}
-        <Code>log files</Code>, and <Code>source code</Code> from the same
-        Quick Look flow.
+        <Code>.env</Code>, <Code>.editorconfig</Code>, <Code>README.md</Code>,{" "}
+        <Code>JSON</Code>, <Code>YAML</Code>, <Code>XML</Code>, <Code>INI</Code>
+        , <Code>shell scripts</Code>, <Code>log files</Code>, and{" "}
+        <Code>source code</Code> from the same Quick Look flow.
       </>
     ),
   },
@@ -132,8 +131,8 @@ const installSteps = [
         <Link className={styles.inlineLink} href="/download">
           <Code>/download</Code>
         </Link>{" "}
-        page and you always land on the current installer, checksum, and
-        version history without hunting through release assets manually.
+        page and you always land on the current installer, checksum, and version
+        history without hunting through release assets manually.
       </>
     ),
   },
@@ -177,9 +176,9 @@ const faqs = [
       <>
         Yes. The app is designed around exactly that workflow, including common
         files such as <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
-        <Code>.editorconfig</Code>, <Code>package.json</Code>,{" "}
-        <Code>YAML</Code>, <Code>XML</Code>, <Code>plist</Code>,{" "}
-        <Code>log files</Code>, and many other text-based formats.
+        <Code>.editorconfig</Code>, <Code>package.json</Code>, <Code>YAML</Code>
+        , <Code>XML</Code>, <Code>plist</Code>, <Code>log files</Code>, and many
+        other text-based formats.
       </>
     ),
     schemaQuestion:
@@ -235,8 +234,8 @@ const faqs = [
         Yes, but only for file types dotViewer already ships with routing
         support for. You can override highlighting for supported extensions and
         exact filenames in the app. Sorry, but dotViewer cannot teach macOS
-        Quick Look completely brand-new file types at runtime. If a file type
-        is not in the shipped support list, it needs a dotViewer update and a
+        Quick Look completely brand-new file types at runtime. If a file type is
+        not in the shipped support list, it needs a dotViewer update and a
         GitHub issue request.
       </>
     ),
@@ -338,8 +337,8 @@ export default function HomePage() {
               <p className={styles.heroBody}>
                 dotViewer turns Finder into a better technical file viewer.
                 Preview technical text files like <Code>.gitignore</Code>,{" "}
-                <Code>.env</Code>, and <Code>README.md</Code> without opening
-                a full editor for a quick check.
+                <Code>.env</Code>, and <Code>README.md</Code> without opening a
+                full editor for a quick check.
               </p>
 
               <p className={styles.heroBody}>
@@ -480,18 +479,38 @@ export default function HomePage() {
               <div className={styles.featureCopy}>
                 <div className={styles.storyKicker}>Code and config files</div>
                 <h3 className={styles.storyTitle}>
-                  Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
-                  <Code>shell scripts</Code>, <Code>XML</Code>, <Code>JSON</Code>,{" "}
-                  <Code>YAML</Code>, and <Code>source code</Code> with
-                  syntax-aware rendering.
+                  Preview{" "}
+                  <NoWhitespace>
+                    <Code>.gitignore</Code>,
+                  </NoWhitespace>{" "}
+                  <NoWhitespace>
+                    <Code>.env</Code>,
+                  </NoWhitespace>{" "}
+                  <NoWhitespace>
+                    <Code>shell scripts</Code>,
+                  </NoWhitespace>{" "}
+                  <NoWhitespace>
+                    <Code>XML</Code>,
+                  </NoWhitespace>{" "}
+                  <NoWhitespace>
+                    <Code>JSON</Code>,
+                  </NoWhitespace>{" "}
+                  <NoWhitespace>
+                    <Code>YAML</Code>,
+                  </NoWhitespace>{" "}
+                  and{" "}
+                  <NoWhitespace>
+                    <Code>source code</Code>
+                  </NoWhitespace>{" "}
+                  with syntax-aware rendering.
                 </h3>
                 <p className={styles.storyBody}>
                   dotViewer is made for the technical files Finder often handles
                   badly by default: <Code>source code</Code>,{" "}
-                  <Code>shell scripts</Code>, dotfiles, <Code>XML</Code>,
-                  config files, <Code>log files</Code>, and plain text
-                  documents. The preview stays in Quick Look, so a small
-                  inspection stays small.
+                  <Code>shell scripts</Code>, dotfiles, <Code>XML</Code>, config
+                  files, <Code>log files</Code>, and plain text documents. The
+                  preview stays in Quick Look, so a small inspection stays
+                  small.
                 </p>
               </div>
 
@@ -595,9 +614,8 @@ export default function HomePage() {
                 lets people switch between system-following themes, choose a
                 shared starting preview size across files, tune code and
                 markdown widths, control copy behavior, manage file types, and
-                inspect extension status. This is part of what makes the
-                product more useful than a narrow single-purpose preview
-                plugin.
+                inspect extension status. This is part of what makes the product
+                more useful than a narrow single-purpose preview plugin.
               </p>
             </div>
 
@@ -657,11 +675,10 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  Manage built-in and custom mappings for the{" "}
-                  {stats.fileTypes} shipped file types, {stats.extensions}{" "}
-                  routed extensions, and {stats.filenameMappings} exact
-                  filename mappings from the app instead of editing scattered
-                  plugin settings.
+                  Manage built-in and custom mappings for the {stats.fileTypes}{" "}
+                  shipped file types, {stats.extensions} routed extensions, and{" "}
+                  {stats.filenameMappings} exact filename mappings from the app
+                  instead of editing scattered plugin settings.
                 </figcaption>
               </figure>
 
@@ -719,8 +736,8 @@ export default function HomePage() {
                 <p className={styles.sectionBody}>
                   Everything in the accordion below is already routed today, so
                   users can override its highlighting or display mapping in the
-                  companion app. If a type is missing from that list, users
-                  will not be able to add it themselves until a future shipped
+                  companion app. If a type is missing from that list, users will
+                  not be able to add it themselves until a future shipped
                   dotViewer version includes it.
                 </p>
               </div>
