@@ -50,7 +50,7 @@
 
 .title {
   max-width: 760px;
-  margin: 18px 0 0;
+  margin: 18px auto 0;
   font-size: clamp(1.9rem, 2.8vw, 3rem);
   line-height: 0.98;
   letter-spacing: -0.06em;
