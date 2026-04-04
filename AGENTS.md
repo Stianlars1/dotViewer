@@ -310,3 +310,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`125 tests, 0 failures`)
   - `./scripts/dotviewer-refresh.sh --no-open` → pass
 - Follow-ups: If you later want true last-manual-size restoration, that needs a different design and likely host-side panel control rather than only the Quick Look extension’s initial `contentSize` hint.
+
+### Site copy refresh for shipped controls and file-type coverage
+- Outcome: Updated the public website copy to reflect the shipped system-following theme variants, the shared initial preview-size option, and the current built-in file-type coverage counts. The download page now also mentions the newer theme/file-mapping/preview-size controls instead of underselling the companion app.
+- Files: `site/app/page.tsx`, `site/app/download/page.tsx`, `site/lib/structured-data.ts`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 700/700 (100.0%)`)
+- Follow-ups: Internal engineering docs (`CLAUDE.md`, `KNOWN_ISSUES.md`, `BACKLOG.md`) still contain some pre-2026-04-03 file-type counts and can be normalized in a separate docs sweep if you want everything fully consistent.

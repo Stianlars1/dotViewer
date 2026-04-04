@@ -107,7 +107,8 @@ export default async function DownloadPage() {
             Get the notarized DMG for the Quick Look app that previews{" "}
             <Code>.gitignore</Code>, <Code>.env</Code>, markdown, config files,
             plain text documents, <Code>log files</Code>, and{" "}
-            <Code>source code</Code> in Finder. Use the button below to
+            <Code>source code</Code> in Finder, with companion-app controls for
+            themes, file mappings, and preview sizing. Use the button below to
             download the current release.
           </p>
           <p className={styles.body}>
@@ -200,7 +201,8 @@ export default async function DownloadPage() {
               <p>
                 Dotfiles, config files, markdown, <Code>log files</Code>, plain
                 text documents, and <Code>source code</Code> in Finder Quick
-                Look.
+                Look, with system-following themes and a shared initial preview
+                size when you want a steadier window.
               </p>
             </div>
             <div className={styles.sideItem}>

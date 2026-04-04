@@ -12,9 +12,9 @@ const APP_DESCRIPTION =
 const FEATURE_LIST = [
   "Preview dotfiles, config files, logs, plain text documents, and source code in Finder Quick Look.",
   "Read markdown in RAW mode or rendered mode with an optional table of contents.",
-  "Use built-in themes, font sizing, width controls, word wrap, and line number options.",
+  "Use system-following theme choices, initial preview window sizing, font sizing, width controls, word wrap, and line number options.",
   "Configure copy behavior for Quick Look selection workflows.",
-  "Manage file type mappings from the companion macOS app.",
+  "Manage built-in and custom file type mappings from the companion macOS app.",
 ];
 
 const SCREENSHOT_PATHS = [

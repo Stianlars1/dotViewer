@@ -59,7 +59,7 @@ const suiteBenefits = [
   },
   {
     title: "Real controls built into the app",
-    body: "Themes, width, copy behavior, markdown defaults, file type mappings, and status live in the companion app that ships with the extension.",
+    body: "System-following themes, initial preview size, width, copy behavior, markdown defaults, file type mappings, and status live in the companion app that ships with the extension.",
   },
 ];
 
@@ -90,7 +90,7 @@ const comparisonPoints = [
   {
     id: "built-in-controls",
     content:
-      "Tune themes, line numbers, width, copy behavior, file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
+      "Tune system-following themes, initial preview size, line numbers, width, copy behavior, file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
   },
 ];
 
@@ -222,10 +222,10 @@ const faqs = [
     id: "tuning",
     question: "Can I tune the preview and app UI?",
     answer:
-      "Yes. dotViewer includes built-in themes, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+      "Yes. dotViewer includes system-following theme choices, initial preview window sizing, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
     schemaQuestion: "Can I tune the preview and app UI?",
     schemaAnswer:
-      "Yes. dotViewer includes built-in themes, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+      "Yes. dotViewer includes system-following theme choices, initial preview window sizing, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
   },
 ];
 
@@ -570,10 +570,12 @@ export default function HomePage() {
               </h2>
               <p className={styles.sectionBody}>
                 dotViewer is not only a Quick Look extension. The companion app
-                lets people change themes, tune code and markdown widths,
-                control copy behavior, manage file types, and inspect extension
-                status. This is part of what makes the product more useful than
-                a narrow single-purpose preview plugin.
+                lets people switch between system-following themes, choose a
+                shared starting preview size across files, tune code and
+                markdown widths, control copy behavior, manage file types, and
+                inspect extension status. This is part of what makes the
+                product more useful than a narrow single-purpose preview
+                plugin.
               </p>
             </div>
 
@@ -587,8 +589,9 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Built-in themes including GitHub, <Code>Xcode</Code>,
-                  Solarized, Tokyo Night, and Blackout.
+                  Built-in themes include Atom One, GitHub, <Code>Xcode</Code>,
+                  and Solarized in system-following pairs, plus fixed dark
+                  themes such as Tokyo Night and Blackout.
                 </figcaption>
               </figure>
 
@@ -602,7 +605,8 @@ export default function HomePage() {
                 />
                 <figcaption>
                   Appearance controls for font size, app UI text size, line
-                  numbers, word wrap, and content width.
+                  numbers, word wrap, content width, and the initial Quick Look
+                  window size.
                 </figcaption>
               </figure>
 
@@ -631,8 +635,10 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  Manage built-in and custom file type mappings from the app
-                  instead of editing scattered plugin settings.
+                  Manage built-in and custom file type mappings across{" "}
+                  {stats.fileTypes} shipped file types, {stats.extensions}{" "}
+                  extensions, and {stats.filenameMappings} filename mappings
+                  from the app instead of editing scattered plugin settings.
                 </figcaption>
               </figure>
 
