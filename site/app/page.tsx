@@ -12,6 +12,7 @@ import {
 import { getSiteConfig } from "../lib/site-config";
 import { BorderBeam } from "@stianlarsen/border-beam";
 import { NoWhitespace } from "../components/NoWhitespace";
+import { SupportChecker } from "../components/support-checker";
 
 const heroMeta = [
   "One install",
@@ -231,23 +232,32 @@ const faqs = [
     question: "Can I add my own file types in dotViewer?",
     answer: (
       <>
-        Yes, but only for file types dotViewer already ships with routing
-        support for. You can override highlighting for supported extensions and
-        exact filenames in the app. Sorry, but dotViewer cannot teach macOS
-        Quick Look completely brand-new file types at runtime. If a file type is
-        not in the shipped support list, it needs a dotViewer update and a
+        Yes, but only for file types dotViewer already ships mappings for. You
+        can override highlighting for supported extensions and exact filenames
+        in the app, while a small number of shipped mappings still have
+        macOS-owned preview paths. Sorry, but dotViewer cannot teach macOS
+        Quick Look completely brand-new file types at runtime. If a file type
+        is not in the shipped support list, it needs a dotViewer update and a
         GitHub issue request.
       </>
     ),
     schemaQuestion: "Can I add my own file types in dotViewer?",
     schemaAnswer:
-      "Yes, but only for file types dotViewer already ships with routing support for. You can override highlighting for supported extensions and exact filenames in the app. dotViewer cannot teach macOS Quick Look completely brand-new file types at runtime. If a file type is not in the shipped support list, it needs a dotViewer update and a GitHub issue request.",
+      "Yes, but only for file types dotViewer already ships mappings for. You can override highlighting for supported extensions and exact filenames in the app, while a small number of shipped mappings still have macOS-owned preview paths. dotViewer cannot teach macOS Quick Look completely brand-new file types at runtime. If a file type is not in the shipped support list, it needs a dotViewer update and a GitHub issue request.",
   },
 ];
 
 export default function HomePage() {
   const stats = getProductStats();
   const supportedFileTypes = getSupportedFileTypes();
+  const routingCaveatCount = supportedFileTypes.reduce((count, type) => {
+    return (
+      count +
+      type.routingLimitations.reduce((total, limitation) => {
+        return total + limitation.matchedExtensions.length;
+      }, 0)
+    );
+  }, 0);
   const config = getSiteConfig();
   const releasesHref = config.releasesUrl ?? "#install";
   const repoHref = config.repoUrl ?? releasesHref;
@@ -346,6 +356,13 @@ export default function HomePage() {
                 native app. The screenshots below are from the real macOS
                 product, not a web-only mockup.
               </p>
+
+              <SupportChecker
+                issueRequestHref={issueRequestHref}
+                issuesHref={issuesHref}
+                stats={stats}
+                supportedFileTypes={supportedFileTypes}
+              />
 
               <div className={styles.heroActions}>
                 <Link className={styles.primaryAction} href="/download">
@@ -734,11 +751,12 @@ export default function HomePage() {
                   brand-new file types at runtime.
                 </p>
                 <p className={styles.sectionBody}>
-                  Everything in the accordion below is already routed today, so
-                  users can override its highlighting or display mapping in the
-                  companion app. If a type is missing from that list, users will
-                  not be able to add it themselves until a future shipped
-                  dotViewer version includes it.
+                  Everything in the accordion below is already shipped today.
+                  Most of it routes directly to dotViewer in Finder Quick Look,
+                  but a small number of mappings still stay with macOS system
+                  previewers and are marked inline. If a type is missing from
+                  that list, users will not be able to add it themselves until
+                  a future shipped dotViewer version includes it.
                 </p>
               </div>
 
@@ -765,10 +783,12 @@ export default function HomePage() {
 
               <details className={styles.supportAccordion}>
                 <summary>
-                  Everything dotViewer already routes today
+                  Everything dotViewer already ships today
                   <span>
                     {stats.fileTypes} file types • {stats.extensions} extensions
-                    • {stats.filenameMappings} filenames
+                    • {stats.filenameMappings} filenames • {routingCaveatCount}{" "}
+                    macOS routing caveat
+                    {routingCaveatCount === 1 ? "" : "s"} called out inline
                   </span>
                 </summary>
                 <div className={styles.supportList}>
@@ -803,6 +823,31 @@ export default function HomePage() {
                             <code key={`${type.displayName}-file-${filename}`}>
                               {filename}
                             </code>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {type.routingLimitations.length > 0 ? (
+                        <div className={styles.supportCaveats}>
+                          {type.routingLimitations.map((limitation) => (
+                            <div
+                              className={styles.supportCaveat}
+                              key={`${type.id}-${limitation.id}`}
+                            >
+                              <div className={styles.supportCaveatHeader}>
+                                <strong>{limitation.title}</strong>
+                                <div className={styles.supportCaveatTokens}>
+                                  {limitation.matchedExtensions.map((extension) => (
+                                    <code
+                                      key={`${type.id}-${limitation.id}-${extension}`}
+                                    >
+                                      .{extension}
+                                    </code>
+                                  ))}
+                                </div>
+                              </div>
+                              <p>{limitation.summary}</p>
+                            </div>
                           ))}
                         </div>
                       ) : null}
