@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 type FileTypeEntry = {
+  displayName?: string;
   extensions?: string[];
   filenames?: string[];
 };
@@ -12,6 +13,14 @@ export type ProductStats = {
   fileTypes: number;
   filenameMappings: number;
   grammars: number;
+};
+
+export type SupportedFileTypeRecord = {
+  id: string;
+  displayName: string;
+  extensions: string[];
+  filenames: string[];
+  mappingCount: number;
 };
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
@@ -56,4 +65,33 @@ export function getProductStats(): ProductStats {
     filenameMappings: filenames.size,
     grammars: safeCountScmFiles(treeSitterQueriesPath),
   };
+}
+
+export function getSupportedFileTypes(): SupportedFileTypeRecord[] {
+  const entries = safeReadJson(defaultFileTypesPath);
+
+  return entries
+    .map((entry) => {
+      const extensions = [...new Set((entry.extensions ?? []).map((value) => value.toLowerCase()))].sort();
+      const filenames = [...new Set((entry.filenames ?? []).map((value) => value.toLowerCase()))].sort();
+      const displayName = entry.displayName?.trim() || "Unnamed file type";
+
+      return {
+        id: `${displayName}__${extensions.join(",")}__${filenames.join(",")}`,
+        displayName,
+        extensions,
+        filenames,
+        mappingCount: extensions.length + filenames.length,
+      };
+    })
+    .sort((left, right) => {
+      const nameOrder = left.displayName.localeCompare(right.displayName, undefined, {
+        sensitivity: "base",
+      });
+      if (nameOrder !== 0) {
+        return nameOrder;
+      }
+
+      return right.mappingCount - left.mappingCount;
+    });
 }

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
-import { getProductStats } from "../lib/product-stats";
+import { getProductStats, getSupportedFileTypes } from "../lib/product-stats";
 import {
   buildHomeSchema,
   CREATOR_NAME,
@@ -59,7 +59,7 @@ const suiteBenefits = [
   },
   {
     title: "Real controls built into the app",
-    body: "System-following themes, initial preview size, width, copy behavior, markdown defaults, file type mappings, and status live in the companion app that ships with the extension.",
+    body: "System-following themes, initial preview size, width, copy behavior, markdown defaults, supported file mappings, and status live in the companion app that ships with the extension.",
   },
 ];
 
@@ -90,7 +90,7 @@ const comparisonPoints = [
   {
     id: "built-in-controls",
     content:
-      "Tune system-following themes, initial preview size, line numbers, width, copy behavior, file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
+      "Tune system-following themes, initial preview size, line numbers, width, copy behavior, supported file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.",
   },
 ];
 
@@ -227,13 +227,35 @@ const faqs = [
     schemaAnswer:
       "Yes. dotViewer includes system-following theme choices, initial preview window sizing, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
   },
+  {
+    id: "custom-mappings",
+    question: "Can I add my own file types in dotViewer?",
+    answer: (
+      <>
+        Yes, but only for file types dotViewer already ships with routing
+        support for. You can override highlighting for supported extensions and
+        exact filenames in the app. Sorry, but dotViewer cannot teach macOS
+        Quick Look completely brand-new file types at runtime. If a file type
+        is not in the shipped support list, it needs a dotViewer update and a
+        GitHub issue request.
+      </>
+    ),
+    schemaQuestion: "Can I add my own file types in dotViewer?",
+    schemaAnswer:
+      "Yes, but only for file types dotViewer already ships with routing support for. You can override highlighting for supported extensions and exact filenames in the app. dotViewer cannot teach macOS Quick Look completely brand-new file types at runtime. If a file type is not in the shipped support list, it needs a dotViewer update and a GitHub issue request.",
+  },
 ];
 
 export default function HomePage() {
   const stats = getProductStats();
+  const supportedFileTypes = getSupportedFileTypes();
   const config = getSiteConfig();
   const releasesHref = config.releasesUrl ?? "#install";
   const repoHref = config.repoUrl ?? releasesHref;
+  const issuesHref = config.repoUrl ? `${config.repoUrl}/issues` : repoHref;
+  const issueRequestHref = config.repoUrl
+    ? `${config.repoUrl}/issues/new?title=${encodeURIComponent("File type support: ")}`
+    : repoHref;
   const schema = buildHomeSchema(
     config,
     stats,
@@ -635,10 +657,11 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  Manage built-in and custom file type mappings across{" "}
+                  Manage built-in and custom mappings for the{" "}
                   {stats.fileTypes} shipped file types, {stats.extensions}{" "}
-                  extensions, and {stats.filenameMappings} filename mappings
-                  from the app instead of editing scattered plugin settings.
+                  routed extensions, and {stats.filenameMappings} exact
+                  filename mappings from the app instead of editing scattered
+                  plugin settings.
                 </figcaption>
               </figure>
 
@@ -679,6 +702,97 @@ export default function HomePage() {
                   <li key={item.id}>{item.content}</li>
                 ))}
               </ul>
+            </div>
+
+            <div className={styles.mappingPanel}>
+              <div className={styles.sectionIntro}>
+                <div className={styles.kicker}>Custom mappings</div>
+                <h2 className={styles.sectionTitle}>
+                  Be explicit about what users can map themselves.
+                </h2>
+                <p className={styles.sectionBody}>
+                  dotViewer does support custom mappings in the app, but only
+                  for file types the shipped extension already routes. Sorry,
+                  but dotViewer cannot teach macOS Quick Look completely
+                  brand-new file types at runtime.
+                </p>
+                <p className={styles.sectionBody}>
+                  Everything in the accordion below is already routed today, so
+                  users can override its highlighting or display mapping in the
+                  companion app. If a type is missing from that list, users
+                  will not be able to add it themselves until a future shipped
+                  dotViewer version includes it.
+                </p>
+              </div>
+
+              <div className={styles.mappingCallout}>
+                <p>
+                  Currently shipped coverage: <strong>{stats.fileTypes}</strong>{" "}
+                  file types, <strong>{stats.extensions}</strong> extensions,
+                  and <strong>{stats.filenameMappings}</strong> exact filename
+                  mappings.
+                </p>
+                <p>
+                  If you need something outside that list, please open a GitHub
+                  issue so it can be added to a future release.
+                </p>
+                <div className={styles.mappingActions}>
+                  <a className={styles.primaryAction} href={issueRequestHref}>
+                    Request file type support
+                  </a>
+                  <a className={styles.secondaryAction} href={issuesHref}>
+                    View support issues
+                  </a>
+                </div>
+              </div>
+
+              <details className={styles.supportAccordion}>
+                <summary>
+                  Everything dotViewer already routes today
+                  <span>
+                    {stats.fileTypes} file types • {stats.extensions} extensions
+                    • {stats.filenameMappings} filenames
+                  </span>
+                </summary>
+                <div className={styles.supportList}>
+                  {supportedFileTypes.map((type) => (
+                    <article className={styles.supportItem} key={type.id}>
+                      <div className={styles.supportItemHeader}>
+                        <h3>{type.displayName}</h3>
+                        <p>
+                          {type.extensions.length} extension
+                          {type.extensions.length === 1 ? "" : "s"}
+                          {type.filenames.length > 0
+                            ? ` • ${type.filenames.length} exact filename${
+                                type.filenames.length === 1 ? "" : "s"
+                              }`
+                            : ""}
+                        </p>
+                      </div>
+
+                      {type.extensions.length > 0 ? (
+                        <div className={styles.tokenGroup}>
+                          {type.extensions.map((extension) => (
+                            <code key={`${type.displayName}-ext-${extension}`}>
+                              .{extension}
+                            </code>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {type.filenames.length > 0 ? (
+                        <div className={styles.tokenGroup}>
+                          {type.filenames.map((filename) => (
+                            <code key={`${type.displayName}-file-${filename}`}>
+                              {filename}
+                            </code>
+                          ))}
+                        </div>
+                      ) : null}
+                    </article>
+                  ))}
+                </div>
+              </details>
             </div>
           </section>
 

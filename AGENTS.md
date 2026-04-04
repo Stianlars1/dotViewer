@@ -319,3 +319,12 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run build` → pass
   - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 700/700 (100.0%)`)
 - Follow-ups: Internal engineering docs (`CLAUDE.md`, `KNOWN_ISSUES.md`, `BACKLOG.md`) still contain some pre-2026-04-03 file-type counts and can be normalized in a separate docs sweep if you want everything fully consistent.
+
+### Website custom-mapping limits and support list
+- Outcome: Tightened the public site copy so it now says users can only add mappings for file types dotViewer already routes, apologizes for the macOS Quick Look limitation around brand-new runtime file types, links directly to GitHub issue creation for new support requests, and adds an accordion listing every shipped routed file type plus its extensions and exact filename mappings.
+- Files: `site/app/page.tsx`, `site/app/page.module.css`, `site/app/download/page.tsx`, `site/lib/product-stats.ts`, `site/lib/structured-data.ts`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `curl -s http://127.0.0.1:3300/` grep checks for custom-mapping limitation copy, GitHub issue CTA, and support accordion content → pass
+- Follow-ups: Deploy the updated `site/` build when you want production to show the new limitation copy and full support list.
