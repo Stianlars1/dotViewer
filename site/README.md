@@ -6,18 +6,18 @@
 [![GitHub downloads](https://img.shields.io/github/downloads/Stianlars1/dotViewer/total?style=for-the-badge)](https://github.com/Stianlars1/dotViewer/releases)
 [![macOS](https://img.shields.io/badge/macOS-15%2B-black?style=for-the-badge&logo=apple)](https://dotviewer.app/download)
 
-Marketing site and public download handoff for [dotViewer](https://dotviewer.app), the macOS Quick Look app for dotfiles, config files, markdown, plain text documents, logs, and source code.
+Marketing site and install chooser for [dotViewer](https://dotviewer.app), the macOS Quick Look app for dotfiles, config files, markdown, CSV/TSV data, man pages, plain text documents, logs, executable scripts, and source code.
 
-The site is intentionally product-led. It uses real app screenshots, links directly to the public download flow, and keeps the release history in sync with GitHub Releases.
+The site is intentionally product-led. It uses real app screenshots, links directly to the public install flow, and keeps the release history in sync with GitHub Releases.
 
 Created by [Stian Larsen](https://stianlarsen.com). Also worth a look: [dbHost](https://dbhost.app), a free PostgreSQL database management app from the same creator.
 
 ## What This Site Covers
 
 - The homepage positions dotViewer as the all-in-one Quick Look upgrade for technical files on macOS.
-- The `/download` page acts as the stable public install URL while the actual DMG changes release to release.
+- The `/download` page acts as the stable public install chooser for the free direct DMG and the paid App Store route while the actual DMG changes release to release.
 - The version history is fetched from GitHub Releases, so the website does not need a separate manual release archive.
-- Structured data, sitemap, robots, metadata, and internal links are tuned around Finder preview search intent and direct download discovery.
+- Structured data, sitemap, robots, metadata, and internal links are tuned around Finder preview search intent and install discovery.
 
 ## Why The Positioning Matters
 
@@ -26,7 +26,7 @@ The core product story is not just "preview code."
 dotViewer is better positioned as:
 
 - one install instead of separate markdown, code, and plain-text Quick Look plugins
-- a Finder-native way to preview `.gitignore`, `.env`, `README.md`, JSON, YAML, XML, plist, logs, shell scripts, and other technical files
+- a Finder-native way to preview `.gitignore`, `.env`, `README.md`, JSON, YAML, XML, TSV, man pages, executable scripts, plist, logs, shell scripts, and other technical files
 - a calmer alternative to opening VS Code, Xcode, Typora, or Terminal for every tiny file check
 
 That is why the site copy repeatedly emphasizes:
@@ -34,6 +34,9 @@ That is why the site copy repeatedly emphasizes:
 - dotfiles
 - config files
 - markdown
+- TSV and CSV data
+- man pages
+- executable scripts
 - plain text documents
 - logs
 - source code
@@ -64,7 +67,7 @@ That is why the site copy repeatedly emphasizes:
 
 ## Analytics Stack
 
-The site now tracks traffic and installer intent in three layers:
+The site now tracks traffic and install intent in three layers:
 
 - Vercel Analytics, mounted once in the root layout through `@vercel/analytics/next`
 - Google Analytics / Google tag, enabled only when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is present
@@ -73,7 +76,7 @@ The site now tracks traffic and installer intent in three layers:
 Tracked first-party events:
 
 - Page views for route changes, including `path`, `url`, `title`, `referrer`, `visitor_id`, `session_id`, geo headers, and UTM fields
-- Download events for checksum clicks, release-history DMG clicks, and stable `/download/latest` redirects, including `source`, `release_tag`, `asset_kind`, and target URL
+- Install-intent events for checksum clicks, release-history DMG clicks, stable `/download/latest` redirects, and App Store CTA clicks, including `source`, `release_tag`, `asset_kind`, and target URL
 
 Relevant implementation files:
 
@@ -108,6 +111,8 @@ npm run build
 | `NEXT_PUBLIC_GITHUB_REPO` | Optional override | Public repo slug fallback for client-visible config |
 | `GITHUB_TOKEN` | Optional | Raises GitHub API rate limits for release fetches |
 | `DIRECT_DOWNLOAD_URL` | Optional override | Forces the download CTA to a specific installer URL |
+| `APP_STORE_URL` | Optional override | App Store URL used for the paid channel CTA |
+| `NEXT_PUBLIC_APP_STORE_URL` | Optional public override | Client-visible fallback for the same App Store URL |
 | `DATABASE_URL` | Required for first-party analytics persistence | PostgreSQL connection string used by Drizzle and the runtime analytics route |
 | `NEXT_PUBLIC_GOOGLE_TAG_ID` | Optional | Google tag / GA measurement ID (`G-...` or `GT-...`) for client-side Google tracking |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional legacy alias | Backward-compatible alias for the same Google tag ID |
@@ -164,9 +169,9 @@ The site resolves the latest macOS installer in this order:
 2. `GITHUB_REPO` or the built-in `Stianlars1/dotViewer` default via GitHub Releases
 3. Vercel Git environment variables: `VERCEL_GIT_REPO_OWNER` and `VERCEL_GIT_REPO_SLUG`
 
-Public download behavior:
+Public install behavior:
 
-- `/download` is the human-facing landing page with release-aware copy and version history
+- `/download` is the human-facing landing page with release-aware copy, the free direct DMG CTA, the paid App Store CTA, and version history
 - `/download/latest` is the stable machine-friendly redirect to the current installer
 
 ## Release Flow

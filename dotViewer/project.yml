@@ -64,6 +64,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - "2"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.29k
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 29k
           - UTTypeIdentifier: com.stianlars1.dotviewer.3
             UTTypeDescription: Man Page
             UTTypeConformsTo:
@@ -78,6 +85,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - "4"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.4gl
+            UTTypeDescription: Informix
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 4gl
           - UTTypeIdentifier: com.stianlars1.dotviewer.5
             UTTypeDescription: Man Page
             UTTypeConformsTo:
@@ -92,6 +106,20 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - "6"
+          - UTTypeIdentifier: com.stianlars1.dotviewer.68s
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 68s
+          - UTTypeIdentifier: com.stianlars1.dotviewer.68x
+            UTTypeDescription: Generic Assembler
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - 68x
           - UTTypeIdentifier: com.stianlars1.dotviewer.7
             UTTypeDescription: Man Page
             UTTypeConformsTo:
@@ -113,34 +141,6 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - "9"
-          - UTTypeIdentifier: com.stianlars1.dotviewer.29k
-            UTTypeDescription: Generic Assembler
-            UTTypeConformsTo:
-              - public.plain-text
-            UTTypeTagSpecification:
-              public.filename-extension:
-                - 29k
-          - UTTypeIdentifier: com.stianlars1.dotviewer.4gl
-            UTTypeDescription: Informix
-            UTTypeConformsTo:
-              - public.plain-text
-            UTTypeTagSpecification:
-              public.filename-extension:
-                - 4gl
-          - UTTypeIdentifier: com.stianlars1.dotviewer.68s
-            UTTypeDescription: Generic Assembler
-            UTTypeConformsTo:
-              - public.plain-text
-            UTTypeTagSpecification:
-              public.filename-extension:
-                - 68s
-          - UTTypeIdentifier: com.stianlars1.dotviewer.68x
-            UTTypeDescription: Generic Assembler
-            UTTypeConformsTo:
-              - public.plain-text
-            UTTypeTagSpecification:
-              public.filename-extension:
-                - 68x
           - UTTypeIdentifier: com.stianlars1.dotviewer.a
             UTTypeDescription: ADA95
             UTTypeConformsTo:
@@ -213,6 +213,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - ado
+          - UTTypeIdentifier: com.stianlars1.dotviewer.adoc
+            UTTypeDescription: AsciiDoc
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - adoc
           - UTTypeIdentifier: com.stianlars1.dotviewer.agda
             UTTypeDescription: Agda
             UTTypeConformsTo:
@@ -299,6 +306,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - as400cl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.asciidoc
+            UTTypeDescription: AsciiDoc
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - asciidoc
           - UTTypeIdentifier: com.stianlars1.dotviewer.ascx
             UTTypeDescription: Active Server Pages
             UTTypeConformsTo:
@@ -348,6 +362,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - avenue
+          - UTTypeIdentifier: com.stianlars1.dotviewer.awk
+            UTTypeDescription: (G)AWK
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - awk
           - UTTypeIdentifier: com.stianlars1.dotviewer.b
             UTTypeDescription: Limbo
             UTTypeConformsTo:
@@ -505,6 +527,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - bi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.bib
+            UTTypeDescription: BibTeX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - bib
           - UTTypeIdentifier: com.stianlars1.dotviewer.bms
             UTTypeDescription: BM Script
             UTTypeConformsTo:
@@ -613,13 +642,6 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - cfc
-          - UTTypeIdentifier: com.stianlars1.dotviewer.cfg
-            UTTypeDescription: INI
-            UTTypeConformsTo:
-              - public.plain-text
-            UTTypeTagSpecification:
-              public.filename-extension:
-                - cfg
           - UTTypeIdentifier: com.stianlars1.dotviewer.cfignore
             UTTypeDescription: Dev Ignore Files
             UTTypeConformsTo:
@@ -755,6 +777,30 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - clisp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.clj
+            UTTypeDescription: Clojure
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - clj
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cljc
+            UTTypeDescription: Clojure
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cljc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cljs
+            UTTypeDescription: Clojure
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cljs
           - UTTypeIdentifier: com.stianlars1.dotviewer.clp
             UTTypeDescription: Clips
             UTTypeConformsTo:
@@ -762,6 +808,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - clp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cls
+            UTTypeDescription: TeX and LaTeX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cls
           - UTTypeIdentifier: com.stianlars1.dotviewer.cmake
             UTTypeDescription: CMake
             UTTypeConformsTo:
@@ -815,6 +868,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - comp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.conf
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - conf
           - UTTypeIdentifier: com.stianlars1.dotviewer.containerignore
             UTTypeDescription: Docker Ignore
             UTTypeConformsTo:
@@ -860,6 +920,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - crk
+          - UTTypeIdentifier: com.stianlars1.dotviewer.cs
+            UTTypeDescription: C#
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - cs
           - UTTypeIdentifier: com.stianlars1.dotviewer.cshtml
             UTTypeDescription: Razor (C#/HTML)
             UTTypeConformsTo:
@@ -917,6 +985,22 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - cursorrules
+          - UTTypeIdentifier: com.stianlars1.dotviewer.d
+            UTTypeDescription: D
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - d
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dart
+            UTTypeDescription: Dart
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dart
           - UTTypeIdentifier: com.stianlars1.dotviewer.dat
             UTTypeDescription: AMPL
             UTTypeConformsTo:
@@ -1333,6 +1417,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - firebaserc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.fish
+            UTTypeDescription: Fish
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - fish
           - UTTypeIdentifier: com.stianlars1.dotviewer.flake8
             UTTypeDescription: Python Lint Config
             UTTypeConformsTo:
@@ -1375,6 +1467,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - fpp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.frag
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - frag
           - UTTypeIdentifier: com.stianlars1.dotviewer.frink
             UTTypeDescription: Frink
             UTTypeConformsTo:
@@ -1474,6 +1574,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gemspec
+          - UTTypeIdentifier: com.stianlars1.dotviewer.geom
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - geom
           - UTTypeIdentifier: com.stianlars1.dotviewer.gitattributes
             UTTypeDescription: Git Config
             UTTypeConformsTo:
@@ -1555,6 +1663,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gleam
+          - UTTypeIdentifier: com.stianlars1.dotviewer.glsl
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - glsl
           - UTTypeIdentifier: com.stianlars1.dotviewer.gnad
             UTTypeDescription: ADA95
             UTTypeConformsTo:
@@ -1570,6 +1686,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gnumakefile
+          - UTTypeIdentifier: com.stianlars1.dotviewer.go
+            UTTypeDescription: Go
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - go
           - UTTypeIdentifier: com.stianlars1.dotviewer.go_version
             UTTypeDescription: Version Manager Files
             UTTypeConformsTo:
@@ -1705,6 +1829,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - helmignore
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hlsl
+            UTTypeDescription: HLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hlsl
           - UTTypeIdentifier: com.stianlars1.dotviewer.hnd
             UTTypeDescription: AMTrix
             UTTypeConformsTo:
@@ -1720,6 +1852,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - hrl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.hs
+            UTTypeDescription: Haskell
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - hs
           - UTTypeIdentifier: com.stianlars1.dotviewer.htaccess
             UTTypeDescription: Apache Config
             UTTypeConformsTo:
@@ -1840,6 +1980,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - inf
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ini
+            UTTypeDescription: INI
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ini
           - UTTypeIdentifier: com.stianlars1.dotviewer.inp
             UTTypeDescription: Charmm
             UTTypeConformsTo:
@@ -1891,6 +2038,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - j
+          - UTTypeIdentifier: com.stianlars1.dotviewer.java
+            UTTypeDescription: Java
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - java
           - UTTypeIdentifier: com.stianlars1.dotviewer.jbuilder
             UTTypeDescription: Ruby
             UTTypeConformsTo:
@@ -1914,6 +2069,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - jinja
+          - UTTypeIdentifier: com.stianlars1.dotviewer.jl
+            UTTypeDescription: Julia
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - jl
           - UTTypeIdentifier: com.stianlars1.dotviewer.jnlp
             UTTypeDescription: XML
             UTTypeConformsTo:
@@ -1921,6 +2084,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - jnlp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.js
+            UTTypeDescription: Javascript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - js
           - UTTypeIdentifier: com.stianlars1.dotviewer.js_regex
             UTTypeDescription: Javascript Regex
             UTTypeConformsTo:
@@ -1986,6 +2157,22 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - kml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.kt
+            UTTypeDescription: Kotlin
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - kt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.kts
+            UTTypeDescription: Kotlin
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - kts
           - UTTypeIdentifier: com.stianlars1.dotviewer.latex
             UTTypeDescription: TeX and LaTeX
             UTTypeConformsTo:
@@ -2021,6 +2208,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - lgt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lhs
+            UTTypeDescription: Haskell LHS
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lhs
           - UTTypeIdentifier: com.stianlars1.dotviewer.lintstagedrc
             UTTypeDescription: Project RC Files
             UTTypeConformsTo:
@@ -2094,6 +2288,22 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - lsl
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lsp
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lsp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.lua
+            UTTypeDescription: Lua
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - lua
           - UTTypeIdentifier: com.stianlars1.dotviewer.ly
             UTTypeDescription: Lilypond
             UTTypeConformsTo:
@@ -2123,6 +2333,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - mailmap
+          - UTTypeIdentifier: com.stianlars1.dotviewer.man
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - man
           - UTTypeIdentifier: com.stianlars1.dotviewer.map
             UTTypeDescription: JSON
             UTTypeConformsTo:
@@ -2130,6 +2347,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - map
+          - UTTypeIdentifier: com.stianlars1.dotviewer.markdown
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - markdown
           - UTTypeIdentifier: com.stianlars1.dotviewer.markdownlintrc
             UTTypeDescription: Markdown Lint Config
             UTTypeConformsTo:
@@ -2151,6 +2375,41 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - mbox
+          - UTTypeIdentifier: com.stianlars1.dotviewer.md
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - md
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mdoc
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mdoc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mdown
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mdown
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mdtxt
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mdtxt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mdx
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mdx
           - UTTypeIdentifier: com.stianlars1.dotviewer.mel
             UTTypeDescription: Maya
             UTTypeConformsTo:
@@ -2193,6 +2452,28 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - miranda
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mjs
+            UTTypeDescription: Javascript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mjs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mkd
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mkd
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mkdn
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mkdn
           - UTTypeIdentifier: com.stianlars1.dotviewer.ml
             UTTypeDescription: Objective Caml
             UTTypeConformsTo:
@@ -2246,6 +2527,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - mod
+          - UTTypeIdentifier: com.stianlars1.dotviewer.mojo
+            UTTypeDescription: Mojo
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - mojo
           - UTTypeIdentifier: com.stianlars1.dotviewer.moon
             UTTypeDescription: MoonScript
             UTTypeConformsTo:
@@ -2450,6 +2739,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - nrm
+          - UTTypeIdentifier: com.stianlars1.dotviewer.nroff
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - nroff
           - UTTypeIdentifier: com.stianlars1.dotviewer.nrx
             UTTypeDescription: NetRexx
             UTTypeConformsTo:
@@ -2557,6 +2853,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - opml
+          - UTTypeIdentifier: com.stianlars1.dotviewer.org
+            UTTypeDescription: Emacs Org-Mode
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - org
           - UTTypeIdentifier: com.stianlars1.dotviewer.orig
             UTTypeDescription: Backup File
             UTTypeConformsTo:
@@ -2897,6 +3200,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - pryrc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ps
+            UTTypeDescription: PostScript
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ps
           - UTTypeIdentifier: com.stianlars1.dotviewer.ps1
             UTTypeDescription: Microsoft PowerShell
             UTTypeConformsTo:
@@ -3043,6 +3353,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - q
+          - UTTypeIdentifier: com.stianlars1.dotviewer.qmd
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - qmd
           - UTTypeIdentifier: com.stianlars1.dotviewer.qml
             UTTypeDescription: QML
             UTTypeConformsTo:
@@ -3058,6 +3375,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - qu
+          - UTTypeIdentifier: com.stianlars1.dotviewer.r
+            UTTypeDescription: R
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - r
           - UTTypeIdentifier: com.stianlars1.dotviewer.rabl
             UTTypeDescription: Ruby
             UTTypeConformsTo:
@@ -3177,6 +3502,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - rkt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rmd
+            UTTypeDescription: Markdown
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rmd
           - UTTypeIdentifier: com.stianlars1.dotviewer.rnc
             UTTypeDescription: Relax NG
             UTTypeConformsTo:
@@ -3184,6 +3516,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - rnc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.roff
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - roff
           - UTTypeIdentifier: com.stianlars1.dotviewer.rpg
             UTTypeDescription: RPG
             UTTypeConformsTo:
@@ -3213,6 +3552,21 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - rpy
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rs
+            UTTypeDescription: Rust
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rs
+          - UTTypeIdentifier: com.stianlars1.dotviewer.rst
+            UTTypeDescription: reStructured Text
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - rst
           - UTTypeIdentifier: com.stianlars1.dotviewer.ruby
             UTTypeDescription: Ruby
             UTTypeConformsTo:
@@ -3329,6 +3683,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - scad
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scala
+            UTTypeDescription: Scala
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scala
           - UTTypeIdentifier: com.stianlars1.dotviewer.scanfile
             UTTypeDescription: Ruby
             UTTypeConformsTo:
@@ -3367,6 +3729,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - sci
+          - UTTypeIdentifier: com.stianlars1.dotviewer.scm
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - scm
           - UTTypeIdentifier: com.stianlars1.dotviewer.scom
             UTTypeDescription: Lisp
             UTTypeConformsTo:
@@ -3613,6 +3983,28 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - sq
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sql
+            UTTypeDescription: PL/SQL
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.srt
+            UTTypeDescription: SRT Subtitle
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - srt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ss
+            UTTypeDescription: Lisp
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ss
           - UTTypeIdentifier: com.stianlars1.dotviewer.st
             UTTypeDescription: Smalltalk
             UTTypeConformsTo:
@@ -3629,6 +4021,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - staging
+          - UTTypeIdentifier: com.stianlars1.dotviewer.sty
+            UTTypeDescription: TeX and LaTeX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - sty
           - UTTypeIdentifier: com.stianlars1.dotviewer.styl
             UTTypeDescription: Stylus
             UTTypeConformsTo:
@@ -3659,6 +4058,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - sum
+          - UTTypeIdentifier: com.stianlars1.dotviewer.svelte
+            UTTypeDescription: Svelte
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - svelte
           - UTTypeIdentifier: com.stianlars1.dotviewer.swcrc
             UTTypeDescription: SWC Config
             UTTypeConformsTo:
@@ -3712,6 +4118,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - test
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tex
+            UTTypeDescription: TeX and LaTeX
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tex
           - UTTypeIdentifier: com.stianlars1.dotviewer.tf
             UTTypeDescription: Terraform
             UTTypeConformsTo:
@@ -3801,6 +4214,21 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - trg
+          - UTTypeIdentifier: com.stianlars1.dotviewer.troff
+            UTTypeDescription: Man Page
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - troff
+          - UTTypeIdentifier: com.stianlars1.dotviewer.ts
+            UTTypeDescription: TypeScript
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - ts
           - UTTypeIdentifier: com.stianlars1.dotviewer.tsbuildinfo
             UTTypeDescription: Babel Config JS
             UTTypeConformsTo:
@@ -3816,6 +4244,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - tsql
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tsx
+            UTTypeDescription: TSX (TypeScript with React)
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tsx
           - UTTypeIdentifier: com.stianlars1.dotviewer.ttcn3
             UTTypeDescription: TTCN3
             UTTypeConformsTo:
@@ -3851,6 +4287,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - upc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.v
+            UTTypeDescription: Verilog
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - v
           - UTTypeIdentifier: com.stianlars1.dotviewer.vagrantfile
             UTTypeDescription: Ruby
             UTTypeConformsTo:
@@ -3890,6 +4334,22 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - vercelignore
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vert
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vert
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vhd
+            UTTypeDescription: VHDL
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vhd
           - UTTypeIdentifier: com.stianlars1.dotviewer.vhdl
             UTTypeDescription: VHDL
             UTTypeConformsTo:
@@ -3919,6 +4379,14 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - vimrc
+          - UTTypeIdentifier: com.stianlars1.dotviewer.vs
+            UTTypeDescription: GLSL Shader
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - vs
           - UTTypeIdentifier: com.stianlars1.dotviewer.vscodeignore
             UTTypeDescription: Dev Ignore Files
             UTTypeConformsTo:
@@ -4262,6 +4730,7 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - zshrc
+
     entitlements:
       path: App/dotViewer.entitlements
       properties:
@@ -4290,6 +4759,7 @@ targets:
     info:
       path: QuickLookExtension/Info.plist
       properties:
+        CFBundleDisplayName: dotViewer Preview
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
@@ -4347,6 +4817,7 @@ targets:
               - public.tcsh-script
               - public.text
               - public.toml
+              - public.unix-executable
               - public.xhtml
               - public.xml
               - public.yacc-source
@@ -4388,17 +4859,17 @@ targets:
               - com.netscape.javascript-source
               - com.stianlars1.dotviewer.1
               - com.stianlars1.dotviewer.2
+              - com.stianlars1.dotviewer.29k
               - com.stianlars1.dotviewer.3
               - com.stianlars1.dotviewer.4
+              - com.stianlars1.dotviewer.4gl
               - com.stianlars1.dotviewer.5
               - com.stianlars1.dotviewer.6
+              - com.stianlars1.dotviewer.68s
+              - com.stianlars1.dotviewer.68x
               - com.stianlars1.dotviewer.7
               - com.stianlars1.dotviewer.8
               - com.stianlars1.dotviewer.9
-              - com.stianlars1.dotviewer.29k
-              - com.stianlars1.dotviewer.4gl
-              - com.stianlars1.dotviewer.68s
-              - com.stianlars1.dotviewer.68x
               - com.stianlars1.dotviewer.a
               - com.stianlars1.dotviewer.a4c
               - com.stianlars1.dotviewer.a51
@@ -4409,6 +4880,7 @@ targets:
               - com.stianlars1.dotviewer.ac
               - com.stianlars1.dotviewer.acf
               - com.stianlars1.dotviewer.ado
+              - com.stianlars1.dotviewer.adoc
               - com.stianlars1.dotviewer.agda
               - com.stianlars1.dotviewer.ahk
               - com.stianlars1.dotviewer.alan
@@ -4421,6 +4893,7 @@ targets:
               - com.stianlars1.dotviewer.arm
               - com.stianlars1.dotviewer.as
               - com.stianlars1.dotviewer.as400cl
+              - com.stianlars1.dotviewer.asciidoc
               - com.stianlars1.dotviewer.ascx
               - com.stianlars1.dotviewer.ashx
               - com.stianlars1.dotviewer.asm
@@ -4428,6 +4901,7 @@ targets:
               - com.stianlars1.dotviewer.astro
               - com.stianlars1.dotviewer.au3
               - com.stianlars1.dotviewer.avenue
+              - com.stianlars1.dotviewer.awk
               - com.stianlars1.dotviewer.b
               - com.stianlars1.dotviewer.babelrc
               - com.stianlars1.dotviewer.backup
@@ -4449,6 +4923,7 @@ targets:
               - com.stianlars1.dotviewer.berksfile
               - com.stianlars1.dotviewer.bfr
               - com.stianlars1.dotviewer.bi
+              - com.stianlars1.dotviewer.bib
               - com.stianlars1.dotviewer.bms
               - com.stianlars1.dotviewer.bnd
               - com.stianlars1.dotviewer.bndrun
@@ -4464,7 +4939,6 @@ targets:
               - com.stianlars1.dotviewer.cbl
               - com.stianlars1.dotviewer.ceylon
               - com.stianlars1.dotviewer.cfc
-              - com.stianlars1.dotviewer.cfg
               - com.stianlars1.dotviewer.cfignore
               - com.stianlars1.dotviewer.cfm
               - com.stianlars1.dotviewer.cfusertextencoding
@@ -4483,7 +4957,11 @@ targets:
               - com.stianlars1.dotviewer.class
               - com.stianlars1.dotviewer.clipper
               - com.stianlars1.dotviewer.clisp
+              - com.stianlars1.dotviewer.clj
+              - com.stianlars1.dotviewer.cljc
+              - com.stianlars1.dotviewer.cljs
               - com.stianlars1.dotviewer.clp
+              - com.stianlars1.dotviewer.cls
               - com.stianlars1.dotviewer.cmake
               - com.stianlars1.dotviewer.cmd
               - com.stianlars1.dotviewer.cob
@@ -4491,12 +4969,14 @@ targets:
               - com.stianlars1.dotviewer.coffee
               - com.stianlars1.dotviewer.commitlintrc
               - com.stianlars1.dotviewer.comp
+              - com.stianlars1.dotviewer.conf
               - com.stianlars1.dotviewer.containerignore
               - com.stianlars1.dotviewer.coveragerc
               - com.stianlars1.dotviewer.cpy
               - com.stianlars1.dotviewer.cr
               - com.stianlars1.dotviewer.critic
               - com.stianlars1.dotviewer.crk
+              - com.stianlars1.dotviewer.cs
               - com.stianlars1.dotviewer.cshtml
               - com.stianlars1.dotviewer.csproj
               - com.stianlars1.dotviewer.cu
@@ -4504,6 +4984,8 @@ targets:
               - com.stianlars1.dotviewer.curlrc
               - com.stianlars1.dotviewer.cursorignore
               - com.stianlars1.dotviewer.cursorrules
+              - com.stianlars1.dotviewer.d
+              - com.stianlars1.dotviewer.dart
               - com.stianlars1.dotviewer.dat
               - com.stianlars1.dotviewer.dats
               - com.stianlars1.dotviewer.def
@@ -4560,12 +5042,14 @@ targets:
               - com.stianlars1.dotviewer.feature
               - com.stianlars1.dotviewer.ff
               - com.stianlars1.dotviewer.firebaserc
+              - com.stianlars1.dotviewer.fish
               - com.stianlars1.dotviewer.flake8
               - com.stianlars1.dotviewer.flowconfig
               - com.stianlars1.dotviewer.flx
               - com.stianlars1.dotviewer.fnc
               - com.stianlars1.dotviewer.fp
               - com.stianlars1.dotviewer.fpp
+              - com.stianlars1.dotviewer.frag
               - com.stianlars1.dotviewer.frink
               - com.stianlars1.dotviewer.fsharp
               - com.stianlars1.dotviewer.fsi
@@ -4579,6 +5063,7 @@ targets:
               - com.stianlars1.dotviewer.gemfile
               - com.stianlars1.dotviewer.gemrc
               - com.stianlars1.dotviewer.gemspec
+              - com.stianlars1.dotviewer.geom
               - com.stianlars1.dotviewer.gitattributes
               - com.stianlars1.dotviewer.gitblame_ignore_revs
               - com.stianlars1.dotviewer.gitconfig
@@ -4590,8 +5075,10 @@ targets:
               - com.stianlars1.dotviewer.gitmodules
               - com.stianlars1.dotviewer.glade
               - com.stianlars1.dotviewer.gleam
+              - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
@@ -4610,8 +5097,10 @@ targets:
               - com.stianlars1.dotviewer.hcl
               - com.stianlars1.dotviewer.hdr
               - com.stianlars1.dotviewer.helmignore
+              - com.stianlars1.dotviewer.hlsl
               - com.stianlars1.dotviewer.hnd
               - com.stianlars1.dotviewer.hrl
+              - com.stianlars1.dotviewer.hs
               - com.stianlars1.dotviewer.htaccess
               - com.stianlars1.dotviewer.htpasswd
               - com.stianlars1.dotviewer.httpd
@@ -4629,6 +5118,7 @@ targets:
               - com.stianlars1.dotviewer.iml
               - com.stianlars1.dotviewer.inc
               - com.stianlars1.dotviewer.inf
+              - com.stianlars1.dotviewer.ini
               - com.stianlars1.dotviewer.inp
               - com.stianlars1.dotviewer.inputrc
               - com.stianlars1.dotviewer.io
@@ -4636,10 +5126,13 @@ targets:
               - com.stianlars1.dotviewer.iss
               - com.stianlars1.dotviewer.itcl
               - com.stianlars1.dotviewer.j
+              - com.stianlars1.dotviewer.java
               - com.stianlars1.dotviewer.jbuilder
               - com.stianlars1.dotviewer.jenkinsfile
               - com.stianlars1.dotviewer.jinja
+              - com.stianlars1.dotviewer.jl
               - com.stianlars1.dotviewer.jnlp
+              - com.stianlars1.dotviewer.js
               - com.stianlars1.dotviewer.js_regex
               - com.stianlars1.dotviewer.jsm
               - com.stianlars1.dotviewer.json5
@@ -4649,11 +5142,14 @@ targets:
               - com.stianlars1.dotviewer.jsx
               - com.stianlars1.dotviewer.kdev3
               - com.stianlars1.dotviewer.kml
+              - com.stianlars1.dotviewer.kt
+              - com.stianlars1.dotviewer.kts
               - com.stianlars1.dotviewer.latex
               - com.stianlars1.dotviewer.lbn
               - com.stianlars1.dotviewer.ldif
               - com.stianlars1.dotviewer.less
               - com.stianlars1.dotviewer.lgt
+              - com.stianlars1.dotviewer.lhs
               - com.stianlars1.dotviewer.lintstagedrc
               - com.stianlars1.dotviewer.liquid
               - com.stianlars1.dotviewer.local
@@ -4664,20 +5160,32 @@ targets:
               - com.stianlars1.dotviewer.lottie
               - com.stianlars1.dotviewer.ls
               - com.stianlars1.dotviewer.lsl
+              - com.stianlars1.dotviewer.lsp
+              - com.stianlars1.dotviewer.lua
               - com.stianlars1.dotviewer.ly
               - com.stianlars1.dotviewer.m3
               - com.stianlars1.dotviewer.m4
               - com.stianlars1.dotviewer.mailmap
+              - com.stianlars1.dotviewer.man
               - com.stianlars1.dotviewer.map
+              - com.stianlars1.dotviewer.markdown
               - com.stianlars1.dotviewer.markdownlintrc
               - com.stianlars1.dotviewer.mat
               - com.stianlars1.dotviewer.mbox
+              - com.stianlars1.dotviewer.md
+              - com.stianlars1.dotviewer.mdoc
+              - com.stianlars1.dotviewer.mdown
+              - com.stianlars1.dotviewer.mdtxt
+              - com.stianlars1.dotviewer.mdx
               - com.stianlars1.dotviewer.mel
               - com.stianlars1.dotviewer.mercury
               - com.stianlars1.dotviewer.meson
               - com.stianlars1.dotviewer.mhl
               - com.stianlars1.dotviewer.mib
               - com.stianlars1.dotviewer.miranda
+              - com.stianlars1.dotviewer.mjs
+              - com.stianlars1.dotviewer.mkd
+              - com.stianlars1.dotviewer.mkdn
               - com.stianlars1.dotviewer.ml
               - com.stianlars1.dotviewer.mli
               - com.stianlars1.dotviewer.mll
@@ -4685,6 +5193,7 @@ targets:
               - com.stianlars1.dotviewer.mly
               - com.stianlars1.dotviewer.mo
               - com.stianlars1.dotviewer.mod
+              - com.stianlars1.dotviewer.mojo
               - com.stianlars1.dotviewer.moon
               - com.stianlars1.dotviewer.mpd
               - com.stianlars1.dotviewer.mpl
@@ -4713,6 +5222,7 @@ targets:
               - com.stianlars1.dotviewer.npmignore
               - com.stianlars1.dotviewer.npmrc
               - com.stianlars1.dotviewer.nrm
+              - com.stianlars1.dotviewer.nroff
               - com.stianlars1.dotviewer.nrx
               - com.stianlars1.dotviewer.nsh
               - com.stianlars1.dotviewer.nsi
@@ -4728,6 +5238,7 @@ targets:
               - com.stianlars1.dotviewer.ooc
               - com.stianlars1.dotviewer.oorexx
               - com.stianlars1.dotviewer.opml
+              - com.stianlars1.dotviewer.org
               - com.stianlars1.dotviewer.orig
               - com.stianlars1.dotviewer.os
               - com.stianlars1.dotviewer.otio
@@ -4774,6 +5285,7 @@ targets:
               - com.stianlars1.dotviewer.profile
               - com.stianlars1.dotviewer.properties
               - com.stianlars1.dotviewer.pryrc
+              - com.stianlars1.dotviewer.ps
               - com.stianlars1.dotviewer.ps1
               - com.stianlars1.dotviewer.psd1
               - com.stianlars1.dotviewer.psl
@@ -4793,8 +5305,10 @@ targets:
               - com.stianlars1.dotviewer.pyw
               - com.stianlars1.dotviewer.pyx
               - com.stianlars1.dotviewer.q
+              - com.stianlars1.dotviewer.qmd
               - com.stianlars1.dotviewer.qml
               - com.stianlars1.dotviewer.qu
+              - com.stianlars1.dotviewer.r
               - com.stianlars1.dotviewer.rabl
               - com.stianlars1.dotviewer.rake
               - com.stianlars1.dotviewer.rakefile
@@ -4811,11 +5325,15 @@ targets:
               - com.stianlars1.dotviewer.rex
               - com.stianlars1.dotviewer.rjs
               - com.stianlars1.dotviewer.rkt
+              - com.stianlars1.dotviewer.rmd
               - com.stianlars1.dotviewer.rnc
+              - com.stianlars1.dotviewer.roff
               - com.stianlars1.dotviewer.rpg
               - com.stianlars1.dotviewer.rpl
               - com.stianlars1.dotviewer.rpp
               - com.stianlars1.dotviewer.rpy
+              - com.stianlars1.dotviewer.rs
+              - com.stianlars1.dotviewer.rst
               - com.stianlars1.dotviewer.ruby
               - com.stianlars1.dotviewer.ruby_gemset
               - com.stianlars1.dotviewer.run
@@ -4832,11 +5350,13 @@ targets:
               - com.stianlars1.dotviewer.sbt
               - com.stianlars1.dotviewer.sc
               - com.stianlars1.dotviewer.scad
+              - com.stianlars1.dotviewer.scala
               - com.stianlars1.dotviewer.scanfile
               - com.stianlars1.dotviewer.scd
               - com.stianlars1.dotviewer.sce
               - com.stianlars1.dotviewer.sch
               - com.stianlars1.dotviewer.sci
+              - com.stianlars1.dotviewer.scm
               - com.stianlars1.dotviewer.scom
               - com.stianlars1.dotviewer.sconstruct
               - com.stianlars1.dotviewer.screenrc
@@ -4870,12 +5390,17 @@ targets:
               - com.stianlars1.dotviewer.spp
               - com.stianlars1.dotviewer.sps
               - com.stianlars1.dotviewer.sq
+              - com.stianlars1.dotviewer.sql
+              - com.stianlars1.dotviewer.srt
+              - com.stianlars1.dotviewer.ss
               - com.stianlars1.dotviewer.st
               - com.stianlars1.dotviewer.staging
+              - com.stianlars1.dotviewer.sty
               - com.stianlars1.dotviewer.styl
               - com.stianlars1.dotviewer.stylelintignore
               - com.stianlars1.dotviewer.stylelintrc
               - com.stianlars1.dotviewer.sum
+              - com.stianlars1.dotviewer.svelte
               - com.stianlars1.dotviewer.swcrc
               - com.stianlars1.dotviewer.swiftformat
               - com.stianlars1.dotviewer.t4
@@ -4883,6 +5408,7 @@ targets:
               - com.stianlars1.dotviewer.tesc
               - com.stianlars1.dotviewer.tese
               - com.stianlars1.dotviewer.test
+              - com.stianlars1.dotviewer.tex
               - com.stianlars1.dotviewer.tf
               - com.stianlars1.dotviewer.tfstate
               - com.stianlars1.dotviewer.tfvars
@@ -4895,23 +5421,30 @@ targets:
               - com.stianlars1.dotviewer.tpl
               - com.stianlars1.dotviewer.tps
               - com.stianlars1.dotviewer.trg
+              - com.stianlars1.dotviewer.troff
+              - com.stianlars1.dotviewer.ts
               - com.stianlars1.dotviewer.tsbuildinfo
               - com.stianlars1.dotviewer.tsql
+              - com.stianlars1.dotviewer.tsx
               - com.stianlars1.dotviewer.ttcn3
               - com.stianlars1.dotviewer.ttl
               - com.stianlars1.dotviewer.ttx
               - com.stianlars1.dotviewer.twig
               - com.stianlars1.dotviewer.typescript
               - com.stianlars1.dotviewer.upc
+              - com.stianlars1.dotviewer.v
               - com.stianlars1.dotviewer.vagrantfile
               - com.stianlars1.dotviewer.vala
               - com.stianlars1.dotviewer.vb
               - com.stianlars1.dotviewer.vbs
               - com.stianlars1.dotviewer.vercelignore
+              - com.stianlars1.dotviewer.vert
+              - com.stianlars1.dotviewer.vhd
               - com.stianlars1.dotviewer.vhdl
               - com.stianlars1.dotviewer.vim
               - com.stianlars1.dotviewer.viminfo
               - com.stianlars1.dotviewer.vimrc
+              - com.stianlars1.dotviewer.vs
               - com.stianlars1.dotviewer.vscodeignore
               - com.stianlars1.dotviewer.vue
               - com.stianlars1.dotviewer.vxml
@@ -4994,6 +5527,7 @@ targets:
               - dev.svelte
               # Other vendor UTIs
               - cz.wz.zuggy.subrip
+
     entitlements:
       path: QuickLookExtension/QuickLookPreview.entitlements
       properties:
@@ -5018,6 +5552,7 @@ targets:
     info:
       path: QuickLookThumbnailExtension/Info.plist
       properties:
+        CFBundleDisplayName: dotViewer Thumbnail
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         NSExtension:
@@ -5074,6 +5609,7 @@ targets:
               - public.tcsh-script
               - public.text
               - public.toml
+              - public.unix-executable
               - public.xhtml
               - public.xml
               - public.yacc-source
@@ -5115,17 +5651,17 @@ targets:
               - com.netscape.javascript-source
               - com.stianlars1.dotviewer.1
               - com.stianlars1.dotviewer.2
+              - com.stianlars1.dotviewer.29k
               - com.stianlars1.dotviewer.3
               - com.stianlars1.dotviewer.4
+              - com.stianlars1.dotviewer.4gl
               - com.stianlars1.dotviewer.5
               - com.stianlars1.dotviewer.6
+              - com.stianlars1.dotviewer.68s
+              - com.stianlars1.dotviewer.68x
               - com.stianlars1.dotviewer.7
               - com.stianlars1.dotviewer.8
               - com.stianlars1.dotviewer.9
-              - com.stianlars1.dotviewer.29k
-              - com.stianlars1.dotviewer.4gl
-              - com.stianlars1.dotviewer.68s
-              - com.stianlars1.dotviewer.68x
               - com.stianlars1.dotviewer.a
               - com.stianlars1.dotviewer.a4c
               - com.stianlars1.dotviewer.a51
@@ -5136,6 +5672,7 @@ targets:
               - com.stianlars1.dotviewer.ac
               - com.stianlars1.dotviewer.acf
               - com.stianlars1.dotviewer.ado
+              - com.stianlars1.dotviewer.adoc
               - com.stianlars1.dotviewer.agda
               - com.stianlars1.dotviewer.ahk
               - com.stianlars1.dotviewer.alan
@@ -5148,6 +5685,7 @@ targets:
               - com.stianlars1.dotviewer.arm
               - com.stianlars1.dotviewer.as
               - com.stianlars1.dotviewer.as400cl
+              - com.stianlars1.dotviewer.asciidoc
               - com.stianlars1.dotviewer.ascx
               - com.stianlars1.dotviewer.ashx
               - com.stianlars1.dotviewer.asm
@@ -5155,6 +5693,7 @@ targets:
               - com.stianlars1.dotviewer.astro
               - com.stianlars1.dotviewer.au3
               - com.stianlars1.dotviewer.avenue
+              - com.stianlars1.dotviewer.awk
               - com.stianlars1.dotviewer.b
               - com.stianlars1.dotviewer.babelrc
               - com.stianlars1.dotviewer.backup
@@ -5176,6 +5715,7 @@ targets:
               - com.stianlars1.dotviewer.berksfile
               - com.stianlars1.dotviewer.bfr
               - com.stianlars1.dotviewer.bi
+              - com.stianlars1.dotviewer.bib
               - com.stianlars1.dotviewer.bms
               - com.stianlars1.dotviewer.bnd
               - com.stianlars1.dotviewer.bndrun
@@ -5191,7 +5731,6 @@ targets:
               - com.stianlars1.dotviewer.cbl
               - com.stianlars1.dotviewer.ceylon
               - com.stianlars1.dotviewer.cfc
-              - com.stianlars1.dotviewer.cfg
               - com.stianlars1.dotviewer.cfignore
               - com.stianlars1.dotviewer.cfm
               - com.stianlars1.dotviewer.cfusertextencoding
@@ -5210,7 +5749,11 @@ targets:
               - com.stianlars1.dotviewer.class
               - com.stianlars1.dotviewer.clipper
               - com.stianlars1.dotviewer.clisp
+              - com.stianlars1.dotviewer.clj
+              - com.stianlars1.dotviewer.cljc
+              - com.stianlars1.dotviewer.cljs
               - com.stianlars1.dotviewer.clp
+              - com.stianlars1.dotviewer.cls
               - com.stianlars1.dotviewer.cmake
               - com.stianlars1.dotviewer.cmd
               - com.stianlars1.dotviewer.cob
@@ -5218,12 +5761,14 @@ targets:
               - com.stianlars1.dotviewer.coffee
               - com.stianlars1.dotviewer.commitlintrc
               - com.stianlars1.dotviewer.comp
+              - com.stianlars1.dotviewer.conf
               - com.stianlars1.dotviewer.containerignore
               - com.stianlars1.dotviewer.coveragerc
               - com.stianlars1.dotviewer.cpy
               - com.stianlars1.dotviewer.cr
               - com.stianlars1.dotviewer.critic
               - com.stianlars1.dotviewer.crk
+              - com.stianlars1.dotviewer.cs
               - com.stianlars1.dotviewer.cshtml
               - com.stianlars1.dotviewer.csproj
               - com.stianlars1.dotviewer.cu
@@ -5231,6 +5776,8 @@ targets:
               - com.stianlars1.dotviewer.curlrc
               - com.stianlars1.dotviewer.cursorignore
               - com.stianlars1.dotviewer.cursorrules
+              - com.stianlars1.dotviewer.d
+              - com.stianlars1.dotviewer.dart
               - com.stianlars1.dotviewer.dat
               - com.stianlars1.dotviewer.dats
               - com.stianlars1.dotviewer.def
@@ -5287,12 +5834,14 @@ targets:
               - com.stianlars1.dotviewer.feature
               - com.stianlars1.dotviewer.ff
               - com.stianlars1.dotviewer.firebaserc
+              - com.stianlars1.dotviewer.fish
               - com.stianlars1.dotviewer.flake8
               - com.stianlars1.dotviewer.flowconfig
               - com.stianlars1.dotviewer.flx
               - com.stianlars1.dotviewer.fnc
               - com.stianlars1.dotviewer.fp
               - com.stianlars1.dotviewer.fpp
+              - com.stianlars1.dotviewer.frag
               - com.stianlars1.dotviewer.frink
               - com.stianlars1.dotviewer.fsharp
               - com.stianlars1.dotviewer.fsi
@@ -5306,6 +5855,7 @@ targets:
               - com.stianlars1.dotviewer.gemfile
               - com.stianlars1.dotviewer.gemrc
               - com.stianlars1.dotviewer.gemspec
+              - com.stianlars1.dotviewer.geom
               - com.stianlars1.dotviewer.gitattributes
               - com.stianlars1.dotviewer.gitblame_ignore_revs
               - com.stianlars1.dotviewer.gitconfig
@@ -5317,8 +5867,10 @@ targets:
               - com.stianlars1.dotviewer.gitmodules
               - com.stianlars1.dotviewer.glade
               - com.stianlars1.dotviewer.gleam
+              - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
@@ -5337,8 +5889,10 @@ targets:
               - com.stianlars1.dotviewer.hcl
               - com.stianlars1.dotviewer.hdr
               - com.stianlars1.dotviewer.helmignore
+              - com.stianlars1.dotviewer.hlsl
               - com.stianlars1.dotviewer.hnd
               - com.stianlars1.dotviewer.hrl
+              - com.stianlars1.dotviewer.hs
               - com.stianlars1.dotviewer.htaccess
               - com.stianlars1.dotviewer.htpasswd
               - com.stianlars1.dotviewer.httpd
@@ -5356,6 +5910,7 @@ targets:
               - com.stianlars1.dotviewer.iml
               - com.stianlars1.dotviewer.inc
               - com.stianlars1.dotviewer.inf
+              - com.stianlars1.dotviewer.ini
               - com.stianlars1.dotviewer.inp
               - com.stianlars1.dotviewer.inputrc
               - com.stianlars1.dotviewer.io
@@ -5363,10 +5918,13 @@ targets:
               - com.stianlars1.dotviewer.iss
               - com.stianlars1.dotviewer.itcl
               - com.stianlars1.dotviewer.j
+              - com.stianlars1.dotviewer.java
               - com.stianlars1.dotviewer.jbuilder
               - com.stianlars1.dotviewer.jenkinsfile
               - com.stianlars1.dotviewer.jinja
+              - com.stianlars1.dotviewer.jl
               - com.stianlars1.dotviewer.jnlp
+              - com.stianlars1.dotviewer.js
               - com.stianlars1.dotviewer.js_regex
               - com.stianlars1.dotviewer.jsm
               - com.stianlars1.dotviewer.json5
@@ -5376,11 +5934,14 @@ targets:
               - com.stianlars1.dotviewer.jsx
               - com.stianlars1.dotviewer.kdev3
               - com.stianlars1.dotviewer.kml
+              - com.stianlars1.dotviewer.kt
+              - com.stianlars1.dotviewer.kts
               - com.stianlars1.dotviewer.latex
               - com.stianlars1.dotviewer.lbn
               - com.stianlars1.dotviewer.ldif
               - com.stianlars1.dotviewer.less
               - com.stianlars1.dotviewer.lgt
+              - com.stianlars1.dotviewer.lhs
               - com.stianlars1.dotviewer.lintstagedrc
               - com.stianlars1.dotviewer.liquid
               - com.stianlars1.dotviewer.local
@@ -5391,20 +5952,32 @@ targets:
               - com.stianlars1.dotviewer.lottie
               - com.stianlars1.dotviewer.ls
               - com.stianlars1.dotviewer.lsl
+              - com.stianlars1.dotviewer.lsp
+              - com.stianlars1.dotviewer.lua
               - com.stianlars1.dotviewer.ly
               - com.stianlars1.dotviewer.m3
               - com.stianlars1.dotviewer.m4
               - com.stianlars1.dotviewer.mailmap
+              - com.stianlars1.dotviewer.man
               - com.stianlars1.dotviewer.map
+              - com.stianlars1.dotviewer.markdown
               - com.stianlars1.dotviewer.markdownlintrc
               - com.stianlars1.dotviewer.mat
               - com.stianlars1.dotviewer.mbox
+              - com.stianlars1.dotviewer.md
+              - com.stianlars1.dotviewer.mdoc
+              - com.stianlars1.dotviewer.mdown
+              - com.stianlars1.dotviewer.mdtxt
+              - com.stianlars1.dotviewer.mdx
               - com.stianlars1.dotviewer.mel
               - com.stianlars1.dotviewer.mercury
               - com.stianlars1.dotviewer.meson
               - com.stianlars1.dotviewer.mhl
               - com.stianlars1.dotviewer.mib
               - com.stianlars1.dotviewer.miranda
+              - com.stianlars1.dotviewer.mjs
+              - com.stianlars1.dotviewer.mkd
+              - com.stianlars1.dotviewer.mkdn
               - com.stianlars1.dotviewer.ml
               - com.stianlars1.dotviewer.mli
               - com.stianlars1.dotviewer.mll
@@ -5412,6 +5985,7 @@ targets:
               - com.stianlars1.dotviewer.mly
               - com.stianlars1.dotviewer.mo
               - com.stianlars1.dotviewer.mod
+              - com.stianlars1.dotviewer.mojo
               - com.stianlars1.dotviewer.moon
               - com.stianlars1.dotviewer.mpd
               - com.stianlars1.dotviewer.mpl
@@ -5440,6 +6014,7 @@ targets:
               - com.stianlars1.dotviewer.npmignore
               - com.stianlars1.dotviewer.npmrc
               - com.stianlars1.dotviewer.nrm
+              - com.stianlars1.dotviewer.nroff
               - com.stianlars1.dotviewer.nrx
               - com.stianlars1.dotviewer.nsh
               - com.stianlars1.dotviewer.nsi
@@ -5455,6 +6030,7 @@ targets:
               - com.stianlars1.dotviewer.ooc
               - com.stianlars1.dotviewer.oorexx
               - com.stianlars1.dotviewer.opml
+              - com.stianlars1.dotviewer.org
               - com.stianlars1.dotviewer.orig
               - com.stianlars1.dotviewer.os
               - com.stianlars1.dotviewer.otio
@@ -5501,6 +6077,7 @@ targets:
               - com.stianlars1.dotviewer.profile
               - com.stianlars1.dotviewer.properties
               - com.stianlars1.dotviewer.pryrc
+              - com.stianlars1.dotviewer.ps
               - com.stianlars1.dotviewer.ps1
               - com.stianlars1.dotviewer.psd1
               - com.stianlars1.dotviewer.psl
@@ -5520,8 +6097,10 @@ targets:
               - com.stianlars1.dotviewer.pyw
               - com.stianlars1.dotviewer.pyx
               - com.stianlars1.dotviewer.q
+              - com.stianlars1.dotviewer.qmd
               - com.stianlars1.dotviewer.qml
               - com.stianlars1.dotviewer.qu
+              - com.stianlars1.dotviewer.r
               - com.stianlars1.dotviewer.rabl
               - com.stianlars1.dotviewer.rake
               - com.stianlars1.dotviewer.rakefile
@@ -5538,11 +6117,15 @@ targets:
               - com.stianlars1.dotviewer.rex
               - com.stianlars1.dotviewer.rjs
               - com.stianlars1.dotviewer.rkt
+              - com.stianlars1.dotviewer.rmd
               - com.stianlars1.dotviewer.rnc
+              - com.stianlars1.dotviewer.roff
               - com.stianlars1.dotviewer.rpg
               - com.stianlars1.dotviewer.rpl
               - com.stianlars1.dotviewer.rpp
               - com.stianlars1.dotviewer.rpy
+              - com.stianlars1.dotviewer.rs
+              - com.stianlars1.dotviewer.rst
               - com.stianlars1.dotviewer.ruby
               - com.stianlars1.dotviewer.ruby_gemset
               - com.stianlars1.dotviewer.run
@@ -5559,11 +6142,13 @@ targets:
               - com.stianlars1.dotviewer.sbt
               - com.stianlars1.dotviewer.sc
               - com.stianlars1.dotviewer.scad
+              - com.stianlars1.dotviewer.scala
               - com.stianlars1.dotviewer.scanfile
               - com.stianlars1.dotviewer.scd
               - com.stianlars1.dotviewer.sce
               - com.stianlars1.dotviewer.sch
               - com.stianlars1.dotviewer.sci
+              - com.stianlars1.dotviewer.scm
               - com.stianlars1.dotviewer.scom
               - com.stianlars1.dotviewer.sconstruct
               - com.stianlars1.dotviewer.screenrc
@@ -5597,12 +6182,17 @@ targets:
               - com.stianlars1.dotviewer.spp
               - com.stianlars1.dotviewer.sps
               - com.stianlars1.dotviewer.sq
+              - com.stianlars1.dotviewer.sql
+              - com.stianlars1.dotviewer.srt
+              - com.stianlars1.dotviewer.ss
               - com.stianlars1.dotviewer.st
               - com.stianlars1.dotviewer.staging
+              - com.stianlars1.dotviewer.sty
               - com.stianlars1.dotviewer.styl
               - com.stianlars1.dotviewer.stylelintignore
               - com.stianlars1.dotviewer.stylelintrc
               - com.stianlars1.dotviewer.sum
+              - com.stianlars1.dotviewer.svelte
               - com.stianlars1.dotviewer.swcrc
               - com.stianlars1.dotviewer.swiftformat
               - com.stianlars1.dotviewer.t4
@@ -5610,6 +6200,7 @@ targets:
               - com.stianlars1.dotviewer.tesc
               - com.stianlars1.dotviewer.tese
               - com.stianlars1.dotviewer.test
+              - com.stianlars1.dotviewer.tex
               - com.stianlars1.dotviewer.tf
               - com.stianlars1.dotviewer.tfstate
               - com.stianlars1.dotviewer.tfvars
@@ -5622,23 +6213,30 @@ targets:
               - com.stianlars1.dotviewer.tpl
               - com.stianlars1.dotviewer.tps
               - com.stianlars1.dotviewer.trg
+              - com.stianlars1.dotviewer.troff
+              - com.stianlars1.dotviewer.ts
               - com.stianlars1.dotviewer.tsbuildinfo
               - com.stianlars1.dotviewer.tsql
+              - com.stianlars1.dotviewer.tsx
               - com.stianlars1.dotviewer.ttcn3
               - com.stianlars1.dotviewer.ttl
               - com.stianlars1.dotviewer.ttx
               - com.stianlars1.dotviewer.twig
               - com.stianlars1.dotviewer.typescript
               - com.stianlars1.dotviewer.upc
+              - com.stianlars1.dotviewer.v
               - com.stianlars1.dotviewer.vagrantfile
               - com.stianlars1.dotviewer.vala
               - com.stianlars1.dotviewer.vb
               - com.stianlars1.dotviewer.vbs
               - com.stianlars1.dotviewer.vercelignore
+              - com.stianlars1.dotviewer.vert
+              - com.stianlars1.dotviewer.vhd
               - com.stianlars1.dotviewer.vhdl
               - com.stianlars1.dotviewer.vim
               - com.stianlars1.dotviewer.viminfo
               - com.stianlars1.dotviewer.vimrc
+              - com.stianlars1.dotviewer.vs
               - com.stianlars1.dotviewer.vscodeignore
               - com.stianlars1.dotviewer.vue
               - com.stianlars1.dotviewer.vxml
@@ -5721,6 +6319,7 @@ targets:
               - dev.svelte
               # Other vendor UTIs
               - cz.wz.zuggy.subrip
+
     entitlements:
       path: QuickLookThumbnailExtension/QuickLookThumbnail.entitlements
       properties:

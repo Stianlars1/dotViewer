@@ -22,14 +22,14 @@ From v1 requirements and future direction.
 | B-010 | ~~Markdown rendered/raw toggle in preview header~~ | ~~Done~~ | Completed 2026-02-09 — toggle works for all markdown files including named files (README, CHANGELOG) |
 | B-019 | ~~Table of Contents for rendered markdown~~ | ~~Done~~ | Completed 2026-02-09 — sidebar TOC with heading navigation, toggle in header + settings, code-block-aware scanner. Fixed 2026-02-12: setting now fully gates feature (KI-018), font size syncs with render setting, Apple sidebar.left toggle icon. |
 | B-011 | Automated test suite expansion (XPC + snapshots) | Deferred (Post-v1) | Baseline unit suite is in place (7 test classes, added 2026-02-11). Remaining XPC integration and visual snapshot coverage is deferred until post-v1. |
-| B-012 | App Store distribution | Deferred (Post-v1) | Deferred until release channel strategy explicitly includes App Store distribution. Requires sandboxing review, notarization, screenshots, and listing work. |
+| B-012 | ~~App Store distribution~~ | ~~Done~~ | Public App Store distribution is live. Remaining work is now channel optimization: pricing, review collection, site parity, and measurement. |
 | B-013 | Print / export to PDF | Optional (Low) | Optional enhancement (not next-up). Existing print CSS covers title, syntax color tuning, and page-break handling; full export UX is deferred pending user demand. |
 | B-014 | ~~Line number highlighting / deep linking~~ | ~~Done~~ | Completed 2026-02-11 — Click line numbers to highlight, Shift+click for range selection. Deep linking via URL fragments not implemented. |
 | B-015 | ~~Search within preview~~ | ~~Done~~ | Completed 2026-02-11 — Optional search bar (off by default), uses text selection + paste workflow since Quick Look intercepts keyboard input. Highlights matches with prev/next navigation. |
 | B-016 | Additional tree-sitter grammars | Low | Cover more of the 177 entries currently using heuristic fallback |
 | B-017 | Performance benchmarking suite | Low | Automated timing for large files across all grammars |
 | B-018 | Custom theme editor in host app | Low | Let users create/modify color palettes |
-| B-020 | ~~Broader UTI declarations for developer extensions~~ | ~~Done~~ | Completed 2026-02-10, expanded 2026-02-13 — 563 custom UTI exports, 680 QLSupportedContentTypes per extension target. Registry now covers 400 file types / 582 extensions / 295 filename patterns. See KI-010. |
+| B-020 | ~~Broader UTI declarations for developer extensions~~ | ~~Done~~ | Completed 2026-02-10, expanded 2026-02-13 and 2026-04-05 — 635 custom UTI exports, 753 QLSupportedContentTypes per extension target. Registry now covers 404 file types / 599 extensions / 295 filename patterns. See KI-010. |
 | B-021 | ~~Custom file types UX improvements~~ | ~~Done~~ | Completed 2026-02-10 — Added explanatory note in FileTypesView, clarified toggle descriptions in SettingsView. |
 | B-022 | ~~Layout width customization / presets~~ | ~~Done~~ | Completed 2026-02-14 — Added per-mode width controls: code/RAW width (auto/custom + max-width) and markdown rendered width (auto/custom + max-width). Includes cache-key integration and unit tests (`PreviewHTMLBuilderTests`). |
 | B-023 | ~~Content alignment options~~ | ~~Done~~ | Completed 2026-02-17 — Added per-variant content alignment controls (left/center/right) for code, markdown RAW, and markdown rendered previews. Applies in both auto and custom width modes; wired through settings, cache key, and preview CSS. |
@@ -37,13 +37,13 @@ From v1 requirements and future direction.
 | B-025 | ~~Markdown clickable links~~ | ~~Done~~ | Completed 2026-02-12 — Clicking links copies URL to clipboard with toast confirmation. Tooltip on hover. Relative links resolved to absolute file:// paths. KI-012. |
 | B-026 | ~~Synced font sizes~~ | ~~Done~~ | Completed 2026-02-12 — New `syncFontSizes` setting (default ON). Code and rendered markdown share one font size. Toggle in Settings > Appearance, disabled slider with note in Markdown settings when synced. |
 | B-027 | ~~Open With Assistant for system-owned UTIs~~ | ~~Won't Fix / Removed~~ | Tested 2026-02-16 — does not change Quick Look routing for system-owned UTIs; Finder automation blocked in sandboxed apps. |
-| B-038 | ~~Custom mapping routing for common unknown text extensions~~ | ~~Done~~ | Completed 2026-04-03 — Added shipped routing for `.cue` and `.1`-`.9`, plus clearer UI copy that runtime custom mappings only affect files that already reach dotViewer. |
+| B-038 | ~~Custom mapping routing for common unknown text extensions~~ | ~~Done~~ | Completed 2026-04-03, expanded 2026-04-05 — Added shipped routing for `.cue`, `.1`-`.9`, `.man`, `.mdoc`, `.roff`, `.nroff`, and `.troff`, plus clearer UI copy that runtime custom mappings only affect files that already reach dotViewer. |
 | B-039 | ~~Theme appearance modes for paired palettes~~ | ~~Done~~ | Completed 2026-04-03 — Added system-following variants for Atom One, GitHub, Xcode, and Solarized, and unified preview/thumbnail appearance detection around the system interface style. |
 | B-040 | ~~Preview window size controls~~ | ~~Done~~ | Completed 2026-04-03 — Added a persistent initial Quick Look window size setting (`Auto` or `Fixed` with width/height sliders) that applies across all dotViewer previews. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.
-- `B-012`: Reopen when the product release strategy includes App Store as a target channel.
+- `B-012`: Reopen only if the App Store channel itself needs product-specific follow-up beyond pricing, listing optimization, or marketing parity.
 - `B-013`: Reopen when explicit user demand or workflow requirements justify dedicated print/export UX.
 
 ## Technical Debt

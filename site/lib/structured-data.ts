@@ -8,9 +8,9 @@ export const DBHOST_URL = "https://dbhost.app";
 
 const APP_NAME = "dotViewer";
 const APP_DESCRIPTION =
-  "dotViewer lets macOS preview dotfiles, config files, markdown, plain text documents, logs, and source code in Finder Quick Look.";
+  "dotViewer lets macOS preview dotfiles, config files, markdown, CSV and TSV data, man pages, plain text documents, logs, executable scripts, and source code in Finder Quick Look.";
 const FEATURE_LIST = [
-  "Preview dotfiles, config files, logs, plain text documents, and source code in Finder Quick Look.",
+  "Preview dotfiles, config files, CSV and TSV data, man pages, logs, executable scripts, plain text documents, and source code in Finder Quick Look.",
   "Read markdown in RAW mode or rendered mode with an optional table of contents.",
   "Use system-following theme choices, initial preview window sizing, font sizing, width controls, word wrap, and line number options.",
   "Configure copy behavior for Quick Look selection workflows.",
@@ -54,7 +54,7 @@ function buildBaseGraph(config: SiteConfig) {
     url: homeUrl,
     logo: logoUrl,
     founder: { "@id": creatorId },
-    sameAs: [CREATOR_URL, DBHOST_URL, config.repoUrl].filter(Boolean),
+    sameAs: [CREATOR_URL, DBHOST_URL, config.repoUrl, config.appStoreUrl].filter(Boolean),
   };
 
   const creator = {
@@ -89,8 +89,9 @@ function buildBaseGraph(config: SiteConfig) {
     creator: { "@id": creatorId },
     publisher: { "@id": organizationId },
     isAccessibleForFree: true,
+    sameAs: [config.appStoreUrl].filter(Boolean),
     keywords:
-      "Quick Look extension, Finder preview, dotfiles, config files, markdown preview, code preview, plain text preview, macOS",
+      "Quick Look extension, Finder preview, dotfiles, config files, markdown preview, TSV preview, man page preview, code preview, plain text preview, macOS",
     offers: {
       "@type": "Offer",
       price: "0",
@@ -127,7 +128,7 @@ export function buildHomeSchema(config: SiteConfig, stats: ProductStats, faqs: {
     name: "dotViewer for macOS",
     url: base.homeUrl,
     description:
-      "Preview dotfiles, config files, markdown, plain text documents, logs, and source code in Finder Quick Look.",
+      "Preview dotfiles, config files, markdown, CSV and TSV data, man pages, executable scripts, plain text documents, logs, and source code in Finder Quick Look.",
     isPartOf: { "@id": base.websiteId },
     about: { "@id": base.appId },
     primaryImageOfPage: absoluteUrl(config.siteUrl, "/product/markdown-rendered-toc.jpeg"),

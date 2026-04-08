@@ -178,7 +178,7 @@
 }
 
 .heroInner {
-  max-width: 940px;
+  max-width: 1024px;
   margin: 0 auto;
   text-align: center;
 }
@@ -211,6 +211,8 @@
   line-height: 1.05;
   letter-spacing: -0.048em;
   font-weight: 680;
+  text-wrap: pretty;
+  text-wrap: balanced;
 
   .code {
     font-size: inherit;
@@ -221,10 +223,11 @@
 }
 
 .heroBody {
-  max-width: 720px;
+  max-width: 70ch;
   margin: 24px auto 0;
   color: var(--muted);
-  font-size: clamp(1.08rem, 1.8vw, 1.32rem);
+  font-size: 1rem;
+  text-wrap: pretty;
   line-height: 1.72;
 }
 
@@ -312,6 +315,7 @@
   height: auto;
   border-radius: 24px;
   background: #10141d;
+  overflow: hidden;
 }
 
 .galleryStack,
@@ -461,6 +465,7 @@
 .shotHero figcaption,
 .controlCard figcaption,
 .appCard figcaption {
+  width: fit-content;
   position: relative;
   display: grid;
   gap: 10px;
@@ -533,6 +538,7 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
   color: #0453f4;
   font-size: 0.84em;
+  width: fit-content;
 }
 
 .appGrid {

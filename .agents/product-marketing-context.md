@@ -18,7 +18,7 @@ macOS Quick Look extension, Finder preview app, markdown/code/config previewer.
 Native macOS app plus Quick Look extension suite.
 
 **Business model:**
-Free direct download today, distributed outside the App Store as a signed and notarized DMG. Positioning should leave room for paid features later without promising "free forever."
+Dual-channel distribution. The direct website DMG is the free adoption path, distributed outside the App Store as a signed and notarized installer. A paid App Store listing is also live and should be treated as the convenience and support purchase path rather than hidden or contradicted by the site.
 
 ## Target Audience
 **Target companies:**
@@ -162,6 +162,7 @@ Native, useful, trustworthy, pragmatic, thoughtful.
 - 295 filename mappings
 - 53 tree-sitter query files
 - Developer ID signed and notarized DMG distribution
+- Public App Store listing live as an additional paid channel
 
 **Customers:**
 No public customer logos captured yet.
@@ -180,10 +181,13 @@ No published testimonial library captured yet.
 
 ## Goals
 **Business goal:**
-Make `dotviewer.app` a credible public launch site that converts search and direct visitors into DMG downloads.
+Make `dotviewer.app` a credible public launch site that converts search and direct visitors into either direct DMG installs or App Store purchase intent.
 
 **Conversion action:**
-Download the latest macOS DMG from `/download`.
+Choose an install path from `/download`: free direct DMG for low-friction adoption or paid App Store purchase for convenience and support.
 
 **Current metrics:**
-No formal analytics baseline captured yet.
+- GitHub DMG downloads: 17 total across public releases as of 2026-04-04 (`v1.1.0`: 5, `v1.0.0`: 12)
+- GitHub repo baseline: 0 stars, 0 watchers, 0 forks as of 2026-04-04
+- App Store listing is live, but no ratings or review overview are displayed yet
+- Website analytics stack exists, but no formal Search Console baseline or published funnel report is captured yet

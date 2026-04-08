@@ -53,7 +53,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 text = "Failed to read file"
             }
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
-            let lineCount = text.components(separatedBy: "\n").count
+            let lineCount = TextLineUtilities.visualLineCount(in: text)
             return makeRTFReply(text: text, palette: palette, lineCount: lineCount, fontSize: SharedSettings.shared.fontSize)
         }
 #endif
@@ -110,8 +110,14 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         let fileMtime = fileMeta.mtime
         let isEmptyFile = fileSize == 0
 
-        let languageId = registry.highlightLanguage(for: key) ?? "plaintext"
-        let languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
+        var languageId = registry.highlightLanguage(for: key) ?? "plaintext"
+        var languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
+
+        if actualPathExtension.isEmpty,
+           let detected = ShebangLanguageDetector.detect(url: url) ?? detectedLanguage(forMimeType: mimeType) {
+            languageId = detected.languageId
+            languageName = detected.displayName
+        }
 
         let isMarkdown = languageId == "markdown"
         let showLineNumbers = SharedSettings.shared.showLineNumbers
@@ -241,14 +247,40 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             routeLogger.log("Request cancelled after read for \(url.lastPathComponent, privacy: .public)")
         }
 
-        let shouldAttemptHighlight = shouldHighlight && !cancelledAfterRead
+        var effectiveLanguageId = languageId
+        var effectiveLanguageName = languageName
+
+        if let shebang = ShebangLanguageDetector.detect(in: fileInfo.text),
+           key.isEmpty || (!isKnownType && actualPathExtension.isEmpty) {
+            effectiveLanguageId = shebang.languageId
+            effectiveLanguageName = shebang.displayName
+        }
+
+        let specialHTML: String?
+        if let kind = DelimitedTextKind(rawValue: key),
+           let preview = DelimitedTextRenderer.preview(text: fileInfo.text, kind: kind) {
+            specialHTML = preview.html
+            effectiveLanguageId = "plaintext"
+            effectiveLanguageName = kind.rawValue.uppercased()
+        } else if ManPageRenderer.shouldRender(url: url, mimeType: mimeType, key: key, text: fileInfo.text),
+                  let html = ManPageRenderer.renderHTML(url: url) {
+            specialHTML = html
+            effectiveLanguageId = "plaintext"
+            effectiveLanguageName = "Man Page"
+        } else {
+            specialHTML = nil
+        }
+
+        let shouldAttemptHighlight = shouldHighlight && !cancelledAfterRead && specialHTML == nil
         let rawHTML: String
-        if isMarkdown && !useMarkdownHighlight {
+        if let specialHTML {
+            rawHTML = specialHTML
+        } else if isMarkdown && !useMarkdownHighlight {
             rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
         } else if shouldAttemptHighlight {
             let highlightResult = await HighlightXPCClient.shared.highlight(
                 code: fileInfo.text,
-                language: languageId,
+                language: effectiveLanguageId,
                 theme: SharedSettings.shared.selectedTheme,
                 showLineNumbers: showLineNumbers,
                 requestId: requestId,
@@ -288,7 +320,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         let info = PreviewInfo(
             title: url.lastPathComponent,
-            language: languageName.isEmpty ? "Text" : languageName,
+            language: effectiveLanguageName.isEmpty ? "Text" : effectiveLanguageName,
             lineCount: fileInfo.lineCount,
             fileSizeBytes: fileInfo.fileSizeBytes,
             isTruncated: fileInfo.isTruncated,
@@ -358,6 +390,23 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
     private static func systemIsDark() -> Bool {
         SystemAppearance.isDark()
+    }
+
+    private static func detectedLanguage(forMimeType mimeType: String) -> ShebangMatch? {
+        switch mimeType.lowercased() {
+        case "text/x-shellscript":
+            return ShebangMatch(languageId: "bash", displayName: "Shell Script")
+        case "text/x-script.python":
+            return ShebangMatch(languageId: "python", displayName: "Python")
+        case "text/x-perl":
+            return ShebangMatch(languageId: "perl", displayName: "Perl")
+        case "text/x-ruby":
+            return ShebangMatch(languageId: "ruby", displayName: "Ruby")
+        case "text/x-php":
+            return ShebangMatch(languageId: "php", displayName: "PHP")
+        default:
+            return nil
+        }
     }
 
     private static func makeHTMLReply(
@@ -445,7 +494,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             text = ""
         }
 
-        let lineCount = text.components(separatedBy: "\n").count
+        let lineCount = TextLineUtilities.visualLineCount(in: text)
 
         let escaped = text
             .replacingOccurrences(of: "&", with: "&amp;")

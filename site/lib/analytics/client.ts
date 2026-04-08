@@ -10,7 +10,7 @@ declare global {
 }
 
 export type DownloadAnalyticsPayload = {
-  assetKind: "dmg" | "checksum";
+  assetKind: "app_store" | "checksum" | "dmg";
   persistCustomEvent?: boolean;
   releaseTag?: string | null;
   source: string;
@@ -38,7 +38,7 @@ type AnalyticsEnvelope =
       visitorId: string;
     }
   | {
-      assetKind: "dmg" | "checksum";
+      assetKind: "app_store" | "checksum" | "dmg";
       path: string;
       referrer: string | null;
       releaseTag: string | null;

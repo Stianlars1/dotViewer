@@ -173,9 +173,9 @@ enum TextThumbnailRenderer {
     }
 
     static func makeSnippet(text: String, maxLines: Int, truncatedByBytes: Bool) -> TextThumbnailSnippet {
-        let rawLines = text.split(separator: "\n", omittingEmptySubsequences: false)
+        let rawLines = TextLineUtilities.lines(forDisplayFrom: text)
         let truncatedByLines = rawLines.count > maxLines
-        let limitedLines = rawLines.prefix(maxLines).map(String.init)
+        let limitedLines = Array(rawLines.prefix(maxLines))
         let isTruncated = truncatedByLines || truncatedByBytes
 
         var lines = limitedLines
@@ -183,7 +183,7 @@ enum TextThumbnailRenderer {
             lines[last] = lines[last] + " ..."
         }
 
-        return TextThumbnailSnippet(lines: lines, isTruncated: isTruncated, lineCount: max(limitedLines.count, 1))
+        return TextThumbnailSnippet(lines: lines, isTruncated: isTruncated, lineCount: rawLines.count)
     }
 
     static func makeReply(

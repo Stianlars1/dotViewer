@@ -5,17 +5,20 @@ public enum FileTypeResolution {
     ///
     /// Resolution order (most specific first):
     /// 1. Full filename without leading dot  (e.g. `env.local`, `eslintrc.json`, `docker-compose.yml`)
-    /// 2. Progressive prefix segments        (e.g. `eslintrc` from `eslintrc.json`)
+    /// 2. Dotfile/multi-dot prefix segments  (e.g. `eslintrc` from `eslintrc.json`)
     /// 3. Path extension                     (e.g. `json`, `yml`, `js`)
-    /// 4. Intermediate dot segments           (e.g. `json` from `claude.json.backup.1770685742797`)
+    /// 4. Intermediate dot segments          (e.g. `json` from `claude.json.backup.1770685742797`)
     ///
     /// This ensures chained dotfiles like `.eslintrc.json` resolve to "eslintrc" (ESLint config)
-    /// rather than generic "json", while `.env.staging` resolves to "env" (Environment).
+    /// rather than generic "json", while normal single-dot files like `sample.conf`
+    /// keep their real extension instead of resolving to generic basename aliases like "sample".
     /// Multi-dot files like `.claude.json.backup.xxx` resolve to "json" (first known intermediate segment).
     public static func bestKey(for url: URL, registry: FileTypeRegistry = .shared) -> String {
         let pathExt = url.pathExtension.lowercased()
         let fileName = url.lastPathComponent.lowercased()
         let fileNameNoLeadingDot = fileName.hasPrefix(".") ? String(fileName.dropFirst()) : fileName
+        let dotCount = fileNameNoLeadingDot.filter { $0 == "." }.count
+        let shouldTryPrefixes = fileName.hasPrefix(".") || dotCount > 1
 
         // Build candidates from most specific to least specific
         var candidates: [String] = []
@@ -26,13 +29,16 @@ public enum FileTypeResolution {
             candidates.append(fileNameNoLeadingDot)
         }
 
-        // 2. Progressive prefixes by stripping trailing segments
-        //    "docker-compose.override.yml" → "docker-compose.override" → "docker-compose"
-        var remaining = fileNameNoLeadingDot
-        while let lastDot = remaining.lastIndex(of: ".") {
-            remaining = String(remaining[..<lastDot])
-            if !remaining.isEmpty {
-                candidates.append(remaining)
+        // 2. Dotfiles and multi-dot files keep progressive prefix lookup.
+        if shouldTryPrefixes {
+            // ".eslintrc.json" → "eslintrc"
+            // "docker-compose.override.yml" → "docker-compose.override" → "docker-compose"
+            var remaining = fileNameNoLeadingDot
+            while let lastDot = remaining.lastIndex(of: ".") {
+                remaining = String(remaining[..<lastDot])
+                if !remaining.isEmpty {
+                    candidates.append(remaining)
+                }
             }
         }
 

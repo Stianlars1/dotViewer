@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>dotViewer Thumbnail</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -72,6 +74,7 @@
 				<string>public.tcsh-script</string>
 				<string>public.text</string>
 				<string>public.toml</string>
+				<string>public.unix-executable</string>
 				<string>public.xhtml</string>
 				<string>public.xml</string>
 				<string>public.yacc-source</string>
@@ -112,17 +115,17 @@
 				<string>com.netscape.javascript-source</string>
 				<string>com.stianlars1.dotviewer.1</string>
 				<string>com.stianlars1.dotviewer.2</string>
+				<string>com.stianlars1.dotviewer.29k</string>
 				<string>com.stianlars1.dotviewer.3</string>
 				<string>com.stianlars1.dotviewer.4</string>
+				<string>com.stianlars1.dotviewer.4gl</string>
 				<string>com.stianlars1.dotviewer.5</string>
 				<string>com.stianlars1.dotviewer.6</string>
+				<string>com.stianlars1.dotviewer.68s</string>
+				<string>com.stianlars1.dotviewer.68x</string>
 				<string>com.stianlars1.dotviewer.7</string>
 				<string>com.stianlars1.dotviewer.8</string>
 				<string>com.stianlars1.dotviewer.9</string>
-				<string>com.stianlars1.dotviewer.29k</string>
-				<string>com.stianlars1.dotviewer.4gl</string>
-				<string>com.stianlars1.dotviewer.68s</string>
-				<string>com.stianlars1.dotviewer.68x</string>
 				<string>com.stianlars1.dotviewer.a</string>
 				<string>com.stianlars1.dotviewer.a4c</string>
 				<string>com.stianlars1.dotviewer.a51</string>
@@ -133,6 +136,7 @@
 				<string>com.stianlars1.dotviewer.ac</string>
 				<string>com.stianlars1.dotviewer.acf</string>
 				<string>com.stianlars1.dotviewer.ado</string>
+				<string>com.stianlars1.dotviewer.adoc</string>
 				<string>com.stianlars1.dotviewer.agda</string>
 				<string>com.stianlars1.dotviewer.ahk</string>
 				<string>com.stianlars1.dotviewer.alan</string>
@@ -145,6 +149,7 @@
 				<string>com.stianlars1.dotviewer.arm</string>
 				<string>com.stianlars1.dotviewer.as</string>
 				<string>com.stianlars1.dotviewer.as400cl</string>
+				<string>com.stianlars1.dotviewer.asciidoc</string>
 				<string>com.stianlars1.dotviewer.ascx</string>
 				<string>com.stianlars1.dotviewer.ashx</string>
 				<string>com.stianlars1.dotviewer.asm</string>
@@ -152,6 +157,7 @@
 				<string>com.stianlars1.dotviewer.astro</string>
 				<string>com.stianlars1.dotviewer.au3</string>
 				<string>com.stianlars1.dotviewer.avenue</string>
+				<string>com.stianlars1.dotviewer.awk</string>
 				<string>com.stianlars1.dotviewer.b</string>
 				<string>com.stianlars1.dotviewer.babelrc</string>
 				<string>com.stianlars1.dotviewer.backup</string>
@@ -173,6 +179,7 @@
 				<string>com.stianlars1.dotviewer.berksfile</string>
 				<string>com.stianlars1.dotviewer.bfr</string>
 				<string>com.stianlars1.dotviewer.bi</string>
+				<string>com.stianlars1.dotviewer.bib</string>
 				<string>com.stianlars1.dotviewer.bms</string>
 				<string>com.stianlars1.dotviewer.bnd</string>
 				<string>com.stianlars1.dotviewer.bndrun</string>
@@ -188,7 +195,6 @@
 				<string>com.stianlars1.dotviewer.cbl</string>
 				<string>com.stianlars1.dotviewer.ceylon</string>
 				<string>com.stianlars1.dotviewer.cfc</string>
-				<string>com.stianlars1.dotviewer.cfg</string>
 				<string>com.stianlars1.dotviewer.cfignore</string>
 				<string>com.stianlars1.dotviewer.cfm</string>
 				<string>com.stianlars1.dotviewer.cfusertextencoding</string>
@@ -207,7 +213,11 @@
 				<string>com.stianlars1.dotviewer.class</string>
 				<string>com.stianlars1.dotviewer.clipper</string>
 				<string>com.stianlars1.dotviewer.clisp</string>
+				<string>com.stianlars1.dotviewer.clj</string>
+				<string>com.stianlars1.dotviewer.cljc</string>
+				<string>com.stianlars1.dotviewer.cljs</string>
 				<string>com.stianlars1.dotviewer.clp</string>
+				<string>com.stianlars1.dotviewer.cls</string>
 				<string>com.stianlars1.dotviewer.cmake</string>
 				<string>com.stianlars1.dotviewer.cmd</string>
 				<string>com.stianlars1.dotviewer.cob</string>
@@ -215,12 +225,14 @@
 				<string>com.stianlars1.dotviewer.coffee</string>
 				<string>com.stianlars1.dotviewer.commitlintrc</string>
 				<string>com.stianlars1.dotviewer.comp</string>
+				<string>com.stianlars1.dotviewer.conf</string>
 				<string>com.stianlars1.dotviewer.containerignore</string>
 				<string>com.stianlars1.dotviewer.coveragerc</string>
 				<string>com.stianlars1.dotviewer.cpy</string>
 				<string>com.stianlars1.dotviewer.cr</string>
 				<string>com.stianlars1.dotviewer.critic</string>
 				<string>com.stianlars1.dotviewer.crk</string>
+				<string>com.stianlars1.dotviewer.cs</string>
 				<string>com.stianlars1.dotviewer.cshtml</string>
 				<string>com.stianlars1.dotviewer.csproj</string>
 				<string>com.stianlars1.dotviewer.cu</string>
@@ -228,6 +240,8 @@
 				<string>com.stianlars1.dotviewer.curlrc</string>
 				<string>com.stianlars1.dotviewer.cursorignore</string>
 				<string>com.stianlars1.dotviewer.cursorrules</string>
+				<string>com.stianlars1.dotviewer.d</string>
+				<string>com.stianlars1.dotviewer.dart</string>
 				<string>com.stianlars1.dotviewer.dat</string>
 				<string>com.stianlars1.dotviewer.dats</string>
 				<string>com.stianlars1.dotviewer.def</string>
@@ -284,12 +298,14 @@
 				<string>com.stianlars1.dotviewer.feature</string>
 				<string>com.stianlars1.dotviewer.ff</string>
 				<string>com.stianlars1.dotviewer.firebaserc</string>
+				<string>com.stianlars1.dotviewer.fish</string>
 				<string>com.stianlars1.dotviewer.flake8</string>
 				<string>com.stianlars1.dotviewer.flowconfig</string>
 				<string>com.stianlars1.dotviewer.flx</string>
 				<string>com.stianlars1.dotviewer.fnc</string>
 				<string>com.stianlars1.dotviewer.fp</string>
 				<string>com.stianlars1.dotviewer.fpp</string>
+				<string>com.stianlars1.dotviewer.frag</string>
 				<string>com.stianlars1.dotviewer.frink</string>
 				<string>com.stianlars1.dotviewer.fsharp</string>
 				<string>com.stianlars1.dotviewer.fsi</string>
@@ -303,6 +319,7 @@
 				<string>com.stianlars1.dotviewer.gemfile</string>
 				<string>com.stianlars1.dotviewer.gemrc</string>
 				<string>com.stianlars1.dotviewer.gemspec</string>
+				<string>com.stianlars1.dotviewer.geom</string>
 				<string>com.stianlars1.dotviewer.gitattributes</string>
 				<string>com.stianlars1.dotviewer.gitblame_ignore_revs</string>
 				<string>com.stianlars1.dotviewer.gitconfig</string>
@@ -314,8 +331,10 @@
 				<string>com.stianlars1.dotviewer.gitmodules</string>
 				<string>com.stianlars1.dotviewer.glade</string>
 				<string>com.stianlars1.dotviewer.gleam</string>
+				<string>com.stianlars1.dotviewer.glsl</string>
 				<string>com.stianlars1.dotviewer.gnad</string>
 				<string>com.stianlars1.dotviewer.gnumakefile</string>
+				<string>com.stianlars1.dotviewer.go</string>
 				<string>com.stianlars1.dotviewer.go_version</string>
 				<string>com.stianlars1.dotviewer.gql</string>
 				<string>com.stianlars1.dotviewer.gradle</string>
@@ -334,8 +353,10 @@
 				<string>com.stianlars1.dotviewer.hcl</string>
 				<string>com.stianlars1.dotviewer.hdr</string>
 				<string>com.stianlars1.dotviewer.helmignore</string>
+				<string>com.stianlars1.dotviewer.hlsl</string>
 				<string>com.stianlars1.dotviewer.hnd</string>
 				<string>com.stianlars1.dotviewer.hrl</string>
+				<string>com.stianlars1.dotviewer.hs</string>
 				<string>com.stianlars1.dotviewer.htaccess</string>
 				<string>com.stianlars1.dotviewer.htpasswd</string>
 				<string>com.stianlars1.dotviewer.httpd</string>
@@ -353,6 +374,7 @@
 				<string>com.stianlars1.dotviewer.iml</string>
 				<string>com.stianlars1.dotviewer.inc</string>
 				<string>com.stianlars1.dotviewer.inf</string>
+				<string>com.stianlars1.dotviewer.ini</string>
 				<string>com.stianlars1.dotviewer.inp</string>
 				<string>com.stianlars1.dotviewer.inputrc</string>
 				<string>com.stianlars1.dotviewer.io</string>
@@ -360,10 +382,13 @@
 				<string>com.stianlars1.dotviewer.iss</string>
 				<string>com.stianlars1.dotviewer.itcl</string>
 				<string>com.stianlars1.dotviewer.j</string>
+				<string>com.stianlars1.dotviewer.java</string>
 				<string>com.stianlars1.dotviewer.jbuilder</string>
 				<string>com.stianlars1.dotviewer.jenkinsfile</string>
 				<string>com.stianlars1.dotviewer.jinja</string>
+				<string>com.stianlars1.dotviewer.jl</string>
 				<string>com.stianlars1.dotviewer.jnlp</string>
+				<string>com.stianlars1.dotviewer.js</string>
 				<string>com.stianlars1.dotviewer.js_regex</string>
 				<string>com.stianlars1.dotviewer.jsm</string>
 				<string>com.stianlars1.dotviewer.json5</string>
@@ -373,11 +398,14 @@
 				<string>com.stianlars1.dotviewer.jsx</string>
 				<string>com.stianlars1.dotviewer.kdev3</string>
 				<string>com.stianlars1.dotviewer.kml</string>
+				<string>com.stianlars1.dotviewer.kt</string>
+				<string>com.stianlars1.dotviewer.kts</string>
 				<string>com.stianlars1.dotviewer.latex</string>
 				<string>com.stianlars1.dotviewer.lbn</string>
 				<string>com.stianlars1.dotviewer.ldif</string>
 				<string>com.stianlars1.dotviewer.less</string>
 				<string>com.stianlars1.dotviewer.lgt</string>
+				<string>com.stianlars1.dotviewer.lhs</string>
 				<string>com.stianlars1.dotviewer.lintstagedrc</string>
 				<string>com.stianlars1.dotviewer.liquid</string>
 				<string>com.stianlars1.dotviewer.local</string>
@@ -388,20 +416,32 @@
 				<string>com.stianlars1.dotviewer.lottie</string>
 				<string>com.stianlars1.dotviewer.ls</string>
 				<string>com.stianlars1.dotviewer.lsl</string>
+				<string>com.stianlars1.dotviewer.lsp</string>
+				<string>com.stianlars1.dotviewer.lua</string>
 				<string>com.stianlars1.dotviewer.ly</string>
 				<string>com.stianlars1.dotviewer.m3</string>
 				<string>com.stianlars1.dotviewer.m4</string>
 				<string>com.stianlars1.dotviewer.mailmap</string>
+				<string>com.stianlars1.dotviewer.man</string>
 				<string>com.stianlars1.dotviewer.map</string>
+				<string>com.stianlars1.dotviewer.markdown</string>
 				<string>com.stianlars1.dotviewer.markdownlintrc</string>
 				<string>com.stianlars1.dotviewer.mat</string>
 				<string>com.stianlars1.dotviewer.mbox</string>
+				<string>com.stianlars1.dotviewer.md</string>
+				<string>com.stianlars1.dotviewer.mdoc</string>
+				<string>com.stianlars1.dotviewer.mdown</string>
+				<string>com.stianlars1.dotviewer.mdtxt</string>
+				<string>com.stianlars1.dotviewer.mdx</string>
 				<string>com.stianlars1.dotviewer.mel</string>
 				<string>com.stianlars1.dotviewer.mercury</string>
 				<string>com.stianlars1.dotviewer.meson</string>
 				<string>com.stianlars1.dotviewer.mhl</string>
 				<string>com.stianlars1.dotviewer.mib</string>
 				<string>com.stianlars1.dotviewer.miranda</string>
+				<string>com.stianlars1.dotviewer.mjs</string>
+				<string>com.stianlars1.dotviewer.mkd</string>
+				<string>com.stianlars1.dotviewer.mkdn</string>
 				<string>com.stianlars1.dotviewer.ml</string>
 				<string>com.stianlars1.dotviewer.mli</string>
 				<string>com.stianlars1.dotviewer.mll</string>
@@ -409,6 +449,7 @@
 				<string>com.stianlars1.dotviewer.mly</string>
 				<string>com.stianlars1.dotviewer.mo</string>
 				<string>com.stianlars1.dotviewer.mod</string>
+				<string>com.stianlars1.dotviewer.mojo</string>
 				<string>com.stianlars1.dotviewer.moon</string>
 				<string>com.stianlars1.dotviewer.mpd</string>
 				<string>com.stianlars1.dotviewer.mpl</string>
@@ -437,6 +478,7 @@
 				<string>com.stianlars1.dotviewer.npmignore</string>
 				<string>com.stianlars1.dotviewer.npmrc</string>
 				<string>com.stianlars1.dotviewer.nrm</string>
+				<string>com.stianlars1.dotviewer.nroff</string>
 				<string>com.stianlars1.dotviewer.nrx</string>
 				<string>com.stianlars1.dotviewer.nsh</string>
 				<string>com.stianlars1.dotviewer.nsi</string>
@@ -452,6 +494,7 @@
 				<string>com.stianlars1.dotviewer.ooc</string>
 				<string>com.stianlars1.dotviewer.oorexx</string>
 				<string>com.stianlars1.dotviewer.opml</string>
+				<string>com.stianlars1.dotviewer.org</string>
 				<string>com.stianlars1.dotviewer.orig</string>
 				<string>com.stianlars1.dotviewer.os</string>
 				<string>com.stianlars1.dotviewer.otio</string>
@@ -498,6 +541,7 @@
 				<string>com.stianlars1.dotviewer.profile</string>
 				<string>com.stianlars1.dotviewer.properties</string>
 				<string>com.stianlars1.dotviewer.pryrc</string>
+				<string>com.stianlars1.dotviewer.ps</string>
 				<string>com.stianlars1.dotviewer.ps1</string>
 				<string>com.stianlars1.dotviewer.psd1</string>
 				<string>com.stianlars1.dotviewer.psl</string>
@@ -517,8 +561,10 @@
 				<string>com.stianlars1.dotviewer.pyw</string>
 				<string>com.stianlars1.dotviewer.pyx</string>
 				<string>com.stianlars1.dotviewer.q</string>
+				<string>com.stianlars1.dotviewer.qmd</string>
 				<string>com.stianlars1.dotviewer.qml</string>
 				<string>com.stianlars1.dotviewer.qu</string>
+				<string>com.stianlars1.dotviewer.r</string>
 				<string>com.stianlars1.dotviewer.rabl</string>
 				<string>com.stianlars1.dotviewer.rake</string>
 				<string>com.stianlars1.dotviewer.rakefile</string>
@@ -535,11 +581,15 @@
 				<string>com.stianlars1.dotviewer.rex</string>
 				<string>com.stianlars1.dotviewer.rjs</string>
 				<string>com.stianlars1.dotviewer.rkt</string>
+				<string>com.stianlars1.dotviewer.rmd</string>
 				<string>com.stianlars1.dotviewer.rnc</string>
+				<string>com.stianlars1.dotviewer.roff</string>
 				<string>com.stianlars1.dotviewer.rpg</string>
 				<string>com.stianlars1.dotviewer.rpl</string>
 				<string>com.stianlars1.dotviewer.rpp</string>
 				<string>com.stianlars1.dotviewer.rpy</string>
+				<string>com.stianlars1.dotviewer.rs</string>
+				<string>com.stianlars1.dotviewer.rst</string>
 				<string>com.stianlars1.dotviewer.ruby</string>
 				<string>com.stianlars1.dotviewer.ruby_gemset</string>
 				<string>com.stianlars1.dotviewer.run</string>
@@ -556,11 +606,13 @@
 				<string>com.stianlars1.dotviewer.sbt</string>
 				<string>com.stianlars1.dotviewer.sc</string>
 				<string>com.stianlars1.dotviewer.scad</string>
+				<string>com.stianlars1.dotviewer.scala</string>
 				<string>com.stianlars1.dotviewer.scanfile</string>
 				<string>com.stianlars1.dotviewer.scd</string>
 				<string>com.stianlars1.dotviewer.sce</string>
 				<string>com.stianlars1.dotviewer.sch</string>
 				<string>com.stianlars1.dotviewer.sci</string>
+				<string>com.stianlars1.dotviewer.scm</string>
 				<string>com.stianlars1.dotviewer.scom</string>
 				<string>com.stianlars1.dotviewer.sconstruct</string>
 				<string>com.stianlars1.dotviewer.screenrc</string>
@@ -594,12 +646,17 @@
 				<string>com.stianlars1.dotviewer.spp</string>
 				<string>com.stianlars1.dotviewer.sps</string>
 				<string>com.stianlars1.dotviewer.sq</string>
+				<string>com.stianlars1.dotviewer.sql</string>
+				<string>com.stianlars1.dotviewer.srt</string>
+				<string>com.stianlars1.dotviewer.ss</string>
 				<string>com.stianlars1.dotviewer.st</string>
 				<string>com.stianlars1.dotviewer.staging</string>
+				<string>com.stianlars1.dotviewer.sty</string>
 				<string>com.stianlars1.dotviewer.styl</string>
 				<string>com.stianlars1.dotviewer.stylelintignore</string>
 				<string>com.stianlars1.dotviewer.stylelintrc</string>
 				<string>com.stianlars1.dotviewer.sum</string>
+				<string>com.stianlars1.dotviewer.svelte</string>
 				<string>com.stianlars1.dotviewer.swcrc</string>
 				<string>com.stianlars1.dotviewer.swiftformat</string>
 				<string>com.stianlars1.dotviewer.t4</string>
@@ -607,6 +664,7 @@
 				<string>com.stianlars1.dotviewer.tesc</string>
 				<string>com.stianlars1.dotviewer.tese</string>
 				<string>com.stianlars1.dotviewer.test</string>
+				<string>com.stianlars1.dotviewer.tex</string>
 				<string>com.stianlars1.dotviewer.tf</string>
 				<string>com.stianlars1.dotviewer.tfstate</string>
 				<string>com.stianlars1.dotviewer.tfvars</string>
@@ -619,23 +677,30 @@
 				<string>com.stianlars1.dotviewer.tpl</string>
 				<string>com.stianlars1.dotviewer.tps</string>
 				<string>com.stianlars1.dotviewer.trg</string>
+				<string>com.stianlars1.dotviewer.troff</string>
+				<string>com.stianlars1.dotviewer.ts</string>
 				<string>com.stianlars1.dotviewer.tsbuildinfo</string>
 				<string>com.stianlars1.dotviewer.tsql</string>
+				<string>com.stianlars1.dotviewer.tsx</string>
 				<string>com.stianlars1.dotviewer.ttcn3</string>
 				<string>com.stianlars1.dotviewer.ttl</string>
 				<string>com.stianlars1.dotviewer.ttx</string>
 				<string>com.stianlars1.dotviewer.twig</string>
 				<string>com.stianlars1.dotviewer.typescript</string>
 				<string>com.stianlars1.dotviewer.upc</string>
+				<string>com.stianlars1.dotviewer.v</string>
 				<string>com.stianlars1.dotviewer.vagrantfile</string>
 				<string>com.stianlars1.dotviewer.vala</string>
 				<string>com.stianlars1.dotviewer.vb</string>
 				<string>com.stianlars1.dotviewer.vbs</string>
 				<string>com.stianlars1.dotviewer.vercelignore</string>
+				<string>com.stianlars1.dotviewer.vert</string>
+				<string>com.stianlars1.dotviewer.vhd</string>
 				<string>com.stianlars1.dotviewer.vhdl</string>
 				<string>com.stianlars1.dotviewer.vim</string>
 				<string>com.stianlars1.dotviewer.viminfo</string>
 				<string>com.stianlars1.dotviewer.vimrc</string>
+				<string>com.stianlars1.dotviewer.vs</string>
 				<string>com.stianlars1.dotviewer.vscodeignore</string>
 				<string>com.stianlars1.dotviewer.vue</string>
 				<string>com.stianlars1.dotviewer.vxml</string>

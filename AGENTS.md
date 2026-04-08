@@ -375,3 +375,46 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `cd site && npm run build` → pass
   - `cd site && npx playwright screenshot --browser=chromium --viewport-size='1440,3000' 'http://127.0.0.1:3200/#previews' /tmp/dotviewer-previews-captions-tall.png` → pass
 - Follow-ups: Deploy the updated `site/` build when you want production to show the refined caption cards live.
+
+### Distribution alignment + growth plan
+- Outcome: Aligned the public site and marketing context around the real dual-channel model: free direct DMG for adoption plus a paid App Store option for monetization. Added App Store CTA tracking to the analytics pipeline, surfaced the App Store route on the homepage and `/download`, updated install/readme docs, created a detailed growth and monetization execution plan, and updated backlog state to reflect that App Store distribution is already live.
+- Files: `.agents/product-marketing-context.md`, `docs/marketing/growth-and-monetization-plan-2026-04-04.md`, `site/app/page.tsx`, `site/app/download/page.tsx`, `site/app/api/analytics/route.ts`, `site/lib/analytics/client.ts`, `site/lib/analytics/server.ts`, `site/lib/site-config.ts`, `site/lib/structured-data.ts`, `site/README.md`, `BACKLOG.md`, `CHANGELOG.md`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+- Follow-ups: Add Search Console, ship a Homebrew Cask, collect App Store ratings, and execute the 30-day checklist in `docs/marketing/growth-and-monetization-plan-2026-04-04.md`.
+
+### App Store export diagnostics
+- Outcome: Hardened the App Store path in `scripts/release.sh` so export failures now capture `xcodebuild` output, locate the generated `.xcdistributionlogs` bundle, and surface the real Apple-side cause and missing bundle IDs instead of failing with only generic provisioning noise. Re-ran the original `1.1.0` App Store build after Apple-side propagation and confirmed the export now completes and produces a signed `dotViewer.pkg`.
+- Files: `scripts/release.sh`, `AGENTS.md`
+- Verified:
+  - `bash -n ./scripts/release.sh` → pass
+  - `./scripts/release.sh 1.1.0 --app-store` → pass (`dotViewer/build/appstore/dotViewer.pkg` exported)
+  - `pkgutil --check-signature dotViewer/build/appstore/dotViewer.pkg` → pass
+- Follow-ups: Headless upload still needs separate App Store Connect upload credentials or API key material; the existing notary keychain profile is not usable by `altool`.
+
+### Transporter validation fix
+- Outcome: Fixed the new Transporter validation failure by adding `CFBundleDisplayName` to both Quick Look extension targets in the XcodeGen source. Rebuilt the `1.1.0` App Store package and verified those keys are now present in both the archive and the exported `.pkg` payload, matching the error Transporter reported.
+- Files: `dotViewer/project.yml`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `./scripts/release.sh 1.1.0 --app-store` → pass
+  - `plutil -p dotViewer/build/dotViewer.xcarchive/Products/Applications/dotViewer.app/Contents/PlugIns/QuickLookExtension.appex/Contents/Info.plist` → `CFBundleDisplayName = dotViewer Preview`
+  - `plutil -p dotViewer/build/dotViewer.xcarchive/Products/Applications/dotViewer.app/Contents/PlugIns/QuickLookThumbnailExtension.appex/Contents/Info.plist` → `CFBundleDisplayName = dotViewer Thumbnail`
+  - `pkgutil --expand-full dotViewer/build/appstore/dotViewer.pkg /tmp/dotviewer-pkg-expanded` + plist checks → both exported extension plists contain `CFBundleDisplayName`
+- Follow-ups: Retry Transporter verification with the rebuilt `dotViewer/build/appstore/dotViewer.pkg`; if Apple reports a next validation issue, handle that one from the new log rather than the old package.
+
+## 2026-04-05
+
+### Victor feedback sweep
+- Outcome: Investigated Victor/Vico’s email, created GitHub issues for each reported area, fixed POSIX-style line counting so trailing terminal newlines no longer inflate visible line counts, added structured `csv`/`tsv` preview rendering, added named-manpage rendering via `mandoc` for `.man`/`.mdoc`/`.roff`/`.nroff`/`.troff`, added shebang/MIME fallback for extensionless executable text scripts, and expanded UTI/export generation plus coverage auditing for the new routing cases.
+- Files: `dotViewer/Shared/TextLineUtilities.swift`, `dotViewer/Shared/DelimitedTextRenderer.swift`, `dotViewer/Shared/ManPageRenderer.swift`, `dotViewer/Shared/ShebangLanguageDetector.swift`, `dotViewer/Shared/FileInspector.swift`, `dotViewer/Shared/FileTypeResolution.swift`, `dotViewer/Shared/PlainTextRenderer.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/HighlightXPC/TreeSitterHighlighter.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/Shared/DefaultFileTypes.json`, `dotViewer/project.yml`, `dotViewer/App/Info.plist`, `dotViewer/QuickLookExtension/Info.plist`, `dotViewer/QuickLookThumbnailExtension/Info.plist`, `scripts/dotviewer-gen-utis.py`, `scripts/dotviewer-test-uti-coverage.py`, `dotViewer/dotViewerTests/*`, `README.md`, `KNOWN_ISSUES.md`, `BACKLOG.md`, `CHANGELOG.md`, `site/app/page.tsx`, `site/app/download/page.tsx`, `site/lib/structured-data.ts`, `site/README.md`, `AGENTS.md`
+- Verified:
+  - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 707/707 (100.0%)`)
+  - `cd dotViewer && xcodegen generate` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`139 tests, 0 failures`)
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass
+  - `./scripts/dotviewer-ql-smoke.sh /tmp/dotviewer-vico/victor.conf` → pass (dotViewer preview request + routing logs captured)
+  - `./scripts/dotviewer-ql-smoke.sh` raw captures for `/tmp/dotviewer-vico/victor.tsv`, `/tmp/dotviewer-vico/victor_script`, `/tmp/dotviewer-vico/victor.man`, `/tmp/dotviewer-vico/victor.mdoc`, `/tmp/dotviewer-vico/victor.roff`, and `/tmp/dotviewer-vico/test.1` → extension launch confirmed from `/Applications/dotViewer.app`
+  - `mdls -name kMDItemContentType -name kMDItemContentTypeTree /tmp/dotviewer-vico/victor.conf /tmp/dotviewer-vico/victor.tsv /tmp/dotviewer-vico/victor_script /tmp/dotviewer-vico/victor.man /tmp/dotviewer-vico/victor.mdoc /tmp/dotviewer-vico/victor.roff /tmp/dotviewer-vico/test.1` → pass (custom manpage UTIs and executable-script routing verified; `.tsv` resolves to `public.tab-separated-values-text`, `.conf` to `com.coteditor.conf` on this machine)
+- Follow-ups: System-owned routing limits like `.ts` and `.html`, plus truly novel `dyn.*` extensions, remain constrained by macOS Quick Look exact-match behavior. Vendor-owned UTIs can still differ across machines even when dotViewer ships compatibility aliases.

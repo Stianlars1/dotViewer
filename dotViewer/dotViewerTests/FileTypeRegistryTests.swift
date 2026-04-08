@@ -21,7 +21,16 @@ final class FileTypeRegistryTests: XCTestCase {
         XCTAssertEqual(registry.highlightLanguage(for: "cue"), "plaintext")
         XCTAssertEqual(registry.displayName(for: "cue"), "CUE / Cue Sheet")
 
+        XCTAssertEqual(registry.highlightLanguage(for: "csv"), "plaintext")
+        XCTAssertEqual(registry.displayName(for: "csv"), "CSV")
+        XCTAssertEqual(registry.highlightLanguage(for: "tsv"), "plaintext")
+        XCTAssertEqual(registry.displayName(for: "tsv"), "TSV")
+        XCTAssertEqual(registry.highlightLanguage(for: "conf"), "ini")
+        XCTAssertEqual(registry.displayName(for: "conf"), "INI")
+
         XCTAssertEqual(registry.highlightLanguage(for: "1"), "plaintext")
+        XCTAssertEqual(registry.highlightLanguage(for: "man"), "plaintext")
+        XCTAssertEqual(registry.highlightLanguage(for: "mdoc"), "plaintext")
         XCTAssertEqual(registry.highlightLanguage(for: "2"), "plaintext")
         XCTAssertEqual(registry.highlightLanguage(for: "9"), "plaintext")
         XCTAssertEqual(registry.displayName(for: "1"), "Man Page")

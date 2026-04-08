@@ -107,9 +107,9 @@
 
 **Root cause**: Quick Look matches on **exact UTI**, not conformance. If a file's UTI isn't in our QLSupportedContentTypes list, our extension is never called. Despite `public.data` being listed, it does NOT catch dynamic UTIs (`dyn.*`) — see KI-010.
 
-**Fix (2026-02-10, expanded 2026-02-13)**: Exhaustive UTI coverage expansion — 563 custom UTI exports + system/vendor UTIs = 680 entries in `QLSupportedContentTypes` per extension target, covering all 582 extensions and 295 filename patterns in `DefaultFileTypes.json`. Combined with `looksTextual` binary gating, this ensures all registered text files get dotViewer previews.
+**Fix (2026-02-10, expanded 2026-02-13 and 2026-04-05)**: Exhaustive UTI coverage expansion — 635 custom UTI exports + system/vendor UTIs = 753 entries in `QLSupportedContentTypes` per extension target, covering all 599 explicit extensions and 295 filename patterns in `DefaultFileTypes.json`. Combined with `looksTextual` binary gating, structured TSV/CSV rendering, named-manpage exports, and executable-script routing aliases, this keeps the shipped registry routable where macOS allows third-party Quick Look ownership.
 
-**Remaining gap**: Files with extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) get `dyn.*` UTIs that don't match any entry. This is an inherent macOS Quick Look limitation — no `.appex` extension can catch truly unknown file types. See KI-010.
+**Remaining gap**: Files with extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) get `dyn.*` UTIs that don't match any entry. This is an inherent macOS Quick Look limitation — no `.appex` extension can catch truly unknown file types. Vendor-owned UTIs can also differ by machine, so LaunchServices may still report a third-party identifier even when dotViewer ships a compatible alias. See KI-010.
 
 ---
 
@@ -244,25 +244,29 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 
 **Root cause**: Quick Look routes files to extensions based on **exact UTI matching**, not conformance. Despite `public.data` being listed in `QLSupportedContentTypes`, files with dynamic UTIs (`dyn.*`) are NOT matched. Only files whose exact UTI appears in the list get routed to dotViewer.
 
-**Fixes applied (2026-02-10)**:
+**Fixes applied (2026-02-10, expanded 2026-04-05)**:
 - Fixed `displayName(for:)` — custom extensions now show their user-specified display name in the preview header
 - Fixed `bestKey()` — multi-dot files resolve to intermediate known segments via right-to-left segment scanning
 - Fixed 5 missing primary extensions in DefaultFileTypes.json (`xml`, `plist`, `jsonc`, `ini`, `log`)
-- **Exhaustive UTI coverage expansion** — expanded from ~78 to 680 `QLSupportedContentTypes` per extension target:
-  - 563 `UTExportedTypeDeclarations` (`com.stianlars1.dotviewer.*`)
+- **Exhaustive UTI coverage expansion** — expanded from ~78 to 753 `QLSupportedContentTypes` per extension target:
+  - 635 `UTExportedTypeDeclarations` (`com.stianlars1.dotviewer.*`)
   - System/vendor UTIs included for routing conflicts and known platform mappings
-  - 400 file type entries covering 582 extensions and 295 filenames
+  - 404 file type entries covering 599 extensions and 295 filenames
   - Script `scripts/dotviewer-gen-utis.py` generates declarations from DefaultFileTypes.json
+  - Vendor-backed extensions now also get dotViewer-owned exports where possible, so formats like `.conf` and named manpage files do not depend on a third-party app being installed
+  - Numeric-only extensions are quoted correctly during UTI generation so manpage sections remain string tags end-to-end
+  - Added named manpage routing (`.man`, `.mdoc`, `.roff`, `.nroff`, `.troff`) plus compatibility routing for `public.tab-separated-values-text` and executable-script UTIs
   - Added 58 new file type entries sourced from sbarex/SourceCodeSyntaxHighlight user requests: shaders (GLSL, HLSL, WGSL, Unity), PL/SQL, Bazel/Starlark, Razor, Liquid, JSON5, JSONL, KML, WSDL, XAML, Apple .strings/.mobileconfig, Svelte, Odin, Elvish, MQL, Gherkin, SRT subtitles, and more
   - Removed 313 pre-computed `dyn.*` fallback codes that were non-functional (encoding mismatch with macOS)
+  - Coverage audit now validates the checked-in app/extension declarations and reports the “custom UTI export exists, will work after LaunchServices registration” case explicitly
 
 **Remaining gap**: Truly novel extensions not in DefaultFileTypes.json (e.g., `.1770685742797` backup files) still won't reach our extension. This is an inherent limitation of macOS Quick Look — there is no catch-all mechanism for `.appex` extensions. No Quick Look extension (sbarex, Peek, QLStephen) has solved this; QLStephen's `.qlgenerator` approach is dead on macOS 15.
 
 **Progress (2026-02-12)**: Custom file types now support overriding built-in types (with confirmation dialog), filename-based mappings (e.g., Jenkinsfile → groovy, Dockerfile → docker), and multi-dot extensions (e.g., `.env.local`). HighlightLanguage picker expanded from 33 to 54 entries with quality tiers. Shared `CustomExtensionValidation` logic ensures consistent validation across add/edit flows. Override badges shown in file types list. See `docs/custom-file-types-design.md`.
 
-**User-facing limitation**: Custom file types work for highlighting, display name, and override of any of the 582 extensions already in `DefaultFileTypes.json`. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. This is a hard platform limitation, not a dotViewer bug.
+**User-facing limitation**: Custom file types work for highlighting, display name, and override of any of the 599 extensions already in `DefaultFileTypes.json`. For truly novel extensions (not in the registry), the file never reaches dotViewer — macOS assigns a `dyn.*` UTI that Quick Look cannot route to any third-party extension. On machines with third-party editors installed, metadata may still show a vendor UTI like `com.coteditor.conf`; dotViewer now ships compatibility aliases for those cases, but the visible UTI string still comes from LaunchServices, not from dotViewer.
 
-**Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 582 extensions in the registry. Only completely unknown extensions remain unroutable.
+**Acceptance criteria**: ~~Custom file types added in Settings should take effect immediately for any text file.~~ Achieved for all 599 extensions in the registry. Only completely unknown extensions remain unroutable.
 
 ---
 

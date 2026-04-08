@@ -2,7 +2,24 @@
 
 ## [Unreleased]
 
-No unreleased changes yet.
+### Added
+
+- Added [docs/marketing/growth-and-monetization-plan-2026-04-04.md](/Users/stian/Developer/macOS%20Apps/v2.5/docs/marketing/growth-and-monetization-plan-2026-04-04.md), a concrete growth and monetization execution plan covering SEO, distribution, App Store, Setapp, content, and measurement.
+- Added structured preview rendering for `csv` and `tsv` files so delimited data no longer falls back to generic plain-text layout.
+- Added rendered manpage support for `.man`, `.mdoc`, `.roff`, `.nroff`, and `.troff` using `/usr/bin/mandoc`, alongside the existing numeric section support.
+- Added shebang/MIME-based language detection for extensionless executable text scripts.
+- Added shared text-line counting utilities and dedicated tests to keep header metadata, preview HTML, syntax output, and thumbnails aligned.
+
+### Changed
+
+- Aligned the marketing context with the live dual-channel model: free direct DMG for adoption plus a paid App Store path for monetization.
+- Updated the website install flow to surface both the free direct DMG and the paid App Store route, and added App Store CTA tracking to the analytics pipeline.
+- Updated `site/README.md` to document the install-chooser model and the new App Store URL environment variables.
+- Marked `B-012` as done in `BACKLOG.md` to reflect that public App Store distribution is already live.
+- Fixed line counting so a trailing terminal newline no longer inflates the visible line count in the file-info header, preview HTML, or thumbnail snippets.
+- Expanded generated UTI coverage for Victor's reported cases, including named manpage formats, vendor-backed `.conf` compatibility, `public.tab-separated-values-text`, and executable-script routing aliases.
+- Updated the UTI coverage audit so it validates the checked-in Quick Look/app declarations and correctly reports registration-dependent custom UTI coverage.
+- Refreshed the README, known-issues notes, and public site copy to document the new TSV/manpage/script coverage and the remaining macOS routing limits.
 
 ## v1.1.0 (2026-04-03) — Current
 

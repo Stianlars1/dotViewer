@@ -222,6 +222,10 @@
   line-height: 1.75;
 }
 
+.sideItem .secondaryAction {
+  margin-top: 14px;
+}
+
 .historySection {
   margin-top: 120px;
 }

@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Download dotViewer for macOS",
   description:
-    "Download the notarized dotViewer DMG for macOS and browse version history for the Quick Look app that previews dotfiles, config files, markdown, logs, plain text, and code.",
+    "Choose the free direct dotViewer DMG or the paid App Store route for macOS, then browse version history for the Quick Look app that previews dotfiles, config files, CSV/TSV data, man pages, logs, plain text, executable scripts, and code.",
   alternates: {
     canonical: "/download",
   },
@@ -64,6 +64,7 @@ function Code({ children }: { children: ReactNode }) {
 
 export default async function DownloadPage() {
   const config = getSiteConfig();
+  const appStoreHref = config.appStoreUrl;
   const releases = config.githubRepo
     ? await getGitHubReleases(config.githubRepo, 16)
     : [];
@@ -97,7 +98,7 @@ export default async function DownloadPage() {
           className={styles.testVideo}
         />
         <section className={styles.hero}>
-          <div className={styles.eyebrow}>Direct macOS download</div>
+          <div className={styles.eyebrow}>macOS install options</div>
           <h1 className={styles.title}>
             {latestRelease?.name
               ? `Download ${latestRelease.name} for macOS.`
@@ -106,16 +107,18 @@ export default async function DownloadPage() {
           <p className={styles.body}>
             Get the notarized DMG for the Quick Look app that previews{" "}
             <Code>.gitignore</Code>, <Code>.env</Code>, markdown, config files,
-            plain text documents, <Code>log files</Code>, and{" "}
-            <Code>source code</Code> in Finder, with companion-app controls for
-            themes, supported file mappings, and preview sizing. Use the
-            button below to download the current release.
+            <Code>CSV</Code> / <Code>TSV</Code> data, man pages, plain text
+            documents, <Code>log files</Code>, extensionless executable
+            scripts, and <Code>source code</Code> in Finder, with
+            companion-app controls for themes, supported file mappings, and
+            preview sizing.
           </p>
           <p className={styles.body}>
-            This page exists so the public download link can stay stable while
-            the actual DMG asset and version change release to release. If the
-            GitHub release feed is temporarily slow, the stable installer route
-            still stays the same.
+            The direct DMG is the free adoption path. If you prefer
+            store-managed installation and want to support ongoing development,
+            use the paid App Store route instead. This page exists so the
+            public DMG link can stay stable while the actual release asset and
+            version change over time.
           </p>
 
           <div className={styles.actions}>
@@ -127,14 +130,20 @@ export default async function DownloadPage() {
               source="download_page_hero"
               targetUrl={`${stableDownloadHref}?source=download_page_hero`}
             >
-              {latestRelease?.name
-                ? `Download ${latestRelease.name}`
-                : "Download latest DMG"}
+              {latestRelease?.name ? `Get ${latestRelease.name} DMG` : "Get latest DMG"}
             </TrackedDownloadLink>
-            <a
-              className={styles.secondaryAction}
-              href={config.releasesUrl ?? "/#install"}
-            >
+            {appStoreHref ? (
+              <TrackedDownloadLink
+                assetKind="app_store"
+                className={styles.secondaryAction}
+                releaseTag={null}
+                source="download_page_hero_app_store"
+                targetUrl={appStoreHref}
+              >
+                Buy on App Store
+              </TrackedDownloadLink>
+            ) : null}
+            <a className={styles.secondaryAction} href={config.releasesUrl ?? "/#install"}>
               View GitHub releases
             </a>
           </div>
@@ -200,11 +209,31 @@ export default async function DownloadPage() {
               <div className={styles.sideLabel}>Best for previewing</div>
               <p>
                 Dotfiles, config files, markdown, <Code>log files</Code>, plain
-                text documents, and <Code>source code</Code> in Finder Quick
-                Look, with system-following themes and a shared initial preview
-                size when you want a steadier window.
+                text documents, <Code>CSV</Code> / <Code>TSV</Code> data, man
+                pages, extensionless executable scripts, and{" "}
+                <Code>source code</Code> in Finder Quick Look, with
+                system-following themes and a shared initial preview size when
+                you want a steadier window.
               </p>
             </div>
+            {appStoreHref ? (
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Paid channel</div>
+                <p>
+                  Prefer the App Store for store-managed installation, Apple
+                  billing, and a clean way to support ongoing development.
+                </p>
+                <TrackedDownloadLink
+                  assetKind="app_store"
+                  className={styles.secondaryAction}
+                  releaseTag={null}
+                  source="download_page_side_panel_app_store"
+                  targetUrl={appStoreHref}
+                >
+                  Buy on App Store
+                </TrackedDownloadLink>
+              </div>
+            ) : null}
             <div className={styles.sideItem}>
               <div className={styles.sideLabel}>Direct download URL</div>
               <code>{stableDownloadHref}</code>

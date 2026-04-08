@@ -30,7 +30,7 @@ public enum FileInspector {
     }
 
     public static func fileInfo(from text: String, fileSizeBytes: Int, isTruncated: Bool) -> FileInfo {
-        let lineCount = max(countLines(in: text), 1)
+        let lineCount = TextLineUtilities.visualLineCount(in: text)
         return FileInfo(text: text, lineCount: lineCount, fileSizeBytes: fileSizeBytes, isTruncated: isTruncated)
     }
 
@@ -39,13 +39,5 @@ public enum FileInspector {
             return decoded
         }
         return String(decoding: data, as: UTF8.self)
-    }
-
-    private static func countLines(in text: String) -> Int {
-        var count = 0
-        for scalar in text.unicodeScalars where scalar == "\n" {
-            count += 1
-        }
-        return text.isEmpty ? 0 : count + 1
     }
 }

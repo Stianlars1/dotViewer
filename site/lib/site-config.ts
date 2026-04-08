@@ -1,5 +1,6 @@
 const DEFAULT_SITE_URL = "https://dotviewer.app";
 const DEFAULT_GITHUB_REPO = "Stianlars1/dotViewer";
+const DEFAULT_APP_STORE_URL = "https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12";
 
 function normalizeUrl(value: string | undefined): string | null {
   if (!value) {
@@ -56,6 +57,7 @@ function inferRepoFromVercel(): string | null {
 }
 
 export type SiteConfig = {
+  appStoreUrl: string | null;
   directDownloadUrl: string | null;
   githubRepo: string | null;
   googleAnalyticsId: string | null;
@@ -66,6 +68,10 @@ export type SiteConfig = {
 };
 
 export function getSiteConfig(): SiteConfig {
+  const appStoreUrl =
+    normalizeUrl(process.env.APP_STORE_URL) ??
+    normalizeUrl(process.env.NEXT_PUBLIC_APP_STORE_URL) ??
+    DEFAULT_APP_STORE_URL;
   const directDownloadUrl = normalizeUrl(process.env.DIRECT_DOWNLOAD_URL);
   const githubRepo =
     normalizeRepo(process.env.GITHUB_REPO) ??
@@ -80,6 +86,7 @@ export function getSiteConfig(): SiteConfig {
   const siteUrl = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? DEFAULT_SITE_URL;
 
   return {
+    appStoreUrl,
     directDownloadUrl,
     githubRepo,
     googleAnalyticsId,

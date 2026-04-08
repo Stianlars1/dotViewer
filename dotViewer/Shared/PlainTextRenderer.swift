@@ -10,7 +10,7 @@ public enum PlainTextRenderer {
 private enum TreeSitterFallbackRenderer {
     static func renderPlain(data: Data, showLineNumbers: Bool) -> String {
         let text = String(decoding: data, as: UTF8.self)
-        let lines = text.split(separator: "\n", omittingEmptySubsequences: false).map { escapeHTML(String($0)) }
+        let lines = TextLineUtilities.lines(forDisplayFrom: text).map(escapeHTML)
 
         if showLineNumbers {
             return lines.enumerated().map { index, line in

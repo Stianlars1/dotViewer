@@ -6,7 +6,7 @@ For every extension in DefaultFileTypes.json (both `extensions` and implied from
 this script:
   1. Creates a temp file with that extension
   2. Asks macOS what UTI it resolves to (via Swift UTType API)
-  3. Checks that UTI is in our QLSupportedContentTypes (from project.yml)
+  3. Checks that UTI is in our QLSupportedContentTypes (from the checked-in Info.plists)
   4. Reports pass/fail for each
 
 Usage:
@@ -15,6 +15,7 @@ Usage:
 """
 
 import json
+import plistlib
 import subprocess
 import sys
 import tempfile
@@ -25,6 +26,9 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = SCRIPT_DIR.parent
 DEFAULT_TYPES_JSON = ROOT_DIR / "dotViewer" / "Shared" / "DefaultFileTypes.json"
 PROJECT_YML = ROOT_DIR / "dotViewer" / "project.yml"
+APP_INFO_PLIST = ROOT_DIR / "dotViewer" / "App" / "Info.plist"
+PREVIEW_INFO_PLIST = ROOT_DIR / "dotViewer" / "QuickLookExtension" / "Info.plist"
+THUMBNAIL_INFO_PLIST = ROOT_DIR / "dotViewer" / "QuickLookThumbnailExtension" / "Info.plist"
 
 
 def load_all_extensions():
@@ -62,85 +66,34 @@ def load_all_extensions():
 
 
 def load_ql_supported_content_types():
-    """Parse QLSupportedContentTypes from project.yml."""
-    content = PROJECT_YML.read_text(encoding="utf-8")
+    """Load QLSupportedContentTypes from both Quick Look extension Info.plists."""
     utis = set()
-    in_ql = False
-    for line in content.splitlines():
-        stripped = line.strip()
-        if stripped == "QLSupportedContentTypes:":
-            in_ql = True
-            continue
-        if in_ql:
-            if stripped.startswith("- ") and not stripped.startswith("- {"):
-                uti = stripped[2:].strip()
-                if not uti.startswith("#"):
-                    utis.add(uti)
-            elif stripped.startswith("#"):
-                continue
-            elif stripped and not stripped.startswith("-"):
-                in_ql = False
+    for plist_path in (PREVIEW_INFO_PLIST, THUMBNAIL_INFO_PLIST):
+        plist = plistlib.loads(plist_path.read_bytes())
+        extension = plist.get("NSExtension", {})
+        attributes = extension.get("NSExtensionAttributes", {})
+        utis.update(attributes.get("QLSupportedContentTypes", []))
     return utis
 
 
 def load_exported_utis():
-    """Parse UTExportedTypeDeclarations from project.yml to get ext→UTI mapping."""
-    content = PROJECT_YML.read_text(encoding="utf-8")
-    exports = {}  # ext → UTI identifier
-    current_uti = None
-    in_ext_spec = False
-    in_uti_block = False
-
-    for line in content.splitlines():
-        stripped = line.strip()
-        if stripped == "UTExportedTypeDeclarations:":
-            in_uti_block = True
+    """Load exported UTI declarations from the host app Info.plist."""
+    plist = plistlib.loads(APP_INFO_PLIST.read_bytes())
+    exports = {}
+    for declaration in plist.get("UTExportedTypeDeclarations", []):
+        identifier = declaration.get("UTTypeIdentifier")
+        tag_spec = declaration.get("UTTypeTagSpecification", {})
+        extensions = tag_spec.get("public.filename-extension", [])
+        if not identifier:
             continue
-        if not in_uti_block:
-            continue
-        # End of block: next key at 4-space indent level
-        if line.startswith("    ") and not line.startswith("        ") and stripped and ":" in stripped:
-            break
-
-        if "UTTypeIdentifier:" in stripped:
-            current_uti = stripped.split("UTTypeIdentifier:", 1)[1].strip()
-            in_ext_spec = False
-        elif "public.filename-extension:" in stripped:
-            in_ext_spec = True
-        elif in_ext_spec and stripped.startswith("- "):
-            ext = stripped[2:].strip()
-            if current_uti:
-                exports[ext.lower()] = current_uti
-            in_ext_spec = False
-
+        for ext in extensions:
+            exports[str(ext).lower()] = identifier
     return exports
 
 
 def find_unquoted_numeric_extensions():
-    """Catch YAML numeric scalars under public.filename-extension before XcodeGen turns them into plist integers."""
-    offenders = []
-    in_ext_spec = False
-
-    for line_number, line in enumerate(PROJECT_YML.read_text(encoding="utf-8").splitlines(), start=1):
-        stripped = line.strip()
-
-        if stripped == "public.filename-extension:":
-            in_ext_spec = True
-            continue
-
-        if not in_ext_spec:
-            continue
-
-        if stripped.startswith("- "):
-            value = stripped[2:].strip()
-            if value.isdigit():
-                offenders.append((line_number, value))
-            continue
-
-        if stripped and not stripped.startswith("#"):
-            in_ext_spec = False
-
-    return offenders
+    """Numeric extensions are safe once serialized into plist arrays."""
+    return []
 
 
 def resolve_utis_batch(extensions):

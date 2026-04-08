@@ -543,6 +543,133 @@ public enum PreviewHTMLBuilder {
           font-style: italic;
         }
 
+        #raw-view[data-language="csv"],
+        #raw-view[data-language="tsv"] {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .code-view .delimited-preview {
+          display: grid;
+          gap: 12px;
+        }
+
+        .code-view .delimited-summary,
+        .code-view .delimited-note {
+          margin: 0;
+          color: var(--comment);
+          font-size: 0.92em;
+        }
+
+        .code-view .delimited-scroll {
+          overflow: auto;
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          background: var(--surface);
+        }
+
+        .code-view .delimited-table {
+          width: 100%;
+          border-collapse: collapse;
+          table-layout: auto;
+          font-size: 0.95em;
+        }
+
+        .code-view .delimited-table th,
+        .code-view .delimited-table td {
+          padding: 10px 12px;
+          border-bottom: 1px solid var(--border);
+          text-align: left;
+          vertical-align: top;
+          white-space: nowrap;
+        }
+
+        .code-view .delimited-table th {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background: var(--surface-strong);
+          color: var(--heading);
+          font-weight: 600;
+        }
+
+        .code-view .delimited-table td {
+          color: var(--text);
+        }
+
+        .code-view .delimited-table tbody tr:nth-child(2n) {
+          background: color-mix(in srgb, var(--surface) 72%, transparent);
+        }
+
+        .code-view .manpage-preview {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+          font-size: 0.98em;
+          line-height: 1.62;
+          color: var(--text);
+        }
+
+        .code-view .manpage-preview a {
+          color: var(--link);
+          text-decoration: none;
+        }
+
+        .code-view .manpage-preview a:hover {
+          text-decoration: underline;
+        }
+
+        .code-view .manpage-preview table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .code-view .manpage-preview table.head,
+        .code-view .manpage-preview table.foot {
+          margin: 0 0 18px;
+          color: var(--comment);
+          font-size: 0.88em;
+          border-bottom: 1px solid var(--border);
+        }
+
+        .code-view .manpage-preview td.head-rtitle,
+        .code-view .manpage-preview td.foot-os {
+          text-align: right;
+        }
+
+        .code-view .manpage-preview td.head-vol {
+          text-align: center;
+        }
+
+        .code-view .manpage-preview .manual-text {
+          display: grid;
+          gap: 18px;
+        }
+
+        .code-view .manpage-preview .Sh {
+          margin: 0;
+        }
+
+        .code-view .manpage-preview h1.Sh {
+          margin: 0 0 10px;
+          font-size: 1.2em;
+          line-height: 1.2;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: var(--heading);
+        }
+
+        .code-view .manpage-preview p.Pp,
+        .code-view .manpage-preview p {
+          margin: 0;
+        }
+
+        .code-view .manpage-preview code,
+        .code-view .manpage-preview .Fl,
+        .code-view .manpage-preview .Cm,
+        .code-view .manpage-preview .Ic,
+        .code-view .manpage-preview .Fn,
+        .code-view .manpage-preview .Cd {
+          font-family: "SF Mono", Menlo, Monaco, monospace;
+        }
+
         .rendered-view {
           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
           line-height: 1.6;

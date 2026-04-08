@@ -2,7 +2,7 @@
 
 Best-in-class Quick Look previewer for developers on macOS.
 
-`dotViewer` turns Finder Quick Look into a full code-and-config viewer: syntax-highlighted previews, markdown raw/rendered modes, quality thumbnails, and highly configurable copy behavior.
+`dotViewer` turns Finder Quick Look into a full code-and-config viewer: syntax-highlighted previews, structured CSV/TSV tables, rendered manpages, markdown raw/rendered modes, quality thumbnails, and highly configurable copy behavior.
 
 ## What dotViewer Is
 
@@ -94,7 +94,7 @@ Shared code in `Shared.framework` is used by all targets.
 
 ### 3) Preview UI and Interaction
 - Header badge with language display.
-- Header metadata: line count + file size.
+- Header metadata: POSIX-style line count + file size.
 - Copy button with selection-aware behavior.
 - RAW/RENDERED toggle for markdown.
 - Optional search button in header.
@@ -132,6 +132,9 @@ Copy actions that always remain available (regardless of preset):
 
 ### 5) File Type Support and Routing
 - Built-in registry loaded from `DefaultFileTypes.json`.
+- Structured table preview for `csv` and `tsv` files.
+- Rendered manpage preview via `mandoc` for `.1`-`.9`, `.man`, `.mdoc`, `.roff`, `.nroff`, and `.troff`.
+- Shebang + MIME fallback for extensionless executable text scripts once Finder routes them to dotViewer.
 - Extension and filename matching.
 - Multi-dot filename resolution strategy.
 - Dotfile-aware resolution.
@@ -230,8 +233,8 @@ These numbers are from the current codebase.
 
 | Metric | Value |
 |---|---:|
-| Built-in file type entries (`DefaultFileTypes.json`) | `402` |
-| Explicit extensions in registry | `592` |
+| Built-in file type entries (`DefaultFileTypes.json`) | `404` |
+| Explicit extensions in registry | `599` |
 | Filename patterns in registry | `295` |
 | Tree-sitter grammar integrations (`TreeSitterHighlighter`) | `53` |
 | Tree-sitter query files (`TreeSitterQueries/*.scm`) | `53` |
@@ -239,8 +242,8 @@ These numbers are from the current codebase.
 | Picker options with tree-sitter grammar label | `52` |
 | Copy behavior presets | `8` |
 | Themes (including system-following pairs) | `14` |
-| UTExportedTypeDeclarations in `project.yml` | `573` |
-| QLSupportedContentTypes per extension target | `690` |
+| UTExportedTypeDeclarations in shipped app metadata | `635` |
+| QLSupportedContentTypes per extension target | `753` |
 
 ## Website And Download Analytics
 
@@ -261,6 +264,7 @@ These are not dotViewer defects; they are Quick Look routing/host constraints.
 - `.ts` conflict: macOS often routes `.ts` to MPEG transport stream preview (`public.mpeg-2-transport-stream`) before third-party code previewers.
 - Open With defaults do not change Quick Look routing for system-owned UTIs (they only affect double-click/open behavior).
 - `.html` conflict: macOS native HTML renderer takes priority for many `.html` files.
+- Vendor-owned UTIs can vary by machine. dotViewer ships its own exports plus compatibility aliases for common cases like `.conf`, but exact-match routing still decides which previewer wins.
 - `Cmd+C` interception: Quick Look host intercepts keyboard copy before WebKit DOM handlers, which is why dotViewer provides copy behavior presets.
 - Catch-all unknown extensions: Quick Look extension routing is exact UTI-match based, so truly novel `dyn.*` types are not fully catchable by third-party `.appex` plugins.
 

@@ -348,6 +348,24 @@
     "highlightLanguage": "hugo"
   },
   {
+    "id": "csv",
+    "displayName": "CSV",
+    "extensions": [
+      "csv"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
+  },
+  {
+    "id": "tsv",
+    "displayName": "TSV",
+    "extensions": [
+      "tsv"
+    ],
+    "filenames": [],
+    "highlightLanguage": "plaintext"
+  },
+  {
     "id": "ini",
     "displayName": "INI",
     "extensions": [
@@ -2972,7 +2990,12 @@
       "6",
       "7",
       "8",
-      "9"
+      "9",
+      "man",
+      "mdoc",
+      "roff",
+      "nroff",
+      "troff"
     ],
     "filenames": [],
     "highlightLanguage": "plaintext"

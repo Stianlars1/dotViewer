@@ -75,6 +75,7 @@ KNOWN_UTIS = {
     "xhtml":    "public.xhtml",
     "css":      "public.css",
     "csv":      "public.comma-separated-values-text",
+    "tsv":      "public.tab-separated-values-text",
     "json":     "public.json",
     "xml":      "public.xml",
     "yaml":     "public.yaml",
@@ -166,6 +167,7 @@ UTI_CONFLICTS = {
 # Base QLSupportedContentTypes — always included
 BASE_CONTENT_TYPES = {
     "public.data",
+    "public.executable",
     "public.mpeg-2-transport-stream",
     "public.plain-text",
     "public.text",
@@ -216,6 +218,7 @@ BASE_CONTENT_TYPES = {
     "public.xml",
     "public.yaml",
     "public.toml",
+    "public.unix-executable",
     "com.apple.property-list",
     "com.microsoft.ini",
     "com.coteditor.conf",
@@ -375,7 +378,12 @@ for ext in exts {
 
 
 def classify_extensions(extensions, resolved_utis):
-    """Classify extensions into categories."""
+    """Classify extensions into categories.
+
+    Vendor UTIs remain in QLSupportedContentTypes for compatibility, but we
+    also export our own custom UTIs for those extensions so routing does not
+    depend on third-party apps being installed.
+    """
     system = {}
     vendor = {}
     already_custom = {}
@@ -394,6 +402,7 @@ def classify_extensions(extensions, resolved_utis):
                 system[ext] = uti
             else:
                 vendor[ext] = uti
+                needs_export[ext] = info
             continue
 
         resolved = resolved_utis.get(ext, "UNKNOWN")
@@ -406,6 +415,7 @@ def classify_extensions(extensions, resolved_utis):
             system[ext] = resolved
         else:
             vendor[ext] = resolved
+            needs_export[ext] = info
 
     return system, vendor, already_custom, needs_export
 
@@ -413,6 +423,11 @@ def classify_extensions(extensions, resolved_utis):
 def make_uti_name(ext):
     """Convert extension to safe UTI component name."""
     return ext.replace("+", "plus").replace("#", "sharp").replace("-", "_")
+
+
+def yaml_extension_literal(ext):
+    """Quote numeric-only extensions so plist generation keeps them as strings."""
+    return f'"{ext}"' if ext.isdigit() else ext
 
 
 def main():
@@ -439,10 +454,10 @@ def main():
 
     print(f"\n── Classification ──────────────────────────────────────")
     print(f"  System UTIs (macOS built-in):    {len(system)}")
-    print(f"  Vendor UTIs (third-party):       {len(vendor)}")
+    print(f"  Vendor UTIs (accepted in QL):    {len(vendor)}")
     print(f"  Already exported (our custom):   {len(already_custom)}")
     print(f"  Needs new export:                {len(needs_export)}")
-    total = len(system) + len(vendor) + len(already_custom) + len(needs_export)
+    total = len(system) + len(vendor) + len(already_custom)
     print(f"  Total:                           {total}")
 
     # Build exports for ALL extensions needing them (including "already custom"
@@ -504,7 +519,7 @@ def main():
                 print(f"              - {c}")
             print(f"            UTTypeTagSpecification:")
             print(f"              public.filename-extension:")
-            print(f"                - {exp['ext']}")
+            print(f"                - {yaml_extension_literal(exp['ext'])}")
 
         # ── QLSupportedContentTypes ──────────────────────────────────────
         print(f"\n{'=' * 70}")

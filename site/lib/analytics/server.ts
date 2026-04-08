@@ -24,7 +24,7 @@ type PageViewEvent = {
 };
 
 type DownloadEvent = {
-  assetKind: "dmg" | "checksum";
+  assetKind: "app_store" | "checksum" | "dmg";
   path: string;
   releaseTag: string | null;
   source: string;

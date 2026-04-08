@@ -23,10 +23,28 @@ final class FileTypeResolutionTests: XCTestCase {
         XCTAssertEqual(key, "cue")
     }
 
+    func testSingleDotConfigPrefersExtensionOverBasenameAlias() {
+        let url = URL(fileURLWithPath: "/tmp/sample.conf")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "conf")
+    }
+
+    func testSingleDotTSVPrefersExtensionOverBasenameAlias() {
+        let url = URL(fileURLWithPath: "/tmp/sample.tsv")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "tsv")
+    }
+
     func testManpageSectionOneExtension() {
         let url = URL(fileURLWithPath: "/tmp/dotviewer.1")
         let key = FileTypeResolution.bestKey(for: url)
         XCTAssertEqual(key, "1")
+    }
+
+    func testManpageMdocExtension() {
+        let url = URL(fileURLWithPath: "/tmp/dotviewer.mdoc")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "mdoc")
     }
 
     // MARK: - Dotfiles

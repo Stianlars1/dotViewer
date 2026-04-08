@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { getProductStats, getSupportedFileTypes } from "../lib/product-stats";
+import { TrackedDownloadLink } from "../components/tracked-download-link";
 import {
   buildHomeSchema,
   CREATOR_NAME,
@@ -17,7 +18,8 @@ import { SupportChecker } from "../components/support-checker";
 const heroMeta = [
   "One install",
   "Actual app screenshots",
-  "Free download",
+  "Free direct DMG",
+  "Paid App Store option",
   "Notarized DMG",
 ];
 
@@ -26,9 +28,11 @@ const coverageExamples = [
   ".env",
   "README.md",
   "package.json",
+  "data.tsv",
+  "nginx.conf",
+  "tool",
+  "man.1",
   "config.yaml",
-  "docker-compose.yml",
-  "notes.txt",
   "app.log",
 ];
 
@@ -52,9 +56,11 @@ const suiteBenefits = [
     body: (
       <>
         Open <Code>.gitignore</Code>, <Code>.env</Code>, README files,{" "}
-        <Code>shell scripts</Code>, <Code>JSON</Code>, <Code>YAML</Code>,{" "}
-        <Code>XML</Code>, and <Code>source code</Code> directly in Finder Quick
-        Look instead of bouncing into editors and <Code>Terminal</Code> windows.
+        <Code>shell scripts</Code>, extensionless executable scripts,{" "}
+        <Code>JSON</Code>, <Code>YAML</Code>, <Code>XML</Code>,{" "}
+        <Code>TSV</Code>, man pages, and <Code>source code</Code> directly in
+        Finder Quick Look instead of bouncing into editors and{" "}
+        <Code>Terminal</Code> windows.
       </>
     ),
   },
@@ -77,7 +83,8 @@ const comparisonPoints = [
         Preview common developer files such as <Code>.gitignore</Code>,{" "}
         <Code>.env</Code>, <Code>.editorconfig</Code>, <Code>README.md</Code>,{" "}
         <Code>JSON</Code>, <Code>YAML</Code>, <Code>XML</Code>, <Code>INI</Code>
-        , <Code>shell scripts</Code>, <Code>log files</Code>, and{" "}
+        , <Code>CSV</Code>, <Code>TSV</Code>, extensionless executable scripts,
+        man pages, <Code>shell scripts</Code>, <Code>log files</Code>, and{" "}
         <Code>source code</Code> from the same Quick Look flow.
       </>
     ),
@@ -156,8 +163,9 @@ const faqs = [
     answer: (
       <>
         dotViewer is built for the technical text files people keep checking in
-        Finder: dotfiles, config files, markdown documents, logs, plain text
-        documents, and <Code>source code</Code>.
+        Finder: dotfiles, config files, markdown documents, <Code>CSV</Code> /{" "}
+        <Code>TSV</Code> data, man pages, logs, extensionless executable
+        scripts, plain text documents, and <Code>source code</Code>.
       </>
     ),
     schemaQuestion: "What files is dotViewer built for?",
@@ -178,7 +186,8 @@ const faqs = [
         Yes. The app is designed around exactly that workflow, including common
         files such as <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
         <Code>.editorconfig</Code>, <Code>package.json</Code>, <Code>YAML</Code>
-        , <Code>XML</Code>, <Code>plist</Code>, <Code>log files</Code>, and many
+        , <Code>XML</Code>, <Code>plist</Code>, <Code>TSV</Code>, man pages,{" "}
+        <Code>log files</Code>, extensionless executable scripts, and many
         other text-based formats.
       </>
     ),
@@ -217,6 +226,15 @@ const faqs = [
     schemaQuestion: "Is the app signed and notarized?",
     schemaAnswer:
       "Yes. The public download flow is built around a Developer ID signed, notarized DMG so installation feels trustworthy and Gatekeeper-friendly for normal macOS users.",
+  },
+  {
+    id: "pricing",
+    question: "Is dotViewer free or paid?",
+    answer:
+      "Both distribution paths exist. The direct DMG on dotviewer.app is the free adoption path. There is also a paid App Store option for people who prefer store-managed installation and want to support ongoing development through a purchase.",
+    schemaQuestion: "Is dotViewer free or paid?",
+    schemaAnswer:
+      "Both distribution paths exist. The direct DMG on dotviewer.app is the free adoption path. There is also a paid App Store option for people who prefer store-managed installation and want to support ongoing development through a purchase.",
   },
   {
     id: "tuning",
@@ -259,6 +277,7 @@ export default function HomePage() {
     );
   }, 0);
   const config = getSiteConfig();
+  const appStoreHref = config.appStoreUrl;
   const releasesHref = config.releasesUrl ?? "#install";
   const repoHref = config.repoUrl ?? releasesHref;
   const issuesHref = config.repoUrl ? `${config.repoUrl}/issues` : repoHref;
@@ -372,7 +391,10 @@ export default function HomePage() {
               <p className={styles.heroBody}>
                 It replaces the usual patchwork of Quick Look add-ons with one
                 native app. The screenshots below are from the real macOS
-                product, not a web-only mockup.
+                product, not a web-only mockup. Use the free direct DMG if you
+                want the quickest install, or the paid App Store option if you
+                prefer store-managed installation and want to support
+                development.
               </p>
 
               <SupportChecker
@@ -384,11 +406,23 @@ export default function HomePage() {
 
               <div className={styles.heroActions}>
                 <Link className={styles.primaryAction} href="/download">
-                  Download for macOS
+                  Get the free DMG
                 </Link>
-                <a className={styles.secondaryAction} href={releasesHref}>
-                  View releases
-                </a>
+                {appStoreHref ? (
+                  <TrackedDownloadLink
+                    assetKind="app_store"
+                    className={styles.secondaryAction}
+                    releaseTag={null}
+                    source="home_page_hero_app_store"
+                    targetUrl={appStoreHref}
+                  >
+                    Buy on App Store
+                  </TrackedDownloadLink>
+                ) : (
+                  <a className={styles.secondaryAction} href={releasesHref}>
+                    View releases
+                  </a>
+                )}
               </div>
 
               <div className={styles.heroMeta} aria-label="Product details">
@@ -927,9 +961,10 @@ export default function HomePage() {
                 A normal Mac install flow, kept intentionally short.
               </h2>
               <p className={styles.sectionBody}>
-                The install path is meant to feel familiar: direct download,
-                drag to Applications, launch once, then use Quick Look in
-                Finder.
+                The free direct path is meant to feel familiar: download the
+                DMG, drag to Applications, launch once, then use Quick Look in
+                Finder. If you prefer store-managed installation, the paid App
+                Store channel is available too.
               </p>
             </div>
 
@@ -944,9 +979,10 @@ export default function HomePage() {
             </div>
 
             <div className={styles.installNote}>
-              Free public download. One notarized DMG, one launch, and then you
-              can use Space in Finder to preview markdown, config files,
-              dotfiles, plain text documents, logs, and code.
+              Free public DMG for adoption, plus a paid App Store path for
+              convenience and support. One notarized install, one launch, and
+              then you can use Space in Finder to preview markdown, config
+              files, dotfiles, plain text documents, logs, and code.
             </div>
           </section>
 
@@ -975,16 +1011,29 @@ export default function HomePage() {
                 </h2>
                 <p className={styles.ctaBody}>
                   dotViewer is for the moments when you just need to inspect the
-                  file, understand what it is, and keep moving. Download the
-                  latest DMG or read the release history before installing.
+                  file, understand what it is, and keep moving. Get the free
+                  direct DMG, or choose the App Store if you want the paid
+                  store-managed route instead.
                 </p>
                 <div className={styles.ctaActions}>
                   <Link className={styles.primaryAction} href="/download">
-                    Download for macOS
+                    Get the free DMG
                   </Link>
-                  <a className={styles.secondaryAction} href={releasesHref}>
-                    View releases
-                  </a>
+                  {appStoreHref ? (
+                    <TrackedDownloadLink
+                      assetKind="app_store"
+                      className={styles.secondaryAction}
+                      releaseTag={null}
+                      source="home_page_bottom_cta_app_store"
+                      targetUrl={appStoreHref}
+                    >
+                      Buy on App Store
+                    </TrackedDownloadLink>
+                  ) : (
+                    <a className={styles.secondaryAction} href={releasesHref}>
+                      View releases
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
@@ -1013,6 +1062,7 @@ export default function HomePage() {
               <a href="#install">Install</a>
               <a href="#faq">FAQ</a>
               <Link href="/download">Download</Link>
+              {appStoreHref ? <a href={appStoreHref}>App Store</a> : null}
               <a href={releasesHref}>Releases</a>
               <a href={repoHref}>GitHub</a>
             </div>

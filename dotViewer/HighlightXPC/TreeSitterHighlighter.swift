@@ -583,6 +583,10 @@ private extension TreeSitterHighlighter {
             appendSegment(remaining, className: nil, lines: &lines)
         }
 
+        if String(decoding: data, as: UTF8.self).hasSuffix("\n"), lines.count > 1, lines.last?.isEmpty == true {
+            lines.removeLast()
+        }
+
         if showLineNumbers {
             return lines.enumerated().map { index, line in
                 let lineNumber = index + 1

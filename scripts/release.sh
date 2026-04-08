@@ -106,6 +106,91 @@ sign_dmg_if_needed() {
     fi
 }
 
+extract_distribution_log_path() {
+    local output="$1"
+
+    printf '%s\n' "$output" \
+        | sed -n 's/.*Created bundle at path "\(.*\.xcdistributionlogs\)".*/\1/p' \
+        | tail -1
+}
+
+latest_distribution_log_path() {
+    local temp_root="${TMPDIR:-/tmp}"
+
+    find "$temp_root" -maxdepth 1 -type d -name "*.xcdistributionlogs" -print0 2>/dev/null \
+        | xargs -0 stat -f '%m %N' 2>/dev/null \
+        | sort -nr \
+        | head -1 \
+        | cut -d' ' -f2-
+}
+
+diagnose_export_failure() {
+    local export_output="$1"
+    local log_bundle
+    local provisioning_log
+    local app_store_log
+    local account
+    local missing_profiles
+
+    log_bundle="$(extract_distribution_log_path "$export_output")"
+
+    if [ -z "$log_bundle" ] || [ ! -d "$log_bundle" ]; then
+        log_bundle="$(latest_distribution_log_path)"
+    fi
+
+    echo ""
+    print_error "Export failed"
+
+    if [ -n "$log_bundle" ] && [ -d "$log_bundle" ]; then
+        echo "  Distribution logs: $log_bundle"
+    else
+        print_warning "Could not locate Xcode distribution logs for deeper diagnostics"
+        return
+    fi
+
+    provisioning_log="$log_bundle/IDEDistributionProvisioning.log"
+    app_store_log="$log_bundle/IDEDistributionAppStoreConnect.log"
+
+    if [ -f "$provisioning_log" ]; then
+        account="$(sed -n "s/.*username='\\([^']*\\)'.*/\\1/p" "$provisioning_log" | head -1)"
+        missing_profiles="$(sed -n "s/.*No profiles for '\\([^']*\\)'.*/\\1/p" "$provisioning_log" | sort -u)"
+
+        if grep -q "FORBIDDEN_ERROR.PLA_NOT_ACCEPTED" "$provisioning_log"; then
+            echo "  Apple Developer portal access is still blocked for team $TEAM_ID."
+            if [ -n "$account" ]; then
+                echo "  Account used: $account"
+            fi
+            echo "  Apple returned FORBIDDEN_ERROR.PLA_NOT_ACCEPTED while Xcode requested"
+            echo "  Mac App Store signing assets for this archive."
+            echo ""
+            echo "  This is not a stale export flag in this script."
+            echo "  App Store Connect access is working, but Developer portal provisioning"
+            echo "  for team $TEAM_ID is still denied by Apple."
+            echo ""
+            echo "  Next steps:"
+            echo "    1. Accept the latest Apple Developer Program License Agreement on"
+            echo "       developer.apple.com for team $TEAM_ID."
+            echo "    2. In Xcode > Settings > Accounts, sign out and back in for the"
+            echo "       account above, then restart Xcode."
+            echo "    3. Re-run: ./scripts/release.sh $VERSION --app-store"
+        fi
+
+        if [ -n "$missing_profiles" ]; then
+            echo ""
+            echo "  Missing Mac App Store provisioning profiles:"
+            while IFS= read -r bundle_id; do
+                [ -n "$bundle_id" ] && echo "    - $bundle_id"
+            done <<< "$missing_profiles"
+        fi
+    fi
+
+    if [ -f "$app_store_log" ] && grep -q "fetched 1 items, total 1 items" "$app_store_log"; then
+        echo ""
+        echo "  App Store Connect app lookup succeeded."
+        echo "  The blocker is provisioning/certificate access, not the app record."
+    fi
+}
+
 print_help() {
     cat <<USAGE
 
@@ -301,12 +386,24 @@ print_success "Archive created: $ARCHIVE_PATH"
 
 print_step "Step 4/8: Exporting for $BUILD_MODE distribution..."
 
-xcodebuild -exportArchive \
+set +e
+EXPORT_OUTPUT=$(xcodebuild -exportArchive \
     -archivePath "$ARCHIVE_PATH" \
     -exportPath "$EXPORT_PATH" \
     -exportOptionsPlist "$EXPORT_OPTIONS_PATH" \
     -allowProvisioningUpdates \
-    -quiet
+    -quiet 2>&1)
+EXPORT_STATUS=$?
+set -e
+
+if [ -n "$EXPORT_OUTPUT" ]; then
+    echo "$EXPORT_OUTPUT"
+fi
+
+if [ "$EXPORT_STATUS" -ne 0 ]; then
+    diagnose_export_failure "$EXPORT_OUTPUT"
+    exit "$EXPORT_STATUS"
+fi
 
 if [ "$APP_STORE" = true ]; then
     if [ ! -f "$APP_PATH" ]; then
