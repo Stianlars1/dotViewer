@@ -11,11 +11,12 @@ set -euo pipefail
 #    ./scripts/release.sh [version] [options]
 #
 #  Options:
-#    --app-store       Build for App Store submission (no DMG/notarization)
-#    --skip-notarize   Skip notarization (testing only)
-#    --skip-dmg        Build and notarize app only, skip DMG creation
-#    --github          Create GitHub release after build (requires gh CLI)
-#    --help            Show this help message
+#    --app-store              Build for App Store submission (no DMG/notarization)
+#    --skip-notarize          Skip notarization (testing only)
+#    --skip-dmg               Build and notarize app only, skip DMG creation
+#    --github                 Create GitHub release after build (requires gh CLI)
+#    --build-number=<number>  Override CURRENT_PROJECT_VERSION for this build
+#    --help                   Show this help message
 # ============================================================================
 
 RED='\033[0;31m'
@@ -36,6 +37,7 @@ SKIP_NOTARIZE=false
 SKIP_DMG=false
 APP_STORE=false
 CREATE_GITHUB_RELEASE=false
+BUILD_NUMBER=""
 
 create_manual_dmg() {
     local staging_dir="$BUILD_DIR/dmg-staging"
@@ -204,12 +206,14 @@ Options:
   --skip-notarize   Skip notarization (testing only)
   --skip-dmg        Build app only, skip DMG creation
   --github          Create GitHub release after build
+  --build-number=N  Override CURRENT_PROJECT_VERSION for this build
   --help            Show this help message
 
 Examples:
   $0 1.1.0
   $0 1.1.1 --app-store
   $0 1.1.0 --github
+  $0 1.2.0 --app-store --build-number=3
 
 USAGE
 }
@@ -227,6 +231,9 @@ for arg in "$@"; do
             ;;
         --github)
             CREATE_GITHUB_RELEASE=true
+            ;;
+        --build-number=*)
+            BUILD_NUMBER="${arg#*=}"
             ;;
         --help|-h)
             print_help
@@ -345,6 +352,9 @@ START_TIME=$(date +%s)
 print_header "dotViewer Release Build v$VERSION"
 echo "  Mode:    $BUILD_MODE"
 echo "  Version: $VERSION"
+if [ -n "$BUILD_NUMBER" ]; then
+    echo "  Build:   $BUILD_NUMBER"
+fi
 if [ "$SKIP_NOTARIZE" = true ]; then
     echo -e "  ${YELLOW}Notarization: SKIPPED (testing only)${NC}"
 fi
@@ -367,13 +377,18 @@ print_success "Build directory cleaned"
 print_step "Step 3/8: Creating archive..."
 echo ""
 
+XCODEBUILD_VERSION_ARGS=(MARKETING_VERSION="$VERSION")
+if [ -n "$BUILD_NUMBER" ]; then
+    XCODEBUILD_VERSION_ARGS+=(CURRENT_PROJECT_VERSION="$BUILD_NUMBER")
+fi
+
 xcodebuild -project "$PROJECT_DIR/$APP_NAME.xcodeproj" \
     -scheme "$APP_NAME" \
     -configuration Release \
     -archivePath "$ARCHIVE_PATH" \
     -allowProvisioningUpdates \
     archive \
-    MARKETING_VERSION="$VERSION" \
+    "${XCODEBUILD_VERSION_ARGS[@]}" \
     -destination "generic/platform=macOS" \
     -quiet
 
