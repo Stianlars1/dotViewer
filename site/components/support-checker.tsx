@@ -76,7 +76,13 @@ export function SupportChecker({
       </div>
 
       <div className={styles.shell}>
-        <form className={styles.form} role="search">
+        <form
+          className={styles.form}
+          onSubmit={(event) => {
+            event.preventDefault();
+          }}
+          role="search"
+        >
           <label className={styles.label} htmlFor={inputId}>
             Type your file type
           </label>

@@ -418,3 +418,14 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `./scripts/dotviewer-ql-smoke.sh` raw captures for `/tmp/dotviewer-vico/victor.tsv`, `/tmp/dotviewer-vico/victor_script`, `/tmp/dotviewer-vico/victor.man`, `/tmp/dotviewer-vico/victor.mdoc`, `/tmp/dotviewer-vico/victor.roff`, and `/tmp/dotviewer-vico/test.1` → extension launch confirmed from `/Applications/dotViewer.app`
   - `mdls -name kMDItemContentType -name kMDItemContentTypeTree /tmp/dotviewer-vico/victor.conf /tmp/dotviewer-vico/victor.tsv /tmp/dotviewer-vico/victor_script /tmp/dotviewer-vico/victor.man /tmp/dotviewer-vico/victor.mdoc /tmp/dotviewer-vico/victor.roff /tmp/dotviewer-vico/test.1` → pass (custom manpage UTIs and executable-script routing verified; `.tsv` resolves to `public.tab-separated-values-text`, `.conf` to `com.coteditor.conf` on this machine)
 - Follow-ups: System-owned routing limits like `.ts` and `.html`, plus truly novel `dyn.*` extensions, remain constrained by macOS Quick Look exact-match behavior. Vendor-owned UTIs can still differ across machines even when dotViewer ships compatibility aliases.
+
+## 2026-04-10
+
+### Nuke/reset cleanup and download polish
+- Outcome: Fixed `--keep-settings` so it preserves the App Group container while still clearing related caches, taught the thumbnail renderer to use a predictable temp-file prefix and clean stale PNGs, prevented the support checker form from submitting on Enter, and removed the download-page hero video plus `site/public/test.mov` to cut dead weight.
+- Files: `scripts/dotviewer-nuke.sh`, `dotViewer/QuickLookThumbnailExtension/TextThumbnailRenderer.swift`, `site/components/support-checker.tsx`, `site/app/download/page.tsx`, `site/app/download/page.module.css`, `site/public/test.mov`, `AGENTS.md`
+- Verified:
+  - `git diff --check` → pass
+  - `bash -n scripts/dotviewer-nuke.sh` → pass
+  - `cd dotViewer && xcodegen generate && xcodebuild -project dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath build test` → pass (`139 tests, 0 failures`)
+  - `cd site && npm run typecheck && npm run build` → pass

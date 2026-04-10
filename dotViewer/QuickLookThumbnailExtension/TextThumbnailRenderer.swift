@@ -159,6 +159,9 @@ enum ThumbnailSyntaxColorizer {
 }
 
 enum TextThumbnailRenderer {
+    private static let thumbnailTempFilePrefix = "dotviewer-thumbnail-"
+    private static let thumbnailTempFileLifetime: TimeInterval = 24 * 60 * 60
+
     static func loadSnippet(
         url: URL,
         maxBytes: Int,
@@ -184,6 +187,23 @@ enum TextThumbnailRenderer {
         }
 
         return TextThumbnailSnippet(lines: lines, isTruncated: isTruncated, lineCount: rawLines.count)
+    }
+
+    private static func cleanupTemporaryFiles() {
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let cutoff = Date().addingTimeInterval(-thumbnailTempFileLifetime)
+        let files = (try? FileManager.default.contentsOfDirectory(
+            at: tempDirectory,
+            includingPropertiesForKeys: [.contentModificationDateKey],
+            options: [.skipsHiddenFiles]
+        )) ?? []
+
+        for file in files where file.lastPathComponent.hasPrefix(thumbnailTempFilePrefix) && file.pathExtension == "png" {
+            let modified = (try? file.resourceValues(forKeys: [.contentModificationDateKey]))?.contentModificationDate ?? .distantPast
+            if modified < cutoff {
+                try? FileManager.default.removeItem(at: file)
+            }
+        }
     }
 
     static func makeReply(
@@ -401,8 +421,10 @@ enum TextThumbnailRenderer {
             return QLThumbnailReply(contextSize: size) { _ in true }
         }
 
+        cleanupTemporaryFiles()
+
         let tempURL = URL(fileURLWithPath: NSTemporaryDirectory())
-            .appendingPathComponent(UUID().uuidString)
+            .appendingPathComponent("\(thumbnailTempFilePrefix)\(UUID().uuidString)")
             .appendingPathExtension("png")
         do {
             try pngData.write(to: tempURL)

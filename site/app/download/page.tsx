@@ -89,14 +89,6 @@ export default async function DownloadPage() {
       />
 
       <main className={styles.main}>
-        <video
-          src={"/test.mov"}
-          autoPlay={true}
-          muted={true}
-          controls={false}
-          loop={true}
-          className={styles.testVideo}
-        />
         <section className={styles.hero}>
           <div className={styles.eyebrow}>macOS install options</div>
           <h1 className={styles.title}>

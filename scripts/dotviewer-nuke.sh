@@ -48,6 +48,7 @@ What gets removed:
   - HTTP storages:       ~/Library/HTTPStorages/com.stianlars1.dotViewer*
   - WebKit data:         ~/Library/WebKit/com.stianlars1.dotViewer*
   - Runtime caches:      /var/folders/.../C/com.stianlars1.dotViewer*
+  - Thumbnail temp files: /var/folders/.../T/dotviewer-thumbnail-*
   - Crash reports:       ~/Library/Logs/DiagnosticReports/*dotViewer*
   - PluginKit:           Unregisters Quick Look extensions
   - Quick Look caches:   qlmanage -r cache
@@ -215,8 +216,12 @@ nuke_containers() {
     nuke_path "$container" "Container: $(basename "$container")"
   done
 
-  log "--- App Group container ---"
-  nuke_path "$HOME/Library/Group Containers/${APP_GROUP}" "App Group"
+  if [[ "$KEEP_SETTINGS" == true ]]; then
+    log "Keeping App Group container (--keep-settings)"
+  else
+    log "--- App Group container ---"
+    nuke_path "$HOME/Library/Group Containers/${APP_GROUP}" "App Group"
+  fi
 }
 
 nuke_preferences() {
@@ -259,6 +264,7 @@ nuke_runtime_caches() {
 
   if [[ -n "$temp_base" && -d "$temp_base" ]]; then
     nuke_glob "${temp_base}${BUNDLE_ID}*" "Temp files"
+    nuke_glob "${temp_base}dotviewer-thumbnail-*" "Thumbnail temp files"
   fi
 }
 
@@ -271,6 +277,10 @@ nuke_library_data() {
   # Application Support
   nuke_glob "$HOME/Library/Application Support/${BUNDLE_ID}*" "Application Support"
   nuke_path "$HOME/Library/Application Support/dotViewer" "Application Support (by name)"
+
+  # App Group caches. Keep preferences when --keep-settings is set, but clear caches.
+  nuke_path "$HOME/Library/Group Containers/${APP_GROUP}/PreviewCache" "App Group preview cache"
+  nuke_path "$HOME/Library/Group Containers/${APP_GROUP}/Library/Caches" "App Group caches"
 
   # Saved Application State (window positions, restore state)
   nuke_glob "$HOME/Library/Saved Application State/${BUNDLE_ID}*" "Saved Application State"

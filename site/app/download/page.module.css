@@ -13,28 +13,6 @@
   max-width: 820px;
 }
 
-.testVideo {
-  position: absolute;
-  right: clamp(5%, 5vw, 10%);
-  top: clamp(96px, 10vw, 128px);
-  width: clamp(200px, 24vw, 400px);
-  height: auto;
-  border-radius: 16px;
-  mask-clip: padding-box;
-  -webkit-mask-clip: padding-box;
-  clip-path: ellipse();
-
-  @media screen and (max-width: 960px) {
-    /*display: none;*/
-    position: relative;
-    right: unset;
-    top: unset;
-    display: block;
-    margin: 0 auto 64px;
-    width: 350px;
-  }
-}
-
 .eyebrow,
 .kicker {
   display: inline-flex;
