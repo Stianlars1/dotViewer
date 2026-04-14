@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { AnimatedStat } from "../components/animated-stat";
 import styles from "./page.module.css";
 import { getProductStats, getSupportedFileTypes } from "../lib/product-stats";
 import { TrackedDownloadLink } from "../components/tracked-download-link";
@@ -15,60 +16,11 @@ import { BorderBeam } from "@stianlarsen/border-beam";
 import { NoWhitespace } from "../components/NoWhitespace";
 import { SupportChecker } from "../components/support-checker";
 
-const heroMeta = [
-  "One install",
-  "Actual app screenshots",
-  "Free direct DMG",
-  "Paid App Store option",
-  "Notarized DMG",
-];
-
-const coverageExamples = [
-  ".gitignore",
-  ".env",
-  "README.md",
-  "package.json",
-  "data.tsv",
-  "nginx.conf",
-  "tool",
-  "man.1",
-  "config.yaml",
-  "app.log",
-];
 
 function Code({ children }: { children: ReactNode }) {
   return <code>{children}</code>;
 }
 
-const suiteBenefits = [
-  {
-    title: "One install instead of Finder plugin stacking",
-    body: (
-      <>
-        dotViewer covers markdown, config files, logs, dotfiles, plain text
-        documents, and <Code>source code</Code> in one package instead of making
-        you combine separate Quick Look tools.
-      </>
-    ),
-  },
-  {
-    title: "Preview the file, not the workaround",
-    body: (
-      <>
-        Open <Code>.gitignore</Code>, <Code>.env</Code>, README files,{" "}
-        <Code>shell scripts</Code>, extensionless executable scripts,{" "}
-        <Code>JSON</Code>, <Code>YAML</Code>, <Code>XML</Code>,{" "}
-        <Code>TSV</Code>, man pages, and <Code>source code</Code> directly in
-        Finder Quick Look instead of bouncing into editors and{" "}
-        <Code>Terminal</Code> windows.
-      </>
-    ),
-  },
-  {
-    title: "Real controls built into the app",
-    body: "System-following themes, initial preview size, width, copy behavior, markdown defaults, supported file mappings, and status live in the companion app that ships with the extension.",
-  },
-];
 
 const comparisonPoints = [
   {
@@ -382,27 +334,10 @@ export default function HomePage() {
               </h1>
 
               <p className={styles.heroBody}>
-                dotViewer turns Finder into a better technical file viewer.
-                Preview technical text files like <Code>.gitignore</Code>,{" "}
-                <Code>.env</Code>, and <Code>README.md</Code> without opening a
-                full editor for a quick check.
+                Preview <Code>.gitignore</Code>, <Code>.env</Code>,{" "}
+                <Code>README.md</Code>, and hundreds more technical text files
+                without opening a full editor. One native app, free direct DMG.
               </p>
-
-              <p className={styles.heroBody}>
-                It replaces the usual patchwork of Quick Look add-ons with one
-                native app. The screenshots below are from the real macOS
-                product, not a web-only mockup. Use the free direct DMG if you
-                want the quickest install, or the paid App Store option if you
-                prefer store-managed installation and want to support
-                development.
-              </p>
-
-              <SupportChecker
-                issueRequestHref={issueRequestHref}
-                issuesHref={issuesHref}
-                stats={stats}
-                supportedFileTypes={supportedFileTypes}
-              />
 
               <div className={styles.heroActions}>
                 <Link className={styles.primaryAction} href="/download">
@@ -424,24 +359,6 @@ export default function HomePage() {
                   </a>
                 )}
               </div>
-
-              <div className={styles.heroMeta} aria-label="Product details">
-                {heroMeta.map((item) => (
-                  <span className={styles.heroMetaItem} key={item}>
-                    {item}
-                  </span>
-                ))}
-              </div>
-
-              <p className={styles.heroBody}>
-                Common examples:{" "}
-                {coverageExamples.map((item, index) => (
-                  <span key={item}>
-                    {index > 0 ? " \u2022 " : null}
-                    <Code>{item}</Code>
-                  </span>
-                ))}
-              </p>
             </div>
           </section>
 
@@ -461,9 +378,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 70vw"
                 />
                 <figcaption>
-                  Rendered markdown mode turns a README-style document into a
-                  readable page with a sidebar table of contents, task list
-                  checkboxes, and styled code blocks inside Quick Look.
+                  Rendered markdown with table of contents
                 </figcaption>
               </figure>
 
@@ -477,9 +392,7 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 28vw"
                   />
                   <figcaption>
-                    RAW markdown keeps the source visible while still
-                    highlighting headings, checkboxes, fenced code, and inline
-                    syntax for quick inspection.
+                    RAW mode with syntax-highlighted source
                   </figcaption>
                 </figure>
 
@@ -492,31 +405,27 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 28vw"
                   />
                   <figcaption>
-                    A compact C file preview shows syntax colors, line numbers,
-                    file metadata, and the copy control in the same Quick Look
-                    frame.
+                    C source with line numbers and file badge
                   </figcaption>
                 </figure>
               </div>
             </div>
           </section>
 
-          <section className={styles.proofStrip} aria-label="Product summary">
-            {suiteBenefits.map((item) => (
-              <article className={styles.proofMessage} key={item.title}>
-                <h2 className={styles.proofMessageTitle}>{item.title}</h2>
-                <p className={styles.proofMessageBody}>{item.body}</p>
-              </article>
-            ))}
-          </section>
+          <section className={styles.section} id="support-checker">
+            <div className={styles.sectionIntro}>
+              <div className={styles.kicker}>Support Checker</div>
+              <h2 className={styles.sectionTitle}>
+                Check if your file type is supported.
+              </h2>
+            </div>
 
-          <section className={styles.statsStrip} aria-label="Coverage summary">
-            {proofStats.map((item) => (
-              <article className={styles.statItem} key={item.label}>
-                <div className={styles.statValue}>{item.value}</div>
-                <div className={styles.statLabel}>{item.label}</div>
-              </article>
-            ))}
+            <SupportChecker
+              issueRequestHref={issueRequestHref}
+              issuesHref={issuesHref}
+              stats={stats}
+              supportedFileTypes={supportedFileTypes}
+            />
           </section>
 
           <section className={styles.section}>
@@ -528,11 +437,9 @@ export default function HomePage() {
                   text viewers.
                 </h2>
                 <p className={styles.sectionBody}>
-                  Many Finder workflows break because the right preview tool
-                  depends on the file in front of you. dotViewer is built to
-                  reduce that fragmentation. Install one app, then preview
-                  markdown, config files, dotfiles, logs, plain text, and{" "}
-                  <Code>source code</Code> from the same macOS Quick Look flow.
+                  Install one app and preview markdown, config files, dotfiles,
+                  logs, plain text, and <Code>source code</Code> from the same
+                  Quick Look flow.
                 </p>
               </div>
 
@@ -551,12 +458,6 @@ export default function HomePage() {
                 Real macOS previews for code, markdown, config files, and
                 technical documents.
               </h2>
-              <p className={styles.sectionBody}>
-                The website uses the actual preview UI language from dotViewer:
-                dark Quick Look surfaces, file badges, top-bar actions, RAW
-                versus rendered markdown, and the wider markdown layout with TOC
-                support when that mode is enabled.
-              </p>
             </div>
 
             <div className={styles.featureRow}>
@@ -589,11 +490,7 @@ export default function HomePage() {
                   with syntax-aware rendering.
                 </h3>
                 <p className={styles.storyBody}>
-                  dotViewer is made for the technical files Finder often handles
-                  badly by default: <Code>source code</Code>,{" "}
-                  <Code>shell scripts</Code>, dotfiles, <Code>XML</Code>, config
-                  files, <Code>log files</Code>, and plain text documents. The
-                  preview stays in Quick Look, so a small inspection stays
+                  The preview stays in Quick Look, so a small inspection stays
                   small.
                 </p>
               </div>
@@ -608,9 +505,7 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 42vw"
                   />
                   <figcaption>
-                    Short code snippets stay readable in the floating Quick Look
-                    panel, with the language badge, file details, and copy
-                    action visible above the source.
+                    C source with language badge and copy action
                   </figcaption>
                 </figure>
 
@@ -623,9 +518,7 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 42vw"
                   />
                   <figcaption>
-                    Longer Swift files keep their structure with token-aware
-                    coloring, line numbers, and the handoff button back to
-                    <Code>Xcode</Code>.
+                    Swift file with token-aware highlighting
                   </figcaption>
                 </figure>
               </div>
@@ -642,9 +535,7 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 46vw"
                   />
                   <figcaption>
-                    Rendered mode is for reading: headings, task lists, and
-                    fenced code blocks are laid out like a document, with the
-                    table of contents open on the left.
+                    Rendered mode with styled code blocks and TOC
                   </figcaption>
                 </figure>
 
@@ -657,9 +548,7 @@ export default function HomePage() {
                     sizes="(max-width: 1100px) 100vw, 46vw"
                   />
                   <figcaption>
-                    RAW mode is for checking the actual markdown source, while
-                    still making the structure readable through syntax-aware
-                    styling.
+                    RAW markdown source inspection
                   </figcaption>
                 </figure>
               </div>
@@ -671,10 +560,8 @@ export default function HomePage() {
                   switching tools.
                 </h3>
                 <p className={styles.storyBody}>
-                  dotViewer supports the two markdown views people actually
-                  need: inspect the source and read the document. README files,
-                  changelogs, notes, and docs can stay inside Finder Quick Look
-                  instead of making you jump to a dedicated markdown app.
+                  Inspect the source or read the document, without leaving
+                  Finder.
                 </p>
               </div>
             </div>
@@ -687,10 +574,8 @@ export default function HomePage() {
                   practical controls.
                 </h3>
                 <p className={styles.storyBody}>
-                  dotViewer includes configurable copy behavior for preview
-                  selection. That means the preview is useful for real work, not
-                  just passive viewing. The small “Copied selection” feedback
-                  below is part of the shipped product.
+                  Configurable copy makes the preview useful for real work, not
+                  just passive viewing.
                 </p>
               </div>
 
@@ -703,9 +588,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 48vw"
                 />
                 <figcaption>
-                  After you select text, dotViewer can confirm the copy action
-                  with a small toast so copying from Quick Look feels explicit
-                  instead of ambiguous.
+                  Copy toast confirms clipboard action
                 </figcaption>
               </figure>
             </div>
@@ -719,12 +602,8 @@ export default function HomePage() {
                 markdown defaults, and file type management.
               </h2>
               <p className={styles.sectionBody}>
-                dotViewer is not only a Quick Look extension. The companion app
-                lets people switch between system-following themes, choose a
-                shared starting preview size across files, tune code and
-                markdown widths, control copy behavior, manage file types, and
-                inspect extension status. This is part of what makes the product
-                more useful than a narrow single-purpose preview plugin.
+                The companion app puts themes, layout, copy behavior, and file
+                type management in one place.
               </p>
             </div>
 
@@ -738,10 +617,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  The theme picker exposes the shipped palette set, including
-                  system-following Atom One, GitHub, <Code>Xcode</Code>, and
-                  Solarized pairs plus fixed dark themes such as Tokyo Night and
-                  Blackout.
+                  System-following and fixed dark themes
                 </figcaption>
               </figure>
 
@@ -754,9 +630,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Appearance settings let people tune font size, app UI text
-                  size, line numbers, word wrap, content width, and the initial
-                  Quick Look window size from one screen.
+                  Font size, line numbers, width, and layout
                 </figcaption>
               </figure>
 
@@ -769,9 +643,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 31vw"
                 />
                 <figcaption>
-                  Preview UI settings cover copy behavior, line numbers in
-                  copied text, find-in-preview, and how dotViewer handles files
-                  outside the built-in registry.
+                  Copy behavior, find-in-preview, and more
                 </figcaption>
               </figure>
             </div>
@@ -786,10 +658,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  The File Types screen groups the {stats.fileTypes} shipped
-                  file types, {stats.extensions} routed extensions, and{" "}
-                  {stats.filenameMappings} filename mappings so overrides and
-                  custom additions stay in one place.
+                  Browse and override {stats.fileTypes} shipped file types
                 </figcaption>
               </figure>
 
@@ -802,8 +671,7 @@ export default function HomePage() {
                   sizes="(max-width: 1100px) 100vw, 46vw"
                 />
                 <figcaption>
-                  The status view confirms the extension is enabled and surfaces
-                  quick counts for built-in, custom, and disabled mappings.
+                  Extension status and mapping counts
                 </figcaption>
               </figure>
             </div>
@@ -818,10 +686,8 @@ export default function HomePage() {
                   enough to say where macOS still wins.
                 </h2>
                 <p className={styles.sectionBody}>
-                  dotViewer is strongest where Finder gives third-party Quick
-                  Look extensions room to improve the experience. When macOS
-                  owns the preview path, the limitation is stated directly
-                  instead of hidden behind vague marketing claims.
+                  Where macOS owns the preview path, the limitation is stated
+                  directly.
                 </p>
               </div>
 
@@ -832,6 +698,15 @@ export default function HomePage() {
               </ul>
             </div>
 
+            <section className={styles.statsStrip} aria-label="Coverage summary">
+              {proofStats.map((item) => (
+                <article className={styles.statItem} key={item.label}>
+                  <AnimatedStat value={item.value} className={styles.statValue} />
+                  <div className={styles.statLabel}>{item.label}</div>
+                </article>
+              ))}
+            </section>
+
             <div className={styles.mappingPanel}>
               <div className={styles.sectionIntro}>
                 <div className={styles.kicker}>Custom mappings</div>
@@ -839,18 +714,10 @@ export default function HomePage() {
                   Be explicit about what users can map themselves.
                 </h2>
                 <p className={styles.sectionBody}>
-                  dotViewer does support custom mappings in the app, but only
-                  for file types the shipped extension already routes. Sorry,
-                  but dotViewer cannot teach macOS Quick Look completely
-                  brand-new file types at runtime.
-                </p>
-                <p className={styles.sectionBody}>
-                  Everything in the accordion below is already shipped today.
-                  Most of it routes directly to dotViewer in Finder Quick Look,
-                  but a small number of mappings still stay with macOS system
-                  previewers and are marked inline. If a type is missing from
-                  that list, users will not be able to add it themselves until a
-                  future shipped dotViewer version includes it.
+                  Custom mappings work for file types the extension already
+                  routes. dotViewer cannot teach macOS Quick Look brand-new file
+                  types at runtime. Everything in the accordion below is already
+                  shipped.
                 </p>
               </div>
 
@@ -961,10 +828,8 @@ export default function HomePage() {
                 A normal Mac install flow, kept intentionally short.
               </h2>
               <p className={styles.sectionBody}>
-                The free direct path is meant to feel familiar: download the
-                DMG, drag to Applications, launch once, then use Quick Look in
-                Finder. If you prefer store-managed installation, the paid App
-                Store channel is available too.
+                Download, drag to Applications, launch once. Also available on
+                the App Store.
               </p>
             </div>
 
@@ -978,12 +843,6 @@ export default function HomePage() {
               ))}
             </div>
 
-            <div className={styles.installNote}>
-              Free public DMG for adoption, plus a paid App Store path for
-              convenience and support. One notarized install, one launch, and
-              then you can use Space in Finder to preview markdown, config
-              files, dotfiles, plain text documents, logs, and code.
-            </div>
           </section>
 
           <section className={styles.section} id="faq">
@@ -1010,10 +869,7 @@ export default function HomePage() {
                   macOS.
                 </h2>
                 <p className={styles.ctaBody}>
-                  dotViewer is for the moments when you just need to inspect the
-                  file, understand what it is, and keep moving. Get the free
-                  direct DMG, or choose the App Store if you want the paid
-                  store-managed route instead.
+                  Inspect the file, understand what it is, and keep moving.
                 </p>
                 <div className={styles.ctaActions}>
                   <Link className={styles.primaryAction} href="/download">
