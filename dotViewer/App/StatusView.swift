@@ -5,6 +5,10 @@ import Shared
 struct StatusView: View {
     @StateObject private var helper = ExtensionHelper.shared
     @State private var extensionStatus: ExtensionStatus = .checking
+    @State private var conflicts: [QLExtensionInfo] = []
+    @State private var staleRegistrations: [QLExtensionInfo] = []
+    @State private var isScanning = false
+    @State private var resolveResult: String?
 
     var body: some View {
         ScrollView {
@@ -115,6 +119,8 @@ struct StatusView: View {
                     }
                 }
 
+                extensionConflictsSection
+
                 VStack(alignment: .leading, spacing: 12) {
                     Text("How to Use")
                         .font(.headline)
@@ -150,6 +156,7 @@ struct StatusView: View {
         .navigationTitle("Status")
         .onAppear {
             Task { await checkExtensionStatus() }
+            Task { await scanForConflicts() }
         }
     }
 }
@@ -199,6 +206,172 @@ private extension StatusView {
         let status = await ExtensionStatusChecker.shared.checkStatus()
         withAnimation {
             extensionStatus = status
+        }
+    }
+
+    @MainActor
+    func scanForConflicts() async {
+        isScanning = true
+        let scanner = ExtensionConflictScanner.shared
+        let foundConflicts = await scanner.scanConflicts()
+        let foundStale = await scanner.scanStaleDotViewerRegistrations()
+        withAnimation {
+            conflicts = foundConflicts
+            staleRegistrations = foundStale
+            isScanning = false
+        }
+    }
+
+    @ViewBuilder
+    var extensionConflictsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Extension Conflicts")
+                    .font(.headline)
+
+                Spacer()
+
+                Button {
+                    Task { await scanForConflicts() }
+                } label: {
+                    if isScanning {
+                        ProgressView()
+                            .controlSize(.small)
+                    } else {
+                        Image(systemName: "arrow.clockwise")
+                    }
+                }
+                .buttonStyle(.borderless)
+                .help("Rescan for conflicts")
+            }
+
+            VStack(alignment: .leading, spacing: 12) {
+                if conflicts.isEmpty && staleRegistrations.isEmpty {
+                    HStack(spacing: 10) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(.green)
+                            .font(.title3)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("No conflicts detected")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            Text("dotViewer has priority for all its registered file types.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                } else {
+                    if !conflicts.isEmpty {
+                        Text("These Quick Look extensions may override dotViewer for some file types:")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        ForEach(conflicts) { ext in
+                            conflictRow(ext)
+                        }
+
+                        Button {
+                            Task {
+                                let count = await ExtensionConflictScanner.shared.resolveAllConflicts()
+                                resolveResult = "Disabled \(count) conflicting extension\(count == 1 ? "" : "s"). dotViewer now has priority."
+                                await scanForConflicts()
+                                await checkExtensionStatus()
+                            }
+                        } label: {
+                            Label("Resolve All — Prefer dotViewer", systemImage: "wand.and.stars")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.regular)
+                    }
+
+                    if !staleRegistrations.isEmpty {
+                        if !conflicts.isEmpty { Divider() }
+
+                        Text("Old dotViewer registrations from previous builds:")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+
+                        ForEach(staleRegistrations) { ext in
+                            staleRow(ext)
+                        }
+
+                        Button {
+                            Task {
+                                for ext in staleRegistrations {
+                                    await ExtensionConflictScanner.shared.disableExtension(ext.id)
+                                }
+                                await scanForConflicts()
+                            }
+                        } label: {
+                            Label("Clean Up Stale Registrations", systemImage: "trash")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.regular)
+                    }
+                }
+
+                if let result = resolveResult {
+                    Text(result)
+                        .font(.caption)
+                        .foregroundStyle(.green)
+                        .transition(.opacity)
+                }
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+        .frame(maxWidth: 420)
+    }
+
+    func conflictRow(_ ext: QLExtensionInfo) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+                .font(.body)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(ext.appName)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+                Text(ext.id)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+            }
+
+            Spacer()
+
+            Button("Disable") {
+                Task {
+                    await ExtensionConflictScanner.shared.disableExtension(ext.id)
+                    await scanForConflicts()
+                }
+            }
+            .controlSize(.small)
+            .buttonStyle(.bordered)
+        }
+    }
+
+    func staleRow(_ ext: QLExtensionInfo) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "clock.arrow.circlepath")
+                .foregroundStyle(.gray)
+                .font(.body)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("dotViewer \(ext.version)")
+                    .font(.subheadline)
+                Text(ext.path)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .truncationMode(.head)
+            }
+
+            Spacer()
         }
     }
 }

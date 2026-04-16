@@ -85,8 +85,9 @@ Runs out-of-process. Provides syntax highlighting via tree-sitter.
 ### Host App
 Settings UI for the extension (font size, theme). Source in `dotViewer/App/`.
 - `dotViewerApp.swift`, `ContentView.swift`, `SettingsView.swift`
-- `StatusView.swift` — shows extension registration status
+- `StatusView.swift` — shows extension registration status + extension conflict scanner UI
 - `Utilities/ExtensionHelper.swift`, `ExtensionStatusChecker.swift`
+- `Utilities/ExtensionConflictScanner.swift` — discovers competing Quick Look extensions via `pluginkit`, offers per-extension disable and one-click "Resolve All"
 
 ## Required Features
 
@@ -98,19 +99,20 @@ Canonical scope — what this product must support:
 - **Preview header**: file type badge, file size, copy-to-clipboard button, markdown mode toggle
 - **Search**: optional search bar with match highlighting and prev/next navigation (off by default)
 - **Line highlighting**: click line numbers to highlight, Shift+click for range selection
-- **Responsive sizing**: dynamic preview window dimensions based on content
+- **Window sizing**: 5 modes (Fixed default, Auto, Aspect Ratio, Fit Content, Remember) with configurable dimensions
 - **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
 - **Settings**: font size (synced between code and markdown by default), theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
-- **File type coverage**: 388 definitions, 561 extensions, 283 filenames
+- **File type coverage**: 404 definitions, 599 extensions, 295 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams
 - **Sensitive file detection**: warn on .env, credentials, keys
+- **Extension conflict scanner**: detects competing third-party QL extensions, one-click resolve via `pluginkit`
 - **Print**: @media print CSS with file title, syntax colors, page breaks
 
 ## Key Concepts
 
-- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 502 UTIs covering all 561 extensions in DefaultFileTypes.json: 402 custom exports (`com.stianlars1.dotviewer.*`), ~64 system UTIs, ~63 vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
-- **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 561 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
+- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 753 UTIs covering all 599 extensions in DefaultFileTypes.json: 635 custom exports (`com.stianlars1.dotviewer.*`), plus system and vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
+- **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 599 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
 - **Multi-dot file resolution**: `FileTypeResolution.bestKey()` tries full name → progressive prefix stripping → bare extension → intermediate segment scanning. For `.claude.json.backup.xxx`, this resolves to `json`.
 - **XPC protocol**: `HighlightServiceProtocol` — the QuickLookExtension calls `highlight(code:language:theme:showLineNumbers:requestId:reply:)` on the XPC service. The reply returns HTML as `NSData`.
 - **App Group**: Settings (font size, theme) sync between the host app and extensions via `group.stianlars1.dotViewer.shared`.
@@ -129,6 +131,7 @@ Source `scripts/dotviewer-aliases.zsh` for shortcuts:
 | `dvutis`   | `dotviewer-gen-ql-content-types.sh` | Regenerate UTI list from FileTypeRegistry  |
 | `dvgenutis`| `dotviewer-gen-utis.py`             | Generate UTI declarations from JSON registry|
 | `dvaudit`  | `dotviewer-gen-default-filetypes.py`| Audit JSON against codebase                |
+| `dvpublish`| `publish.sh`                        | Full release: DMG → GitHub → App Store pkg |
 
 Log filtering examples:
 ```bash

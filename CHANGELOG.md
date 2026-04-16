@@ -1,5 +1,27 @@
 # Changelog
 
+## v1.3.0 (2026-04-16)
+
+### Added
+
+- New dedicated **Window Size** section in Settings with five modes:
+  - **Fixed** (default) — one shared starting size for every preview, with configurable width and height.
+  - **Auto** — sizes each window from content, with a raised minimum floor (700×420) so small files no longer open in tiny frames.
+  - **Aspect Ratio** — opens every preview at a user-chosen ratio (`16:10`, `16:9`, `4:3`, `3:2`, `1:1`) with a configurable base width.
+  - **Fit Content** — fixed width with content-driven height capped at a user-set maximum. Short files stay compact; long files never exceed the cap.
+  - **Remember** — reuses the size dotViewer last requested, with `Reset remembered size` and `Save as Fixed` actions.
+- **Save as Fixed** button in Remember mode: locks the last-remembered dimensions into Fixed mode so users can browse files until they find a size they like, then lock it in.
+
+- **Extension Conflicts** scanner in the Status view: automatically detects third-party Quick Look extensions that may override dotViewer, with per-extension "Disable" buttons and a one-click "Resolve All — Prefer dotViewer" action.
+- Stale dotViewer registration cleanup: detects and removes old build-path registrations left behind by development builds.
+
+### Changed
+
+- Moved the preview window-size picker out of Preview UI into its own top-level Settings section.
+- Changed the default window-size mode from `Auto` (content-sized) to `Fixed` (700×560) so fresh installs open every preview at a consistent size.
+- `Auto` mode minimum floor raised from 160pt to 420pt height and always uses 700pt width, so even 1-line files open at a usable size.
+- Documented in `KNOWN_ISSUES.md` why `Oil3/PluginKits` does not unlock `.ts` routing — the limitation is macOS-owned UTI priority, not a third-party extension conflict.
+
 ## [Unreleased]
 
 ### Added

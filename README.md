@@ -189,9 +189,16 @@ Everything is configurable in the host app.
 - Max preview file size (`10-500 KB` range, default `100 KB`).
 - Show/hide truncation warning.
 
+### Window Size
+- Five preview window-size modes: `Fixed` (default), `Auto`, `Aspect Ratio`, `Fit Content`, `Remember`.
+- `Fixed`: one shared width×height for every preview (700×560 default).
+- `Auto`: sizes from content with a minimum floor of 700×420 so small files don't open in tiny frames.
+- `Aspect Ratio`: user picks a ratio (`16:10`, `16:9`, `4:3`, `3:2`, `1:1`) and a base width; height computed.
+- `Fit Content`: fixed width, content-driven height capped at a user-set maximum.
+- `Remember`: reuses the size dotViewer last requested, with `Reset` and `Save as Fixed` actions.
+
 ### Preview UI
 - Show/hide file info header.
-- Initial preview window size (`Per File` or `Same for All Files`) with configurable shared width/height.
 - Choose one of 8 copy behaviors.
 - Include line numbers in copy (manual selection + header copy button).
 - Show/hide in-preview search UI.
@@ -241,6 +248,7 @@ These numbers are from the current codebase.
 | Highlight language picker options | `55` |
 | Picker options with tree-sitter grammar label | `52` |
 | Copy behavior presets | `8` |
+| Window-size modes | `5` |
 | Themes (including system-following pairs) | `14` |
 | UTExportedTypeDeclarations in shipped app metadata | `635` |
 | QLSupportedContentTypes per extension target | `753` |
@@ -269,6 +277,19 @@ These are not dotViewer defects; they are Quick Look routing/host constraints.
 - Catch-all unknown extensions: Quick Look extension routing is exact UTI-match based, so truly novel `dyn.*` types are not fully catchable by third-party `.appex` plugins.
 
 See `KNOWN_ISSUES.md` for full technical detail.
+
+### Troubleshooting: Another Extension Overrides dotViewer
+
+If another Quick Look extension (Peek, SourceCodeSyntaxHighlight, etc.) is installed and claims the same file types, macOS may route files to that extension instead of dotViewer. This is a third-party conflict — not a system limitation.
+
+To diagnose and fix:
+
+1. Install [PluginKits](https://github.com/Oil3/PluginKits), a free open-source macOS extension manager.
+2. Open PluginKits → Extension Conflicts tab to see which extensions compete for the same UTIs.
+3. Choose dotViewer as the handler for the conflicted file types. The change takes effect immediately.
+4. PluginKits can also re-register dotViewer's `.appex` extensions if they stop appearing after an update.
+
+PluginKits cannot override macOS-owned UTI bindings (like `.ts` → MPEG transport stream or `.html` → system HTML renderer). Those remain platform limitations.
 
 ## Architecture (Short)
 
@@ -324,6 +345,7 @@ If you paste this README into another AI chat, the model should understand:
 - Syntax highlighting is tree-sitter-first with heuristic fallback.
 - Markdown supports full raw/rendered workflows with TOC and print styles.
 - Copy behavior is intentionally configurable (8 presets) due Quick Look keyboard interception.
+- Preview window sizing is configurable: Fixed (default), Auto, Aspect Ratio, Fit Content, and Remember modes.
 - File routing quality is driven by large UTI coverage + registry matching.
 - The app is highly configurable and designed for fast Finder-native code inspection.
 

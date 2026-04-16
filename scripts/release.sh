@@ -256,18 +256,20 @@ fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(dirname "$SCRIPT_DIR")"
 PROJECT_DIR="$REPO_DIR/dotViewer"
-BUILD_DIR="$PROJECT_DIR/build"
-ARCHIVE_PATH="$BUILD_DIR/$APP_NAME.xcarchive"
 
 if [ "$APP_STORE" = true ]; then
+    BUILD_DIR="$PROJECT_DIR/build-appstore"
     EXPORT_OPTIONS="ExportOptions-AppStore.plist"
     EXPORT_PATH="$BUILD_DIR/appstore"
     BUILD_MODE="App Store"
 else
+    BUILD_DIR="$PROJECT_DIR/build"
     EXPORT_OPTIONS="ExportOptions-DevID.plist"
     EXPORT_PATH="$BUILD_DIR/export"
     BUILD_MODE="Developer ID"
 fi
+
+ARCHIVE_PATH="$BUILD_DIR/$APP_NAME.xcarchive"
 
 EXPORT_OPTIONS_PATH="$PROJECT_DIR/$EXPORT_OPTIONS"
 
@@ -599,6 +601,21 @@ fi
 if [ "$CREATE_GITHUB_RELEASE" = true ] && [ -f "${DMG_PATH:-}" ]; then
     print_step "Creating GitHub release..."
 
+    # Extract release notes from CHANGELOG.md
+    CHANGELOG_FILE="$REPO_DIR/CHANGELOG.md"
+    CHANGELOG_NOTES=""
+    if [ -f "$CHANGELOG_FILE" ]; then
+        CHANGELOG_NOTES=$(awk -v ver="## v$VERSION" '
+            $0 ~ ver { found=1; next }
+            found && /^## / { exit }
+            found { print }
+        ' "$CHANGELOG_FILE" | sed '/^$/{ N; /^\n$/d; }' | sed '1{ /^$/d; }')
+    fi
+
+    if [ -z "$CHANGELOG_NOTES" ]; then
+        CHANGELOG_NOTES="Quick Look extension for syntax-highlighted previews of source code, config files, and dotfiles."
+    fi
+
     if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
         print_warning "Tag v$VERSION already exists - skipping tag creation"
     else
@@ -606,25 +623,26 @@ if [ "$CREATE_GITHUB_RELEASE" = true ] && [ -f "${DMG_PATH:-}" ]; then
         print_success "Created tag: v$VERSION"
     fi
 
+    RELEASE_ASSETS=("$DMG_PATH")
+    if [ -f "$CHECKSUM_FILE" ]; then
+        RELEASE_ASSETS+=("$CHECKSUM_FILE")
+    fi
+
     gh release create "v$VERSION" \
-        "$DMG_PATH" \
+        "${RELEASE_ASSETS[@]}" \
         --title "$APP_NAME $VERSION" \
         --notes "$(cat <<NOTES
-## $APP_NAME $VERSION
-
-Quick Look extension for syntax-highlighted previews of source code, config files, and dotfiles.
-
-### Installation
-1. Download the DMG
-2. Open it and drag $APP_NAME to Applications
-3. Launch $APP_NAME once to register the Quick Look extension
-4. Press Space on any code file in Finder to preview
-
-### Requirements
-- macOS 15.0 or later
+$CHANGELOG_NOTES
 
 ---
-*Built and notarized with Apple Developer ID*
+### Installation
+1. Download **$APP_NAME-$VERSION.dmg**
+2. Open the DMG and drag $APP_NAME to Applications
+3. Launch $APP_NAME once to register the Quick Look extensions
+4. Press Space on any code file in Finder
+
+**Requirements:** macOS 15.0 or later
+*Signed and notarized with Apple Developer ID*
 NOTES
 )"
 

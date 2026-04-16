@@ -1,0 +1,459 @@
+- generic [ref=e2]:
+  - link "Skip to content" [ref=e3] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=e4]:
+    - navigation "Primary" [ref=e6]:
+      - link "dotViewer" [ref=e7] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e8]: dotViewer
+      - generic [ref=e9]:
+        - link "Previews" [ref=e10] [cursor=pointer]:
+          - /url: "#previews"
+        - link "Controls" [ref=e11] [cursor=pointer]:
+          - /url: "#controls"
+        - link "Coverage" [ref=e12] [cursor=pointer]:
+          - /url: "#coverage"
+        - link "Install" [ref=e13] [cursor=pointer]:
+          - /url: "#install"
+        - link "FAQ" [ref=e14] [cursor=pointer]:
+          - /url: "#faq"
+      - link "Download" [ref=e15] [cursor=pointer]:
+        - /url: /download
+  - main [ref=e16]:
+    - generic [ref=e17]:
+      - generic [ref=e19]:
+        - generic [ref=e20]: Finder preview for technical files on macOS
+        - heading "Preview dotfiles, config files, markdown, logs, plain text, and code in Quick Look." [level=1] [ref=e21]:
+          - text: Preview
+          - generic [ref=e22]: dotfiles,
+          - generic [ref=e23]: config files,
+          - generic [ref=e24]: markdown,
+          - generic [ref=e25]: logs,
+          - generic [ref=e26]: plain text, and
+          - generic [ref=e27]: code
+          - text: in Quick Look.
+        - paragraph [ref=e28]:
+          - text: dotViewer turns Finder into a better technical file viewer. Preview technical text files like
+          - code [ref=e29]: .gitignore
+          - text: ","
+          - code [ref=e30]: .env
+          - text: ", and"
+          - code [ref=e31]: README.md
+          - text: without opening a full editor for a quick check.
+        - paragraph [ref=e32]: It replaces the usual patchwork of Quick Look add-ons with one native app. The screenshots below are from the real macOS product, not a web-only mockup. Use the free direct DMG if you want the quickest install, or the paid App Store option if you prefer store-managed installation and want to support development.
+        - region "Check a file type before you install." [ref=e33]:
+          - generic [ref=e34]:
+            - generic [ref=e35]: Support checker
+            - heading "Check a file type before you install." [level=2] [ref=e36]
+            - paragraph [ref=e37]:
+              - text: Type an extension like
+              - code [ref=e38]: .cue
+              - text: ", an exact filename like"
+              - code [ref=e39]: Dockerfile
+              - text: ", or a language name like"
+              - code [ref=e40]: yaml
+              - text: . The result below uses the same shipped support list and macOS routing caveats the site exposes in full further down the page.
+            - paragraph [ref=e41]:
+              - text: "Static shipped coverage:"
+              - strong [ref=e42]: "404"
+              - text: file types,
+              - strong [ref=e43]: "599"
+              - text: extensions, and
+              - strong [ref=e44]: "295"
+              - text: exact filename mappings.
+          - generic [ref=e45]:
+            - search [ref=e46]:
+              - generic [ref=e47]: Type your file type
+              - generic [ref=e48]:
+                - generic [ref=e49]: /
+                - searchbox "Type your file type" [ref=e50]
+              - paragraph [ref=e51]: Search works against shipped extensions, exact filename mappings, and file type names.
+              - generic [ref=e52]:
+                - button ".cue" [ref=e53] [cursor=pointer]:
+                  - code [ref=e54]: .cue
+                - button "Dockerfile" [ref=e55] [cursor=pointer]:
+                  - code [ref=e56]: Dockerfile
+                - button "README.md" [ref=e57] [cursor=pointer]:
+                  - code [ref=e58]: README.md
+                - button ".env.local" [ref=e59] [cursor=pointer]:
+                  - code [ref=e60]: .env.local
+                - button "yaml" [ref=e61] [cursor=pointer]:
+                  - code [ref=e62]: yaml
+                - button ".1" [ref=e63] [cursor=pointer]:
+                  - code [ref=e64]: ".1"
+            - status [ref=e65]:
+              - generic [ref=e66]:
+                - generic [ref=e67]: Ready to check
+                - paragraph [ref=e68]: Start with a real extension, filename, or language name and dotViewer will check the shipped list instantly.
+        - generic [ref=e69]:
+          - link "Get the free DMG" [ref=e70] [cursor=pointer]:
+            - /url: /download
+          - link "Buy on App Store" [ref=e71] [cursor=pointer]:
+            - /url: https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12
+        - generic "Product details" [ref=e72]:
+          - generic [ref=e73]: One install
+          - generic [ref=e74]: Actual app screenshots
+          - generic [ref=e75]: Free direct DMG
+          - generic [ref=e76]: Paid App Store option
+          - generic [ref=e77]: Notarized DMG
+        - paragraph [ref=e78]:
+          - text: "Common examples:"
+          - code [ref=e80]: .gitignore
+          - generic [ref=e81]:
+            - text: •
+            - code [ref=e82]: .env
+          - generic [ref=e83]:
+            - text: •
+            - code [ref=e84]: README.md
+          - generic [ref=e85]:
+            - text: •
+            - code [ref=e86]: package.json
+          - generic [ref=e87]:
+            - text: •
+            - code [ref=e88]: data.tsv
+          - generic [ref=e89]:
+            - text: •
+            - code [ref=e90]: nginx.conf
+          - generic [ref=e91]:
+            - text: •
+            - code [ref=e92]: tool
+          - generic [ref=e93]:
+            - text: •
+            - code [ref=e94]: man.1
+          - generic [ref=e95]:
+            - text: •
+            - code [ref=e96]: config.yaml
+          - generic [ref=e97]:
+            - text: •
+            - code [ref=e98]: app.log
+      - region "Actual product screenshots" [ref=e99]:
+        - generic [ref=e100]:
+          - figure "Preview Rendered markdown mode turns a README-style document into a readable page with a sidebar table of contents, task list checkboxes, and styled code blocks inside Quick Look." [ref=e101]:
+            - img "dotViewer rendered markdown preview with the table of contents open" [ref=e102]
+            - generic [ref=e103]: Preview Rendered markdown mode turns a README-style document into a readable page with a sidebar table of contents, task list checkboxes, and styled code blocks inside Quick Look.
+          - generic [ref=e104]:
+            - figure "Preview RAW markdown keeps the source visible while still highlighting headings, checkboxes, fenced code, and inline syntax for quick inspection." [ref=e105]:
+              - img "dotViewer markdown RAW preview with syntax highlighting" [ref=e106]
+              - generic [ref=e107]: Preview RAW markdown keeps the source visible while still highlighting headings, checkboxes, fenced code, and inline syntax for quick inspection.
+            - figure "Preview A compact C file preview shows syntax colors, line numbers, file metadata, and the copy control in the same Quick Look frame." [ref=e108]:
+              - img "dotViewer C source file preview in Quick Look" [ref=e109]
+              - generic [ref=e110]: Preview A compact C file preview shows syntax colors, line numbers, file metadata, and the copy control in the same Quick Look frame.
+      - region "Product summary" [ref=e111]:
+        - article [ref=e112]:
+          - heading "One install instead of Finder plugin stacking" [level=2] [ref=e113]
+          - paragraph [ref=e114]:
+            - text: dotViewer covers markdown, config files, logs, dotfiles, plain text documents, and
+            - code [ref=e115]: source code
+            - text: in one package instead of making you combine separate Quick Look tools.
+        - article [ref=e116]:
+          - heading "Preview the file, not the workaround" [level=2] [ref=e117]
+          - paragraph [ref=e118]:
+            - text: Open
+            - code [ref=e119]: .gitignore
+            - text: ","
+            - code [ref=e120]: .env
+            - text: ", README files,"
+            - code [ref=e121]: shell scripts
+            - text: ", extensionless executable scripts,"
+            - code [ref=e122]: JSON
+            - text: ","
+            - code [ref=e123]: YAML
+            - text: ","
+            - code [ref=e124]: XML
+            - text: ","
+            - code [ref=e125]: TSV
+            - text: ", man pages, and"
+            - code [ref=e126]: source code
+            - text: directly in Finder Quick Look instead of bouncing into editors and
+            - code [ref=e127]: Terminal
+            - text: windows.
+        - article [ref=e128]:
+          - heading "Real controls built into the app" [level=2] [ref=e129]
+          - paragraph [ref=e130]: System-following themes, initial preview size, width, copy behavior, markdown defaults, supported file mappings, and status live in the companion app that ships with the extension.
+      - region "Coverage summary" [ref=e131]:
+        - article [ref=e132]:
+          - generic [ref=e133]: "404"
+          - generic [ref=e134]: built-in file types
+        - article [ref=e135]:
+          - generic [ref=e136]: "599"
+          - generic [ref=e137]: registered extensions
+        - article [ref=e138]:
+          - generic [ref=e139]: "295"
+          - generic [ref=e140]: filename mappings
+        - article [ref=e141]:
+          - generic [ref=e142]: "53"
+          - generic [ref=e143]: highlight query files
+      - generic [ref=e145]:
+        - generic [ref=e146]:
+          - generic [ref=e147]: Why dotViewer
+          - heading "One Quick Look app instead of separate markdown, code, and text viewers." [level=2] [ref=e148]
+          - paragraph [ref=e149]:
+            - text: Many Finder workflows break because the right preview tool depends on the file in front of you. dotViewer is built to reduce that fragmentation. Install one app, then preview markdown, config files, dotfiles, logs, plain text, and
+            - code [ref=e150]: source code
+            - text: from the same macOS Quick Look flow.
+        - list [ref=e151]:
+          - listitem [ref=e152]: Use one macOS app instead of separate markdown previewers, plain-text viewers, and syntax-highlighting plugins.
+          - listitem [ref=e153]:
+            - text: Preview common developer files such as
+            - code [ref=e154]: .gitignore
+            - text: ","
+            - code [ref=e155]: .env
+            - text: ","
+            - code [ref=e156]: .editorconfig
+            - text: ","
+            - code [ref=e157]: README.md
+            - text: ","
+            - code [ref=e158]: JSON
+            - text: ","
+            - code [ref=e159]: YAML
+            - text: ","
+            - code [ref=e160]: XML
+            - text: ","
+            - code [ref=e161]: INI
+            - text: ","
+            - code [ref=e162]: CSV
+            - text: ","
+            - code [ref=e163]: TSV
+            - text: ", extensionless executable scripts, man pages,"
+            - code [ref=e164]: shell scripts
+            - text: ","
+            - code [ref=e165]: log files
+            - text: ", and"
+            - code [ref=e166]: source code
+            - text: from the same Quick Look flow.
+          - listitem [ref=e167]: Switch markdown between RAW and rendered views without changing tools or leaving Finder.
+          - listitem [ref=e168]: Tune system-following themes, initial preview size, line numbers, width, copy behavior, supported file mappings, and markdown defaults from the built-in app instead of managing multiple utilities.
+      - generic [ref=e169]:
+        - generic [ref=e170]:
+          - generic [ref=e171]: Preview Modes
+          - heading "Real macOS previews for code, markdown, config files, and technical documents." [level=2] [ref=e172]
+          - paragraph [ref=e173]: "The website uses the actual preview UI language from dotViewer: dark Quick Look surfaces, file badges, top-bar actions, RAW versus rendered markdown, and the wider markdown layout with TOC support when that mode is enabled."
+        - generic [ref=e174]:
+          - generic [ref=e175]:
+            - generic [ref=e176]: Code and config files
+            - heading "Preview .gitignore , .env , shell scripts , XML , JSON , YAML , and source code with syntax-aware rendering." [level=3] [ref=e177]:
+              - text: Preview
+              - generic [ref=e178]:
+                - code [ref=e179]: .gitignore
+                - text: ","
+              - generic [ref=e180]:
+                - code [ref=e181]: .env
+                - text: ","
+              - generic [ref=e182]:
+                - code [ref=e183]: shell scripts
+                - text: ","
+              - generic [ref=e184]:
+                - code [ref=e185]: XML
+                - text: ","
+              - generic [ref=e186]:
+                - code [ref=e187]: JSON
+                - text: ","
+              - generic [ref=e188]:
+                - code [ref=e189]: YAML
+                - text: ","
+              - text: and
+              - code [ref=e191]: source code
+              - text: with syntax-aware rendering.
+            - paragraph [ref=e192]:
+              - text: "dotViewer is made for the technical files Finder often handles badly by default:"
+              - code [ref=e193]: source code
+              - text: ","
+              - code [ref=e194]: shell scripts
+              - text: ", dotfiles,"
+              - code [ref=e195]: XML
+              - text: ", config files,"
+              - code [ref=e196]: log files
+              - text: ", and plain text documents. The preview stays in Quick Look, so a small inspection stays small."
+          - generic [ref=e197]:
+            - figure "Preview Short code snippets stay readable in the floating Quick Look panel, with the language badge, file details, and copy action visible above the source." [ref=e198]:
+              - img "C file preview in dotViewer" [ref=e199]
+              - generic [ref=e200]: Preview Short code snippets stay readable in the floating Quick Look panel, with the language badge, file details, and copy action visible above the source.
+            - figure "Preview Longer Swift files keep their structure with token-aware coloring, line numbers, and the handoff button back to Xcode ." [ref=e201]:
+              - img "Swift file preview in dotViewer" [ref=e202]
+              - generic [ref=e203]:
+                - text: Preview Longer Swift files keep their structure with token-aware coloring, line numbers, and the handoff button back to
+                - code [ref=e204]: Xcode
+                - text: .
+        - generic [ref=e205]:
+          - generic [ref=e206]:
+            - 'figure "Preview Rendered mode is for reading: headings, task lists, and fenced code blocks are laid out like a document, with the table of contents open on the left." [ref=e207]':
+              - img "Rendered markdown preview with table of contents open in dotViewer" [ref=e208]
+              - generic [ref=e209]: "Preview Rendered mode is for reading: headings, task lists, and fenced code blocks are laid out like a document, with the table of contents open on the left."
+            - figure "Preview RAW mode is for checking the actual markdown source, while still making the structure readable through syntax-aware styling." [ref=e210]:
+              - img "RAW markdown preview in dotViewer" [ref=e211]
+              - generic [ref=e212]: Preview RAW mode is for checking the actual markdown source, while still making the structure readable through syntax-aware styling.
+          - generic [ref=e213]:
+            - generic [ref=e214]: Markdown
+            - heading "Preview markdown in source form or rendered form without switching tools." [level=3] [ref=e215]
+            - paragraph [ref=e216]: "dotViewer supports the two markdown views people actually need: inspect the source and read the document. README files, changelogs, notes, and docs can stay inside Finder Quick Look instead of making you jump to a dedicated markdown app."
+        - generic [ref=e217]:
+          - generic [ref=e218]:
+            - generic [ref=e219]: Copy behavior
+            - heading "Selection can copy automatically, because Quick Look needs practical controls." [level=3] [ref=e220]
+            - paragraph [ref=e221]: dotViewer includes configurable copy behavior for preview selection. That means the preview is useful for real work, not just passive viewing. The small “Copied selection” feedback below is part of the shipped product.
+          - figure "Preview After you select text, dotViewer can confirm the copy action with a small toast so copying from Quick Look feels explicit instead of ambiguous." [ref=e222]:
+            - img "dotViewer rendered markdown preview showing copied selection feedback" [ref=e223]
+            - generic [ref=e224]: Preview After you select text, dotViewer can confirm the copy action with a small toast so copying from Quick Look feels explicit instead of ambiguous.
+      - generic [ref=e225]:
+        - generic [ref=e226]:
+          - generic [ref=e227]: App Controls
+          - heading "One companion app for themes, typography, width, copy behavior, markdown defaults, and file type management." [level=2] [ref=e228]
+          - paragraph [ref=e229]: dotViewer is not only a Quick Look extension. The companion app lets people switch between system-following themes, choose a shared starting preview size across files, tune code and markdown widths, control copy behavior, manage file types, and inspect extension status. This is part of what makes the product more useful than a narrow single-purpose preview plugin.
+        - generic [ref=e230]:
+          - figure "Companion App The theme picker exposes the shipped palette set, including system-following Atom One, GitHub, Xcode , and Solarized pairs plus fixed dark themes such as Tokyo Night and Blackout." [ref=e231]:
+            - img "dotViewer theme selection settings" [ref=e232]
+            - generic [ref=e233]:
+              - text: Companion App The theme picker exposes the shipped palette set, including system-following Atom One, GitHub,
+              - code [ref=e234]: Xcode
+              - text: ", and Solarized pairs plus fixed dark themes such as Tokyo Night and Blackout."
+          - figure "Companion App Appearance settings let people tune font size, app UI text size, line numbers, word wrap, content width, and the initial Quick Look window size from one screen." [ref=e235]:
+            - img "dotViewer appearance and preview layout settings" [ref=e236]
+            - generic [ref=e237]: Companion App Appearance settings let people tune font size, app UI text size, line numbers, word wrap, content width, and the initial Quick Look window size from one screen.
+          - figure "Companion App Preview UI settings cover copy behavior, line numbers in copied text, find-in-preview, and how dotViewer handles files outside the built-in registry." [ref=e238]:
+            - img "dotViewer copy behavior and preview UI settings" [ref=e239]
+            - generic [ref=e240]: Companion App Preview UI settings cover copy behavior, line numbers in copied text, find-in-preview, and how dotViewer handles files outside the built-in registry.
+        - generic [ref=e241]:
+          - figure "Companion App The File Types screen groups the 404 shipped file types, 599 routed extensions, and 295 filename mappings so overrides and custom additions stay in one place." [ref=e242]:
+            - img "dotViewer file type registry screen" [ref=e243]
+            - generic [ref=e244]: Companion App The File Types screen groups the 404 shipped file types, 599 routed extensions, and 295 filename mappings so overrides and custom additions stay in one place.
+          - figure "Companion App The status view confirms the extension is enabled and surfaces quick counts for built-in, custom, and disabled mappings." [ref=e245]:
+            - img "dotViewer status screen showing extension enabled and quick stats" [ref=e246]
+            - generic [ref=e247]: Companion App The status view confirms the extension is enabled and surfaces quick counts for built-in, custom, and disabled mappings.
+      - generic [ref=e248]:
+        - generic [ref=e249]:
+          - generic [ref=e250]:
+            - generic [ref=e251]: Coverage and limits
+            - heading "Broad enough to replace several niche preview tools, honest enough to say where macOS still wins." [level=2] [ref=e252]
+            - paragraph [ref=e253]: dotViewer is strongest where Finder gives third-party Quick Look extensions room to improve the experience. When macOS owns the preview path, the limitation is stated directly instead of hidden behind vague marketing claims.
+          - list [ref=e254]:
+            - listitem [ref=e255]:
+              - text: Some file types are still claimed by macOS system preview handlers. For example,
+              - code [ref=e256]: .html
+              - text: stays with the native HTML Quick Look renderer.
+            - listitem [ref=e257]:
+              - text: TypeScript
+              - code [ref=e258]: .ts
+              - text: can still be routed by macOS as MPEG-2 transport stream video in some situations, which is a platform routing limitation rather than a dotViewer bug.
+            - listitem [ref=e259]: dotViewer improves Quick Look where third-party extensions are allowed. It does not override every system-owned preview path in macOS.
+        - generic [ref=e260]:
+          - generic [ref=e261]:
+            - generic [ref=e262]: Custom mappings
+            - heading "Be explicit about what users can map themselves." [level=2] [ref=e263]
+            - paragraph [ref=e264]: dotViewer does support custom mappings in the app, but only for file types the shipped extension already routes. Sorry, but dotViewer cannot teach macOS Quick Look completely brand-new file types at runtime.
+            - paragraph [ref=e265]: Everything in the accordion below is already shipped today. Most of it routes directly to dotViewer in Finder Quick Look, but a small number of mappings still stay with macOS system previewers and are marked inline. If a type is missing from that list, users will not be able to add it themselves until a future shipped dotViewer version includes it.
+          - generic [ref=e266]:
+            - paragraph [ref=e267]:
+              - text: "Currently shipped coverage:"
+              - strong [ref=e268]: "404"
+              - text: file types,
+              - strong [ref=e269]: "599"
+              - text: extensions, and
+              - strong [ref=e270]: "295"
+              - text: exact filename mappings.
+            - paragraph [ref=e271]: If you need something outside that list, please open a GitHub issue so it can be added to a future release.
+            - generic [ref=e272]:
+              - link "Request file type support" [ref=e273] [cursor=pointer]:
+                - /url: https://github.com/Stianlars1/dotViewer/issues/new?title=File%20type%20support%3A%20
+              - link "View support issues" [ref=e274] [cursor=pointer]:
+                - /url: https://github.com/Stianlars1/dotViewer/issues
+          - group [ref=e275]:
+            - generic "Everything dotViewer already ships today 404 file types • 599 extensions • 295 filenames • 4 macOS routing caveats called out inline +" [ref=e276] [cursor=pointer]:
+              - text: Everything dotViewer already ships today
+              - generic [ref=e277]: 404 file types • 599 extensions • 295 filenames • 4 macOS routing caveats called out inline
+              - text: +
+      - generic [ref=e278]:
+        - generic [ref=e279]:
+          - generic [ref=e280]: Install
+          - heading "A normal Mac install flow, kept intentionally short." [level=2] [ref=e281]
+          - paragraph [ref=e282]: "The free direct path is meant to feel familiar: download the DMG, drag to Applications, launch once, then use Quick Look in Finder. If you prefer store-managed installation, the paid App Store channel is available too."
+        - generic [ref=e283]:
+          - article [ref=e284]:
+            - generic [ref=e285]: "01"
+            - heading "Download the latest DMG" [level=3] [ref=e286]
+            - paragraph [ref=e287]:
+              - text: Use the stable
+              - link "/download" [ref=e288] [cursor=pointer]:
+                - /url: /download
+                - code [ref=e289]: /download
+              - text: page and you always land on the current installer, checksum, and version history without hunting through release assets manually.
+          - article [ref=e290]:
+            - generic [ref=e291]: "02"
+            - heading "Drag dotViewer into Applications" [level=3] [ref=e292]
+            - paragraph [ref=e293]: Install it like a normal Mac app. One app, one DMG, no account wall, and no chain of separate Quick Look add-ons.
+          - article [ref=e294]:
+            - generic [ref=e295]: "03"
+            - heading "Launch once, then use Quick Look" [level=3] [ref=e296]
+            - paragraph [ref=e297]: The first launch registers the extension. After that, select a supported file in Finder and press Space to preview it.
+        - generic [ref=e298]: Free public DMG for adoption, plus a paid App Store path for convenience and support. One notarized install, one launch, and then you can use Space in Finder to preview markdown, config files, dotfiles, plain text documents, logs, and code.
+      - generic [ref=e299]:
+        - generic [ref=e300]:
+          - generic [ref=e301]: FAQ
+          - heading "Short answers before installation." [level=2] [ref=e302]
+        - generic [ref=e303]:
+          - generic [ref=e304]:
+            - group [ref=e305]:
+              - generic "What files is dotViewer built for? +" [ref=e306] [cursor=pointer]
+            - group [ref=e307]:
+              - generic "Can dotViewer preview dotfiles like .gitignore and config files like JSON , YAML , XML , and INI ? +" [ref=e308] [cursor=pointer]:
+                - text: Can dotViewer preview dotfiles like
+                - code [ref=e309]: .gitignore
+                - text: and config files like
+                - code [ref=e310]: JSON
+                - text: ","
+                - code [ref=e311]: YAML
+                - text: ","
+                - code [ref=e312]: XML
+                - text: ", and"
+                - code [ref=e313]: INI
+                - text: "? +"
+            - group [ref=e314]:
+              - generic "Why use dotViewer instead of separate markdown or code preview extensions? +" [ref=e315] [cursor=pointer]
+            - group [ref=e316]:
+              - generic "Does it replace Finder's built-in Quick Look for every file type? +" [ref=e317] [cursor=pointer]
+            - group [ref=e318]:
+              - generic "Is the app signed and notarized? +" [ref=e319] [cursor=pointer]
+            - group [ref=e320]:
+              - generic "Is dotViewer free or paid? +" [ref=e321] [cursor=pointer]
+            - group [ref=e322]:
+              - generic "Can I tune the preview and app UI? +" [ref=e323] [cursor=pointer]
+            - group [ref=e324]:
+              - generic "Can I add my own file types in dotViewer? +" [ref=e325] [cursor=pointer]
+          - generic [ref=e326]:
+            - heading "A better Finder Quick Look workflow for technical files on macOS." [level=2] [ref=e327]
+            - paragraph [ref=e328]: dotViewer is for the moments when you just need to inspect the file, understand what it is, and keep moving. Get the free direct DMG, or choose the App Store if you want the paid store-managed route instead.
+            - generic [ref=e329]:
+              - link "Get the free DMG" [ref=e330] [cursor=pointer]:
+                - /url: /download
+              - link "Buy on App Store" [ref=e331] [cursor=pointer]:
+                - /url: https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12
+  - contentinfo [ref=e332]:
+    - generic [ref=e334]:
+      - generic [ref=e335]:
+        - strong [ref=e336]: dotViewer
+        - text: Better Quick Look for dotfiles, config files, markdown, logs, plain text, and code on macOS.
+        - text: Created by
+        - link "Stian Larsen" [ref=e337] [cursor=pointer]:
+          - /url: https://stianlarsen.com
+        - text: ". Also from the same creator:"
+        - link "dbHost" [ref=e338] [cursor=pointer]:
+          - /url: https://dbhost.app
+        - text: for free PostgreSQL database management.
+      - generic [ref=e339]:
+        - link "Previews" [ref=e340] [cursor=pointer]:
+          - /url: "#previews"
+        - link "Controls" [ref=e341] [cursor=pointer]:
+          - /url: "#controls"
+        - link "Coverage" [ref=e342] [cursor=pointer]:
+          - /url: "#coverage"
+        - link "Install" [ref=e343] [cursor=pointer]:
+          - /url: "#install"
+        - link "FAQ" [ref=e344] [cursor=pointer]:
+          - /url: "#faq"
+        - link "Download" [ref=e345] [cursor=pointer]:
+          - /url: /download
+        - link "App Store" [ref=e346] [cursor=pointer]:
+          - /url: https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12
+        - link "Releases" [ref=e347] [cursor=pointer]:
+          - /url: https://github.com/Stianlars1/dotViewer/releases
+        - link "GitHub" [ref=e348] [cursor=pointer]:
+          - /url: https://github.com/Stianlars1/dotViewer

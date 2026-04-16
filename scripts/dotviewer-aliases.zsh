@@ -10,3 +10,4 @@ alias dvsmoke="/Users/stian/Developer/macOS Apps/v2.5/scripts/dotviewer-ql-smoke
 alias dvutis="/Users/stian/Developer/macOS Apps/v2.5/scripts/dotviewer-gen-ql-content-types.sh"
 alias dvaudit="python3 '/Users/stian/Developer/macOS Apps/v2.5/scripts/dotviewer-gen-default-filetypes.py'"
 alias dvnuke="/Users/stian/Developer/macOS Apps/v2.5/scripts/dotviewer-nuke.sh"
+alias dvpublish="/Users/stian/Developer/macOS Apps/v2.5/scripts/publish.sh"

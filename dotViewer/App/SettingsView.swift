@@ -21,6 +21,8 @@ struct SettingsView: View {
     @State private var previewWindowSizeMode: String = SharedSettings.shared.previewWindowSizeMode
     @State private var previewWindowFixedWidth: Double = Double(SharedSettings.shared.previewWindowFixedWidth)
     @State private var previewWindowFixedHeight: Double = Double(SharedSettings.shared.previewWindowFixedHeight)
+    @State private var previewWindowAspectRatio: String = SharedSettings.shared.previewWindowAspectRatio
+    @State private var previewWindowAspectBaseWidth: Double = Double(SharedSettings.shared.previewWindowAspectBaseWidth)
     @State private var previewUnknownFiles: Bool = SharedSettings.shared.previewAllFileTypes
     @State private var forceTextForUnknown: Bool = SharedSettings.shared.previewForceTextForUnknown
 
@@ -47,6 +49,23 @@ struct SettingsView: View {
 
     private var palette: ThemePalette {
         ThemePalette.palette(for: selectedTheme, systemIsDark: colorScheme == .dark)
+    }
+
+    private var previewWindowSizeModeDescription: String {
+        switch previewWindowSizeMode {
+        case "auto":
+            return "Sizes each window from the file's content, with a minimum of 700×420 so small files don't open in tiny frames."
+        case "remember":
+            return "Reuses the size dotViewer last requested. macOS doesn't expose the user's final drag, so this tracks the last requested size."
+        case "aspect":
+            let ratio = PreviewSizing.AspectRatio.from(key: previewWindowAspectRatio)
+            let h = Int(ratio.heightForWidth(CGFloat(previewWindowAspectBaseWidth)))
+            return "Opens every preview at \(Int(previewWindowAspectBaseWidth))×\(h) (\(previewWindowAspectRatio) ratio)."
+        case "contentFixed":
+            return "Width stays fixed. Height adapts to content but never exceeds your max height setting."
+        default:
+            return "Uses one shared starting size for every preview (default). You can still resize the window manually."
+        }
     }
 
     var body: some View {
@@ -187,6 +206,127 @@ struct SettingsView: View {
                 }
 
                 VStack(alignment: .leading, spacing: 16) {
+                    Text("Window Size")
+                        .font(.headline)
+
+                    VStack(alignment: .leading, spacing: 12) {
+                        Picker("Mode", selection: $previewWindowSizeMode) {
+                            Text("Fixed").tag("fixed")
+                            Text("Auto").tag("auto")
+                            Text("Aspect Ratio").tag("aspect")
+                            Text("Fit Content").tag("contentFixed")
+                            Text("Remember").tag("remember")
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: previewWindowSizeMode) { _, newValue in
+                            SharedSettings.shared.previewWindowSizeMode = newValue
+                        }
+
+                        if previewWindowSizeMode == "fixed" {
+                            HStack {
+                                Text("Width")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
+                                .onChange(of: previewWindowFixedWidth) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
+                                }
+
+                            HStack {
+                                Text("Height")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedHeight))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
+                                .onChange(of: previewWindowFixedHeight) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
+                                }
+                        }
+
+                        if previewWindowSizeMode == "aspect" {
+                            Picker("Ratio", selection: $previewWindowAspectRatio) {
+                                ForEach(PreviewSizing.AspectRatio.allKeys, id: \.self) { key in
+                                    Text(key).tag(key)
+                                }
+                            }
+                            .pickerStyle(.segmented)
+                            .onChange(of: previewWindowAspectRatio) { _, newValue in
+                                SharedSettings.shared.previewWindowAspectRatio = newValue
+                            }
+
+                            HStack {
+                                Text("Base Width")
+                                Spacer()
+                                Text("\(Int(previewWindowAspectBaseWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowAspectBaseWidth, in: 420...1600, step: 10)
+                                .onChange(of: previewWindowAspectBaseWidth) { _, newValue in
+                                    SharedSettings.shared.previewWindowAspectBaseWidth = Int(newValue)
+                                }
+                        }
+
+                        if previewWindowSizeMode == "contentFixed" {
+                            HStack {
+                                Text("Width")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedWidth))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
+                                .onChange(of: previewWindowFixedWidth) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
+                                }
+
+                            HStack {
+                                Text("Max Height")
+                                Spacer()
+                                Text("\(Int(previewWindowFixedHeight))px")
+                                    .foregroundStyle(.secondary)
+                            }
+
+                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
+                                .onChange(of: previewWindowFixedHeight) { _, newValue in
+                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
+                                }
+                        }
+
+                        if previewWindowSizeMode == "remember" {
+                            HStack {
+                                Button("Reset remembered size") {
+                                    SharedSettings.shared.resetPreviewWindowLastSize()
+                                }
+                                .controlSize(.small)
+
+                                Spacer()
+
+                                Button("Save as Fixed") {
+                                    SharedSettings.shared.copyLastSizeToFixed()
+                                    previewWindowFixedWidth = Double(SharedSettings.shared.previewWindowFixedWidth)
+                                    previewWindowFixedHeight = Double(SharedSettings.shared.previewWindowFixedHeight)
+                                    previewWindowSizeMode = "fixed"
+                                    SharedSettings.shared.previewWindowSizeMode = "fixed"
+                                }
+                                .controlSize(.small)
+                            }
+                        }
+
+                        Text(previewWindowSizeModeDescription)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding()
+                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+                }
+
+                VStack(alignment: .leading, spacing: 16) {
                     Text("Preview Limits")
                         .font(.headline)
 
@@ -229,51 +369,6 @@ struct SettingsView: View {
                             }
 
                         Text("Shows filename, language, line count, and file size in preview")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Text("Initial Preview Window Size")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-
-                        Picker("Window Size", selection: $previewWindowSizeMode) {
-                            Text("Per File").tag("auto")
-                            Text("Same for All Files").tag("fixed")
-                        }
-                        .pickerStyle(.segmented)
-                        .onChange(of: previewWindowSizeMode) { _, newValue in
-                            SharedSettings.shared.previewWindowSizeMode = newValue
-                        }
-
-                        if previewWindowSizeMode == "fixed" {
-                            HStack {
-                                Text("Width")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedWidth))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
-                                .onChange(of: previewWindowFixedWidth) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
-                                }
-
-                            HStack {
-                                Text("Height")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedHeight))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
-                                .onChange(of: previewWindowFixedHeight) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
-                                }
-                        }
-
-                        Text("Per File sizes the Quick Look window from each preview's content. Same for All Files uses one shared starting size across dotViewer previews, including different file types. You can still resize the window manually after it opens.")
                             .font(.caption)
                             .foregroundStyle(.secondary)
 

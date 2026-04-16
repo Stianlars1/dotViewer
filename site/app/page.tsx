@@ -192,10 +192,10 @@ const faqs = [
     id: "tuning",
     question: "Can I tune the preview and app UI?",
     answer:
-      "Yes. dotViewer includes system-following theme choices, initial preview window sizing, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+      "Yes. dotViewer includes system-following theme choices, five preview window-size modes (Fixed, Auto, Aspect Ratio, Fit Content, Remember), font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
     schemaQuestion: "Can I tune the preview and app UI?",
     schemaAnswer:
-      "Yes. dotViewer includes system-following theme choices, initial preview window sizing, font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
+      "Yes. dotViewer includes system-following theme choices, five preview window-size modes (Fixed, Auto, Aspect Ratio, Fit Content, Remember), font sizing, content width controls, line-number and word-wrap options, markdown defaults, copy behavior, file type controls, and more inside the companion app.",
   },
   {
     id: "custom-mappings",
@@ -214,6 +214,32 @@ const faqs = [
     schemaQuestion: "Can I add my own file types in dotViewer?",
     schemaAnswer:
       "Yes, but only for file types dotViewer already ships mappings for. You can override highlighting for supported extensions and exact filenames in the app, while a small number of shipped mappings still have macOS-owned preview paths. dotViewer cannot teach macOS Quick Look completely brand-new file types at runtime. If a file type is not in the shipped support list, it needs a dotViewer update and a GitHub issue request.",
+  },
+  {
+    id: "extension-conflict",
+    question:
+      "Another Quick Look extension is overriding dotViewer. How do I fix it?",
+    answer: (
+      <>
+        dotViewer includes a built-in extension conflict scanner on the Status
+        screen. It automatically detects competing Quick Look extensions and
+        lets you disable them individually or resolve all conflicts with one
+        click. For manual inspection or advanced control, you can also use the
+        free{" "}
+        <a
+          href="https://github.com/Oil3/PluginKits"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          PluginKits
+        </a>{" "}
+        app. Both approaches take effect immediately.
+      </>
+    ),
+    schemaQuestion:
+      "Another Quick Look extension is overriding dotViewer. How do I fix it?",
+    schemaAnswer:
+      "dotViewer includes a built-in extension conflict scanner on the Status screen that detects competing Quick Look extensions and lets you resolve all conflicts with one click. For advanced control, you can also use the free PluginKits app (github.com/Oil3/PluginKits). Both approaches take effect immediately.",
   },
 ];
 

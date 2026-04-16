@@ -429,3 +429,15 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `bash -n scripts/dotviewer-nuke.sh` → pass
   - `cd dotViewer && xcodegen generate && xcodebuild -project dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath build test` → pass (`139 tests, 0 failures`)
   - `cd site && npm run typecheck && npm run build` → pass
+
+## 2026-04-15
+
+### v1.3.0 — Window size modes, extension conflict scanner, PluginKits verdict
+- Outcome: Added a dedicated Window Size section in Settings with five modes: `Fixed` (default, 700×560), `Auto` (content-aware with raised 700×420 minimum floor), `Aspect Ratio` (user-chosen ratio + base width), `Fit Content` (fixed width, content-driven height with user-set max), and `Remember` (reuses last requested size with `Reset` and `Save as Fixed` actions). Extracted a shared `computeContentSize` helper in PreviewProvider to consolidate sizing logic across HTML and RTF reply paths. Added `AspectRatio` value type in PreviewSizing with five presets and `from(key:)` factory. Added Extension Conflicts scanner in StatusView: discovers competing third-party QL preview extensions via `pluginkit`, shows per-extension "Disable" buttons and a one-click "Resolve All" action, and detects stale dotViewer registrations from old build paths. Documented in `KI-001` why `Oil3/PluginKits` does not unlock `.ts` routing but IS useful for third-party conflicts. Updated README troubleshooting section and website FAQ with PluginKits recommendation for manual conflict resolution. Bumped `MARKETING_VERSION` to `1.3.0` and `CURRENT_PROJECT_VERSION` to `5`.
+- Files: `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewSizing.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/App/StatusView.swift`, `dotViewer/Utilities/ExtensionConflictScanner.swift`, `dotViewer/dotViewerTests/PreviewSizingTests.swift`, `dotViewer/project.yml`, `CHANGELOG.md`, `KNOWN_ISSUES.md`, `BACKLOG.md`, `README.md`, `CLAUDE.md`, `site/app/page.tsx`, `AGENTS.md`
+- Verified:
+  - `cd dotViewer && xcodegen generate` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`155 tests, 0 failures`)
+  - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 707/707 (100.0%)`)
+  - `cd site && npm run typecheck && npm run build` → pass
+- Follow-ups: Run `./scripts/dotviewer-refresh.sh` with write access to `/Applications`, then smoke-test all five window-size modes in Finder. Release via `./scripts/release.sh 1.3.0` for GitHub and `./scripts/release.sh 1.3.0 --app-store` for Transporter.

@@ -144,13 +144,13 @@ public final class SharedSettings: @unchecked Sendable {
     public var previewWindowSizeMode: String {
         get {
             lock.withLock {
-                let value = defaults.string(forKey: "previewWindowSizeMode") ?? "auto"
-                return Self.allowedPreviewWindowSizeModes.contains(value) ? value : "auto"
+                let value = defaults.string(forKey: "previewWindowSizeMode") ?? "fixed"
+                return Self.allowedPreviewWindowSizeModes.contains(value) ? value : "fixed"
             }
         }
         set {
             lock.withLock {
-                let sanitized = Self.allowedPreviewWindowSizeModes.contains(newValue) ? newValue : "auto"
+                let sanitized = Self.allowedPreviewWindowSizeModes.contains(newValue) ? newValue : "fixed"
                 defaults.set(sanitized, forKey: "previewWindowSizeMode")
             }
         }
@@ -183,6 +183,82 @@ public final class SharedSettings: @unchecked Sendable {
                 let clamped = max(220, min(1400, newValue))
                 defaults.set(clamped, forKey: "previewWindowFixedHeight")
             }
+        }
+    }
+
+    public var previewWindowLastWidth: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "previewWindowLastWidth")
+                return value > 0 ? max(420, min(1600, value)) : 700
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(420, min(1600, newValue))
+                defaults.set(clamped, forKey: "previewWindowLastWidth")
+            }
+        }
+    }
+
+    public var previewWindowLastHeight: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "previewWindowLastHeight")
+                return value > 0 ? max(220, min(1400, value)) : 560
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(220, min(1400, newValue))
+                defaults.set(clamped, forKey: "previewWindowLastHeight")
+            }
+        }
+    }
+
+    public func resetPreviewWindowLastSize() {
+        lock.withLock {
+            defaults.removeObject(forKey: "previewWindowLastWidth")
+            defaults.removeObject(forKey: "previewWindowLastHeight")
+        }
+    }
+
+    public var previewWindowAspectRatio: String {
+        get {
+            lock.withLock {
+                let value = defaults.string(forKey: "previewWindowAspectRatio") ?? "16:10"
+                return Self.allowedAspectRatios.contains(value) ? value : "16:10"
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = Self.allowedAspectRatios.contains(newValue) ? newValue : "16:10"
+                defaults.set(sanitized, forKey: "previewWindowAspectRatio")
+            }
+        }
+    }
+
+    public var previewWindowAspectBaseWidth: Int {
+        get {
+            lock.withLock {
+                let value = defaults.integer(forKey: "previewWindowAspectBaseWidth")
+                return value > 0 ? max(420, min(1600, value)) : 700
+            }
+        }
+        set {
+            lock.withLock {
+                let clamped = max(420, min(1600, newValue))
+                defaults.set(clamped, forKey: "previewWindowAspectBaseWidth")
+            }
+        }
+    }
+
+    public func copyLastSizeToFixed() {
+        lock.withLock {
+            let w = defaults.integer(forKey: "previewWindowLastWidth")
+            let h = defaults.integer(forKey: "previewWindowLastHeight")
+            if w > 0 { defaults.set(max(420, min(1600, w)), forKey: "previewWindowFixedWidth") }
+            if h > 0 { defaults.set(max(220, min(1400, h)), forKey: "previewWindowFixedHeight") }
         }
     }
 
@@ -480,7 +556,8 @@ public final class SharedSettings: @unchecked Sendable {
 
     private static let allowedWidthModes: Set<String> = ["auto", "custom"]
     private static let allowedContentAlignments: Set<String> = ["left", "center", "right"]
-    private static let allowedPreviewWindowSizeModes: Set<String> = ["auto", "fixed"]
+    private static let allowedPreviewWindowSizeModes: Set<String> = ["auto", "fixed", "remember", "aspect", "contentFixed"]
+    private static let allowedAspectRatios: Set<String> = ["16:10", "16:9", "4:3", "3:2", "1:1"]
     private static let allowedAppUIFontSizePresets: Set<String> = [
         "system",
         "xSmall",

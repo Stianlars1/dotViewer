@@ -415,14 +415,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         fontSize: Double = 14,
         showHeader: Bool = true
     ) -> QLPreviewReply {
-        let contentSize = PreviewSizing.initialContentSize(
-            lineCount: lineCount,
-            fontSize: fontSize,
-            showHeader: showHeader,
-            windowSizeMode: SharedSettings.shared.previewWindowSizeMode,
-            fixedWidth: SharedSettings.shared.previewWindowFixedWidth,
-            fixedHeight: SharedSettings.shared.previewWindowFixedHeight
-        )
+        let contentSize = computeContentSize(lineCount: lineCount, fontSize: fontSize, showHeader: showHeader)
 
         let reply = QLPreviewReply(dataOfContentType: .html, contentSize: contentSize) { _ in
             html.data(using: .utf8) ?? Data()
@@ -469,14 +462,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         logger.log("Experiment 1: RTF data generated, \(rtfData.count) bytes")
 
-        let contentSize = PreviewSizing.initialContentSize(
-            lineCount: lineCount,
-            fontSize: fontSize,
-            showHeader: false,
-            windowSizeMode: SharedSettings.shared.previewWindowSizeMode,
-            fixedWidth: SharedSettings.shared.previewWindowFixedWidth,
-            fixedHeight: SharedSettings.shared.previewWindowFixedHeight
-        )
+        let contentSize = computeContentSize(lineCount: lineCount, fontSize: fontSize, showHeader: false)
 
         let reply = QLPreviewReply(dataOfContentType: .rtf, contentSize: contentSize) { _ in
             rtfData
@@ -530,6 +516,34 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             fontSize: SharedSettings.shared.fontSize,
             showHeader: false
         )
+    }
+}
+
+// MARK: - Shared sizing helper
+
+private extension PreviewProvider {
+    static func computeContentSize(lineCount: Int, fontSize: Double, showHeader: Bool) -> CGSize {
+        let settings = SharedSettings.shared
+        let mode = settings.previewWindowSizeMode
+        let size = PreviewSizing.initialContentSize(
+            lineCount: lineCount,
+            fontSize: fontSize,
+            showHeader: showHeader,
+            windowSizeMode: mode,
+            fixedWidth: settings.previewWindowFixedWidth,
+            fixedHeight: settings.previewWindowFixedHeight,
+            lastWidth: settings.previewWindowLastWidth,
+            lastHeight: settings.previewWindowLastHeight,
+            aspectRatioKey: settings.previewWindowAspectRatio,
+            aspectBaseWidth: settings.previewWindowAspectBaseWidth
+        )
+
+        if mode == "remember" {
+            settings.previewWindowLastWidth = Int(size.width)
+            settings.previewWindowLastHeight = Int(size.height)
+        }
+
+        return size
     }
 }
 

@@ -22,6 +22,12 @@
 
 **Acceptance criteria**: N/A — macOS system limitation. `public.mpeg-2-transport-stream` cannot be claimed without hijacking real video files, and Finder Open With defaults do not affect Quick Look routing.
 
+**PluginKits verdict (2026-04-15)**:
+- `github.com/Oil3/PluginKits` is a conflict-resolution tool for competing **third-party** Quick Look extensions. It does not override macOS-owned UTI bindings.
+- `.ts` is bound by the OS to `public.mpeg-2-transport-stream`, which conforms to `public.movie` and is served by the built-in video previewer. That binding sits below the third-party `.appex` layer, so neither PluginKits nor a sandboxed Quick Look extension can redirect it.
+- dotViewer already exports `com.stianlars1.dotviewer.typescript` and `com.stianlars1.dotviewer.ts` for the other routing channels; the remaining limit is precedence, not a missing declaration.
+- Recommendation: continue routing TypeScript through `.tsx`, `.cts`, and `.mts`. Keep KI-001 as Won't Fix.
+
 ---
 
 ## KI-002 — Finder thumbnail quality/parity with Quick Look preview
