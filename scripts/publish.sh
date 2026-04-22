@@ -50,6 +50,11 @@ CHECKSUM_PATH="$DMG_PATH.sha256"
 APPSTORE_PKG="$PROJECT_DIR/build-appstore/appstore/dotViewer.pkg"
 CHANGELOG="$REPO_DIR/CHANGELOG.md"
 
+# Homebrew tap for auto-updating `brew install --cask stianlars1/tap/dotviewer`.
+# Override with HOMEBREW_TAP_DIR env var; defaults to sibling directory.
+HOMEBREW_TAP_DIR="${HOMEBREW_TAP_DIR:-$REPO_DIR/../homebrew-tap}"
+HOMEBREW_CASK_FILE="$HOMEBREW_TAP_DIR/Casks/dotviewer.rb"
+
 # ── Step 0: Preflight checks ──────────────────────────────────────────────
 
 echo ""
@@ -82,7 +87,7 @@ fi
 
 # ── Step 1: Extract release notes from CHANGELOG ──────────────────────────
 
-echo -e "${BOLD}Step 1/6:${NC} Extracting release notes from CHANGELOG.md..."
+echo -e "${BOLD}Step 1/7:${NC} Extracting release notes from CHANGELOG.md..."
 
 RELEASE_NOTES=""
 if [ -f "$CHANGELOG" ]; then
@@ -115,7 +120,7 @@ fi
 # ── Step 2: Build DMG (Developer ID) ──────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 2/6:${NC} Building Developer ID release (DMG + notarize)..."
+echo -e "${BOLD}Step 2/7:${NC} Building Developer ID release (DMG + notarize)..."
 echo ""
 
 "$SCRIPT_DIR/release.sh" "$VERSION"
@@ -136,7 +141,7 @@ echo -e "${GREEN}  ✓ Checksum ready: $CHECKSUM_PATH${NC}"
 # ── Step 3: Git tag ───────────────────────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 3/6:${NC} Creating git tag v$VERSION..."
+echo -e "${BOLD}Step 3/7:${NC} Creating git tag v$VERSION..."
 
 if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
     echo -e "${YELLOW}  Tag v$VERSION already exists — skipping tag creation${NC}"
@@ -151,7 +156,7 @@ git push origin "v$VERSION" 2>/dev/null || echo -e "${YELLOW}  Tag already on re
 # ── Step 4: GitHub release ────────────────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 4/6:${NC} Creating GitHub release..."
+echo -e "${BOLD}Step 4/7:${NC} Creating GitHub release..."
 
 EXISTING_RELEASE=$(gh release view "v$VERSION" --json tagName --jq .tagName 2>/dev/null || true)
 
@@ -188,10 +193,76 @@ if [ -n "$GITHUB_URL" ]; then
     echo "    $GITHUB_URL"
 fi
 
-# ── Step 5: Build App Store pkg ───────────────────────────────────────────
+# ── Step 5: Update Homebrew tap (stianlars1/tap) ──────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 5/6:${NC} Building App Store package..."
+echo -e "${BOLD}Step 5/7:${NC} Updating Homebrew tap cask..."
+
+HOMEBREW_PUSHED=""
+HOMEBREW_SKIP_REASON=""
+
+if [ ! -d "$HOMEBREW_TAP_DIR/.git" ]; then
+    HOMEBREW_SKIP_REASON="tap directory not found at $HOMEBREW_TAP_DIR (set HOMEBREW_TAP_DIR to override)"
+elif [ ! -f "$HOMEBREW_CASK_FILE" ]; then
+    HOMEBREW_SKIP_REASON="cask file not found at $HOMEBREW_CASK_FILE"
+else
+    # Compute DMG sha256 directly (avoids depending on CHECKSUM_PATH file format).
+    DMG_SHA256=$(shasum -a 256 "$DMG_PATH" | awk '{print $1}')
+    if [ -z "$DMG_SHA256" ] || [ ${#DMG_SHA256} -ne 64 ]; then
+        echo -e "${RED}  Error: failed to compute DMG SHA256${NC}"
+        exit 1
+    fi
+    echo "  DMG SHA256: $DMG_SHA256"
+
+    # Update version and sha256 lines in the cask. BSD sed requires '' after -i.
+    sed -i '' -E "s/^(  version) \"[^\"]+\"/\\1 \"$VERSION\"/" "$HOMEBREW_CASK_FILE"
+    sed -i '' -E "s/^(  sha256) \"[a-f0-9]{64}\"/\\1 \"$DMG_SHA256\"/" "$HOMEBREW_CASK_FILE"
+
+    # Verify the edits took.
+    if ! grep -q "version \"$VERSION\"" "$HOMEBREW_CASK_FILE"; then
+        echo -e "${RED}  Error: version not updated in $HOMEBREW_CASK_FILE${NC}"
+        exit 1
+    fi
+    if ! grep -q "sha256 \"$DMG_SHA256\"" "$HOMEBREW_CASK_FILE"; then
+        echo -e "${RED}  Error: sha256 not updated in $HOMEBREW_CASK_FILE${NC}"
+        exit 1
+    fi
+
+    pushd "$HOMEBREW_TAP_DIR" >/dev/null
+
+    if git diff --quiet -- "Casks/dotviewer.rb"; then
+        echo -e "${YELLOW}  No changes to commit (cask already at v$VERSION + matching sha256)${NC}"
+    else
+        git add "Casks/dotviewer.rb"
+        git commit -m "dotviewer $VERSION" >/dev/null
+        echo -e "${GREEN}  ✓ Committed bump to v$VERSION${NC}"
+
+        if git remote | grep -q .; then
+            BRANCH=$(git symbolic-ref --short HEAD 2>/dev/null || echo "main")
+            if git push origin "$BRANCH" 2>/dev/null; then
+                HOMEBREW_PUSHED="yes"
+                echo -e "${GREEN}  ✓ Pushed to $(git remote get-url origin)${NC}"
+            else
+                echo -e "${YELLOW}  ⚠ Push failed — commit is local only. Push manually with:${NC}"
+                echo "      (cd \"$HOMEBREW_TAP_DIR\" && git push origin $BRANCH)"
+            fi
+        else
+            echo -e "${YELLOW}  ⚠ No git remote configured. Commit is local only.${NC}"
+            echo "      Add a remote: (cd \"$HOMEBREW_TAP_DIR\" && git remote add origin git@github.com:stianlars1/homebrew-tap.git)"
+        fi
+    fi
+
+    popd >/dev/null
+fi
+
+if [ -n "$HOMEBREW_SKIP_REASON" ]; then
+    echo -e "${YELLOW}  Skipped: $HOMEBREW_SKIP_REASON${NC}"
+fi
+
+# ── Step 6: Build App Store pkg ───────────────────────────────────────────
+
+echo ""
+echo -e "${BOLD}Step 6/7:${NC} Building App Store package..."
 echo ""
 
 "$SCRIPT_DIR/release.sh" "$VERSION" --app-store
@@ -202,7 +273,7 @@ else
     echo -e "${YELLOW}  ⚠ App Store package not found — check the output above${NC}"
 fi
 
-# ── Step 6: Summary ───────────────────────────────────────────────────────
+# ── Step 7: Summary ───────────────────────────────────────────────────────
 
 echo ""
 echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}"
@@ -217,6 +288,11 @@ if [ -n "$GITHUB_URL" ]; then
 fi
 if [ -f "$APPSTORE_PKG" ]; then
     echo "    App Store:  $APPSTORE_PKG"
+fi
+if [ -n "$HOMEBREW_PUSHED" ]; then
+    echo "    Homebrew:   brew upgrade --cask stianlars1/tap/dotviewer"
+elif [ -z "$HOMEBREW_SKIP_REASON" ] && [ -d "$HOMEBREW_TAP_DIR/.git" ]; then
+    echo "    Homebrew:   local commit only — push to update users"
 fi
 echo ""
 echo -e "${BOLD}  Remaining manual step:${NC}"

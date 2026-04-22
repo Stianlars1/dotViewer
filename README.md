@@ -4,6 +4,18 @@ Best-in-class Quick Look previewer for developers on macOS.
 
 `dotViewer` turns Finder Quick Look into a full code-and-config viewer: syntax-highlighted previews, structured CSV/TSV tables, rendered manpages, markdown raw/rendered modes, quality thumbnails, and highly configurable copy behavior.
 
+## Install
+
+Via Homebrew (recommended for developers):
+
+```bash
+brew install --cask stianlars1/tap/dotviewer
+```
+
+Or download the notarized DMG directly from the [latest GitHub release](https://github.com/stianlars1/dotViewer/releases/latest). The Mac App Store build is also available.
+
+Requirements: macOS 15 Sequoia or later.
+
 ## What dotViewer Is
 
 dotViewer is a native macOS app + Quick Look extension suite that lets you:
