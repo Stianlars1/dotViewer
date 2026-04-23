@@ -24,6 +24,27 @@
   --heading-line-display: 1.04;
   --heading-line-title: 1.08;
   --heading-line-copy: 1.14;
+
+  /* Redesign tokens (dv-*) — tighter palette for the refreshed landing + download pages */
+  --dv-bg: #f6f8fb;
+  --dv-bg-deep: #eef2f7;
+  --dv-ink: #0b1220;
+  --dv-ink-2: #1d2636;
+  --dv-muted: #5b6474;
+  --dv-muted-2: #8a93a3;
+  --dv-line: rgba(11, 18, 32, 0.08);
+  --dv-line-2: rgba(11, 18, 32, 0.05);
+  --dv-card: #ffffff;
+  --dv-accent: #1762ff;
+  --dv-accent-ink: #0a3bb3;
+  --dv-accent-soft: rgba(23, 98, 255, 0.08);
+  --dv-shadow-sm: 0 1px 2px rgba(11, 18, 32, 0.04), 0 4px 12px rgba(11, 18, 32, 0.04);
+  --dv-shadow-md: 0 2px 4px rgba(11, 18, 32, 0.04), 0 16px 40px rgba(11, 18, 32, 0.06);
+  --dv-shadow-lg: 0 4px 8px rgba(11, 18, 32, 0.04), 0 40px 80px -20px rgba(11, 18, 32, 0.14);
+  --dv-radius-sm: 10px;
+  --dv-radius: 16px;
+  --dv-radius-lg: 22px;
+  --dv-radius-xl: 28px;
 }
 
 * {
@@ -38,10 +59,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
-  background:
-    radial-gradient(circle at top left, rgba(106, 169, 255, 0.18), transparent 28%),
-    radial-gradient(circle at 90% 14%, rgba(255, 255, 255, 0.9), transparent 18%),
-    linear-gradient(180deg, #f9fbff 0%, #eef4fb 50%, #f7fbff 100%);
+  background: linear-gradient(180deg, #f7fbff 0%, #eef4fb 55%, #f4f7fb 100%);
   color: var(--foreground);
   font-family:
     "SF Pro Display",

@@ -1,6 +1,8 @@
 const DEFAULT_SITE_URL = "https://dotviewer.app";
 const DEFAULT_GITHUB_REPO = "Stianlars1/dotViewer";
 const DEFAULT_APP_STORE_URL = "https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12";
+const DEFAULT_HOMEBREW_TAP = "stianlars1/tap/dotviewer";
+const DEFAULT_HOMEBREW_TAP_REPO_URL = "https://github.com/Stianlars1/homebrew-tap";
 
 function normalizeUrl(value: string | undefined): string | null {
   if (!value) {
@@ -62,6 +64,9 @@ export type SiteConfig = {
   githubRepo: string | null;
   googleAnalyticsId: string | null;
   hasDownloadSource: boolean;
+  homebrewCommand: string;
+  homebrewTap: string;
+  homebrewTapUrl: string;
   releasesUrl: string | null;
   repoUrl: string | null;
   siteUrl: string;
@@ -84,6 +89,14 @@ export function getSiteConfig(): SiteConfig {
   const repoUrl = githubRepo ? `https://github.com/${githubRepo}` : null;
   const releasesUrl = githubRepo ? `${repoUrl}/releases` : null;
   const siteUrl = normalizeUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? DEFAULT_SITE_URL;
+  const homebrewTap = (
+    process.env.HOMEBREW_TAP?.trim() ||
+    process.env.NEXT_PUBLIC_HOMEBREW_TAP?.trim() ||
+    DEFAULT_HOMEBREW_TAP
+  );
+  const homebrewCommand = `brew install --cask ${homebrewTap}`;
+  const homebrewTapUrl =
+    normalizeUrl(process.env.NEXT_PUBLIC_HOMEBREW_TAP_URL) ?? DEFAULT_HOMEBREW_TAP_REPO_URL;
 
   return {
     appStoreUrl,
@@ -91,6 +104,9 @@ export function getSiteConfig(): SiteConfig {
     githubRepo,
     googleAnalyticsId,
     hasDownloadSource: Boolean(directDownloadUrl || githubRepo),
+    homebrewCommand,
+    homebrewTap,
+    homebrewTapUrl,
     releasesUrl,
     repoUrl,
     siteUrl,

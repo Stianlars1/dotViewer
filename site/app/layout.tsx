@@ -5,6 +5,7 @@ import { getSiteConfig } from "../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
 import { geistMono, geistSans } from "../lib/fonts/geist/geist";
 import { inter } from "../lib/fonts/inter/inter";
+import { LightboxProvider } from "../components/image-lightbox";
 import { SiteAnalytics } from "../components/site-analytics";
 
 const { googleAnalyticsId, siteUrl } = getSiteConfig();
@@ -78,7 +79,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${geistMono.variable} ${geistSans.variable} ${inter.variable}`}>
-        {children}
+        <LightboxProvider>{children}</LightboxProvider>
         <Suspense fallback={null}>
           <SiteAnalytics googleAnalyticsId={googleAnalyticsId} />
         </Suspense>

@@ -1,0 +1,300 @@
+.hero {
+  padding: 72px 0 24px;
+  text-align: center;
+  position: relative;
+  isolation: isolate;
+}
+
+.logoWrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+  position: relative;
+  z-index: 2;
+}
+
+.eyebrow {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  color: var(--dv-accent-ink);
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid rgba(23, 98, 255, 0.18);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 8px 20px -12px rgba(23, 98, 255, 0.3);
+}
+
+.eyebrowDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--dv-accent);
+  display: inline-block;
+}
+
+.title {
+  position: relative;
+  z-index: 2;
+  margin: 22px auto 0;
+  max-width: 920px;
+  font-size: clamp(40px, 5.6vw, 62px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  color: var(--dv-ink);
+  text-wrap: balance;
+  font-family:
+    var(--font-inter),
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif;
+}
+
+.word {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: var(--font-geist-mono), "SF Mono", "JetBrains Mono", monospace;
+  font-weight: 500;
+  color: var(--dv-accent);
+  font-size: 0.82em;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+  display: inline-block;
+  padding: 0 0.08em;
+}
+
+.spaced {
+  margin-right: 0.26em;
+}
+
+.lede {
+  position: relative;
+  z-index: 2;
+  margin: 22px auto 0;
+  max-width: 580px;
+  color: var(--dv-muted);
+  font-size: 17px;
+  line-height: 1.58;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.ctaRow {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.primary,
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-size: 14.5px;
+  font-weight: 500;
+  transition:
+    transform 0.15s ease,
+    background 0.15s ease,
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  letter-spacing: -0.005em;
+}
+
+.primary {
+  background: var(--dv-accent);
+  color: #ffffff;
+  box-shadow: 0 8px 24px -8px rgba(23, 98, 255, 0.5);
+}
+
+.primary:hover {
+  background: #0f4ddb;
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px -8px rgba(23, 98, 255, 0.55);
+}
+
+.ghost {
+  background: #ffffff;
+  color: var(--dv-ink);
+  border: 1px solid var(--dv-line);
+}
+
+.ghost:hover {
+  border-color: rgba(11, 18, 32, 0.2);
+  transform: translateY(-1px);
+}
+
+.meta {
+  position: relative;
+  z-index: 2;
+  margin-top: 20px;
+  color: var(--dv-muted-2);
+  font-size: 12.5px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+.meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meta svg {
+  width: 12px;
+  height: 12px;
+  color: var(--dv-accent);
+}
+
+.preview {
+  margin: 56px auto 0;
+  max-width: 1060px;
+  position: relative;
+  z-index: 2;
+}
+
+.previewGlow {
+  position: absolute;
+  inset: -80px -60px -20px -60px;
+  background:
+    radial-gradient(
+      55% 60% at 50% 35%,
+      rgba(23, 98, 255, 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      35% 40% at 80% 80%,
+      rgba(139, 92, 246, 0.18),
+      transparent 70%
+    ),
+    radial-gradient(
+      35% 40% at 15% 75%,
+      rgba(56, 189, 248, 0.2),
+      transparent 72%
+    );
+  filter: blur(28px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.previewFrame {
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+  border-radius: calc(var(--dv-radius-xl) + 10px);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.78),
+    rgba(255, 255, 255, 0.42) 60%,
+    rgba(255, 255, 255, 0.6)
+  );
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 0 0 1px rgba(23, 98, 255, 0.06) inset,
+    0 40px 80px -24px rgba(11, 18, 32, 0.22),
+    0 18px 48px -20px rgba(23, 98, 255, 0.28);
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.previewSheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      130deg,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0) 28%,
+      rgba(255, 255, 255, 0) 72%,
+      rgba(255, 255, 255, 0.22) 100%
+    ),
+    radial-gradient(
+      120% 60% at 50% -10%,
+      rgba(255, 255, 255, 0.75),
+      transparent 55%
+    );
+  mix-blend-mode: screen;
+  z-index: 1;
+}
+
+.previewRing {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(139, 184, 255, 0.35) 25%,
+    rgba(255, 255, 255, 0.05) 45%,
+    rgba(139, 92, 246, 0.22) 70%,
+    rgba(255, 255, 255, 0.7) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  z-index: 3;
+}
+
+.previewInner {
+  position: relative;
+  z-index: 1;
+  border-radius: var(--dv-radius-xl);
+  overflow: hidden;
+  background: #0e1117;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(11, 18, 32, 0.45) inset,
+    0 20px 40px -18px rgba(11, 18, 32, 0.45);
+}
+
+.previewInner img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+@media (max-width: 720px) {
+  .hero {
+    padding: 56px 0 16px;
+  }
+  .logoWrap {
+    margin-bottom: 16px;
+  }
+  .meta {
+    gap: 10px;
+  }
+  .preview {
+    margin-top: 40px;
+  }
+}

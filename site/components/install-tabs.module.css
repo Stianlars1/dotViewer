@@ -1,0 +1,219 @@
+.root {
+  border: 1px solid var(--dv-line);
+  border-radius: var(--dv-radius-xl);
+  background: #ffffff;
+  box-shadow: var(--dv-shadow-sm);
+  overflow: hidden;
+}
+
+.tablist {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--dv-line-2);
+  padding: 6px;
+  background: #fbfcfe;
+}
+
+.tab {
+  appearance: none;
+  flex: 1 1 0;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--dv-muted);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: color 0.2s ease, background 0.2s ease;
+  text-align: center;
+}
+
+.tab:hover {
+  color: var(--dv-ink);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--dv-ink);
+  background: #ffffff;
+  box-shadow:
+    0 1px 0 rgba(11, 18, 32, 0.02),
+    0 4px 12px -6px rgba(11, 18, 32, 0.1);
+}
+
+.tabMeta {
+  font-family: var(--font-geist-mono), "SF Mono", monospace;
+  font-size: 11.5px;
+  color: var(--dv-muted-2);
+}
+
+.panel {
+  padding: 28px 28px 30px;
+  display: grid;
+  gap: 16px;
+}
+
+.panelTitle {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--dv-ink);
+  margin: 0;
+}
+
+.panelBody {
+  margin: 0;
+  color: var(--dv-muted);
+  font-size: 14px;
+  line-height: 1.6;
+  max-width: 60ch;
+}
+
+.commandRow {
+  display: flex;
+  align-items: stretch;
+  gap: 10px;
+  padding: 14px 14px 14px 18px;
+  background: #0e1117;
+  border-radius: var(--dv-radius);
+  color: #dbe3f3;
+  font-family: var(--font-geist-mono), "SF Mono", monospace;
+  font-size: 13.5px;
+  letter-spacing: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.commandText {
+  flex: 1 1 0;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-right: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.commandSigil {
+  color: rgba(220, 231, 255, 0.42);
+  user-select: none;
+}
+
+.copyButton {
+  appearance: none;
+  border: 1px solid rgba(220, 231, 255, 0.12);
+  background: rgba(220, 231, 255, 0.08);
+  color: #f2f6ff;
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 0 14px;
+  border-radius: calc(var(--dv-radius) - 4px);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  min-width: 92px;
+  justify-content: center;
+}
+
+.copyButton:hover {
+  background: rgba(220, 231, 255, 0.14);
+  border-color: rgba(220, 231, 255, 0.22);
+}
+
+.copyButton:active {
+  transform: translateY(1px);
+}
+
+.copyButton[data-copied="true"] {
+  color: #9eebb9;
+  background: rgba(78, 220, 139, 0.12);
+  border-color: rgba(78, 220, 139, 0.3);
+}
+
+.copyIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  background: var(--dv-accent);
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 999px;
+  box-shadow: 0 8px 24px -8px rgba(23, 98, 255, 0.5);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.primary:hover {
+  background: #0f4ddb;
+  transform: translateY(-1px);
+}
+
+.ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 16px;
+  background: #ffffff;
+  color: var(--dv-ink);
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 999px;
+  border: 1px solid var(--dv-line);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.ghost:hover {
+  border-color: rgba(11, 18, 32, 0.2);
+  transform: translateY(-1px);
+}
+
+.note {
+  margin: 0;
+  color: var(--dv-muted-2);
+  font-size: 12.5px;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .tablist {
+    flex-wrap: wrap;
+  }
+  .tab {
+    flex: 1 1 30%;
+    min-width: 0;
+  }
+  .panel {
+    padding: 20px;
+  }
+  .commandRow {
+    padding: 12px;
+    font-size: 12.5px;
+  }
+  .copyButton {
+    min-width: 72px;
+    padding: 0 10px;
+  }
+}

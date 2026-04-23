@@ -1,0 +1,163 @@
+.trigger {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  border-radius: inherit;
+  position: relative;
+}
+
+.trigger:focus-visible {
+  outline: 2px solid var(--dv-accent);
+  outline-offset: 4px;
+  border-radius: inherit;
+}
+
+/* Native <dialog> — styled with its built-in ::backdrop. */
+.dialog {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 95vw;
+  overflow: visible;
+}
+
+.dialog::backdrop {
+  background: rgba(6, 10, 20, 0.82);
+}
+
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: auto;
+  animation: dialogIn 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dialog[open]::backdrop {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.frame {
+  position: relative;
+  border-radius: 20px;
+  background: #0e1117;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 0 0 1px rgba(11, 18, 32, 0.5) inset,
+    0 40px 120px -24px rgba(0, 0, 0, 0.55);
+  max-width: 100%;
+  display: flex;
+}
+
+.frame img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(95vh - 80px);
+  border-radius: 20px;
+  object-fit: contain;
+}
+
+.close {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.98);
+  border: 0;
+  font: inherit;
+  color: #0b1220;
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 10px 28px -10px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.close:hover {
+  transform: scale(1.06);
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--dv-accent);
+  outline-offset: 3px;
+}
+
+.close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.caption {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12.5px;
+  letter-spacing: 0.01em;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes dialogIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* View Transitions API — morph the image between trigger and dialog.
+   We can't selector-prefix pseudo-element arguments, so we target all
+   transition groups. This only runs during an active transition, so it
+   has zero idle cost. */
+:global(::view-transition-group(*)) {
+  animation-duration: 340ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:global(::view-transition-image-pair(*)) {
+  isolation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open],
+  .dialog[open]::backdrop {
+    animation: none;
+  }
+  :global(::view-transition-group(*)) {
+    animation-duration: 0.01ms;
+  }
+}
+
+@media (max-width: 720px) {
+  .close {
+    top: 8px;
+    right: 8px;
+  }
+}

@@ -1,0 +1,65 @@
+.root {
+  position: relative;
+  display: inline-block;
+  width: var(--logo-size, 120px);
+  height: var(--logo-size, 120px);
+  border-radius: calc(var(--logo-size, 120px) * 0.22);
+  background:
+    radial-gradient(120% 120% at 30% 20%, #ffffff 0%, #f4f6f9 60%, #e9edf3 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -1px 0 rgba(11, 18, 32, 0.04) inset,
+    0 20px 40px -18px rgba(11, 18, 32, 0.22),
+    0 6px 14px -6px rgba(23, 98, 255, 0.18);
+  overflow: hidden;
+  isolation: isolate;
+  will-change: transform;
+}
+
+.root::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background:
+    radial-gradient(140% 90% at 50% 0%, rgba(255, 255, 255, 0.45), transparent 55%),
+    radial-gradient(80% 60% at 50% 110%, rgba(23, 98, 255, 0.08), transparent 65%);
+  mix-blend-mode: screen;
+  z-index: 4;
+}
+
+.layer {
+  position: absolute;
+  pointer-events: none;
+  transform-origin: 50% 50%;
+  will-change: transform, opacity;
+}
+
+.motive {
+  inset: 10%;
+  z-index: 1;
+  filter: drop-shadow(0 10px 16px rgba(23, 98, 255, 0.22));
+}
+
+.ring {
+  inset: 24%;
+  z-index: 2;
+  filter: drop-shadow(0 3px 6px rgba(11, 18, 32, 0.12));
+}
+
+.focal {
+  inset: 36%;
+  z-index: 3;
+  filter: drop-shadow(0 8px 14px rgba(23, 98, 255, 0.28));
+}
+
+.layer img {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    transform: none !important;
+  }
+}

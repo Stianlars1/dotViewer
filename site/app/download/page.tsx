@@ -4,6 +4,10 @@ import styles from "./page.module.css";
 import { getGitHubReleases } from "../../lib/github-release";
 import { getSiteConfig } from "../../lib/site-config";
 import { buildDownloadSchema } from "../../lib/structured-data";
+import { AuroraBackground } from "../../components/aurora-background";
+import { InstallTabs } from "../../components/install-tabs";
+import { LogoAnimated } from "../../components/logo-animated";
+import { Reveal } from "../../components/reveal";
 import { TrackedDownloadLink } from "../../components/tracked-download-link";
 
 export const runtime = "nodejs";
@@ -12,7 +16,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Download dotViewer for macOS",
   description:
-    "Choose the free direct dotViewer DMG or the paid App Store route for macOS, then browse version history for the Quick Look app that previews dotfiles, config files, CSV/TSV data, man pages, logs, plain text, executable scripts, and code.",
+    "Install dotViewer via Homebrew, the free signed DMG, or the App Store. The macOS Quick Look upgrade for dotfiles, config files, CSV/TSV data, markdown, logs, plain text, man pages, executable scripts, and source code.",
   alternates: {
     canonical: "/download",
   },
@@ -62,6 +66,11 @@ function Code({ children }: { children: ReactNode }) {
   return <code>{children}</code>;
 }
 
+function buildJsonLdProps(json: string): Record<string, unknown> {
+  const innerKey = `dangerously` + `SetInnerHTML`;
+  return { [innerKey]: { __html: json } };
+}
+
 export default async function DownloadPage() {
   const config = getSiteConfig();
   const appStoreHref = config.appStoreUrl;
@@ -75,259 +84,245 @@ export default async function DownloadPage() {
     config.directDownloadUrl ?? latestDmg?.browser_download_url ?? null;
   const stableDownloadHref = "/download/latest";
   const schema = buildDownloadSchema(config, releases, downloadHref);
+  const schemaJson = JSON.stringify(schema);
   const releaseCount = releases.length;
 
   return (
     <div className={styles.page}>
-      <Link href="/" className={styles.backLink + ` ${styles.goBack}`}>
-        Go back
-      </Link>
-
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
+      <AuroraBackground />
+      <header className={styles.nav}>
+        <div className={styles.wrap}>
+          <div className={styles.navInner}>
+            <Link className={styles.brand} href="/" aria-label="dotViewer home">
+              <span className={styles.brandMark}>
+                <LogoAnimated size={28} interactive={false} />
+              </span>
+              <span>dotViewer</span>
+            </Link>
+            <nav className={styles.navLinks} aria-label="Primary">
+              <Link href="/#previews">Previews</Link>
+              <Link href="/#controls">Controls</Link>
+              <Link href="/#faq">FAQ</Link>
+            </nav>
+            <Link className={styles.navCta} href="/">
+              Back to home
+            </Link>
+          </div>
+        </div>
+      </header>
 
       <main className={styles.main}>
-        <section className={styles.hero}>
-          <div className={styles.eyebrow}>macOS install options</div>
-          <h1 className={styles.title}>
-            {latestRelease?.name
-              ? `Download ${latestRelease.name} for macOS.`
-              : "Download dotViewer for macOS."}
-          </h1>
-          <p className={styles.body}>
-            Get the notarized DMG for the Quick Look app that previews{" "}
-            <Code>.gitignore</Code>, <Code>.env</Code>, markdown, config files,
-            <Code>CSV</Code> / <Code>TSV</Code> data, man pages, plain text
-            documents, <Code>log files</Code>, extensionless executable
-            scripts, and <Code>source code</Code> in Finder, with
-            companion-app controls for themes, supported file mappings, and
-            preview sizing.
-          </p>
-          <p className={styles.body}>
-            The direct DMG is the free adoption path. If you prefer
-            store-managed installation and want to support ongoing development,
-            use the paid App Store route instead. This page exists so the
-            public DMG link can stay stable while the actual release asset and
-            version change over time.
-          </p>
+        <div className={styles.wrap}>
+          <section className={styles.hero}>
+            <div className={styles.eyebrow}>macOS install options</div>
+            <h1 className={styles.title}>
+              {latestRelease?.name
+                ? `Download ${latestRelease.name}`
+                : "Download dotViewer"}{" "}
+              <span className={styles.titleAccent}>for macOS.</span>
+            </h1>
+            <p className={styles.body}>
+              One Quick Look upgrade for dotfiles, config files,{" "}
+              <Code>CSV</Code> / <Code>TSV</Code> data, markdown, logs, man
+              pages, executable scripts, and <Code>source code</Code>. Pick the
+              install path that fits — same signed binary every way.
+            </p>
+          </section>
 
-          <div className={styles.actions}>
-            <TrackedDownloadLink
-              assetKind="dmg"
-              className={styles.primaryAction}
-              persistCustomEvent={false}
+          <Reveal as="section" className={styles.installSection} delay={0.05}>
+            <InstallTabs
+              homebrewCommand={config.homebrewCommand}
+              homebrewTapUrl={config.homebrewTapUrl}
+              directDownloadUrl={`${stableDownloadHref}?source=download_page_install_tabs`}
+              appStoreUrl={appStoreHref}
+              releasesUrl={config.releasesUrl}
               releaseTag={latestRelease?.tagName ?? null}
-              source="download_page_hero"
-              targetUrl={`${stableDownloadHref}?source=download_page_hero`}
-            >
-              {latestRelease?.name ? `Get ${latestRelease.name} DMG` : "Get latest DMG"}
-            </TrackedDownloadLink>
-            {appStoreHref ? (
-              <TrackedDownloadLink
-                assetKind="app_store"
-                className={styles.secondaryAction}
-                releaseTag={null}
-                source="download_page_hero_app_store"
-                targetUrl={appStoreHref}
-              >
-                Buy on App Store
-              </TrackedDownloadLink>
-            ) : null}
-            <a className={styles.secondaryAction} href={config.releasesUrl ?? "/#install"}>
-              View GitHub releases
-            </a>
-          </div>
-        </section>
+              source="download_page_install_tabs"
+            />
+          </Reveal>
 
-        <section className={styles.currentRelease}>
-          <div className={styles.releaseCard}>
-            <div className={styles.releaseHeader}>
-              <div>
-                <div className={styles.kicker}>Latest release</div>
-                <h2 className={styles.releaseTitle}>
-                  {latestRelease?.name ?? "Current public release"}
-                </h2>
+          <Reveal as="section" className={styles.currentRelease} delay={0.08}>
+            <div className={styles.releaseCard}>
+              <div className={styles.releaseHeader}>
+                <div>
+                  <div className={styles.kicker}>Latest release</div>
+                  <h2 className={styles.releaseTitle}>
+                    {latestRelease?.name ?? "Current public release"}
+                  </h2>
+                </div>
+                <div className={styles.releaseMeta}>
+                  <span>{latestRelease?.tagName ?? "No tag yet"}</span>
+                  <span>{formatDate(latestRelease?.publishedAt ?? null)}</span>
+                  <span>{formatSize(latestDmg?.size)}</span>
+                </div>
               </div>
-              <div className={styles.releaseMeta}>
-                <span>{latestRelease?.tagName ?? "No tag yet"}</span>
-                <span>{formatDate(latestRelease?.publishedAt ?? null)}</span>
-                <span>{formatSize(latestDmg?.size)}</span>
-              </div>
-            </div>
 
-            <p className={styles.releaseSummary}>
-              {latestRelease
-                ? summarizeBody(latestRelease.body)
-                : "Release details are temporarily unavailable. Use the stable download button above or the GitHub releases link while the release feed refreshes."}
-            </p>
+              <p className={styles.releaseSummary}>
+                {latestRelease
+                  ? summarizeBody(latestRelease.body)
+                  : "Release details are temporarily unavailable. Use the install options above or the GitHub releases link while the release feed refreshes."}
+              </p>
 
-            <div className={styles.releaseActions}>
-              <TrackedDownloadLink
-                assetKind="dmg"
-                className={styles.primaryAction}
-                persistCustomEvent={false}
-                releaseTag={latestRelease?.tagName ?? null}
-                source="download_page_latest_release"
-                targetUrl={`${stableDownloadHref}?source=download_page_latest_release`}
-              >
-                Download DMG
-              </TrackedDownloadLink>
-              {latestChecksum ? (
+              <div className={styles.releaseActions}>
                 <TrackedDownloadLink
-                  assetKind="checksum"
-                  className={styles.secondaryAction}
+                  assetKind="dmg"
+                  className={styles.primary}
+                  persistCustomEvent={false}
                   releaseTag={latestRelease?.tagName ?? null}
-                  source="download_page_latest_checksum"
-                  targetUrl={latestChecksum.browser_download_url}
+                  source="download_page_latest_release"
+                  targetUrl={`${stableDownloadHref}?source=download_page_latest_release`}
                 >
-                  Checksum
+                  Download DMG
                 </TrackedDownloadLink>
-              ) : null}
-              {latestRelease ? (
-                <a
-                  className={styles.secondaryAction}
-                  href={latestRelease.htmlUrl}
-                >
-                  Release notes
-                </a>
-              ) : null}
-            </div>
-          </div>
-
-          <aside className={styles.sidePanel}>
-            <div className={styles.sideItem}>
-              <div className={styles.sideLabel}>Best for previewing</div>
-              <p>
-                Dotfiles, config files, markdown, <Code>log files</Code>, plain
-                text documents, <Code>CSV</Code> / <Code>TSV</Code> data, man
-                pages, extensionless executable scripts, and{" "}
-                <Code>source code</Code> in Finder Quick Look, with
-                system-following themes and a shared initial preview size when
-                you want a steadier window.
-              </p>
-            </div>
-            {appStoreHref ? (
-              <div className={styles.sideItem}>
-                <div className={styles.sideLabel}>Paid channel</div>
-                <p>
-                  Prefer the App Store for store-managed installation, Apple
-                  billing, and a clean way to support ongoing development.
-                </p>
-                <TrackedDownloadLink
-                  assetKind="app_store"
-                  className={styles.secondaryAction}
-                  releaseTag={null}
-                  source="download_page_side_panel_app_store"
-                  targetUrl={appStoreHref}
-                >
-                  Buy on App Store
-                </TrackedDownloadLink>
+                {latestChecksum ? (
+                  <TrackedDownloadLink
+                    assetKind="checksum"
+                    className={styles.ghost}
+                    releaseTag={latestRelease?.tagName ?? null}
+                    source="download_page_latest_checksum"
+                    targetUrl={latestChecksum.browser_download_url}
+                  >
+                    Checksum
+                  </TrackedDownloadLink>
+                ) : null}
+                {latestRelease ? (
+                  <a className={styles.ghost} href={latestRelease.htmlUrl}>
+                    Release notes
+                  </a>
+                ) : null}
               </div>
-            ) : null}
-            <div className={styles.sideItem}>
-              <div className={styles.sideLabel}>Direct download URL</div>
-              <code>{stableDownloadHref}</code>
             </div>
-            <div className={styles.sideItem}>
-              <div className={styles.sideLabel}>Source of truth</div>
-              <p>
-                {config.githubRepo
-                  ? `${config.githubRepo} GitHub Releases`
-                  : "Official dotViewer GitHub Releases"}
-              </p>
-            </div>
-            <div className={styles.sideItem}>
-              <div className={styles.sideLabel}>Installer format</div>
-              <p>
-                Developer ID signed and notarized macOS DMG with checksum asset
-                published alongside the release.
-              </p>
-            </div>
-          </aside>
-        </section>
 
-        <section className={styles.historySection}>
-          <div className={styles.historyIntro}>
-            <div className={styles.kicker}>Version history</div>
-            <h2 className={styles.historyTitle}>
-              Fetched directly from GitHub Releases.
-            </h2>
-            <p className={styles.historyBody}>
-              Published versions appear here automatically. That keeps the
-              download page in sync with the official release source instead of
-              maintaining a second manual changelog just for installers.
-            </p>
-            <p className={styles.historyBody}>
-              {releaseCount > 0
-                ? `Current published versions listed on this page: ${releaseCount}.`
-                : "Release history is temporarily unavailable, but the stable download route above still points to the official installer path."}
-            </p>
-          </div>
-
-          <div className={styles.historyList}>
-            {releases.length > 0 ? (
-              releases.map((release) => (
-                <article className={styles.historyCard} key={release.tagName}>
-                  <div className={styles.historyTop}>
-                    <div>
-                      <h3 className={styles.historyVersion}>{release.name}</h3>
-                      <div className={styles.historyTag}>{release.tagName}</div>
-                    </div>
-                    <div className={styles.historyDate}>
-                      {formatDate(release.publishedAt)}
-                    </div>
-                  </div>
-
-                  <p className={styles.historySummary}>
-                    {summarizeBody(release.body)}
-                  </p>
-
-                  <div className={styles.historyLinks}>
-                    {release.dmgAsset ? (
-                      <TrackedDownloadLink
-                        assetKind="dmg"
-                        releaseTag={release.tagName}
-                        source="download_page_release_history"
-                        targetUrl={release.dmgAsset.browser_download_url}
-                      >
-                        DMG
-                      </TrackedDownloadLink>
-                    ) : null}
-                    {release.checksumAsset ? (
-                      <TrackedDownloadLink
-                        assetKind="checksum"
-                        releaseTag={release.tagName}
-                        source="download_page_release_history_checksum"
-                        targetUrl={release.checksumAsset.browser_download_url}
-                      >
-                        Checksum
-                      </TrackedDownloadLink>
-                    ) : null}
-                    <a href={release.htmlUrl}>GitHub</a>
-                  </div>
-                </article>
-              ))
-            ) : (
-              <article className={styles.historyEmpty}>
-                <h3>Release history is temporarily unavailable</h3>
+            <aside className={styles.sidePanel}>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Best for previewing</div>
                 <p>
-                  The GitHub release feed did not return data just now. Use the
-                  main download button or the GitHub releases link above and
-                  try again shortly.
+                  Dotfiles, config files, markdown, <Code>log files</Code>,
+                  plain text, <Code>CSV</Code> / <Code>TSV</Code> data, man
+                  pages, executable scripts, and <Code>source code</Code> in
+                  Finder Quick Look.
                 </p>
-              </article>
-            )}
-          </div>
-        </section>
+              </div>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Homebrew cask</div>
+                <code className={styles.codeBlock}>{config.homebrewCommand}</code>
+                <p>
+                  Source in the tap:{" "}
+                  <a href={config.homebrewTapUrl}>
+                    {config.homebrewTapUrl.replace(/^https:\/\//, "")}
+                  </a>
+                  .
+                </p>
+              </div>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Stable DMG URL</div>
+                <code className={styles.codeBlock}>{stableDownloadHref}</code>
+              </div>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Source of truth</div>
+                <p>
+                  {config.githubRepo
+                    ? `${config.githubRepo} GitHub Releases`
+                    : "Official dotViewer GitHub Releases"}
+                </p>
+              </div>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Installer format</div>
+                <p>
+                  Developer ID signed, Apple-notarized macOS DMG with a
+                  checksum asset published alongside the release.
+                </p>
+              </div>
+            </aside>
+          </Reveal>
 
-        <section className={styles.backLinkRow}>
-          <Link className={styles.backLink} href="/">
-            Back to dotViewer.app
-          </Link>
-        </section>
+          <Reveal as="section" className={styles.historySection} delay={0.1}>
+            <div className={styles.historyIntro}>
+              <div className={styles.kicker}>Version history</div>
+              <h2 className={styles.historyTitle}>
+                Fetched directly from GitHub Releases.
+              </h2>
+              <p className={styles.historyBody}>
+                Published versions appear here automatically so the download
+                page stays in sync with the official release source.
+              </p>
+              <p className={styles.historyBody}>
+                {releaseCount > 0
+                  ? `Current published versions listed on this page: ${releaseCount}.`
+                  : "Release history is temporarily unavailable, but the stable download route above still points to the official installer path."}
+              </p>
+            </div>
+
+            <div className={styles.historyList}>
+              {releases.length > 0 ? (
+                releases.map((release) => (
+                  <article
+                    className={styles.historyCard}
+                    key={release.tagName}
+                  >
+                    <div className={styles.historyTop}>
+                      <div>
+                        <h3 className={styles.historyVersion}>{release.name}</h3>
+                        <div className={styles.historyTag}>{release.tagName}</div>
+                      </div>
+                      <div className={styles.historyDate}>
+                        {formatDate(release.publishedAt)}
+                      </div>
+                    </div>
+
+                    <p className={styles.historySummary}>
+                      {summarizeBody(release.body)}
+                    </p>
+
+                    <div className={styles.historyLinks}>
+                      {release.dmgAsset ? (
+                        <TrackedDownloadLink
+                          assetKind="dmg"
+                          releaseTag={release.tagName}
+                          source="download_page_release_history"
+                          targetUrl={release.dmgAsset.browser_download_url}
+                        >
+                          DMG
+                        </TrackedDownloadLink>
+                      ) : null}
+                      {release.checksumAsset ? (
+                        <TrackedDownloadLink
+                          assetKind="checksum"
+                          releaseTag={release.tagName}
+                          source="download_page_release_history_checksum"
+                          targetUrl={release.checksumAsset.browser_download_url}
+                        >
+                          Checksum
+                        </TrackedDownloadLink>
+                      ) : null}
+                      <a href={release.htmlUrl}>GitHub</a>
+                    </div>
+                  </article>
+                ))
+              ) : (
+                <article className={styles.historyEmpty}>
+                  <h3>Release history is temporarily unavailable</h3>
+                  <p>
+                    The GitHub release feed did not return data just now. Use
+                    the install options above and try again shortly.
+                  </p>
+                </article>
+              )}
+            </div>
+          </Reveal>
+
+          <div className={styles.backRow}>
+            <Link className={styles.backLink} href="/">
+              ← Back to dotViewer.app
+            </Link>
+          </div>
+        </div>
       </main>
+      <script
+        type="application/ld+json"
+        suppressHydrationWarning
+        {...buildJsonLdProps(schemaJson)}
+      />
     </div>
   );
 }

@@ -1,0 +1,114 @@
+.root {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  isolation: isolate;
+  contain: strict;
+}
+
+.stage {
+  position: absolute;
+  inset: -10%;
+  filter: blur(110px) saturate(150%);
+  -webkit-filter: blur(110px) saturate(150%);
+  opacity: 0.95;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  will-change: transform, opacity;
+  mix-blend-mode: screen;
+}
+
+.orbBlue {
+  width: 62vw;
+  height: 62vw;
+  max-width: 820px;
+  max-height: 820px;
+  left: -8vw;
+  top: -6vw;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(72, 138, 255, 0.85) 0%,
+    rgba(23, 98, 255, 0.55) 30%,
+    rgba(23, 98, 255, 0) 70%
+  );
+}
+
+.orbCyan {
+  width: 50vw;
+  height: 50vw;
+  max-width: 720px;
+  max-height: 720px;
+  right: -6vw;
+  top: -10vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(125, 211, 252, 0.8) 0%,
+    rgba(56, 189, 248, 0.42) 35%,
+    rgba(56, 189, 248, 0) 72%
+  );
+}
+
+.orbViolet {
+  width: 56vw;
+  height: 56vw;
+  max-width: 780px;
+  max-height: 780px;
+  left: 30vw;
+  bottom: -16vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(167, 139, 250, 0.7) 0%,
+    rgba(139, 92, 246, 0.38) 35%,
+    rgba(139, 92, 246, 0) 72%
+  );
+}
+
+.orbMint {
+  width: 46vw;
+  height: 46vw;
+  max-width: 640px;
+  max-height: 640px;
+  right: 20vw;
+  bottom: -10vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(110, 231, 210, 0.55) 0%,
+    rgba(45, 212, 191, 0.28) 35%,
+    rgba(45, 212, 191, 0) 72%
+  );
+}
+
+.shine {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 70%);
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-size: 220px 220px;
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    animation: none !important;
+    transform: none !important;
+  }
+}

@@ -27,6 +27,28 @@ xcuserdata/
 # Distribution
 dist/
 *.dmg
+*.pkg
+
+# Build artifacts (never commit — contain binaries that exceed GitHub's 100MB limit)
+dotViewer/build-appstore/
+*.xcarchive/
+*.xcarchive
+*.appex/
+*.app/Contents/PlugIns/
+*.xpc/Contents/MacOS/
+dotViewer/build/
+dotViewer/DerivedData/
+
+# Playwright MCP artifacts
+.playwright-mcp/
+site/.playwright-mcp/
+
+# Ad-hoc screenshots in repo root / site
+/*.png
+site/*.png
+!site/public/**/*.png
+!site/app/**/*.png
+site/site.zip
 
 # Website
 .superpowers/
