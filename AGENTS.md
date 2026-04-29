@@ -456,3 +456,16 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `./scripts/dotviewer-ql-smoke.sh TestFiles/test.json` → pass (`HTML built for test.json`)
   - `./scripts/dotviewer-ql-smoke.sh TestFiles/TEST_MARKDOWN.md` → pass (`HTML built for TEST_MARKDOWN.md`)
 - Follow-ups: None.
+
+### v1.4.0 publication
+- Outcome: Published `v1.4.0` from commit `293724e`, uploaded the signed/notarized DMG and checksum to GitHub Releases, updated and pushed the Homebrew cask, and built a signed App Store `.pkg` for Transporter delivery.
+- Files: `AGENTS.md`
+- Verified:
+  - `./scripts/publish.sh 1.4.0` → pass (Developer ID app + DMG notarized/stapled, GitHub release published, Homebrew tap pushed, App Store package exported)
+  - `gh release view v1.4.0 --repo Stianlars1/dotViewer --json tagName,name,url,isDraft,isPrerelease,publishedAt,assets` → pass (`dotViewer-1.4.0.dmg` and `.sha256` uploaded)
+  - `curl -I -s https://dotviewer.app/download/latest` → pass (`307` to `v1.4.0` DMG)
+  - `spctl --assess --verbose=4 --type execute dotViewer/build/export/dotViewer.app` → pass (`source=Notarized Developer ID`)
+  - `spctl --assess --verbose=4 --type install dotViewer/build/export/dotViewer-1.4.0.dmg` → pass (`source=Notarized Developer ID`)
+  - `pkgutil --check-signature dotViewer/build-appstore/appstore/dotViewer.pkg` → pass
+  - Production `https://dotviewer.app/` and `/download` curl checks → pass (font FAQ, preview typography copy, and `1.4.0` release visible)
+- Follow-ups: Submit `dotViewer/build-appstore/appstore/dotViewer.pkg` in Transporter if shipping the App Store channel immediately.
