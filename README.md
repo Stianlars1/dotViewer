@@ -55,7 +55,7 @@ dotViewer addresses this with:
 Compared with many Quick Look plugins:
 - It is not plain text only; it provides syntax-aware rendering and token theming.
 - It is not markdown-only; it handles code, config, dotfiles, markdown, and more.
-- It includes first-class customization (theme, copy style, search, wrap, limits, cache).
+- It includes first-class customization (themes, preview font families, copy style, search, wrap, limits, cache).
 - It supports custom file mappings by extension and by exact filename.
 - It documents and works around known macOS Quick Look limitations instead of hiding them.
 
@@ -78,6 +78,7 @@ Shared code in `Shared.framework` is used by all targets.
 - Heuristic fallback highlighter for languages without compiled grammar.
 - Token model with 16 CSS token classes (`14 semantic + 2 aliases`).
 - Theme-aware token colors shared between preview and thumbnail pipelines.
+- User-selectable code font family shared by code previews, markdown RAW, plain text fallback, inline code, and Finder thumbnails.
 - Auto aliasing for language IDs (for example `csharp -> c_sharp`, `makefile -> make`).
 
 ### 2) Markdown Features
@@ -160,6 +161,7 @@ Copy actions that always remain available (regardless of preset):
 - Native CoreGraphics rendering (no WKWebView).
 - Tree-sitter token request with fallback colorizer.
 - Bold/italic token styling in thumbnails.
+- Uses the same selected code font family as Quick Look previews.
 - Full-bleed style rendering with header metadata.
 - Optional line numbers in thumbnail rendering.
 - Dark mode-aware palette handling.
@@ -183,6 +185,7 @@ Copy actions that always remain available (regardless of preset):
 - Extension status page with setup guidance.
 - Quick stats for built-in/custom/disabled type counts.
 - Theme preview card.
+- Installed-font pickers for code/RAW previews and rendered markdown.
 - One-click extension settings launcher.
 - Built-in app uninstall action.
 
@@ -194,6 +197,7 @@ Everything is configurable in the host app.
 - Theme (`14` options: 4 system-following choices + 10 fixed palettes).
 - Font size (`10-24pt`).
 - Sync code + markdown render font sizes.
+- Code / RAW font family from installed macOS fonts (default `SF Mono`).
 - Show/hide line numbers.
 - Word wrap on/off.
 
@@ -227,6 +231,7 @@ Everything is configurable in the host app.
 - Show/hide rendered TOC sidebar.
 - Set TOC default state (open/hidden) when TOC is enabled.
 - Markdown rendered font size.
+- Markdown rendered font family from installed macOS fonts (default system UI font).
 - Markdown rendered width mode (`Auto`/`Custom`) with configurable custom max width.
 - Markdown rendered content alignment (advanced): `Left`, `Center`, `Right`.
 - Custom CSS injection.
@@ -262,6 +267,7 @@ These numbers are from the current codebase.
 | Copy behavior presets | `8` |
 | Window-size modes | `5` |
 | Themes (including system-following pairs) | `14` |
+| Preview font-family pickers | `2` |
 | UTExportedTypeDeclarations in shipped app metadata | `635` |
 | QLSupportedContentTypes per extension target | `753` |
 

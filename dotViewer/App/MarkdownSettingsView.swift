@@ -8,6 +8,7 @@ struct MarkdownSettingsView: View {
     @State private var showTOC: Bool = SharedSettings.shared.markdownShowTOC
     @State private var tocDefaultOpen: Bool = SharedSettings.shared.markdownTOCDefaultOpen
     @State private var renderFontSize: Double = SharedSettings.shared.markdownRenderFontSize
+    @State private var renderedFontFamilyName: String = SharedSettings.shared.markdownRenderedFontFamilyName
     @State private var renderedWidthMode: String = SharedSettings.shared.markdownRenderedWidthMode
     @State private var renderedCustomMaxWidth: Double = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
     @State private var renderedContentAlignment: String = SharedSettings.shared.markdownRenderedContentAlignment
@@ -15,6 +16,7 @@ struct MarkdownSettingsView: View {
     @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var customCSS: String = SharedSettings.shared.markdownCustomCSS
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
+    private let renderedFontFamilies = PreviewFontMenu.renderedFontFamilies
 
     var body: some View {
         ScrollView {
@@ -104,6 +106,32 @@ struct MarkdownSettingsView: View {
 
                         Divider()
 
+                        Picker("Rendered Font", selection: $renderedFontFamilyName) {
+                            ForEach(renderedFontFamilies, id: \.self) { family in
+                                Text(PreviewFontMenu.title(for: family)).tag(family)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: renderedFontFamilyName) { _, newValue in
+                            SharedSettings.shared.markdownRenderedFontFamilyName = newValue
+                        }
+
+                        HStack {
+                            Text("Used by rendered Markdown prose and rich text previews. Inline code still uses the code font.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Spacer()
+
+                            Button("Reset") {
+                                renderedFontFamilyName = PreviewFontFamily.defaultMarkdownRenderedFamily
+                                SharedSettings.shared.markdownRenderedFontFamilyName = PreviewFontFamily.defaultMarkdownRenderedFamily
+                            }
+                            .controlSize(.small)
+                        }
+
+                        Divider()
+
                         Picker("Rendered Width", selection: $renderedWidthMode) {
                             Text("Auto").tag("auto")
                             Text("Custom").tag("custom")
@@ -183,6 +211,7 @@ struct MarkdownSettingsView: View {
         .onAppear {
             syncFontSizes = SharedSettings.shared.syncFontSizes
             renderFontSize = SharedSettings.shared.markdownRenderFontSize
+            renderedFontFamilyName = SharedSettings.shared.markdownRenderedFontFamilyName
             renderedWidthMode = SharedSettings.shared.markdownRenderedWidthMode
             renderedCustomMaxWidth = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
             renderedContentAlignment = SharedSettings.shared.markdownRenderedContentAlignment

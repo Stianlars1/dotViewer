@@ -47,6 +47,26 @@ public final class SharedSettings: @unchecked Sendable {
         }
     }
 
+    public var codeFontFamilyName: String {
+        get {
+            lock.withLock {
+                PreviewFontFamily.sanitized(
+                    defaults.string(forKey: "codeFontFamilyName") ?? PreviewFontFamily.defaultCodeFamily,
+                    fallback: PreviewFontFamily.defaultCodeFamily
+                )
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = PreviewFontFamily.sanitized(
+                    newValue,
+                    fallback: PreviewFontFamily.defaultCodeFamily
+                )
+                defaults.set(sanitized, forKey: "codeFontFamilyName")
+            }
+        }
+    }
+
     public var appUIFontSizePreset: String {
         get {
             lock.withLock {
@@ -398,6 +418,26 @@ public final class SharedSettings: @unchecked Sendable {
             lock.withLock {
                 let clamped = max(10, min(24, newValue))
                 defaults.set(clamped, forKey: "markdownRenderFontSize")
+            }
+        }
+    }
+
+    public var markdownRenderedFontFamilyName: String {
+        get {
+            lock.withLock {
+                PreviewFontFamily.sanitized(
+                    defaults.string(forKey: "markdownRenderedFontFamilyName") ?? PreviewFontFamily.defaultMarkdownRenderedFamily,
+                    fallback: PreviewFontFamily.defaultMarkdownRenderedFamily
+                )
+            }
+        }
+        set {
+            lock.withLock {
+                let sanitized = PreviewFontFamily.sanitized(
+                    newValue,
+                    fallback: PreviewFontFamily.defaultMarkdownRenderedFamily
+                )
+                defaults.set(sanitized, forKey: "markdownRenderedFontFamilyName")
             }
         }
     }

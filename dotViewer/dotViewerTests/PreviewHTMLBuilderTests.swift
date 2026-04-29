@@ -91,6 +91,23 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains("max-width: 1440px;"))
     }
 
+    func testCustomPreviewFontsApplyToCodeAndRenderedCSS() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 1200,
+            renderedHTML: "<h1>Title</h1>",
+            codeFontFamilyName: "Menlo",
+            markdownRenderedFontFamilyName: "New York"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("font-family: \"Menlo\", \"SF Mono\", Menlo, Monaco, Consolas, \"Liberation Mono\", monospace;"))
+        XCTAssertTrue(html.contains("font-family: \"New York\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", Helvetica, Arial, sans-serif;"))
+    }
+
     func testRenderedViewLeftAlignmentAppliesLeftAnchoredMargin() {
         let info = makeInfo(
             codeContentWidthMode: "auto",
@@ -296,7 +313,9 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         markdownRawContentAlignment: String = "left",
         markdownRenderedContentAlignment: String = "center",
         themeName: String = "atomOneLight",
-        renderedHTML: String?
+        renderedHTML: String?,
+        codeFontFamilyName: String = PreviewFontFamily.defaultCodeFamily,
+        markdownRenderedFontFamilyName: String = PreviewFontFamily.defaultMarkdownRenderedFamily
     ) -> PreviewInfo {
         PreviewInfo(
             title: "test.swift",
@@ -311,11 +330,13 @@ final class PreviewHTMLBuilderTests: XCTestCase {
             rawHTML: "<pre class=\"code\">print(\"hello\")</pre>",
             renderedHTML: renderedHTML,
             codeFontSize: 13,
+            codeFontFamilyName: codeFontFamilyName,
             codeContentWidthMode: codeContentWidthMode,
             codeContentCustomMaxWidth: codeContentCustomMaxWidth,
             codeContentAlignment: codeContentAlignment,
             defaultMarkdownMode: "raw",
             markdownRenderFontSize: 14,
+            markdownRenderedFontFamilyName: markdownRenderedFontFamilyName,
             markdownRenderedWidthMode: markdownRenderedWidthMode,
             markdownRenderedCustomMaxWidth: markdownRenderedCustomMaxWidth,
             markdownRawContentAlignment: markdownRawContentAlignment,

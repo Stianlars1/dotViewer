@@ -55,7 +55,8 @@ Common code linked by every target. Key files:
 - `FileTypeResolution.swift` — routing logic, `bestKey(...)` for dotfile/multi-dot names
 - `FileAttributes.swift` — metadata + `looksTextual` binary detection heuristic
 - `FileInspector.swift` — combines UTType, MIME, and byte-level analysis
-- `PreviewHTMLBuilder.swift` — generates HTML for Quick Look previews (themes, line numbers, font size)
+- `PreviewHTMLBuilder.swift` — generates HTML for Quick Look previews (themes, line numbers, font family, font size)
+- `PreviewFontFamily.swift` — sanitizes CSS font-family settings and resolves AppKit fonts for thumbnails/fallbacks
 - `ThemePalette.swift` — 18-token color palette per theme
 - `HighlightProtocol.swift` — `@objc` XPC protocol: `highlight(code:language:theme:...)` and `cancel(requestId:)`
 - `HighlightXPCClient.swift` — NSXPCConnection wrapper for calling the XPC service
@@ -83,7 +84,7 @@ Runs out-of-process. Provides syntax highlighting via tree-sitter.
 - Bridging header: `HighlightXPC-Bridging-Header.h`
 
 ### Host App
-Settings UI for the extension (font size, theme). Source in `dotViewer/App/`.
+Settings UI for the extension (font families, font size, theme). Source in `dotViewer/App/`.
 - `dotViewerApp.swift`, `ContentView.swift`, `SettingsView.swift`
 - `StatusView.swift` — shows extension registration status + extension conflict scanner UI
 - `Utilities/ExtensionHelper.swift`, `ExtensionStatusChecker.swift`
@@ -101,7 +102,7 @@ Canonical scope — what this product must support:
 - **Line highlighting**: click line numbers to highlight, Shift+click for range selection
 - **Window sizing**: 5 modes (Fixed default, Auto, Aspect Ratio, Fit Content, Remember) with configurable dimensions
 - **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
-- **Settings**: font size (synced between code and markdown by default), theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
+- **Settings**: font families, font size (synced between code and markdown by default), theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
 - **File type coverage**: 404 definitions, 599 extensions, 295 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams
@@ -115,7 +116,7 @@ Canonical scope — what this product must support:
 - **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 599 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
 - **Multi-dot file resolution**: `FileTypeResolution.bestKey()` tries full name → progressive prefix stripping → bare extension → intermediate segment scanning. For `.claude.json.backup.xxx`, this resolves to `json`.
 - **XPC protocol**: `HighlightServiceProtocol` — the QuickLookExtension calls `highlight(code:language:theme:showLineNumbers:requestId:reply:)` on the XPC service. The reply returns HTML as `NSData`.
-- **App Group**: Settings (font size, theme) sync between the host app and extensions via `group.stianlars1.dotViewer.shared`.
+- **App Group**: Settings (font families, font size, theme) sync between the host app and extensions via `group.stianlars1.dotViewer.shared`.
 - **Binary gating**: `FileAttributes.looksTextual` samples bytes to avoid rendering binary files. `TransportStreamDetector` prevents `.ts` video files from being treated as TypeScript.
 
 ## Dev Scripts

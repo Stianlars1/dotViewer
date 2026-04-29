@@ -41,6 +41,7 @@ From v1 requirements and future direction.
 | B-039 | ~~Theme appearance modes for paired palettes~~ | ~~Done~~ | Completed 2026-04-03 — Added system-following variants for Atom One, GitHub, Xcode, and Solarized, and unified preview/thumbnail appearance detection around the system interface style. |
 | B-040 | ~~Preview window size controls~~ | ~~Done~~ | Completed 2026-04-03, extended 2026-04-16 — Preview window size now offers 5 modes (`Fixed`, `Auto`, `Aspect Ratio`, `Fit Content`, `Remember`) in a dedicated Window Size settings section. |
 | B-041 | ~~Extension conflict scanner~~ | ~~Done~~ | Completed 2026-04-16 — Built-in conflict detection in StatusView via `pluginkit`. Scans for competing third-party QL preview extensions, per-extension disable, one-click "Resolve All", and stale registration cleanup. Inspired by Oil3/PluginKits. |
+| B-042 | ~~Preview font family preferences~~ | ~~Done~~ | Completed 2026-04-29 — Added installed macOS font pickers for Code/RAW and rendered Markdown. Applies to HTML previews, plain-text fallback, rendered markdown prose, CSV/TSV/manpage rich previews, Settings theme preview, and Finder thumbnails. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.

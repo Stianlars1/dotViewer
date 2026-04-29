@@ -34,7 +34,7 @@ const heroTitle: HeroTitlePiece[] = [
 const heroMeta = [
   "Signed & notarized",
   "Universal (Apple Silicon + Intel)",
-  "macOS 13+",
+  "macOS 15+",
 ];
 
 const fileChips = [
@@ -163,6 +163,15 @@ const faqs = [
     schemaQuestion: "Is dotViewer free or paid?",
     schemaAnswer:
       "Both. The direct DMG and the Homebrew cask are free. There's also a paid App Store option for people who prefer store-managed installation and want to support ongoing development.",
+  },
+  {
+    id: "custom-fonts",
+    question: "Can I choose the preview font?",
+    answer:
+      "Yes. dotViewer lets you pick installed macOS fonts separately for code/RAW previews and rendered markdown. The code choice also carries through Finder thumbnails.",
+    schemaQuestion: "Can I choose the preview font?",
+    schemaAnswer:
+      "Yes. dotViewer lets you pick installed macOS fonts separately for code/RAW previews and rendered markdown. The code choice also carries through Finder thumbnails.",
   },
   {
     id: "extension-conflict",
@@ -449,8 +458,9 @@ export default function HomePage() {
               <div className={styles.label}>Companion app</div>
               <h2 className={styles.h2}>Everything tunable, in one place.</h2>
               <p className={styles.sub}>
-                Themes, layout, copy behaviour, file-type mappings, and conflict
-                resolution — consolidated into a single settings surface.
+                Themes, font families, layout, copy behaviour, file-type
+                mappings, and conflict resolution — consolidated into a single
+                settings surface.
               </p>
             </div>
 
@@ -462,11 +472,13 @@ export default function HomePage() {
                   width={2024}
                   height={1528}
                   sizes="(max-width: 860px) 100vw, 1140px"
-                  caption="Appearance — font, width, wrap"
+                  caption="Appearance — font family, width, wrap"
                 />
                 <figcaption>
                   <span>Appearance</span>
-                  <span className={styles.bentoMeta}>font · width · wrap</span>
+                  <span className={styles.bentoMeta}>
+                    fonts · width · wrap
+                  </span>
                 </figcaption>
               </figure>
 

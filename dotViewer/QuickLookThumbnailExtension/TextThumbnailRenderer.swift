@@ -216,6 +216,7 @@ enum TextThumbnailRenderer {
         showHeader: Bool,
         showLineNumbers: Bool,
         fontSize: CGFloat,
+        fontFamilyName: String = PreviewFontFamily.defaultCodeFamily,
         treeSitterTokens: [HighlightToken]? = nil
     ) -> QLThumbnailReply {
         // Pre-convert tree-sitter tokens to per-line colored tokens
@@ -302,17 +303,33 @@ enum TextThumbnailRenderer {
                 NSGraphicsContext.current?.cgContext.clip(to: contentRect)
 
                 let codeFontSize = max(9, min(fontSize, 12))
-                let lineFont = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .regular)
-                let lineFontBold = NSFont.monospacedSystemFont(ofSize: codeFontSize, weight: .bold)
-                let lineFontItalic: NSFont = {
-                    let desc = lineFont.fontDescriptor.withSymbolicTraits(.italic)
-                    return NSFont(descriptor: desc, size: codeFontSize) ?? lineFont
-                }()
-                let lineFontBoldItalic: NSFont = {
-                    let desc = lineFontBold.fontDescriptor.withSymbolicTraits(.italic)
-                    return NSFont(descriptor: desc, size: codeFontSize) ?? lineFontBold
-                }()
-                let numberFont = NSFont.monospacedSystemFont(ofSize: max(8, min(fontSize - 1, 11)), weight: .regular)
+                let lineFont = PreviewFontResolver.codeFont(
+                    familyName: fontFamilyName,
+                    size: codeFontSize,
+                    weight: .regular
+                )
+                let lineFontBold = PreviewFontResolver.codeFont(
+                    familyName: fontFamilyName,
+                    size: codeFontSize,
+                    weight: .bold
+                )
+                let lineFontItalic = PreviewFontResolver.codeFont(
+                    familyName: fontFamilyName,
+                    size: codeFontSize,
+                    weight: .regular,
+                    traits: .italic
+                )
+                let lineFontBoldItalic = PreviewFontResolver.codeFont(
+                    familyName: fontFamilyName,
+                    size: codeFontSize,
+                    weight: .bold,
+                    traits: .italic
+                )
+                let numberFont = PreviewFontResolver.codeFont(
+                    familyName: fontFamilyName,
+                    size: max(8, min(fontSize - 1, 11)),
+                    weight: .regular
+                )
                 let singleLineHeight = lineFont.ascender - lineFont.descender + lineFont.leading
 
                 let digitWidth = "0".size(withAttributes: [.font: numberFont]).width

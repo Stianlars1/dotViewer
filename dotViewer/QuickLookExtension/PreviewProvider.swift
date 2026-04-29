@@ -142,6 +142,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             mtime: fileMtime,
             showLineNumbers: showLineNumbers,
             codeFontSize: SharedSettings.shared.fontSize,
+            codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
             markdownUseSyntaxHighlightInRaw: useMarkdownHighlight,
             allowUnknown: allowUnknown,
             forceTextForUnknown: forceTextForUnknown,
@@ -150,6 +151,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             showHeader: SharedSettings.shared.showFileInfoHeader,
             markdownDefaultMode: SharedSettings.shared.markdownDefaultMode,
             markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
             markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
             markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
             markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
@@ -179,11 +181,13 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
                 rawHTML: cached.rawHTML,
                 renderedHTML: cached.renderedHTML,
                 codeFontSize: SharedSettings.shared.fontSize,
+                codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
                 codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
                 codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
                 codeContentAlignment: SharedSettings.shared.codeContentAlignment,
                 defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
                 markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+                markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
                 markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
                 markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
                 markdownRawContentAlignment: SharedSettings.shared.markdownRawContentAlignment,
@@ -331,11 +335,13 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             rawHTML: rawHTML,
             renderedHTML: renderedHTML,
             codeFontSize: SharedSettings.shared.fontSize,
+            codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
             codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
             codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
             codeContentAlignment: SharedSettings.shared.codeContentAlignment,
             defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
             markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
+            markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
             markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
             markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
             markdownRawContentAlignment: SharedSettings.shared.markdownRawContentAlignment,
@@ -432,7 +438,11 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
         lineCount: Int,
         fontSize: Double
     ) -> QLPreviewReply {
-        let font = NSFont.monospacedSystemFont(ofSize: CGFloat(fontSize), weight: .regular)
+        let font = PreviewFontResolver.codeFont(
+            familyName: SharedSettings.shared.codeFontFamilyName,
+            size: CGFloat(fontSize),
+            weight: .regular
+        )
         let textColor = NSColor(hex: palette.text) ?? .labelColor
         let bgColor = NSColor(hex: palette.background) ?? .textBackgroundColor
 
@@ -499,7 +509,7 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
               margin: 0; padding: 12px;
               background: \(palette.background);
               color: \(palette.text);
-              font-family: "SF Mono", Menlo, Monaco, monospace;
+              font-family: \(PreviewFontFamily.codeCSSStack(for: SharedSettings.shared.codeFontFamilyName));
               font-size: \(Int(SharedSettings.shared.fontSize))px;
               line-height: 1.45;
             }

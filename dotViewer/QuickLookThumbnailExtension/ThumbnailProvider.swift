@@ -139,6 +139,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
                 showHeader: settings.showHeader,
                 showLineNumbers: settings.showLineNumbers,
                 fontSize: CGFloat(settings.codeFontSize),
+                fontFamilyName: settings.codeFontFamilyName,
                 treeSitterTokens: treeSitterTokens
             )
 
@@ -165,6 +166,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
 private struct ThumbnailSettings: Sendable {
     let showLineNumbers: Bool
     let codeFontSize: Double
+    let codeFontFamilyName: String
     let forceTextForUnknown: Bool
     let allowUnknown: Bool
     let selectedTheme: String
@@ -176,6 +178,7 @@ private struct ThumbnailSettings: Sendable {
         ThumbnailSettings(
             showLineNumbers: SharedSettings.shared.showLineNumbers,
             codeFontSize: SharedSettings.shared.fontSize,
+            codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
             forceTextForUnknown: SharedSettings.shared.previewForceTextForUnknown,
             allowUnknown: SharedSettings.shared.previewAllFileTypes,
             selectedTheme: SharedSettings.shared.selectedTheme,

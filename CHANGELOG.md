@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.4.0 (2026-04-29) — Current
+
+### Added
+
+- Added user-selectable system font family preferences for previews:
+  - Code / RAW font picker in Settings > Appearance.
+  - Rendered Markdown font picker in Settings > Markdown.
+  - Installed macOS font families are exposed through menu pickers, with reset-to-default actions.
+- Code font selection now applies consistently to syntax-highlighted Quick Look previews, markdown RAW, plain-text fallback previews, debug RTF fallback rendering, the Settings theme preview, search query text, inline/code-block typography, and Finder thumbnails.
+- Rendered Markdown font selection now applies to rendered markdown prose plus rich text-style previews such as structured CSV/TSV and rendered manpages, while inline code and code blocks keep the selected code font.
+- Added shared font sanitization/resolution helpers and tests covering CSS output, safe font-name handling, and preview cache invalidation when font choices change.
+
+### Changed
+
+- Bumped the app version to `1.4.0` / build `6` for the user-requested font preference release.
+- Updated the website, README, backlog, and agent docs to document configurable preview font families alongside the existing font-size, theme, width, wrap, and window-size controls.
+
 ## v1.3.0 (2026-04-16)
 
 ### Added

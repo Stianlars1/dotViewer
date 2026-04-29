@@ -6,7 +6,7 @@
 [![GitHub downloads](https://img.shields.io/github/downloads/Stianlars1/dotViewer/total?style=for-the-badge)](https://github.com/Stianlars1/dotViewer/releases)
 [![macOS](https://img.shields.io/badge/macOS-15%2B-black?style=for-the-badge&logo=apple)](https://dotviewer.app/download)
 
-Marketing site and install chooser for [dotViewer](https://dotviewer.app), the macOS Quick Look app for dotfiles, config files, markdown, CSV/TSV data, man pages, plain text documents, logs, executable scripts, and source code.
+Marketing site and install chooser for [dotViewer](https://dotviewer.app), the macOS Quick Look app for dotfiles, config files, markdown, CSV/TSV data, man pages, plain text documents, logs, executable scripts, source code, and user-selected preview fonts.
 
 The site is intentionally product-led. It uses real app screenshots, links directly to the public install flow, and keeps the release history in sync with GitHub Releases.
 
@@ -27,6 +27,7 @@ dotViewer is better positioned as:
 
 - one install instead of separate markdown, code, and plain-text Quick Look plugins
 - a Finder-native way to preview `.gitignore`, `.env`, `README.md`, JSON, YAML, XML, TSV, man pages, executable scripts, plist, logs, shell scripts, and other technical files
+- a single settings surface for themes, font families, sizing, width, copy behavior, and file-type management
 - a calmer alternative to opening VS Code, Xcode, Typora, or Terminal for every tiny file check
 
 That is why the site copy repeatedly emphasizes:

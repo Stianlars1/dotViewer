@@ -6,6 +6,7 @@ struct SettingsView: View {
 
     @State private var selectedTheme: String = SharedSettings.shared.selectedTheme
     @State private var fontSize: Double = SharedSettings.shared.fontSize
+    @State private var codeFontFamilyName: String = SharedSettings.shared.codeFontFamilyName
     @State private var appUIFontSizePreset: String = SharedSettings.shared.appUIFontSizePreset
     @State private var syncFontSizes: Bool = SharedSettings.shared.syncFontSizes
     @State private var showLineNumbers: Bool = SharedSettings.shared.showLineNumbers
@@ -46,6 +47,7 @@ struct SettingsView: View {
     ]
 
     private let appUIFontPresets: [AppUIFontSizePreset] = AppUIFontSizePreset.allCases
+    private let codeFontFamilies = PreviewFontMenu.codeFontFamilies
 
     private var palette: ThemePalette {
         ThemePalette.palette(for: selectedTheme, systemIsDark: colorScheme == .dark)
@@ -112,6 +114,30 @@ struct SettingsView: View {
                         Text("When enabled, code and rendered markdown use the same font size")
                             .font(.caption)
                             .foregroundStyle(.secondary)
+
+                        Picker("Code / RAW Font", selection: $codeFontFamilyName) {
+                            ForEach(codeFontFamilies, id: \.self) { family in
+                                Text(PreviewFontMenu.title(for: family)).tag(family)
+                            }
+                        }
+                        .pickerStyle(.menu)
+                        .onChange(of: codeFontFamilyName) { _, newValue in
+                            SharedSettings.shared.codeFontFamilyName = newValue
+                        }
+
+                        HStack {
+                            Text("Used by code previews, markdown RAW, plain text fallback, and Finder thumbnails.")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+
+                            Spacer()
+
+                            Button("Reset") {
+                                codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
+                                SharedSettings.shared.codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
+                            }
+                            .controlSize(.small)
+                        }
 
                         Divider()
 
@@ -489,19 +515,19 @@ struct SettingsView: View {
 
                     VStack(alignment: .leading, spacing: 0) {
                         Text("// Example code preview")
-                            .font(.system(size: fontSize, design: .monospaced))
+                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
                             .foregroundStyle(Color(hex: palette.comment))
 
                         Text("func greet(name: String) -> String {")
-                            .font(.system(size: fontSize, design: .monospaced))
+                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
                             .foregroundStyle(Color(hex: palette.text))
 
                         Text("    return \"Hello, \\(name)!\"")
-                            .font(.system(size: fontSize, design: .monospaced))
+                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
                             .foregroundStyle(Color(hex: palette.string))
 
                         Text("}")
-                            .font(.system(size: fontSize, design: .monospaced))
+                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
                             .foregroundStyle(Color(hex: palette.text))
                     }
                     .padding()

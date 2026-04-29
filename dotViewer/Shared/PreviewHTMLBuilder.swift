@@ -13,11 +13,13 @@ public struct PreviewInfo {
     public let rawHTML: String
     public let renderedHTML: String?
     public let codeFontSize: Double
+    public let codeFontFamilyName: String
     public let codeContentWidthMode: String
     public let codeContentCustomMaxWidth: Int
     public let codeContentAlignment: String
     public let defaultMarkdownMode: String
     public let markdownRenderFontSize: Double
+    public let markdownRenderedFontFamilyName: String
     public let markdownRenderedWidthMode: String
     public let markdownRenderedCustomMaxWidth: Int
     public let markdownRawContentAlignment: String
@@ -50,11 +52,13 @@ public struct PreviewInfo {
         rawHTML: String,
         renderedHTML: String?,
         codeFontSize: Double,
+        codeFontFamilyName: String = PreviewFontFamily.defaultCodeFamily,
         codeContentWidthMode: String = "auto",
         codeContentCustomMaxWidth: Int = 1200,
         codeContentAlignment: String = "left",
         defaultMarkdownMode: String,
         markdownRenderFontSize: Double,
+        markdownRenderedFontFamilyName: String = PreviewFontFamily.defaultMarkdownRenderedFamily,
         markdownRenderedWidthMode: String = "auto",
         markdownRenderedCustomMaxWidth: Int = 900,
         markdownRawContentAlignment: String = "left",
@@ -86,11 +90,19 @@ public struct PreviewInfo {
         self.rawHTML = rawHTML
         self.renderedHTML = renderedHTML
         self.codeFontSize = codeFontSize
+        self.codeFontFamilyName = PreviewFontFamily.sanitized(
+            codeFontFamilyName,
+            fallback: PreviewFontFamily.defaultCodeFamily
+        )
         self.codeContentWidthMode = codeContentWidthMode
         self.codeContentCustomMaxWidth = codeContentCustomMaxWidth
         self.codeContentAlignment = codeContentAlignment
         self.defaultMarkdownMode = defaultMarkdownMode
         self.markdownRenderFontSize = markdownRenderFontSize
+        self.markdownRenderedFontFamilyName = PreviewFontFamily.sanitized(
+            markdownRenderedFontFamilyName,
+            fallback: PreviewFontFamily.defaultMarkdownRenderedFamily
+        )
         self.markdownRenderedWidthMode = markdownRenderedWidthMode
         self.markdownRenderedCustomMaxWidth = markdownRenderedCustomMaxWidth
         self.markdownRawContentAlignment = markdownRawContentAlignment
@@ -264,6 +276,8 @@ public enum PreviewHTMLBuilder {
     private static func buildCSS(info: PreviewInfo, palette: ThemePalette) -> String {
         let codeFontSize = Int(info.codeFontSize)
         let renderFontSize = Int(info.markdownRenderFontSize)
+        let codeFontStack = PreviewFontFamily.codeCSSStack(for: info.codeFontFamilyName)
+        let renderedFontStack = PreviewFontFamily.markdownCSSStack(for: info.markdownRenderedFontFamilyName)
         func marginRule(for alignment: String) -> String {
             switch alignment {
             case "right":
@@ -476,7 +490,7 @@ public enum PreviewHTMLBuilder {
         }
 
         .code-view {
-          font-family: "SF Mono", Menlo, Monaco, monospace;
+          font-family: \(codeFontStack);
           font-size: \(codeFontSize)px;
           color: var(--text);
           line-height: 1.45;
@@ -545,7 +559,7 @@ public enum PreviewHTMLBuilder {
 
         #raw-view[data-language="csv"],
         #raw-view[data-language="tsv"] {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+          font-family: \(renderedFontStack);
         }
 
         .code-view .delimited-preview {
@@ -601,7 +615,7 @@ public enum PreviewHTMLBuilder {
         }
 
         .code-view .manpage-preview {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+          font-family: \(renderedFontStack);
           font-size: 0.98em;
           line-height: 1.62;
           color: var(--text);
@@ -667,11 +681,11 @@ public enum PreviewHTMLBuilder {
         .code-view .manpage-preview .Ic,
         .code-view .manpage-preview .Fn,
         .code-view .manpage-preview .Cd {
-          font-family: "SF Mono", Menlo, Monaco, monospace;
+          font-family: \(codeFontStack);
         }
 
         .rendered-view {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+          font-family: \(renderedFontStack);
           line-height: 1.6;
           font-size: \(renderFontSize)px;
           color: var(--text);
@@ -752,7 +766,7 @@ public enum PreviewHTMLBuilder {
           border: 1px solid var(--border);
           border-radius: 6px;
           background: var(--surface);
-          font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+          font-family: \(codeFontStack);
           font-size: 0.9em;
         }
 
@@ -798,7 +812,7 @@ public enum PreviewHTMLBuilder {
 
         /* Inline code */
         .rendered-view code {
-          font-family: "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+          font-family: \(codeFontStack);
           font-size: 0.875em;
           background: var(--surface-strong);
           color: var(--text);
@@ -834,7 +848,7 @@ public enum PreviewHTMLBuilder {
           right: 10px;
           font-size: 0.7em;
           color: var(--comment);
-          font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+          font-family: \(renderedFontStack);
           text-transform: uppercase;
           letter-spacing: 0.05em;
           user-select: none;
@@ -976,7 +990,7 @@ public enum PreviewHTMLBuilder {
 
         /* Keyboard shortcuts */
         .rendered-view kbd {
-          font-family: "SF Mono", Menlo, monospace;
+          font-family: \(codeFontStack);
           font-size: 0.85em;
           padding: 2px 6px;
           border: 1px solid var(--border);
@@ -1172,7 +1186,7 @@ public enum PreviewHTMLBuilder {
           background: var(--bg);
           color: var(--text);
           font-size: 13px;
-          font-family: "SF Mono", Menlo, Monaco, monospace;
+          font-family: \(codeFontStack);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;

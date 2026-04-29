@@ -441,3 +441,18 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `python3 scripts/dotviewer-test-uti-coverage.py --quick` → pass (`Coverage: 707/707 (100.0%)`)
   - `cd site && npm run typecheck && npm run build` → pass
 - Follow-ups: Run `./scripts/dotviewer-refresh.sh` with write access to `/Applications`, then smoke-test all five window-size modes in Finder. Release via `./scripts/release.sh 1.3.0` for GitHub and `./scripts/release.sh 1.3.0 --app-store` for Transporter.
+
+## 2026-04-29
+
+### Preview font family preferences
+- Outcome: Added installed macOS font-family pickers for Code/RAW previews and rendered Markdown. The code font now applies to syntax-highlighted previews, Markdown RAW, plain-text fallback, inline/code-block typography, Settings preview text, and Finder thumbnails; the rendered Markdown font applies to prose plus rich CSV/TSV and manpage-style previews. Bumped the release version to `1.4.0` / build `6` and updated the public website and release docs for the new typography controls.
+- Files: `dotViewer/Shared/PreviewFontFamily.swift`, `dotViewer/Shared/SharedSettings.swift`, `dotViewer/Shared/PreviewHTMLBuilder.swift`, `dotViewer/Shared/PreviewCache.swift`, `dotViewer/QuickLookExtension/PreviewProvider.swift`, `dotViewer/QuickLookThumbnailExtension/TextThumbnailRenderer.swift`, `dotViewer/App/PreviewFontMenu.swift`, `dotViewer/App/SettingsView.swift`, `dotViewer/App/MarkdownSettingsView.swift`, `dotViewer/dotViewerTests/PreviewFontFamilyTests.swift`, `dotViewer/project.yml`, `site/app/page.tsx`, `site/app/download/page.tsx`, `README.md`, `CHANGELOG.md`, `BACKLOG.md`, `CLAUDE.md`, `AGENTS.md`
+- Verified:
+  - `git diff --check` → pass
+  - `xcodebuild -project dotViewer/dotViewer.xcodeproj -scheme dotViewerTests -derivedDataPath dotViewer/build test` → pass (`161 tests, 0 failures`)
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - `./scripts/dotviewer-refresh.sh --no-open` → pass (Quick Look preview + thumbnail extensions registered as `1.4.0`)
+  - `./scripts/dotviewer-ql-smoke.sh TestFiles/test.json` → pass (`HTML built for test.json`)
+  - `./scripts/dotviewer-ql-smoke.sh TestFiles/TEST_MARKDOWN.md` → pass (`HTML built for TEST_MARKDOWN.md`)
+- Follow-ups: None.

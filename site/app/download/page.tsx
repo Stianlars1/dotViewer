@@ -16,7 +16,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Download dotViewer for macOS",
   description:
-    "Install dotViewer via Homebrew, the free signed DMG, or the App Store. The macOS Quick Look upgrade for dotfiles, config files, CSV/TSV data, markdown, logs, plain text, man pages, executable scripts, and source code.",
+    "Install dotViewer via Homebrew, the free signed DMG, or the App Store. The macOS Quick Look upgrade for dotfiles, config files, CSV/TSV data, markdown, logs, plain text, man pages, executable scripts, source code, and user-selected preview fonts.",
   alternates: {
     canonical: "/download",
   },
@@ -231,6 +231,14 @@ export default async function DownloadPage() {
                 <p>
                   Developer ID signed, Apple-notarized macOS DMG with a
                   checksum asset published alongside the release.
+                </p>
+              </div>
+              <div className={styles.sideItem}>
+                <div className={styles.sideLabel}>Preview typography</div>
+                <p>
+                  Pick installed macOS fonts separately for code/RAW previews
+                  and rendered markdown. Finder thumbnails follow the selected
+                  code font.
                 </p>
               </div>
             </aside>
