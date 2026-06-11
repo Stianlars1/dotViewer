@@ -273,6 +273,7 @@ export default function HomePage() {
               <a href="#controls">Controls</a>
               <a href="#coverage">Coverage</a>
               <a href="#install">Install</a>
+              <Link href="/security">Security</Link>
               <a href="#faq">FAQ</a>
             </nav>
 
@@ -684,6 +685,7 @@ export default function HomePage() {
               <a href="#coverage">Coverage</a>
               <a href="#faq">FAQ</a>
               <Link href="/download">Download</Link>
+              <Link href="/security">Security</Link>
               {appStoreHref ? <a href={appStoreHref}>App Store</a> : null}
               <a href={releasesHref}>Releases</a>
               <a href={repoHref}>GitHub</a>

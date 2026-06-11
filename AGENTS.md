@@ -469,3 +469,15 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - `pkgutil --check-signature dotViewer/build-appstore/appstore/dotViewer.pkg` → pass
   - Production `https://dotviewer.app/` and `/download` curl checks → pass (font FAQ, preview typography copy, and `1.4.0` release visible)
 - Follow-ups: Submit `dotViewer/build-appstore/appstore/dotViewer.pkg` in Transporter if shipping the App Store channel immediately.
+
+## 2026-06-11
+
+### Website security/trust page
+- Outcome: Added a crawlable `/security` page for dotViewer with signing, notarization, GitHub Releases, App Store, Homebrew, checksum, contact, privacy, and vendor-classification facts, then linked it from the homepage, download page, sitemap, and JSON-LD navigation.
+- Files: `site/app/security/page.tsx`, `site/app/security/page.module.css`, `site/app/page.tsx`, `site/app/download/page.tsx`, `site/app/sitemap.ts`, `site/lib/structured-data.ts`, `site/README.md`, `AGENTS.md`
+- Verified:
+  - `cd site && npm run typecheck` → pass
+  - `cd site && npm run build` → pass
+  - Browser check on `http://127.0.0.1:3300/security` → route rendered with signing/privacy/vendor facts and `AboutPage` JSON-LD
+  - Browser checks on `/` and `/download` → `/security` links present
+  - Emulated 390px mobile viewport → no horizontal overflow

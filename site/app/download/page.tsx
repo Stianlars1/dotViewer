@@ -102,6 +102,7 @@ export default async function DownloadPage() {
             <nav className={styles.navLinks} aria-label="Primary">
               <Link href="/#previews">Previews</Link>
               <Link href="/#controls">Controls</Link>
+              <Link href="/security">Security</Link>
               <Link href="/#faq">FAQ</Link>
             </nav>
             <Link className={styles.navCta} href="/">
@@ -320,6 +321,9 @@ export default async function DownloadPage() {
           </Reveal>
 
           <div className={styles.backRow}>
+            <Link className={styles.backLink} href="/security">
+              Security and trust
+            </Link>
             <Link className={styles.backLink} href="/">
               ← Back to dotViewer.app
             </Link>

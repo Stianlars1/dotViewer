@@ -39,6 +39,7 @@ function normalizeVersion(tagName: string | null | undefined) {
 function buildBaseGraph(config: SiteConfig) {
   const homeUrl = absoluteUrl(config.siteUrl, "/");
   const downloadPageUrl = absoluteUrl(config.siteUrl, "/download");
+  const securityPageUrl = absoluteUrl(config.siteUrl, "/security");
   const latestDownloadUrl = absoluteUrl(config.siteUrl, "/download/latest");
   const logoUrl = absoluteUrl(config.siteUrl, "/brand/dotviewer-icon-light.png");
 
@@ -111,6 +112,7 @@ function buildBaseGraph(config: SiteConfig) {
     latestDownloadUrl,
     organization,
     organizationId,
+    securityPageUrl,
     software,
     website,
     websiteId,
@@ -160,6 +162,7 @@ export function buildHomeSchema(config: SiteConfig, stats: ProductStats, faqs: {
   const siteNavigation = [
     { name: "Home", url: base.homeUrl },
     { name: "Download", url: base.downloadPageUrl },
+    { name: "Security", url: base.securityPageUrl },
     { name: "GitHub Releases", url: config.releasesUrl ?? base.downloadPageUrl },
   ].map((item, index) => ({
     "@type": "SiteNavigationElement",
@@ -178,6 +181,102 @@ export function buildHomeSchema(config: SiteConfig, stats: ProductStats, faqs: {
       webpage,
       faq,
       ...siteNavigation,
+    ],
+  };
+}
+
+export function buildSecuritySchema(config: SiteConfig, latestRelease: ReleaseRecord | null) {
+  const base = buildBaseGraph(config);
+  const securityPageId = `${base.securityPageUrl}#webpage`;
+  const breadcrumbId = `${base.securityPageUrl}#breadcrumb`;
+  const trustListId = `${base.securityPageUrl}#trust-signals`;
+  const latestDmg = latestRelease?.dmgAsset ?? null;
+  const latestChecksum = latestRelease?.checksumAsset ?? null;
+
+  const software = {
+    ...base.software,
+    softwareVersion: normalizeVersion(latestRelease?.tagName),
+    releaseNotes: latestRelease?.htmlUrl ?? undefined,
+    downloadUrl: latestDmg?.browser_download_url ?? base.latestDownloadUrl,
+    sameAs: [config.repoUrl, config.releasesUrl, config.appStoreUrl].filter(Boolean),
+    subjectOf: [
+      latestRelease?.htmlUrl
+        ? {
+            "@type": "CreativeWork",
+            name: latestRelease.name,
+            url: latestRelease.htmlUrl,
+          }
+        : null,
+      latestChecksum
+        ? {
+            "@type": "CreativeWork",
+            name: latestChecksum.name,
+            url: latestChecksum.browser_download_url,
+            encodingFormat: "text/plain",
+          }
+        : null,
+    ].filter(Boolean),
+  };
+
+  const webpage = {
+    "@id": securityPageId,
+    "@type": "AboutPage",
+    name: "dotViewer Security and Trust",
+    url: base.securityPageUrl,
+    description:
+      "Security, signing, notarization, official download, checksum, privacy, and contact details for dotViewer.",
+    isPartOf: { "@id": base.websiteId },
+    about: { "@id": base.appId },
+    mainEntity: { "@id": base.appId },
+    primaryImageOfPage: absoluteUrl(config.siteUrl, "/brand/dotviewer-icon-light.png"),
+  };
+
+  const breadcrumb = {
+    "@id": breadcrumbId,
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: APP_NAME,
+        item: base.homeUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Security",
+        item: base.securityPageUrl,
+      },
+    ],
+  };
+
+  const trustList = {
+    "@id": trustListId,
+    "@type": "ItemList",
+    name: "dotViewer trust signals",
+    itemListElement: [
+      "Developer ID signed macOS app.",
+      "Apple-notarized releases.",
+      "Official DMG assets and SHA-256 checksum files published on GitHub Releases.",
+      "Optional App Store distribution.",
+      "No website login form, account portal, credential collection, or payment-card collection.",
+    ].map((name, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name,
+    })),
+  };
+
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      base.organization,
+      base.creator,
+      base.website,
+      software,
+      webpage,
+      breadcrumb,
+      trustList,
     ],
   };
 }

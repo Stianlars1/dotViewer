@@ -49,6 +49,7 @@ That is why the site copy repeatedly emphasizes:
 - `/` - launch homepage with real product screenshots, install flow, feature proof, FAQ, and CTA
 - `/download` - live download landing page with the public installer CTA, checksum link, and version history
 - `/download/latest` - stable redirect to the newest DMG asset
+- `/security` - crawlable trust page with signing, notarization, checksum, privacy, contact, and official-source details
 
 ### Data Sources
 
@@ -61,8 +62,8 @@ That is why the site copy repeatedly emphasizes:
 ### SEO / Search Signals
 
 - descriptive metadata and canonical URLs
-- `SoftwareApplication`, `Organization`, `WebSite`, `CollectionPage`, `BreadcrumbList`, and FAQ JSON-LD
-- `sitemap.xml` including the homepage and `/download`
+- `SoftwareApplication`, `Organization`, `WebSite`, `CollectionPage`, `AboutPage`, `BreadcrumbList`, and FAQ JSON-LD
+- `sitemap.xml` including the homepage, `/download`, and `/security`
 - `robots.txt` with sitemap and host
 - crawlable internal links that reinforce the `/download` page as the public install destination
 
@@ -204,6 +205,7 @@ The repo includes [vercel.json](/Users/stian/Developer/macOS%20Apps/v2.5/site/ve
 
 - [site/app/page.tsx](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/page.tsx) - homepage content and CTA structure
 - [site/app/download/page.tsx](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/download/page.tsx) - download page and release history
+- [site/app/security/page.tsx](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/security/page.tsx) - signing, notarization, checksum, privacy, and contact trust page
 - [site/app/layout.tsx](/Users/stian/Developer/macOS%20Apps/v2.5/site/app/layout.tsx) - site-wide metadata
 - [site/lib/structured-data.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/lib/structured-data.ts) - JSON-LD builders
 - [site/lib/github-release.ts](/Users/stian/Developer/macOS%20Apps/v2.5/site/lib/github-release.ts) - GitHub Releases fetch logic

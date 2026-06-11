@@ -1,0 +1,375 @@
+.page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: clip;
+  background: transparent;
+  color: var(--dv-ink);
+  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  font-feature-settings: "ss01", "cv11";
+}
+
+.wrap {
+  width: calc(100% - 40px);
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.nav {
+  position: sticky;
+  top: 16px;
+  z-index: 50;
+  margin-top: 16px;
+  isolation: isolate;
+}
+
+.navInner {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 10px 12px 10px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.88);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.8) inset,
+    0 1px 0 rgba(11, 18, 32, 0.04),
+    0 14px 34px -14px rgba(11, 18, 32, 0.12),
+    0 2px 8px -2px rgba(23, 98, 255, 0.08);
+  border-radius: 999px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-size: 15px;
+  color: var(--dv-ink);
+}
+
+.brandMark {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.navLinks {
+  display: flex;
+  gap: 22px;
+  margin-left: auto;
+  font-size: 14px;
+  color: var(--dv-muted);
+}
+
+.navLinks a {
+  transition: color 0.15s ease;
+}
+
+.navLinks a:hover {
+  color: var(--dv-ink);
+}
+
+.navCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: var(--dv-ink);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.navCta:hover {
+  background: var(--dv-accent);
+  transform: translateY(-1px);
+}
+
+.main {
+  position: relative;
+  z-index: 1;
+  padding: 32px 0 96px;
+}
+
+.hero {
+  max-width: 790px;
+  padding: 48px 0 32px;
+}
+
+.eyebrow,
+.cardLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  color: var(--dv-accent-ink);
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--dv-accent-soft);
+  border: 1px solid rgba(23, 98, 255, 0.15);
+}
+
+.title {
+  margin: 22px 0 0;
+  max-width: 12ch;
+  font-size: 56px;
+  line-height: 1.04;
+  letter-spacing: 0;
+  font-weight: 650;
+  color: var(--dv-ink);
+  text-wrap: balance;
+}
+
+.body {
+  margin: 18px 0 0;
+  color: var(--dv-muted);
+  font-size: 16.5px;
+  line-height: 1.6;
+  max-width: 68ch;
+}
+
+.trustGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 34px;
+}
+
+.trustCard,
+.releasePanel,
+.reviewSection {
+  background: #ffffff;
+  border: 1px solid var(--dv-line);
+  border-radius: var(--dv-radius-lg);
+  box-shadow: var(--dv-shadow-sm);
+}
+
+.trustCard {
+  min-width: 0;
+  padding: 24px;
+  overflow-wrap: anywhere;
+}
+
+.trustCard h2,
+.releasePanel h2,
+.reviewIntro h2 {
+  margin: 10px 0 0;
+  font-size: 24px;
+  line-height: 1.12;
+  letter-spacing: 0;
+  color: var(--dv-ink);
+}
+
+.trustCard p,
+.releasePanel p,
+.reviewIntro p {
+  margin: 12px 0 0;
+  color: var(--dv-muted);
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.cardLinks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed var(--dv-line);
+  font-size: 13.5px;
+  color: var(--dv-accent);
+}
+
+.cardLinks a,
+.factRow a {
+  color: var(--dv-accent);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(23, 98, 255, 0.3);
+  text-underline-offset: 3px;
+}
+
+.cardLinks a:hover,
+.factRow a:hover {
+  text-decoration-color: var(--dv-accent);
+}
+
+.releasePanel {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+  padding: 26px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.releaseMeta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.releaseMeta div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--dv-line);
+  border-radius: var(--dv-radius);
+  background: var(--dv-bg);
+}
+
+.releaseMeta span {
+  display: block;
+  color: var(--dv-muted-2);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.releaseMeta strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--dv-ink);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.reviewSection {
+  display: grid;
+  grid-template-columns: 0.82fr 1.18fr;
+  gap: 28px;
+  margin-top: 18px;
+  padding: 28px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.factList {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.factRow {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 18px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--dv-line);
+}
+
+.factRow:first-child {
+  padding-top: 0;
+}
+
+.factRow:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.factRow dt {
+  color: var(--dv-muted-2);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.factRow dd {
+  margin: 0;
+  color: var(--dv-muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.backRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 48px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  color: var(--dv-muted);
+  font-size: 14px;
+  transition: color 0.15s ease;
+}
+
+.backLink:hover {
+  color: var(--dv-ink);
+}
+
+@media (max-width: 960px) {
+  .trustGrid,
+  .releasePanel,
+  .reviewSection {
+    grid-template-columns: 1fr;
+  }
+
+  .releaseMeta {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 860px) {
+  .navLinks {
+    display: none;
+  }
+
+  .hero {
+    padding: 36px 0 24px;
+  }
+
+  .title {
+    max-width: 100%;
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 560px) {
+  .wrap {
+    width: calc(100% - 28px);
+  }
+
+  .navInner {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  .navCta {
+    padding: 9px 12px;
+  }
+
+  .title {
+    font-size: 34px;
+  }
+
+  .trustCard,
+  .releasePanel,
+  .reviewSection {
+    padding: 20px;
+  }
+
+  .factRow {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
