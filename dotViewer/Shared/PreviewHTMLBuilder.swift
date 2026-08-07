@@ -191,6 +191,7 @@ public enum PreviewHTMLBuilder {
           <script>
           \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior, includeLineNumbersInCopy: info.includeLineNumbersInCopy))
           </script>
+          \(info.showSearchButton ? SearchBridge.current().map(buildSearchBridgeClient) ?? "" : "")
         </body>
         </html>
         """
@@ -496,6 +497,19 @@ public enum PreviewHTMLBuilder {
           line-height: 1.45;
           \(codeMaxWidthRule)
           \(codeMarginRule)
+        }
+
+        /* Code must use lining, tabular figures. Several otherwise-good coding fonts default to
+           old-style figures, which drop digits below the baseline and made UUIDs and timestamps
+           look broken. Ligatures and contextual alternates are off for the same reason: they
+           reflow punctuation runs like "role:cms.cm.app" and misrepresent the file's actual bytes. */
+        .code-view,
+        .code-view .code-line,
+        .line-number,
+        .search-bar .search-query {
+          font-variant-numeric: lining-nums tabular-nums;
+          font-variant-ligatures: none;
+          font-feature-settings: "lnum" 1, "tnum" 1, "onum" 0, "smcp" 0, "c2sc" 0, "liga" 0, "clig" 0, "calt" 0;
         }
 
         #raw-view[data-language="markdown"] {
@@ -1195,6 +1209,29 @@ public enum PreviewHTMLBuilder {
           color: var(--comment);
           font-family: inherit;
           font-style: italic;
+        }
+        /* The query is a <span>, not an <input> — Quick Look never gives it real focus, so it gets
+           no focus ring and reads as disabled. While the bar is open the field IS live (⌘F routes
+           typing here), so it is styled as focused and given a caret to say so. */
+        .search-bar.open .search-query {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
+        }
+        .search-bar.open .search-query:not(.placeholder)::after {
+          content: "";
+          display: inline-block;
+          width: 1px;
+          height: 1.05em;
+          margin-left: 1px;
+          vertical-align: text-bottom;
+          background: var(--accent);
+          animation: dv-caret-blink 1.1s steps(1) infinite;
+        }
+        @keyframes dv-caret-blink {
+          50% { opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .search-bar.open .search-query::after { animation: none; }
         }
         .search-bar .search-action-btn {
           display: inline-flex;
@@ -2140,7 +2177,61 @@ public enum PreviewHTMLBuilder {
               closeSearch();
             }
           });
+
+          // Exposed so the loopback search bridge can drive the same code paths the buttons use.
+          // Keyboard input never reaches this page (see SearchBridge), so this is how Cmd+F works.
+          window.__dvSearch = {
+            open: openSearch,
+            close: closeSearch,
+            query: function (text) {
+              if (text && text.length) { searchWithQuery(text); } else { closeSearch(); }
+            },
+            next: function () { goToMatch(currentIdx + 1); },
+            prev: function () { goToMatch(currentIdx - 1); }
+          };
         })();
+        """
+    }
+
+    // MARK: - Search Bridge Client
+
+    /// Subscribes the preview to the host app's loopback server so `Cmd+F` and typed characters —
+    /// which Finder claims before they ever reach this page — can be pushed in from outside.
+    /// See `SearchBridge` and docs/research/quicklook-search-keyboard-2026-08.md.
+    private static func buildSearchBridgeClient(_ coordinates: SearchBridge.Coordinates) -> String {
+        """
+        <script>
+        (function () {
+          var BASE = 'http://127.0.0.1:\(coordinates.port)';
+          // Nonce is generated from UUIDs; filtering to [A-Za-z0-9-] keeps it inert in a JS literal
+          // regardless of how it is ever generated in future.
+          var NONCE = '\(coordinates.nonce.filter { $0.isLetter || $0.isNumber || $0 == "-" })';
+          var stream;
+
+          function apply(message) {
+            var api = window.__dvSearch;
+            if (!api) return;
+            switch (message.type) {
+              case 'open':  api.open(); break;
+              case 'query': api.open(); api.query(message.value || ''); break;
+              case 'next':  api.next(); break;
+              case 'prev':  api.prev(); break;
+              case 'close': api.close(); break;
+              default: break;
+            }
+          }
+
+          try {
+            // EventSource reconnects on its own if the host app restarts, so no retry logic here.
+            stream = new EventSource(BASE + '/events?nonce=' + encodeURIComponent(NONCE));
+            stream.onmessage = function (event) {
+              var message;
+              try { message = JSON.parse(event.data); } catch (e) { return; }
+              apply(message);
+            };
+          } catch (e) { /* no bridge available — buttons still work */ }
+        })();
+        </script>
         """
     }
 

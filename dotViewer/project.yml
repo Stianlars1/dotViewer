@@ -4734,9 +4734,17 @@ targets:
     entitlements:
       path: App/dotViewer.entitlements
       properties:
-        com.apple.security.app-sandbox: true
+        # NOTE: the host app is intentionally NOT sandboxed in this configuration. A sandboxed
+        # process cannot hold Accessibility permission, and Accessibility is required for the
+        # CGEventTap that captures Cmd+F for Quick Look search — see SearchKeyInterceptor and
+        # docs/research/quicklook-search-keyboard-2026-08.md. This build is Developer ID / DMG only;
+        # a Mac App Store build must restore com.apple.security.app-sandbox and ship without the
+        # search-key feature. The extensions remain sandboxed either way.
         com.apple.security.application-groups:
           - group.stianlars1.dotViewer.shared
+        # Loopback server that pushes search queries into open Quick Look previews. Bound to
+        # 127.0.0.1 only. Harmless to keep declared when unsandboxed.
+        com.apple.security.network.server: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer

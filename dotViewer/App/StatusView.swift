@@ -214,7 +214,17 @@ private extension StatusView {
         isScanning = true
         let scanner = ExtensionConflictScanner.shared
         let foundConflicts = await scanner.scanConflicts()
+
+        // Stale registrations only accumulate from building repeatedly out of different source
+        // directories — a developer situation. A customer installs one bundle in /Applications and
+        // will never see this, so surfacing it in a release build is pure noise. Detection stays,
+        // gated to debug, because it is genuinely useful while working on the app.
+        #if DEBUG
         let foundStale = await scanner.scanStaleDotViewerRegistrations()
+        #else
+        let foundStale: [QLExtensionInfo] = []
+        #endif
+
         withAnimation {
             conflicts = foundConflicts
             staleRegistrations = foundStale
@@ -299,7 +309,10 @@ private extension StatusView {
                         Button {
                             Task {
                                 for ext in staleRegistrations {
-                                    await ExtensionConflictScanner.shared.disableExtension(ext.id)
+                                    // By path — the bundle id is shared with the installed build,
+                                    // so removing by id could unregister the working extension.
+                                    await ExtensionConflictScanner.shared
+                                        .removeRegistration(atPath: ext.path)
                                 }
                                 await scanForConflicts()
                             }

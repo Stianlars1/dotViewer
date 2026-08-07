@@ -75,6 +75,17 @@ actor ExtensionConflictScanner {
         return true
     }
 
+    /// Unregisters a specific extension bundle by path.
+    ///
+    /// Must be by path, not bundle id: every dotViewer build shares
+    /// `com.stianlars1.dotViewer.QuickLookPreview`, so `-e ignore -i <id>` is ambiguous when a stale
+    /// build is registered alongside the installed one and can disable the working extension.
+    /// `-e ignore` also only marks an extension ignored — it never clears the registration.
+    @discardableResult
+    func removeRegistration(atPath path: String) async -> Bool {
+        (try? await runPluginkit(arguments: ["-r", path])) != nil
+    }
+
     /// Re-enables a previously disabled extension.
     @discardableResult
     func enableExtension(_ bundleId: String) async -> Bool {

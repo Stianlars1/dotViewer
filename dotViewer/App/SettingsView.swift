@@ -34,6 +34,7 @@ struct SettingsView: View {
     @State private var copyBehavior: String = SharedSettings.shared.copyBehavior
     @State private var showSearchButton: Bool = SharedSettings.shared.showSearchButton
     @State private var includeLineNumbersInCopy: Bool = SharedSettings.shared.includeLineNumbersInCopy
+    @State private var selectedTab: String = "appearanceSection"
 
     private let copyBehaviors: [(String, String, String)] = [
         ("autoCopy", "Auto-copy", "Copies text to clipboard when you release the mouse after selecting."),
@@ -71,504 +72,560 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 24) {
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Appearance")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Picker("Theme", selection: $selectedTheme) {
-                            ForEach(ThemePalette.selectableThemes) { theme in
-                                Text(theme.title).tag(theme.id)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: selectedTheme) { _, newValue in
-                            SharedSettings.shared.selectedTheme = newValue
-                        }
-
-                        HStack {
-                            Text("Font Size")
-                            Spacer()
-                            Text("\(Int(fontSize))pt")
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Slider(value: $fontSize, in: 10...24, step: 1)
-                            .onChange(of: fontSize) { _, newValue in
-                                SharedSettings.shared.fontSize = newValue
-                                if syncFontSizes {
-                                    SharedSettings.shared.markdownRenderFontSize = newValue
-                                }
-                            }
-
-                        Toggle("Sync with Markdown Font Size", isOn: $syncFontSizes)
-                            .onChange(of: syncFontSizes) { _, newValue in
-                                SharedSettings.shared.syncFontSizes = newValue
-                                if newValue {
-                                    SharedSettings.shared.markdownRenderFontSize = fontSize
-                                }
-                            }
-
-                        Text("When enabled, code and rendered markdown use the same font size")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Picker("Code / RAW Font", selection: $codeFontFamilyName) {
-                            ForEach(codeFontFamilies, id: \.self) { family in
-                                Text(PreviewFontMenu.title(for: family)).tag(family)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: codeFontFamilyName) { _, newValue in
-                            SharedSettings.shared.codeFontFamilyName = newValue
-                        }
-
-                        HStack {
-                            Text("Used by code previews, markdown RAW, plain text fallback, and Finder thumbnails.")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-
-                            Spacer()
-
-                            Button("Reset") {
-                                codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
-                                SharedSettings.shared.codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
-                            }
-                            .controlSize(.small)
-                        }
-
-                        Divider()
-
-                        Picker("App UI Text Size", selection: $appUIFontSizePreset) {
-                            ForEach(appUIFontPresets) { preset in
-                                Text(preset.title).tag(preset.rawValue)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: appUIFontSizePreset) { _, newValue in
-                            SharedSettings.shared.appUIFontSizePreset = newValue
-                        }
-
-                        Text("System follows macOS text sizing. Other values override app UI text size.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Toggle("Show Line Numbers", isOn: $showLineNumbers)
-                            .onChange(of: showLineNumbers) { _, newValue in
-                                SharedSettings.shared.showLineNumbers = newValue
-                            }
-
-                        Toggle("Word Wrap", isOn: $wordWrap)
-                            .onChange(of: wordWrap) { _, newValue in
-                                SharedSettings.shared.wordWrap = newValue
-                            }
-
-                        Text("Wrap long lines instead of horizontal scrolling")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Text("Code and RAW Content Width")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-
-                        Picker("Code/RAW Width", selection: $codeContentWidthMode) {
-                            Text("Auto").tag("auto")
-                            Text("Custom").tag("custom")
-                        }
-                        .pickerStyle(.segmented)
-                        .onChange(of: codeContentWidthMode) { _, newValue in
-                            SharedSettings.shared.codeContentWidthMode = newValue
-                        }
-
-                        if codeContentWidthMode == "custom" {
-                            HStack {
-                                Text("Max Width")
-                                Spacer()
-                                Text("\(Int(codeContentCustomMaxWidth))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $codeContentCustomMaxWidth, in: 480...2400, step: 10)
-                                .onChange(of: codeContentCustomMaxWidth) { _, newValue in
-                                    SharedSettings.shared.codeContentCustomMaxWidth = Int(newValue)
-                                }
-                        }
-
-                        Text("Applies to all non-rendered views (code files and markdown RAW mode).")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        DisclosureGroup("Content Alignment (Advanced)", isExpanded: $showContentAlignmentAdvanced) {
-                            VStack(alignment: .leading, spacing: 12) {
-                                Picker("Code Alignment", selection: $codeContentAlignment) {
-                                    Text("Left").tag("left")
-                                    Text("Center").tag("center")
-                                    Text("Right").tag("right")
-                                }
-                                .pickerStyle(.segmented)
-                                .onChange(of: codeContentAlignment) { _, newValue in
-                                    SharedSettings.shared.codeContentAlignment = newValue
-                                }
-
-                                Picker("Markdown RAW Alignment", selection: $markdownRawContentAlignment) {
-                                    Text("Left").tag("left")
-                                    Text("Center").tag("center")
-                                    Text("Right").tag("right")
-                                }
-                                .pickerStyle(.segmented)
-                                .onChange(of: markdownRawContentAlignment) { _, newValue in
-                                    SharedSettings.shared.markdownRawContentAlignment = newValue
-                                }
-                            }
-                            .padding(.top, 8)
-                        }
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Window Size")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Picker("Mode", selection: $previewWindowSizeMode) {
-                            Text("Fixed").tag("fixed")
-                            Text("Auto").tag("auto")
-                            Text("Aspect Ratio").tag("aspect")
-                            Text("Fit Content").tag("contentFixed")
-                            Text("Remember").tag("remember")
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: previewWindowSizeMode) { _, newValue in
-                            SharedSettings.shared.previewWindowSizeMode = newValue
-                        }
-
-                        if previewWindowSizeMode == "fixed" {
-                            HStack {
-                                Text("Width")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedWidth))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
-                                .onChange(of: previewWindowFixedWidth) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
-                                }
-
-                            HStack {
-                                Text("Height")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedHeight))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
-                                .onChange(of: previewWindowFixedHeight) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
-                                }
-                        }
-
-                        if previewWindowSizeMode == "aspect" {
-                            Picker("Ratio", selection: $previewWindowAspectRatio) {
-                                ForEach(PreviewSizing.AspectRatio.allKeys, id: \.self) { key in
-                                    Text(key).tag(key)
-                                }
-                            }
-                            .pickerStyle(.segmented)
-                            .onChange(of: previewWindowAspectRatio) { _, newValue in
-                                SharedSettings.shared.previewWindowAspectRatio = newValue
-                            }
-
-                            HStack {
-                                Text("Base Width")
-                                Spacer()
-                                Text("\(Int(previewWindowAspectBaseWidth))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowAspectBaseWidth, in: 420...1600, step: 10)
-                                .onChange(of: previewWindowAspectBaseWidth) { _, newValue in
-                                    SharedSettings.shared.previewWindowAspectBaseWidth = Int(newValue)
-                                }
-                        }
-
-                        if previewWindowSizeMode == "contentFixed" {
-                            HStack {
-                                Text("Width")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedWidth))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
-                                .onChange(of: previewWindowFixedWidth) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
-                                }
-
-                            HStack {
-                                Text("Max Height")
-                                Spacer()
-                                Text("\(Int(previewWindowFixedHeight))px")
-                                    .foregroundStyle(.secondary)
-                            }
-
-                            Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
-                                .onChange(of: previewWindowFixedHeight) { _, newValue in
-                                    SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
-                                }
-                        }
-
-                        if previewWindowSizeMode == "remember" {
-                            HStack {
-                                Button("Reset remembered size") {
-                                    SharedSettings.shared.resetPreviewWindowLastSize()
-                                }
-                                .controlSize(.small)
-
-                                Spacer()
-
-                                Button("Save as Fixed") {
-                                    SharedSettings.shared.copyLastSizeToFixed()
-                                    previewWindowFixedWidth = Double(SharedSettings.shared.previewWindowFixedWidth)
-                                    previewWindowFixedHeight = Double(SharedSettings.shared.previewWindowFixedHeight)
-                                    previewWindowSizeMode = "fixed"
-                                    SharedSettings.shared.previewWindowSizeMode = "fixed"
-                                }
-                                .controlSize(.small)
-                            }
-                        }
-
-                        Text(previewWindowSizeModeDescription)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Preview Limits")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Text("Max File Size")
-                            Spacer()
-                            Text("\(Int(maxFileSize)) KB")
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Slider(value: $maxFileSize, in: 10...500, step: 10)
-                            .onChange(of: maxFileSize) { _, newValue in
-                                SharedSettings.shared.maxFileSizeBytes = Int(newValue * 1000)
-                            }
-
-                        Text("Files larger than this will be truncated in preview")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Toggle("Show Truncation Warning", isOn: $showTruncationWarning)
-                            .onChange(of: showTruncationWarning) { _, newValue in
-                                SharedSettings.shared.showTruncationWarning = newValue
-                            }
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Preview UI")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Toggle("Show File Info Header", isOn: $showPreviewHeader)
-                            .onChange(of: showPreviewHeader) { _, newValue in
-                                SharedSettings.shared.showFileInfoHeader = newValue
-                            }
-
-                        Text("Shows filename, language, line count, and file size in preview")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Picker("Copy Behavior", selection: $copyBehavior) {
-                            ForEach(copyBehaviors, id: \.0) { behavior in
-                                Text(behavior.1).tag(behavior.0)
-                            }
-                        }
-                        .pickerStyle(.menu)
-                        .onChange(of: copyBehavior) { _, newValue in
-                            SharedSettings.shared.copyBehavior = newValue
-                        }
-
-                        Text(copyBehaviors.first(where: { $0.0 == copyBehavior })?.2 ?? "")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Toggle("Include Line Numbers in Copy", isOn: $includeLineNumbersInCopy)
-                            .onChange(of: includeLineNumbersInCopy) { _, newValue in
-                                SharedSettings.shared.includeLineNumbersInCopy = newValue
-                            }
-
-                        Text("When enabled, manual selection and the header copy button include line numbers.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Toggle("Show Find in Preview", isOn: $showSearchButton)
-                            .onChange(of: showSearchButton) { _, newValue in
-                                SharedSettings.shared.showSearchButton = newValue
-                            }
-
-                        Text("Adds a search button to the preview header. Because Quick Look intercepts keyboard input, you cannot type in the search field directly. Instead, select text in the preview and click the search icon to find matches, or use the Paste button to search for clipboard contents.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Divider()
-
-                        Toggle("Preview Routed Unknown Files", isOn: $previewUnknownFiles)
-                            .onChange(of: previewUnknownFiles) { _, newValue in
-                                SharedSettings.shared.previewAllFileTypes = newValue
-                            }
-
-                        Text("Try to preview files that already open in dotViewer even when their extension is not in the built-in registry.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Toggle("Force Text Preview for Unknown Files", isOn: $forceTextForUnknown)
-                            .onChange(of: forceTextForUnknown) { _, newValue in
-                                SharedSettings.shared.previewForceTextForUnknown = newValue
-                            }
-
-                        Text("If a routed unknown file has readable bytes but no useful text MIME type, treat it as plain text.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Performance & Cache")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Toggle("Enable Performance Logging", isOn: $performanceLoggingEnabled)
-                            .onChange(of: performanceLoggingEnabled) { _, newValue in
-                                SharedSettings.shared.performanceLoggingEnabled = newValue
-                            }
-
-                        Toggle("Enable Preview Cache", isOn: $previewCacheEnabled)
-                            .onChange(of: previewCacheEnabled) { _, newValue in
-                                SharedSettings.shared.previewCacheEnabled = newValue
-                            }
-
-                        HStack {
-                            Text("Cache TTL")
-                            Spacer()
-                            Text("\(Int(previewCacheTTLSeconds))s")
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Slider(value: $previewCacheTTLSeconds, in: 5...600, step: 5)
-                            .onChange(of: previewCacheTTLSeconds) { _, newValue in
-                                SharedSettings.shared.previewCacheTTLSeconds = Int(newValue)
-                            }
-
-                        HStack {
-                            Text("Cache Size Limit")
-                            Spacer()
-                            Text("\(Int(previewCacheMaxMB)) MB")
-                                .foregroundStyle(.secondary)
-                        }
-
-                        Slider(value: $previewCacheMaxMB, in: 10...500, step: 10)
-                            .onChange(of: previewCacheMaxMB) { _, newValue in
-                                SharedSettings.shared.previewCacheMaxMB = Int(newValue)
-                            }
-
-                        Button {
-                            SharedSettings.shared.previewCacheClearRequested = true
-                        } label: {
-                            Label("Clear Preview Cache", systemImage: "trash")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.bordered)
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Theme Preview")
-                        .font(.headline)
-
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("// Example code preview")
-                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
-                            .foregroundStyle(Color(hex: palette.comment))
-
-                        Text("func greet(name: String) -> String {")
-                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
-                            .foregroundStyle(Color(hex: palette.text))
-
-                        Text("    return \"Hello, \\(name)!\"")
-                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
-                            .foregroundStyle(Color(hex: palette.string))
-
-                        Text("}")
-                            .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
-                            .foregroundStyle(Color(hex: palette.text))
-                    }
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color(hex: palette.background), in: RoundedRectangle(cornerRadius: 12))
-                }
-
-                VStack(alignment: .leading, spacing: 16) {
-                    Text("Danger Zone")
-                        .font(.headline)
-                        .foregroundStyle(.red)
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Remove dotViewer from your system")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-
-                        Button(role: .destructive) {
-                            uninstallApp()
-                        } label: {
-                            Label("Uninstall dotViewer", systemImage: "trash")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.red)
-                    }
-                    .padding()
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.red.opacity(0.3), lineWidth: 1)
-                    )
-                }
-
-                Spacer()
-            }
-            .padding(32)
+        // Tabs rather than one long scroll: the seven groups are independent, and hunting for
+        // "Preview UI" three screens down was the main friction. Each page still scrolls on its
+        // own for small windows.
+        TabView(selection: $selectedTab) {
+            appearanceSection
+                .settingsTabPage()
+                .tabItem { Label("Appearance", systemImage: "paintpalette") }
+                .tag("appearanceSection")
+            windowSizeSection
+                .settingsTabPage()
+                .tabItem { Label("Window", systemImage: "macwindow") }
+                .tag("windowSizeSection")
+            limitsSection
+                .settingsTabPage()
+                .tabItem { Label("Limits", systemImage: "speedometer") }
+                .tag("limitsSection")
+            previewUISection
+                .settingsTabPage()
+                .tabItem { Label("Preview UI", systemImage: "slider.horizontal.3") }
+                .tag("previewUISection")
+            performanceSection
+                .settingsTabPage()
+                .tabItem { Label("Performance", systemImage: "bolt") }
+                .tag("performanceSection")
+            themePreviewSection
+                .settingsTabPage()
+                .tabItem { Label("Theme", systemImage: "eye") }
+                .tag("themePreviewSection")
+            dangerZoneSection
+                .settingsTabPage()
+                .tabItem { Label("Danger Zone", systemImage: "exclamationmark.triangle") }
+                .tag("dangerZoneSection")
         }
+        .padding(20)
         .navigationTitle("Settings")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
+
+    @ViewBuilder
+    private var appearanceSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Appearance")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Picker("Theme", selection: $selectedTheme) {
+                    ForEach(ThemePalette.selectableThemes) { theme in
+                        Text(theme.title).tag(theme.id)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: selectedTheme) { _, newValue in
+                    SharedSettings.shared.selectedTheme = newValue
+                }
+
+                HStack {
+                    Text("Font Size")
+                    Spacer()
+                    Text("\(Int(fontSize))pt")
+                        .foregroundStyle(.secondary)
+                }
+
+                Slider(value: $fontSize, in: 10...24, step: 1)
+                    .onChange(of: fontSize) { _, newValue in
+                        SharedSettings.shared.fontSize = newValue
+                        if syncFontSizes {
+                            SharedSettings.shared.markdownRenderFontSize = newValue
+                        }
+                    }
+
+                Toggle("Sync with Markdown Font Size", isOn: $syncFontSizes)
+                    .onChange(of: syncFontSizes) { _, newValue in
+                        SharedSettings.shared.syncFontSizes = newValue
+                        if newValue {
+                            SharedSettings.shared.markdownRenderFontSize = fontSize
+                        }
+                    }
+
+                Text("When enabled, code and rendered markdown use the same font size")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Picker("Code / RAW Font", selection: $codeFontFamilyName) {
+                    ForEach(codeFontFamilies, id: \.self) { family in
+                        Text(PreviewFontMenu.title(for: family)).tag(family)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: codeFontFamilyName) { _, newValue in
+                    SharedSettings.shared.codeFontFamilyName = newValue
+                }
+
+                HStack {
+                    Text("Used by code previews, markdown RAW, plain text fallback, and Finder thumbnails.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    Button("Reset") {
+                        codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
+                        SharedSettings.shared.codeFontFamilyName = PreviewFontFamily.defaultCodeFamily
+                    }
+                    .controlSize(.small)
+                }
+
+                Divider()
+
+                Picker("App UI Text Size", selection: $appUIFontSizePreset) {
+                    ForEach(appUIFontPresets) { preset in
+                        Text(preset.title).tag(preset.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: appUIFontSizePreset) { _, newValue in
+                    SharedSettings.shared.appUIFontSizePreset = newValue
+                }
+
+                Text("System follows macOS text sizing. Other values override app UI text size.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Show Line Numbers", isOn: $showLineNumbers)
+                    .onChange(of: showLineNumbers) { _, newValue in
+                        SharedSettings.shared.showLineNumbers = newValue
+                    }
+
+                Toggle("Word Wrap", isOn: $wordWrap)
+                    .onChange(of: wordWrap) { _, newValue in
+                        SharedSettings.shared.wordWrap = newValue
+                    }
+
+                Text("Wrap long lines instead of horizontal scrolling")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Divider()
+
+                Text("Code and RAW Content Width")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+
+                Picker("Code/RAW Width", selection: $codeContentWidthMode) {
+                    Text("Auto").tag("auto")
+                    Text("Custom").tag("custom")
+                }
+                .pickerStyle(.segmented)
+                .onChange(of: codeContentWidthMode) { _, newValue in
+                    SharedSettings.shared.codeContentWidthMode = newValue
+                }
+
+                if codeContentWidthMode == "custom" {
+                    HStack {
+                        Text("Max Width")
+                        Spacer()
+                        Text("\(Int(codeContentCustomMaxWidth))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $codeContentCustomMaxWidth, in: 480...2400, step: 10)
+                        .onChange(of: codeContentCustomMaxWidth) { _, newValue in
+                            SharedSettings.shared.codeContentCustomMaxWidth = Int(newValue)
+                        }
+                }
+
+                Text("Applies to all non-rendered views (code files and markdown RAW mode).")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                DisclosureGroup("Content Alignment (Advanced)", isExpanded: $showContentAlignmentAdvanced) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        Picker("Code Alignment", selection: $codeContentAlignment) {
+                            Text("Left").tag("left")
+                            Text("Center").tag("center")
+                            Text("Right").tag("right")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: codeContentAlignment) { _, newValue in
+                            SharedSettings.shared.codeContentAlignment = newValue
+                        }
+
+                        Picker("Markdown RAW Alignment", selection: $markdownRawContentAlignment) {
+                            Text("Left").tag("left")
+                            Text("Center").tag("center")
+                            Text("Right").tag("right")
+                        }
+                        .pickerStyle(.segmented)
+                        .onChange(of: markdownRawContentAlignment) { _, newValue in
+                            SharedSettings.shared.markdownRawContentAlignment = newValue
+                        }
+                    }
+                    .padding(.top, 8)
+                }
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var windowSizeSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Window Size")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Picker("Mode", selection: $previewWindowSizeMode) {
+                    Text("Fixed").tag("fixed")
+                    Text("Auto").tag("auto")
+                    Text("Aspect Ratio").tag("aspect")
+                    Text("Fit Content").tag("contentFixed")
+                    Text("Remember").tag("remember")
+                }
+                .pickerStyle(.menu)
+                .onChange(of: previewWindowSizeMode) { _, newValue in
+                    SharedSettings.shared.previewWindowSizeMode = newValue
+                }
+
+                if previewWindowSizeMode == "fixed" {
+                    HStack {
+                        Text("Width")
+                        Spacer()
+                        Text("\(Int(previewWindowFixedWidth))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
+                        .onChange(of: previewWindowFixedWidth) { _, newValue in
+                            SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
+                        }
+
+                    HStack {
+                        Text("Height")
+                        Spacer()
+                        Text("\(Int(previewWindowFixedHeight))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
+                        .onChange(of: previewWindowFixedHeight) { _, newValue in
+                            SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
+                        }
+                }
+
+                if previewWindowSizeMode == "aspect" {
+                    Picker("Ratio", selection: $previewWindowAspectRatio) {
+                        ForEach(PreviewSizing.AspectRatio.allKeys, id: \.self) { key in
+                            Text(key).tag(key)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .onChange(of: previewWindowAspectRatio) { _, newValue in
+                        SharedSettings.shared.previewWindowAspectRatio = newValue
+                    }
+
+                    HStack {
+                        Text("Base Width")
+                        Spacer()
+                        Text("\(Int(previewWindowAspectBaseWidth))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $previewWindowAspectBaseWidth, in: 420...1600, step: 10)
+                        .onChange(of: previewWindowAspectBaseWidth) { _, newValue in
+                            SharedSettings.shared.previewWindowAspectBaseWidth = Int(newValue)
+                        }
+                }
+
+                if previewWindowSizeMode == "contentFixed" {
+                    HStack {
+                        Text("Width")
+                        Spacer()
+                        Text("\(Int(previewWindowFixedWidth))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $previewWindowFixedWidth, in: 420...1600, step: 10)
+                        .onChange(of: previewWindowFixedWidth) { _, newValue in
+                            SharedSettings.shared.previewWindowFixedWidth = Int(newValue)
+                        }
+
+                    HStack {
+                        Text("Max Height")
+                        Spacer()
+                        Text("\(Int(previewWindowFixedHeight))px")
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Slider(value: $previewWindowFixedHeight, in: 220...1400, step: 10)
+                        .onChange(of: previewWindowFixedHeight) { _, newValue in
+                            SharedSettings.shared.previewWindowFixedHeight = Int(newValue)
+                        }
+                }
+
+                if previewWindowSizeMode == "remember" {
+                    HStack {
+                        Button("Reset remembered size") {
+                            SharedSettings.shared.resetPreviewWindowLastSize()
+                        }
+                        .controlSize(.small)
+
+                        Spacer()
+
+                        Button("Save as Fixed") {
+                            SharedSettings.shared.copyLastSizeToFixed()
+                            previewWindowFixedWidth = Double(SharedSettings.shared.previewWindowFixedWidth)
+                            previewWindowFixedHeight = Double(SharedSettings.shared.previewWindowFixedHeight)
+                            previewWindowSizeMode = "fixed"
+                            SharedSettings.shared.previewWindowSizeMode = "fixed"
+                        }
+                        .controlSize(.small)
+                    }
+                }
+
+                Text(previewWindowSizeModeDescription)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var limitsSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Preview Limits")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Text("Max File Size")
+                    Spacer()
+                    Text("\(Int(maxFileSize)) KB")
+                        .foregroundStyle(.secondary)
+                }
+
+                Slider(value: $maxFileSize, in: 10...500, step: 10)
+                    .onChange(of: maxFileSize) { _, newValue in
+                        SharedSettings.shared.maxFileSizeBytes = Int(newValue * 1000)
+                    }
+
+                Text("Files larger than this will be truncated in preview")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Divider()
+
+                Toggle("Show Truncation Warning", isOn: $showTruncationWarning)
+                    .onChange(of: showTruncationWarning) { _, newValue in
+                        SharedSettings.shared.showTruncationWarning = newValue
+                    }
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var previewUISection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Preview UI")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Toggle("Show File Info Header", isOn: $showPreviewHeader)
+                    .onChange(of: showPreviewHeader) { _, newValue in
+                        SharedSettings.shared.showFileInfoHeader = newValue
+                    }
+
+                Text("Shows filename, language, line count, and file size in preview")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Divider()
+
+                Picker("Copy Behavior", selection: $copyBehavior) {
+                    ForEach(copyBehaviors, id: \.0) { behavior in
+                        Text(behavior.1).tag(behavior.0)
+                    }
+                }
+                .pickerStyle(.menu)
+                .onChange(of: copyBehavior) { _, newValue in
+                    SharedSettings.shared.copyBehavior = newValue
+                }
+
+                Text(copyBehaviors.first(where: { $0.0 == copyBehavior })?.2 ?? "")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Include Line Numbers in Copy", isOn: $includeLineNumbersInCopy)
+                    .onChange(of: includeLineNumbersInCopy) { _, newValue in
+                        SharedSettings.shared.includeLineNumbersInCopy = newValue
+                    }
+
+                Text("When enabled, manual selection and the header copy button include line numbers.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Divider()
+
+                Toggle("Show Find in Preview", isOn: $showSearchButton)
+                    .onChange(of: showSearchButton) { _, newValue in
+                        SharedSettings.shared.showSearchButton = newValue
+                    }
+
+                Text("Adds a search button to the preview header. Select text in the preview and click the search icon to find matches, or use the Paste button to search for clipboard contents.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                if showSearchButton {
+                    Divider()
+                    QuickLookFindKeySettings()
+                }
+
+                Divider()
+
+                Toggle("Preview Routed Unknown Files", isOn: $previewUnknownFiles)
+                    .onChange(of: previewUnknownFiles) { _, newValue in
+                        SharedSettings.shared.previewAllFileTypes = newValue
+                    }
+
+                Text("Try to preview files that already open in dotViewer even when their extension is not in the built-in registry.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Toggle("Force Text Preview for Unknown Files", isOn: $forceTextForUnknown)
+                    .onChange(of: forceTextForUnknown) { _, newValue in
+                        SharedSettings.shared.previewForceTextForUnknown = newValue
+                    }
+
+                Text("If a routed unknown file has readable bytes but no useful text MIME type, treat it as plain text.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var performanceSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Performance & Cache")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Toggle("Enable Performance Logging", isOn: $performanceLoggingEnabled)
+                    .onChange(of: performanceLoggingEnabled) { _, newValue in
+                        SharedSettings.shared.performanceLoggingEnabled = newValue
+                    }
+
+                Toggle("Enable Preview Cache", isOn: $previewCacheEnabled)
+                    .onChange(of: previewCacheEnabled) { _, newValue in
+                        SharedSettings.shared.previewCacheEnabled = newValue
+                    }
+
+                HStack {
+                    Text("Cache TTL")
+                    Spacer()
+                    Text("\(Int(previewCacheTTLSeconds))s")
+                        .foregroundStyle(.secondary)
+                }
+
+                Slider(value: $previewCacheTTLSeconds, in: 5...600, step: 5)
+                    .onChange(of: previewCacheTTLSeconds) { _, newValue in
+                        SharedSettings.shared.previewCacheTTLSeconds = Int(newValue)
+                    }
+
+                HStack {
+                    Text("Cache Size Limit")
+                    Spacer()
+                    Text("\(Int(previewCacheMaxMB)) MB")
+                        .foregroundStyle(.secondary)
+                }
+
+                Slider(value: $previewCacheMaxMB, in: 10...500, step: 10)
+                    .onChange(of: previewCacheMaxMB) { _, newValue in
+                        SharedSettings.shared.previewCacheMaxMB = Int(newValue)
+                    }
+
+                Button {
+                    SharedSettings.shared.previewCacheClearRequested = true
+                } label: {
+                    Label("Clear Preview Cache", systemImage: "trash")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var themePreviewSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Theme Preview")
+                .font(.headline)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text("// Example code preview")
+                    .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
+                    .foregroundStyle(Color(hex: palette.comment))
+
+                Text("func greet(name: String) -> String {")
+                    .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
+                    .foregroundStyle(Color(hex: palette.text))
+
+                Text("    return \"Hello, \\(name)!\"")
+                    .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
+                    .foregroundStyle(Color(hex: palette.string))
+
+                Text("}")
+                    .font(Font(PreviewFontResolver.codeFont(familyName: codeFontFamilyName, size: fontSize)))
+                    .foregroundStyle(Color(hex: palette.text))
+            }
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(hex: palette.background), in: RoundedRectangle(cornerRadius: 12))
+        }
+
+    }
+    @ViewBuilder
+    private var dangerZoneSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Danger Zone")
+                .font(.headline)
+                .foregroundStyle(.red)
+
+            VStack(alignment: .leading, spacing: 12) {
+                Text("Remove dotViewer from your system")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Button(role: .destructive) {
+                    uninstallApp()
+                } label: {
+                    Label("Uninstall dotViewer", systemImage: "trash")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.red)
+            }
+            .padding()
+            .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.red.opacity(0.3), lineWidth: 1)
+            )
+        }
+
+    }
+
 
     private func uninstallApp() {
         let alert = NSAlert()
