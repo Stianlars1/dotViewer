@@ -1217,6 +1217,10 @@ public enum PreviewHTMLBuilder {
           border-color: var(--accent);
           box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent);
         }
+        .search-bar .search-query.all-selected {
+          background: color-mix(in srgb, var(--accent) 35%, var(--bg));
+        }
+        .search-bar.open .search-query.all-selected::after { display: none; }
         .search-bar.open .search-query:not(.placeholder)::after {
           content: "";
           display: inline-block;
@@ -2187,7 +2191,13 @@ public enum PreviewHTMLBuilder {
               if (text && text.length) { searchWithQuery(text); } else { closeSearch(); }
             },
             next: function () { goToMatch(currentIdx + 1); },
-            prev: function () { goToMatch(currentIdx - 1); }
+            prev: function () { goToMatch(currentIdx - 1); },
+            // The query is a <span>, so ⌘A selection is shown by styling rather than a real
+            // text selection. The interceptor owns the actual selected/not state.
+            setSelected: function (on) {
+              if (!searchQuery) return;
+              searchQuery.classList.toggle('all-selected', !!on);
+            }
           };
         })();
         """
@@ -2213,7 +2223,8 @@ public enum PreviewHTMLBuilder {
             if (!api) return;
             switch (message.type) {
               case 'open':  api.open(); break;
-              case 'query': api.open(); api.query(message.value || ''); break;
+              case 'query': api.open(); api.query(message.value || ''); api.setSelected(false); break;
+              case 'selectall': api.setSelected(true); break;
               case 'next':  api.next(); break;
               case 'prev':  api.prev(); break;
               case 'close': api.close(); break;

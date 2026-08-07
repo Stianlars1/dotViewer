@@ -30,6 +30,7 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
     private var searchActive = false
     private var query = ""
     private var activationObserver: NSObjectProtocol?
+    private var queryIsSelected = false
 
     private init() {}
 
@@ -165,6 +166,12 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
             }
             return nil
 
+        case kVK_ANSI_A where command:
+            // Without this ⌘A falls through to Finder and selects every file in the window while
+            // the user believes they are selecting the search text.
+            selectAll()
+            return nil
+
         case kVK_Delete, kVK_ForwardDelete:
             dropLastFromQuery()
             return nil
@@ -196,6 +203,7 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
         lock.lock()
         searchActive = true
         query = ""
+        queryIsSelected = false
         lock.unlock()
         SearchBridgeServer.shared.broadcast(kind: "open")
     }
@@ -205,15 +213,33 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
         let wasActive = searchActive
         searchActive = false
         query = ""
+        queryIsSelected = false
         lock.unlock()
         if broadcast, wasActive {
             SearchBridgeServer.shared.broadcast(kind: "close")
         }
     }
 
+    /// Marks the whole query as selected, mirroring what ⌘A does in a real text field: the next
+    /// character replaces everything, and delete clears it.
+    private func selectAll() {
+        lock.lock()
+        let isEmpty = query.isEmpty
+        queryIsSelected = !isEmpty
+        lock.unlock()
+        guard !isEmpty else { return }
+        SearchBridgeServer.shared.broadcast(kind: "selectall")
+    }
+
     private func appendToQuery(_ text: String) {
         lock.lock()
-        query += text
+        // Typing over a selection replaces it, as it would in an NSTextField.
+        if queryIsSelected {
+            query = text
+            queryIsSelected = false
+        } else {
+            query += text
+        }
         let current = query
         lock.unlock()
         SearchBridgeServer.shared.broadcast(kind: "query", value: current)
@@ -221,7 +247,12 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
 
     private func dropLastFromQuery() {
         lock.lock()
-        if !query.isEmpty { query.removeLast() }
+        if queryIsSelected {
+            query = ""
+            queryIsSelected = false
+        } else if !query.isEmpty {
+            query.removeLast()
+        }
         let current = query
         lock.unlock()
         SearchBridgeServer.shared.broadcast(kind: "query", value: current)
