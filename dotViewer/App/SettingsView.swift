@@ -71,43 +71,40 @@ struct SettingsView: View {
         }
     }
 
+    private static let tabs: [SettingsTab] = [
+        .init(id: "appearanceSection", label: "Appearance", icon: "paintpalette"),
+        .init(id: "windowSizeSection", label: "Window", icon: "macwindow"),
+        .init(id: "limitsSection", label: "Limits", icon: "speedometer"),
+        .init(id: "previewUISection", label: "Preview UI", icon: "slider.horizontal.3"),
+        .init(id: "performanceSection", label: "Performance", icon: "bolt"),
+        .init(id: "themePreviewSection", label: "Theme", icon: "eye"),
+        .init(id: "dangerZoneSection", label: "Danger Zone", icon: "exclamationmark.triangle"),
+    ]
+
     var body: some View {
-        // Tabs rather than one long scroll: the seven groups are independent, and hunting for
-        // "Preview UI" three screens down was the main friction. Each page still scrolls on its
-        // own for small windows.
-        TabView(selection: $selectedTab) {
-            appearanceSection
+        // An explicit tab row, not a TabView: with more than a few tabs macOS collapses a
+        // TabView's tabs into a popup button, which hid the sections behind an extra click.
+        VStack(alignment: .leading, spacing: 0) {
+            SettingsTabBar(tabs: Self.tabs, selection: $selectedTab)
+            Divider()
+            selectedContent
                 .settingsTabPage()
-                .tabItem { Label("Appearance", systemImage: "paintpalette") }
-                .tag("appearanceSection")
-            windowSizeSection
-                .settingsTabPage()
-                .tabItem { Label("Window", systemImage: "macwindow") }
-                .tag("windowSizeSection")
-            limitsSection
-                .settingsTabPage()
-                .tabItem { Label("Limits", systemImage: "speedometer") }
-                .tag("limitsSection")
-            previewUISection
-                .settingsTabPage()
-                .tabItem { Label("Preview UI", systemImage: "slider.horizontal.3") }
-                .tag("previewUISection")
-            performanceSection
-                .settingsTabPage()
-                .tabItem { Label("Performance", systemImage: "bolt") }
-                .tag("performanceSection")
-            themePreviewSection
-                .settingsTabPage()
-                .tabItem { Label("Theme", systemImage: "eye") }
-                .tag("themePreviewSection")
-            dangerZoneSection
-                .settingsTabPage()
-                .tabItem { Label("Danger Zone", systemImage: "exclamationmark.triangle") }
-                .tag("dangerZoneSection")
         }
-        .padding(20)
         .navigationTitle("Settings")
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private var selectedContent: some View {
+        switch selectedTab {
+        case "windowSizeSection": windowSizeSection
+        case "limitsSection": limitsSection
+        case "previewUISection": previewUISection
+        case "performanceSection": performanceSection
+        case "themePreviewSection": themePreviewSection
+        case "dangerZoneSection": dangerZoneSection
+        default: appearanceSection
+        }
     }
 
     @ViewBuilder

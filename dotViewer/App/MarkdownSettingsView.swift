@@ -19,25 +19,22 @@ struct MarkdownSettingsView: View {
     @State private var customCSSOverride: Bool = SharedSettings.shared.markdownCustomCSSOverride
     private let renderedFontFamilies = PreviewFontMenu.renderedFontFamilies
 
-    var body: some View {
-        // Same reasoning as SettingsView: independent groups, so tabs beat one tall scroll.
-        TabView(selection: $selectedMarkdownTab) {
-            markdownPreviewSection
-                .settingsTabPage()
-                .tabItem { Label("Preview", systemImage: "doc.richtext") }
-                .tag("markdownPreviewSection")
-            renderedViewSection
-                .settingsTabPage()
-                .tabItem { Label("Rendered", systemImage: "textformat") }
-                .tag("renderedViewSection")
-            customCSSSection
-                .settingsTabPage()
-                .tabItem { Label("Custom CSS", systemImage: "curlybraces") }
-                .tag("customCSSSection")
-        }
-        .padding(20)
-        .navigationTitle("Markdown")
+    private static let tabs: [SettingsTab] = [
+        .init(id: "markdownPreviewSection", label: "Preview", icon: "doc.richtext"),
+        .init(id: "renderedViewSection", label: "Rendered", icon: "textformat"),
+        .init(id: "customCSSSection", label: "Custom CSS", icon: "curlybraces"),
+    ]
 
+    var body: some View {
+        // An explicit tab row, not a TabView: with more than a few tabs macOS collapses a
+        // TabView's tabs into a popup button, which hid the sections behind an extra click.
+        VStack(alignment: .leading, spacing: 0) {
+            SettingsTabBar(tabs: Self.tabs, selection: $selectedMarkdownTab)
+            Divider()
+            selectedContent
+                .settingsTabPage()
+        }
+        .navigationTitle("Markdown")
         .onAppear {
             syncFontSizes = SharedSettings.shared.syncFontSizes
             renderFontSize = SharedSettings.shared.markdownRenderFontSize
@@ -46,6 +43,16 @@ struct MarkdownSettingsView: View {
             renderedCustomMaxWidth = Double(SharedSettings.shared.markdownRenderedCustomMaxWidth)
             renderedContentAlignment = SharedSettings.shared.markdownRenderedContentAlignment
             tocDefaultOpen = SharedSettings.shared.markdownTOCDefaultOpen
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    @ViewBuilder
+    private var selectedContent: some View {
+        switch selectedMarkdownTab {
+        case "renderedViewSection": renderedViewSection
+        case "customCSSSection": customCSSSection
+        default: markdownPreviewSection
         }
     }
 
