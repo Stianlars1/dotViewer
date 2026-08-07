@@ -1,6 +1,33 @@
 # Changelog
 
-## v1.4.0 (2026-04-29) — Current
+## v1.5.0 (2026-08-07) — Current
+
+### Added
+
+- **⌥Space preview panel** — dotViewer's own preview window, opened with `⌥Space` on the file selected in Finder.
+  - Works on **any** text file, not only the ones Quick Look refuses.
+  - Built for the files macOS will never route to a Quick Look extension: `.ts` resolves to `public.mpeg-2-transport-stream`, a system-declared type conforming to `public.movie`, so no third-party extension can claim it. Files with unregistered extensions get dynamic (`dyn.*`) UTIs and are never routed either.
+  - Same rendering as Quick Look — tree-sitter highlighting, themes, fonts, word wrap, window sizing all follow existing settings.
+  - `⌘F` search, `Esc` and `⌘W` to close, and click-away to dismiss.
+  - Links in previews open in the default browser — an affordance Quick Look cannot offer, since `window.open` is blocked inside quicklookd's web view (KI-012). Other URL schemes are refused; a previewed file is untrusted input.
+- **Settings → "Preview with ⌥Space in Finder"** with separate status rows for the two permissions the feature needs: Accessibility (to receive the shortcut) and Automation (to ask Finder which file is selected). Neither is requested at launch.
+
+### Changed
+
+- **`Space` is never intercepted.** Native Quick Look continues to handle every file it already handles; the panel is purely additive.
+- Extracted the preview pipeline into `Shared/PreviewContentBuilder` so the Quick Look extension and the ⌥Space panel render through one code path instead of two copies of the routing, caching and highlighting logic.
+- `HighlightXPC` is now embedded in the host app as well as the Quick Look extension, so the panel can reach the highlighting service.
+- Bumped the app version to `1.5.0` / build `7`.
+
+### Fixed
+
+- The preview panel's link handling never ran: the `WKNavigationDelegate` method only *nearly* matched the optional protocol requirement (a missing `@MainActor` on the `decisionHandler`), so WebKit never called it.
+
+### Notes
+
+- The host app is **not sandboxed**. A sandboxed process cannot hold Accessibility permission, which the ⌘F and ⌥Space features require. The Quick Look extensions remain sandboxed. Distribution is Developer ID (DMG + Homebrew); the Mac App Store build has been dropped.
+
+## v1.4.0 (2026-04-29)
 
 ### Added
 

@@ -5,7 +5,7 @@ set -euo pipefail
 #  dotViewer Publish Script
 # ============================================================================
 #
-#  Full release pipeline: build DMG → notarize → GitHub release → App Store pkg.
+#  Full release pipeline: build DMG → notarize → GitHub release → Homebrew cask.
 #
 #  Usage:
 #    ./scripts/publish.sh <version>
@@ -15,13 +15,15 @@ set -euo pipefail
 #    2. Extracts release notes from CHANGELOG.md for that version
 #    3. Creates a git tag v<version> and pushes it
 #    4. Creates a GitHub release with the DMG, checksum, and changelog notes
-#    5. Runs release.sh <version> --app-store to build the .pkg for Transporter
-#    6. Prints the Transporter drag-and-deliver instructions
+#    5. Updates the Homebrew cask in stianlars1/tap
+#
+#  Deliberately no App Store stage: the host app is unsandboxed because
+#  Accessibility permission requires it. See the note above Step 6.
 #
 #  Prerequisites:
 #    - gh CLI authenticated (brew install gh && gh auth login)
 #    - Apple notarization keychain profile configured (AC_PASSWORD)
-#    - Xcode with signing identity for Developer ID + App Store
+#    - Xcode with a Developer ID signing identity
 #
 # ============================================================================
 
@@ -47,7 +49,6 @@ PROJECT_DIR="$REPO_DIR/dotViewer"
 EXPORT_PATH="$PROJECT_DIR/build/export"
 DMG_PATH="$EXPORT_PATH/dotViewer-$VERSION.dmg"
 CHECKSUM_PATH="$DMG_PATH.sha256"
-APPSTORE_PKG="$PROJECT_DIR/build-appstore/appstore/dotViewer.pkg"
 CHANGELOG="$REPO_DIR/CHANGELOG.md"
 
 # Homebrew tap for auto-updating `brew install --cask stianlars1/tap/dotviewer`.
@@ -87,7 +88,7 @@ fi
 
 # ── Step 1: Extract release notes from CHANGELOG ──────────────────────────
 
-echo -e "${BOLD}Step 1/7:${NC} Extracting release notes from CHANGELOG.md..."
+echo -e "${BOLD}Step 1/5:${NC} Extracting release notes from CHANGELOG.md..."
 
 RELEASE_NOTES=""
 if [ -f "$CHANGELOG" ]; then
@@ -120,7 +121,7 @@ fi
 # ── Step 2: Build DMG (Developer ID) ──────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 2/7:${NC} Building Developer ID release (DMG + notarize)..."
+echo -e "${BOLD}Step 2/5:${NC} Building Developer ID release (DMG + notarize)..."
 echo ""
 
 "$SCRIPT_DIR/release.sh" "$VERSION"
@@ -141,7 +142,7 @@ echo -e "${GREEN}  ✓ Checksum ready: $CHECKSUM_PATH${NC}"
 # ── Step 3: Git tag ───────────────────────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 3/7:${NC} Creating git tag v$VERSION..."
+echo -e "${BOLD}Step 3/5:${NC} Creating git tag v$VERSION..."
 
 if git tag -l "v$VERSION" | grep -q "v$VERSION"; then
     echo -e "${YELLOW}  Tag v$VERSION already exists — skipping tag creation${NC}"
@@ -156,7 +157,7 @@ git push origin "v$VERSION" 2>/dev/null || echo -e "${YELLOW}  Tag already on re
 # ── Step 4: GitHub release ────────────────────────────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 4/7:${NC} Creating GitHub release..."
+echo -e "${BOLD}Step 4/5:${NC} Creating GitHub release..."
 
 EXISTING_RELEASE=$(gh release view "v$VERSION" --json tagName --jq .tagName 2>/dev/null || true)
 
@@ -196,7 +197,7 @@ fi
 # ── Step 5: Update Homebrew tap (stianlars1/tap) ──────────────────────────
 
 echo ""
-echo -e "${BOLD}Step 5/7:${NC} Updating Homebrew tap cask..."
+echo -e "${BOLD}Step 5/5:${NC} Updating Homebrew tap cask..."
 
 HOMEBREW_PUSHED=""
 HOMEBREW_SKIP_REASON=""
@@ -259,21 +260,13 @@ if [ -n "$HOMEBREW_SKIP_REASON" ]; then
     echo -e "${YELLOW}  Skipped: $HOMEBREW_SKIP_REASON${NC}"
 fi
 
-# ── Step 6: Build App Store pkg ───────────────────────────────────────────
-
-echo ""
-echo -e "${BOLD}Step 6/7:${NC} Building App Store package..."
-echo ""
-
-"$SCRIPT_DIR/release.sh" "$VERSION" --app-store
-
-if [ -f "$APPSTORE_PKG" ]; then
-    echo -e "${GREEN}  ✓ App Store package ready: $APPSTORE_PKG${NC}"
-else
-    echo -e "${YELLOW}  ⚠ App Store package not found — check the output above${NC}"
-fi
-
-# ── Step 7: Summary ───────────────────────────────────────────────────────
+# ── Step 6: Summary ───────────────────────────────────────────────────────
+#
+# There is deliberately no App Store step. The host app is not sandboxed — a
+# sandboxed process cannot hold Accessibility permission, which the Cmd+F and
+# Option+Space features require — so a Mac App Store build is not possible
+# without shipping a crippled second binary. Distribution is Developer ID only:
+# DMG, GitHub Releases and the Homebrew cask.
 
 echo ""
 echo -e "${CYAN}══════════════════════════════════════════════════════════════${NC}"
@@ -286,17 +279,11 @@ echo "    Checksum:   $CHECKSUM_PATH"
 if [ -n "$GITHUB_URL" ]; then
     echo "    GitHub:     $GITHUB_URL"
 fi
-if [ -f "$APPSTORE_PKG" ]; then
-    echo "    App Store:  $APPSTORE_PKG"
-fi
 if [ -n "$HOMEBREW_PUSHED" ]; then
     echo "    Homebrew:   brew upgrade --cask stianlars1/tap/dotviewer"
 elif [ -z "$HOMEBREW_SKIP_REASON" ] && [ -d "$HOMEBREW_TAP_DIR/.git" ]; then
     echo "    Homebrew:   local commit only — push to update users"
 fi
-echo ""
-echo -e "${BOLD}  Remaining manual step:${NC}"
-echo "    Open Transporter → drag $APPSTORE_PKG → click Deliver"
 echo ""
 echo -e "${BOLD}  Verification:${NC}"
 echo "    gh release view v$VERSION --json tagName,name,assets"
