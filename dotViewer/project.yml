@@ -49,6 +49,11 @@ targets:
         CFBundleShortVersionString: $(MARKETING_VERSION)
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         LSApplicationCategoryType: public.app-category.developer-tools
+        # ⌥Space previews whatever is selected in Finder, and the only reliable way to learn which
+        # file that is, is to ask Finder — see FinderSelection. Read-only; nothing is changed.
+        NSAppleEventsUsageDescription: >-
+          dotViewer asks Finder which file you have selected so ⌥Space can preview it.
+          It only reads the file's location and never changes anything in Finder.
         UTExportedTypeDeclarations:
           - UTTypeIdentifier: com.stianlars1.dotviewer.1
             UTTypeDescription: Man Page
@@ -4745,6 +4750,10 @@ targets:
         # Loopback server that pushes search queries into open Quick Look previews. Bound to
         # 127.0.0.1 only. Harmless to keep declared when unsandboxed.
         com.apple.security.network.server: true
+        # Hardened Runtime blocks Apple Events without this, even for an unsandboxed process. Used
+        # only to ask Finder for the selected file's path when ⌥Space is pressed — see
+        # FinderSelection and PreviewPanelController. The user still grants Automation in TCC.
+        com.apple.security.automation.apple-events: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer
@@ -4758,6 +4767,12 @@ targets:
       - target: QuickLookExtension
         embed: true
       - target: QuickLookThumbnailExtension
+        embed: true
+      # The ⌥Space panel highlights through the same XPC service the Quick Look extension uses.
+      # NSXPCConnection(serviceName:) only searches the *main* bundle's XPCServices directory, so
+      # the copy nested inside QuickLookExtension.appex is not reachable from the host app — it
+      # needs its own copy here. See PreviewPanelController.
+      - target: HighlightXPC
         embed: true
   QuickLookExtension:
     type: app-extension

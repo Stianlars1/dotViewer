@@ -6,6 +6,8 @@
 	<array>
 		<string>group.stianlars1.dotViewer.shared</string>
 	</array>
+	<key>com.apple.security.automation.apple-events</key>
+	<true/>
 	<key>com.apple.security.network.server</key>
 	<true/>
 </dict>

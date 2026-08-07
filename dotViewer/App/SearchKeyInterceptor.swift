@@ -126,17 +126,42 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
         }
         guard type == .keyDown else { return Unmanaged.passUnretained(event) }
 
+        let keyCode = Int(event.getIntegerValueField(.keyboardEventKeycode))
+        let flags = event.flags
+        let command = flags.contains(.maskCommand)
+        let shift = flags.contains(.maskShift)
+        let option = flags.contains(.maskAlternate)
+        let optionOrControl = option || flags.contains(.maskControl)
+
+        // ⌥Space opens dotViewer's own preview panel. Space itself is deliberately untouched, so
+        // native Quick Look keeps handling every file it already handles.
+        //
+        // Checked before the subscriber guard below because it has to work with no Quick Look
+        // preview open — that is the whole point of the panel.
+        if option, !command, keyCode == kVK_Space,
+           SharedSettings.shared.previewPanelEnabled,
+           FinderSelection.isFinderFrontmost {
+            // The tap callback must return quickly or the system disables it, so the AppleScript
+            // round-trip and the window work both happen off the callback.
+            DispatchQueue.main.async {
+                MainActor.assumeIsolated {
+                    PreviewPanelController.shared.openForFinderSelection()
+                }
+            }
+            return nil  // swallow, so Finder never sees ⌥Space
+        }
+
+        // While dotViewer's own panel is frontmost it handles its own keys. Without this the tap
+        // would swallow them on the way to the panel whenever a Quick Look preview is also open.
+        if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == Bundle.main.bundleIdentifier {
+            return Unmanaged.passUnretained(event)
+        }
+
         // No open dotViewer preview means nothing to type into — stay out of the way entirely.
         guard SearchBridgeServer.shared.subscriberCount > 0 else {
             endSearch(broadcast: false)
             return Unmanaged.passUnretained(event)
         }
-
-        let keyCode = Int(event.getIntegerValueField(.keyboardEventKeycode))
-        let flags = event.flags
-        let command = flags.contains(.maskCommand)
-        let shift = flags.contains(.maskShift)
-        let optionOrControl = flags.contains(.maskAlternate) || flags.contains(.maskControl)
 
         if command, keyCode == kVK_ANSI_F {
             beginSearch()

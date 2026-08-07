@@ -20,6 +20,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>dotViewer asks Finder which file you have selected so ⌥Space can preview it. It only reads the file's location and never changes anything in Finder.</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>

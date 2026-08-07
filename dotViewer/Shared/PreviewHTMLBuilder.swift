@@ -38,6 +38,10 @@ public struct PreviewInfo {
     public let showSearchButton: Bool
     public let includeLineNumbersInCopy: Bool
     public let sourceDirectory: String
+    /// Whether the page should subscribe to the host app's loopback search bridge. Only Quick Look
+    /// needs it — a real window receives ⌘F on its own, and subscribing there would make the event
+    /// tap swallow keys that window is already handling. See `SearchBridge`.
+    public let enableSearchBridge: Bool
 
     public init(
         title: String,
@@ -76,7 +80,8 @@ public struct PreviewInfo {
         copyBehavior: String = "autoCopy",
         showSearchButton: Bool = false,
         includeLineNumbersInCopy: Bool = false,
-        sourceDirectory: String = ""
+        sourceDirectory: String = "",
+        enableSearchBridge: Bool = true
     ) {
         self.title = title
         self.language = language
@@ -121,6 +126,7 @@ public struct PreviewInfo {
         self.showSearchButton = showSearchButton
         self.includeLineNumbersInCopy = includeLineNumbersInCopy
         self.sourceDirectory = sourceDirectory
+        self.enableSearchBridge = enableSearchBridge
     }
 }
 
@@ -191,7 +197,7 @@ public enum PreviewHTMLBuilder {
           <script>
           \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior, includeLineNumbersInCopy: info.includeLineNumbersInCopy))
           </script>
-          \(info.showSearchButton ? SearchBridge.current().map(buildSearchBridgeClient) ?? "" : "")
+          \(info.showSearchButton && info.enableSearchBridge ? SearchBridge.current().map(buildSearchBridgeClient) ?? "" : "")
         </body>
         </html>
         """

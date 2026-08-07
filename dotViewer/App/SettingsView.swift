@@ -486,6 +486,10 @@ struct SettingsView: View {
 
                 Divider()
 
+                PreviewPanelSettings()
+
+                Divider()
+
                 Toggle("Preview Routed Unknown Files", isOn: $previewUnknownFiles)
                     .onChange(of: previewUnknownFiles) { _, newValue in
                         SharedSettings.shared.previewAllFileTypes = newValue

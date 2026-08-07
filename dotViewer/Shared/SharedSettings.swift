@@ -161,6 +161,13 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "showSearchButton") } }
     }
 
+    /// Whether ⌥Space in Finder opens dotViewer's own preview panel. Space is never intercepted —
+    /// native Quick Look keeps handling everything it already handles. See `PreviewPanelController`.
+    public var previewPanelEnabled: Bool {
+        get { lock.withLock { defaults.object(forKey: "previewPanelEnabled") as? Bool ?? true } }
+        set { lock.withLock { defaults.set(newValue, forKey: "previewPanelEnabled") } }
+    }
+
     public var previewWindowSizeMode: String {
         get {
             lock.withLock {

@@ -5,9 +5,11 @@ import CoreGraphics
 import OSLog
 import Shared
 
+/// Quick Look front-end. The rendering pipeline itself lives in `PreviewContentBuilder` so that the
+/// host app's ⌥Space panel draws from exactly the same code; everything here is about turning that
+/// result into a `QLPreviewReply` and sizing the Quick Look window.
 final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
     private static let logger = Logger(subsystem: "com.stianlars1.dotViewer", category: "QuickLookPreview")
-    private static let routeLogger = Logger(subsystem: "com.stianlars1.dotViewer", category: "QuickLookRouting")
 
     // If Quick Look calls the legacy, view-based API, log it so we can see it immediately.
     func preparePreviewOfFile(at url: URL, completionHandler: @escaping (Error?) -> Void) {
@@ -17,18 +19,50 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
     @available(macOSApplicationExtension 12.0, *)
     func providePreview(for request: QLFilePreviewRequest) async throws -> QLPreviewReply {
-        let systemIsDark = Self.systemIsDark()
-        return await Self.buildPreviewReply(for: request.fileURL, systemIsDark: systemIsDark)
-    }
-
-    private static func buildPreviewReply(for url: URL, systemIsDark: Bool) async -> QLPreviewReply {
-        let actualPathExtension = url.pathExtension.lowercased()
-        let registry = FileTypeRegistry.shared
-        let key = FileTypeResolution.bestKey(for: url, registry: registry)
-        logger.log("Preview request: \(url.lastPathComponent, privacy: .public) ext=\(actualPathExtension, privacy: .public) key=\(key, privacy: .public)")
-        logger.log("SharedSettings appGroup=\(SharedSettings.shared.isUsingAppGroup, privacy: .public)")
+        let url = request.fileURL
+        let systemIsDark = SystemAppearance.isDark()
 
 #if DEBUG
+        if let experiment = Self.debugExperimentReply(for: url, systemIsDark: systemIsDark) {
+            return experiment
+        }
+#endif
+
+        switch await PreviewContentBuilder.build(for: url, systemIsDark: systemIsDark) {
+        case .systemFallback:
+            return QLPreviewReply(fileURL: url)
+        case .rendered(let render):
+            return Self.makeHTMLReply(
+                html: render.html,
+                lineCount: render.lineCount,
+                fontSize: render.fontSize,
+                showHeader: render.showHeader
+            )
+        }
+    }
+
+    private static func makeHTMLReply(
+        html: String,
+        lineCount: Int = 40,
+        fontSize: Double = 14,
+        showHeader: Bool = true
+    ) -> QLPreviewReply {
+        let contentSize = computeContentSize(lineCount: lineCount, fontSize: fontSize, showHeader: showHeader)
+
+        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: contentSize) { _ in
+            html.data(using: .utf8) ?? Data()
+        }
+        reply.stringEncoding = .utf8
+        return reply
+    }
+}
+
+// MARK: - Debug experiments
+
+#if DEBUG
+private extension PreviewProvider {
+    /// Fixtures used to probe Quick Look behaviour by hand. Never reached in a release build.
+    static func debugExperimentReply(for url: URL, systemIsDark: Bool) -> QLPreviewReply? {
         if url.deletingPathExtension().lastPathComponent == "dotviewer_heartbeat" {
             let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
             let heartbeatHTML = """
@@ -56,383 +90,12 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
             let lineCount = TextLineUtilities.visualLineCount(in: text)
             return makeRTFReply(text: text, palette: palette, lineCount: lineCount, fontSize: SharedSettings.shared.fontSize)
         }
-#endif
 
-        let (requestId, previousId) = await PreviewRequestCoordinator.shared.startNewRequest()
-        if let previousId {
-            HighlightXPCClient.shared.cancel(requestId: previousId)
-        }
-
-        let cacheEnabled = SharedSettings.shared.previewCacheEnabled
-        let cacheTTL = SharedSettings.shared.previewCacheTTLSeconds
-        let cacheMaxBytes = SharedSettings.shared.previewCacheMaxMB * 1_024 * 1_024
-        let forceTextForUnknown = SharedSettings.shared.previewForceTextForUnknown
-
-        await PreviewCache.shared.handleClearIfRequested()
-
-        let fileAttributes = FileAttributes.attributes(for: url)
-        let typeIsTextual = fileAttributes?.isTextual ?? false
-        let looksTextualSample = fileAttributes?.looksTextual ?? false
-        let mimeType = fileAttributes?.mimeType ?? "application/octet-stream"
-
-        let isPlistFile = PlistConverter.isPropertyList(url: url)
-        let isBinaryPlist = isPlistFile && PlistConverter.isBinaryPlist(url: url)
-        let looksTextual = looksTextualSample || isBinaryPlist
-
-        let isTransportCandidate = TransportStreamDetector.isTransportStreamCandidate(url: url, mimeType: mimeType)
-        let transportMatches = isTransportCandidate && TransportStreamDetector.matchesTransportStreamSyncPattern(url: url)
-        if isTransportCandidate && (!looksTextualSample || transportMatches) {
-            routeLogger.log("Fallback: transport stream candidate for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
-        }
-
-        let isTextual = typeIsTextual || isBinaryPlist || (forceTextForUnknown && looksTextualSample)
-        let isExtensionEnabled = registry.isExtensionEnabled(key)
-        let isKnownType = registry.fileType(for: key) != nil || registry.highlightLanguage(for: key) != nil
-        let allowUnknown = SharedSettings.shared.previewAllFileTypes
-
-        routeLogger.log(
-            "Routing check ext=\(actualPathExtension, privacy: .public) key=\(key, privacy: .public) textual=\(isTextual, privacy: .public) allowUnknown=\(allowUnknown, privacy: .public) known=\(isKnownType, privacy: .public) enabled=\(isExtensionEnabled, privacy: .public) forceText=\(forceTextForUnknown, privacy: .public)"
-        )
-
-        if !isTextual {
-            routeLogger.log("Fallback: non-textual file without forceText for \(url.lastPathComponent, privacy: .public)")
-            return QLPreviewReply(fileURL: url)
-        }
-
-        if !isExtensionEnabled || (!isKnownType && !allowUnknown) {
-            routeLogger.log("Fallback: extension disabled or unsupported type for \(url.lastPathComponent, privacy: .public)")
-            return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
-        }
-
-        let fileMeta = FileInspector.fileMetadata(for: url)
-        let fileSize = fileMeta.sizeBytes
-        let fileMtime = fileMeta.mtime
-        let isEmptyFile = fileSize == 0
-
-        var languageId = registry.highlightLanguage(for: key) ?? "plaintext"
-        var languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
-
-        if actualPathExtension.isEmpty,
-           let detected = ShebangLanguageDetector.detect(url: url) ?? detectedLanguage(forMimeType: mimeType) {
-            languageId = detected.languageId
-            languageName = detected.displayName
-        }
-
-        let isMarkdown = languageId == "markdown"
-        let showLineNumbers = SharedSettings.shared.showLineNumbers
-        let useMarkdownHighlight = SharedSettings.shared.markdownUseSyntaxHighlightInRaw
-        let showBinaryWarning = (!typeIsTextual && !looksTextual && !isEmptyFile)
-        let showUnknownTextWarning = (!typeIsTextual && looksTextualSample && !isKnownType && !isEmptyFile)
-        let encoding = fileAttributes?.stringEncoding ?? .utf8
-
-        routeLogger.debug("Preview routing: key=\(key, privacy: .public) lang=\(languageId, privacy: .public) markdown=\(isMarkdown, privacy: .public) known=\(isKnownType, privacy: .public) allowUnknown=\(allowUnknown, privacy: .public)")
-        let shouldHighlight = !(isMarkdown && !useMarkdownHighlight)
-
-        let routedExtensions: Set<String> = ["md", "markdown", "mdx", "json", "xml", "yaml", "yml", "ts", "tsx", "sh", "bash"]
-        if routedExtensions.contains(key) {
-            routeLogger.log(
-                "Preview route file=\(url.lastPathComponent, privacy: .public) key=\(key, privacy: .public) lang=\(languageId, privacy: .public) highlight=\(shouldHighlight, privacy: .public)"
-            )
-        }
-
-        let cacheKey = PreviewCacheKey(
-            url: url,
-            fileSize: fileSize,
-            mtime: fileMtime,
-            showLineNumbers: showLineNumbers,
-            codeFontSize: SharedSettings.shared.fontSize,
-            codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
-            markdownUseSyntaxHighlightInRaw: useMarkdownHighlight,
-            allowUnknown: allowUnknown,
-            forceTextForUnknown: forceTextForUnknown,
-            languageId: languageId,
-            theme: SharedSettings.shared.selectedTheme,
-            showHeader: SharedSettings.shared.showFileInfoHeader,
-            markdownDefaultMode: SharedSettings.shared.markdownDefaultMode,
-            markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
-            markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
-            markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
-            markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
-            markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
-            markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
-            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
-            markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
-            includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
-            codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
-            codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
-            codeContentAlignment: SharedSettings.shared.codeContentAlignment,
-            markdownRawContentAlignment: SharedSettings.shared.markdownRawContentAlignment,
-            markdownRenderedContentAlignment: SharedSettings.shared.markdownRenderedContentAlignment,
-            wordWrap: SharedSettings.shared.wordWrap
-        )
-
-        if cacheEnabled, let cached = await PreviewCache.shared.load(key: cacheKey, ttlSeconds: cacheTTL) {
-            let info = PreviewInfo(
-                title: url.lastPathComponent,
-                language: languageName.isEmpty ? "Text" : languageName,
-                lineCount: cached.lineCount,
-                fileSizeBytes: cached.fileSizeBytes,
-                isTruncated: cached.isTruncated,
-                showTruncationWarning: SharedSettings.shared.showTruncationWarning,
-                showHeader: SharedSettings.shared.showFileInfoHeader,
-                isSensitive: SensitiveFileDetector.isSensitive(url: url),
-                rawText: cached.rawText,
-                rawHTML: cached.rawHTML,
-                renderedHTML: cached.renderedHTML,
-                codeFontSize: SharedSettings.shared.fontSize,
-                codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
-                codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
-                codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
-                codeContentAlignment: SharedSettings.shared.codeContentAlignment,
-                defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
-                markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
-                markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
-                markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
-                markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
-                markdownRawContentAlignment: SharedSettings.shared.markdownRawContentAlignment,
-                markdownRenderedContentAlignment: SharedSettings.shared.markdownRenderedContentAlignment,
-                markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
-                markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
-                markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
-                themeName: SharedSettings.shared.selectedTheme,
-                showUnknownTextWarning: showUnknownTextWarning,
-                showBinaryWarning: showBinaryWarning,
-                systemIsDark: systemIsDark,
-                wordWrap: SharedSettings.shared.wordWrap,
-                markdownShowTOC: SharedSettings.shared.markdownShowTOC,
-                markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
-                copyBehavior: SharedSettings.shared.copyBehavior,
-                showSearchButton: SharedSettings.shared.showSearchButton,
-                includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
-                sourceDirectory: url.deletingLastPathComponent().path
-            )
-
-            let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
-            let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
-            routeLogger.log("HTML built (cache) for \(url.lastPathComponent, privacy: .public)")
-            return makeHTMLReply(
-                html: html,
-                lineCount: cached.lineCount,
-                fontSize: SharedSettings.shared.fontSize,
-                showHeader: SharedSettings.shared.showFileInfoHeader
-            )
-        }
-
-        let cancelledBeforeRead = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
-        if cancelledBeforeRead {
-            routeLogger.log("Request cancelled before read for \(url.lastPathComponent, privacy: .public)")
-        }
-
-        let maxBytes = SharedSettings.shared.maxFileSizeBytes
-        let fileInfo: FileInfo
-        if isBinaryPlist {
-            guard let conversion = PlistConverter.convertBinaryPlistToXML(at: url, maxBytes: maxBytes) else {
-                routeLogger.log("Fallback: plist conversion failed for \(url.lastPathComponent, privacy: .public)")
-                return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
-            }
-            let convertedTruncated = conversion.isTruncated || fileSize > maxBytes
-            fileInfo = FileInspector.fileInfo(
-                from: conversion.text,
-                fileSizeBytes: fileSize,
-                isTruncated: convertedTruncated
-            )
-        } else {
-            do {
-                fileInfo = try FileInspector.loadFile(url: url, maxBytes: maxBytes, encoding: encoding)
-            } catch {
-                routeLogger.error("Read failed for \(url.lastPathComponent, privacy: .public): \(error.localizedDescription, privacy: .public)")
-                return makePlainTextFallback(url: url, systemIsDark: systemIsDark)
-            }
-        }
-
-        let cancelledAfterRead = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
-        if cancelledAfterRead {
-            routeLogger.log("Request cancelled after read for \(url.lastPathComponent, privacy: .public)")
-        }
-
-        var effectiveLanguageId = languageId
-        var effectiveLanguageName = languageName
-
-        if let shebang = ShebangLanguageDetector.detect(in: fileInfo.text),
-           key.isEmpty || (!isKnownType && actualPathExtension.isEmpty) {
-            effectiveLanguageId = shebang.languageId
-            effectiveLanguageName = shebang.displayName
-        }
-
-        let specialHTML: String?
-        if let kind = DelimitedTextKind(rawValue: key),
-           let preview = DelimitedTextRenderer.preview(text: fileInfo.text, kind: kind) {
-            specialHTML = preview.html
-            effectiveLanguageId = "plaintext"
-            effectiveLanguageName = kind.rawValue.uppercased()
-        } else if ManPageRenderer.shouldRender(url: url, mimeType: mimeType, key: key, text: fileInfo.text),
-                  let html = ManPageRenderer.renderHTML(url: url) {
-            specialHTML = html
-            effectiveLanguageId = "plaintext"
-            effectiveLanguageName = "Man Page"
-        } else {
-            specialHTML = nil
-        }
-
-        let shouldAttemptHighlight = shouldHighlight && !cancelledAfterRead && specialHTML == nil
-        let rawHTML: String
-        if let specialHTML {
-            rawHTML = specialHTML
-        } else if isMarkdown && !useMarkdownHighlight {
-            rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
-        } else if shouldAttemptHighlight {
-            let highlightResult = await HighlightXPCClient.shared.highlight(
-                code: fileInfo.text,
-                language: effectiveLanguageId,
-                theme: SharedSettings.shared.selectedTheme,
-                showLineNumbers: showLineNumbers,
-                requestId: requestId,
-                timeout: 3.0
-            )
-
-            switch highlightResult {
-            case .success(let html):
-                rawHTML = html
-            case .failure(.cancelled):
-                routeLogger.log("Highlight cancelled for \(url.lastPathComponent, privacy: .public); using plain text HTML")
-                rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
-            case .failure:
-                rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
-            }
-        } else {
-            rawHTML = PlainTextRenderer.render(code: fileInfo.text, showLineNumbers: showLineNumbers)
-        }
-
-#if DEBUG
-        if shouldHighlight && !rawHTML.contains("tok-") {
-            routeLogger.log("Highlight output missing tok- spans for \(url.lastPathComponent, privacy: .public)")
-        }
-#endif
-
-        let cancelledAfterHighlight = !(await PreviewRequestCoordinator.shared.isCurrent(requestId))
-        if cancelledAfterHighlight {
-            routeLogger.log("Request cancelled after highlight for \(url.lastPathComponent, privacy: .public)")
-        }
-
-        let renderedHTML: String?
-        if isMarkdown && !cancelledAfterHighlight {
-            renderedHTML = MarkdownRenderer.renderHTML(from: fileInfo.text)
-        } else {
-            renderedHTML = nil
-        }
-
-        let info = PreviewInfo(
-            title: url.lastPathComponent,
-            language: effectiveLanguageName.isEmpty ? "Text" : effectiveLanguageName,
-            lineCount: fileInfo.lineCount,
-            fileSizeBytes: fileInfo.fileSizeBytes,
-            isTruncated: fileInfo.isTruncated,
-            showTruncationWarning: SharedSettings.shared.showTruncationWarning,
-            showHeader: SharedSettings.shared.showFileInfoHeader,
-            isSensitive: SensitiveFileDetector.isSensitive(url: url),
-            rawText: fileInfo.text,
-            rawHTML: rawHTML,
-            renderedHTML: renderedHTML,
-            codeFontSize: SharedSettings.shared.fontSize,
-            codeFontFamilyName: SharedSettings.shared.codeFontFamilyName,
-            codeContentWidthMode: SharedSettings.shared.codeContentWidthMode,
-            codeContentCustomMaxWidth: SharedSettings.shared.codeContentCustomMaxWidth,
-            codeContentAlignment: SharedSettings.shared.codeContentAlignment,
-            defaultMarkdownMode: SharedSettings.shared.markdownDefaultMode,
-            markdownRenderFontSize: SharedSettings.shared.markdownRenderFontSize,
-            markdownRenderedFontFamilyName: SharedSettings.shared.markdownRenderedFontFamilyName,
-            markdownRenderedWidthMode: SharedSettings.shared.markdownRenderedWidthMode,
-            markdownRenderedCustomMaxWidth: SharedSettings.shared.markdownRenderedCustomMaxWidth,
-            markdownRawContentAlignment: SharedSettings.shared.markdownRawContentAlignment,
-            markdownRenderedContentAlignment: SharedSettings.shared.markdownRenderedContentAlignment,
-            markdownShowInlineImages: SharedSettings.shared.markdownShowInlineImages,
-            markdownCustomCSS: SharedSettings.shared.markdownCustomCSS,
-            markdownCustomCSSOverride: SharedSettings.shared.markdownCustomCSSOverride,
-            themeName: SharedSettings.shared.selectedTheme,
-            showUnknownTextWarning: showUnknownTextWarning,
-            showBinaryWarning: showBinaryWarning,
-            systemIsDark: systemIsDark,
-            wordWrap: SharedSettings.shared.wordWrap,
-            markdownShowTOC: SharedSettings.shared.markdownShowTOC,
-            markdownTOCDefaultOpen: SharedSettings.shared.markdownTOCDefaultOpen,
-            copyBehavior: SharedSettings.shared.copyBehavior,
-            showSearchButton: SharedSettings.shared.showSearchButton,
-            includeLineNumbersInCopy: SharedSettings.shared.includeLineNumbersInCopy,
-            sourceDirectory: url.deletingLastPathComponent().path
-        )
-
-        let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
-        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
-        routeLogger.log("HTML built for \(url.lastPathComponent, privacy: .public)")
-
-        let isCurrentRequest = await PreviewRequestCoordinator.shared.isCurrent(requestId)
-        let shouldCache = cacheEnabled && !info.isSensitive && isCurrentRequest
-        if shouldCache {
-            let entry = PreviewCacheEntry(
-                createdAt: Date(),
-                rawHTML: rawHTML,
-                renderedHTML: renderedHTML,
-                rawText: fileInfo.text,
-                lineCount: fileInfo.lineCount,
-                fileSizeBytes: fileInfo.fileSizeBytes,
-                isTruncated: fileInfo.isTruncated
-            )
-            await PreviewCache.shared.store(
-                key: cacheKey,
-                entry: entry,
-                ttlSeconds: cacheTTL,
-                maxBytes: cacheMaxBytes
-            )
-        }
-
-        return makeHTMLReply(
-            html: html,
-            lineCount: fileInfo.lineCount,
-            fontSize: SharedSettings.shared.fontSize,
-            showHeader: SharedSettings.shared.showFileInfoHeader
-        )
+        return nil
     }
 
-    private static func systemIsDark() -> Bool {
-        SystemAppearance.isDark()
-    }
-
-    private static func detectedLanguage(forMimeType mimeType: String) -> ShebangMatch? {
-        switch mimeType.lowercased() {
-        case "text/x-shellscript":
-            return ShebangMatch(languageId: "bash", displayName: "Shell Script")
-        case "text/x-script.python":
-            return ShebangMatch(languageId: "python", displayName: "Python")
-        case "text/x-perl":
-            return ShebangMatch(languageId: "perl", displayName: "Perl")
-        case "text/x-ruby":
-            return ShebangMatch(languageId: "ruby", displayName: "Ruby")
-        case "text/x-php":
-            return ShebangMatch(languageId: "php", displayName: "PHP")
-        default:
-            return nil
-        }
-    }
-
-    private static func makeHTMLReply(
-        html: String,
-        lineCount: Int = 40,
-        fontSize: Double = 14,
-        showHeader: Bool = true
-    ) -> QLPreviewReply {
-        let contentSize = computeContentSize(lineCount: lineCount, fontSize: fontSize, showHeader: showHeader)
-
-        let reply = QLPreviewReply(dataOfContentType: .html, contentSize: contentSize) { _ in
-            html.data(using: .utf8) ?? Data()
-        }
-        reply.stringEncoding = .utf8
-        return reply
-    }
-
-    // MARK: - Experiment 1: RTF Data-Based Reply
-    // Hypothesis: If QL renders RTF using a native NSTextView, Cmd+C may work natively.
-    private static func makeRTFReply(
+    /// Hypothesis: if QL renders RTF using a native NSTextView, Cmd+C may work natively.
+    static func makeRTFReply(
         text: String,
         palette: ThemePalette,
         lineCount: Int,
@@ -474,62 +137,14 @@ final class PreviewProvider: QLPreviewProvider, QLPreviewingController {
 
         let contentSize = computeContentSize(lineCount: lineCount, fontSize: fontSize, showHeader: false)
 
-        let reply = QLPreviewReply(dataOfContentType: .rtf, contentSize: contentSize) { _ in
+        return QLPreviewReply(dataOfContentType: .rtf, contentSize: contentSize) { _ in
             rtfData
         }
-        return reply
-    }
-
-    private static func makePlainTextFallback(url: URL, systemIsDark: Bool) -> QLPreviewReply {
-        let text: String
-        if let utf8 = try? String(contentsOf: url, encoding: .utf8) {
-            text = utf8
-        } else if let latin1 = try? String(contentsOf: url, encoding: .isoLatin1) {
-            text = latin1
-        } else {
-            text = ""
-        }
-
-        let lineCount = TextLineUtilities.visualLineCount(in: text)
-
-        let escaped = text
-            .replacingOccurrences(of: "&", with: "&amp;")
-            .replacingOccurrences(of: "<", with: "&lt;")
-            .replacingOccurrences(of: ">", with: "&gt;")
-            .replacingOccurrences(of: "\"", with: "&quot;")
-
-        let palette = ThemePalette.palette(for: SharedSettings.shared.selectedTheme, systemIsDark: systemIsDark)
-        let html = """
-        <!doctype html>
-        <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body {
-              margin: 0; padding: 12px;
-              background: \(palette.background);
-              color: \(palette.text);
-              font-family: \(PreviewFontFamily.codeCSSStack(for: SharedSettings.shared.codeFontFamilyName));
-              font-size: \(Int(SharedSettings.shared.fontSize))px;
-              line-height: 1.45;
-            }
-            pre { margin: 0; white-space: pre-wrap; word-wrap: break-word; }
-          </style>
-        </head>
-        <body><pre>\(escaped)</pre></body>
-        </html>
-        """
-        routeLogger.log("Plain text fallback built for \(url.lastPathComponent, privacy: .public)")
-        return makeHTMLReply(
-            html: html,
-            lineCount: lineCount,
-            fontSize: SharedSettings.shared.fontSize,
-            showHeader: false
-        )
     }
 }
+#endif
 
-// MARK: - Shared sizing helper
+// MARK: - Window sizing
 
 private extension PreviewProvider {
     static func computeContentSize(lineCount: Int, fontSize: Double, showHeader: Bool) -> CGSize {
@@ -559,6 +174,7 @@ private extension PreviewProvider {
 
 // MARK: - NSColor(hex:)
 
+#if DEBUG
 private extension NSColor {
     convenience init?(hex: String) {
         var sanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -582,3 +198,4 @@ private extension NSColor {
         self.init(calibratedRed: r, green: g, blue: b, alpha: a)
     }
 }
+#endif
