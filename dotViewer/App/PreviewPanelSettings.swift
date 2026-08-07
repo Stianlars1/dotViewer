@@ -75,6 +75,8 @@ struct PreviewPanelSettings: View {
             Task.detached {
                 let automation = FinderSelection.isAutomationGranted
                 await MainActor.run {
+                    // Compared on the main actor against the live value — a comparison against the
+                    // copy captured when the task was created would re-assign on every tick.
                     if automation != hasAutomation { hasAutomation = automation }
                 }
             }

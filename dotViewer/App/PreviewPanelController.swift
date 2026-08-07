@@ -157,7 +157,11 @@ final class PreviewPanelController: NSObject {
         webView.loadHTMLString(render.html, baseURL: url.deletingLastPathComponent())
 
         resetSearchState()
-        size(panel, for: render)
+        // Only on the way up. Re-centering a panel the user has already moved or resized would
+        // yank it out from under them once more than one file can be shown without closing.
+        if !panel.isVisible {
+            size(panel, for: render)
+        }
         installKeyMonitor()
         observeAppDeactivation()
 
@@ -436,7 +440,9 @@ extension PreviewPanelController: WKNavigationDelegate {
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+        // @MainActor is part of the protocol's signature. Without it this only *nearly* matches the
+        // optional requirement, so WebKit never calls it and every link below silently navigates.
+        decisionHandler: @escaping @MainActor (WKNavigationActionPolicy) -> Void
     ) {
         guard navigationAction.navigationType == .linkActivated,
               let url = navigationAction.request.url

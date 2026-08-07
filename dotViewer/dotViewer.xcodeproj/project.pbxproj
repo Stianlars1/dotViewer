@@ -251,6 +251,7 @@
 		F16C034D3A33B75848566CF9 /* rust.scm in Resources */ = {isa = PBXBuildFile; fileRef = E8E32B1DDB8A74130CF231CB /* rust.scm */; };
 		F274615B51DF3607F8BA6DCF /* PreviewPanelSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6FFA4C01CFA65DC6217152 /* PreviewPanelSettings.swift */; };
 		F3E9AF357F4228D7A4052866 /* ruby.scm in Resources */ = {isa = PBXBuildFile; fileRef = 026BDE49AFA15CFA40F6C257 /* ruby.scm */; };
+		F3EFCE4563260E0A83130DFB /* PreviewContentBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59CB30626130812ED93F76B4 /* PreviewContentBuilderTests.swift */; };
 		F43722B0C8BAD2E8DA6F0CC6 /* FileTypeResolutionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB47D953DD137AC898742457 /* FileTypeResolutionTests.swift */; };
 		F66273EAFEA0CC5DF5CD1D2A /* get_changed_ranges.c in Sources */ = {isa = PBXBuildFile; fileRef = E03091B085411A8CF75AFDF4 /* get_changed_ranges.c */; };
 		F7FDF4D3660150B5AA28A8FD /* d.scm in Resources */ = {isa = PBXBuildFile; fileRef = C409A6A6F71B06A5DEE80742 /* d.scm */; };
@@ -571,6 +572,7 @@
 		57D647D517D3BF585104577E /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		596DA735F1E8C1FFBF5926A3 /* dockerfile.scm */ = {isa = PBXFileReference; path = dockerfile.scm; sourceTree = "<group>"; };
 		59B1E53284C8D2E89061B24E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		59CB30626130812ED93F76B4 /* PreviewContentBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContentBuilderTests.swift; sourceTree = "<group>"; };
 		5A5FD8541E287C169C8663D1 /* HighlightProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightProtocol.swift; sourceTree = "<group>"; };
 		5B07C6F227F2932A336CE9E6 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		5C1D02AAB5FFDF3745129BA7 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -2577,6 +2579,7 @@
 				A7464DCF71E0AFB4D1714024 /* ManPageRendererTests.swift */,
 				F5410DBEA3E116BEFCBABB57 /* MarkdownRendererTests.swift */,
 				7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */,
+				59CB30626130812ED93F76B4 /* PreviewContentBuilderTests.swift */,
 				04A0ABE391778142703FAE25 /* PreviewFontFamilyTests.swift */,
 				1553062A87D77F723DD6AF7A /* PreviewHTMLBuilderTests.swift */,
 				A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */,
@@ -3273,6 +3276,7 @@
 				0F17DB28435310CAACF0A2A1 /* ManPageRendererTests.swift in Sources */,
 				D98056158B68EDA24EE8B06C /* MarkdownRendererTests.swift in Sources */,
 				514C7EABD3596631DC98DEFC /* PlistConverterTests.swift in Sources */,
+				F3EFCE4563260E0A83130DFB /* PreviewContentBuilderTests.swift in Sources */,
 				21ECB209262AAFBAD7315DC1 /* PreviewFontFamilyTests.swift in Sources */,
 				990442FDC16503E0AA3639DA /* PreviewHTMLBuilderTests.swift in Sources */,
 				BC4DE0C7687255897B7DDC25 /* PreviewSizingTests.swift in Sources */,
