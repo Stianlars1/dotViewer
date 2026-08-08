@@ -38,7 +38,8 @@ struct PreviewPanelSettings: View {
                     action: hasAccessibility ? nil : ("Grant Access…", {
                         _ = SearchKeyInterceptor.hasAccessibility(prompt: true)
                     }),
-                    settingsAnchor: "Privacy_Accessibility"
+                    settingsAnchor: "Privacy_Accessibility",
+                    troubleshooting: .accessibility
                 )
 
                 permissionRow(
@@ -53,7 +54,8 @@ struct PreviewPanelSettings: View {
                             hasAutomation = true
                         }
                     }),
-                    settingsAnchor: "Privacy_Automation"
+                    settingsAnchor: "Privacy_Automation",
+                    troubleshooting: .automation
                 )
 
                 if isReady {
@@ -90,7 +92,8 @@ struct PreviewPanelSettings: View {
         missingText: String,
         explanation: String,
         action: (String, () -> Void)?,
-        settingsAnchor: String
+        settingsAnchor: String,
+        troubleshooting: PermissionTroubleshooting.Kind
     ) -> some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 6) {
@@ -116,6 +119,8 @@ struct PreviewPanelSettings: View {
                     }
                     .buttonStyle(.link)
                 }
+
+                PermissionTroubleshooting(kind: troubleshooting)
             }
         }
     }

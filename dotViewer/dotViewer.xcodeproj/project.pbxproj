@@ -214,6 +214,7 @@
 		CC442E726688BB830DE49949 /* java.scm in Resources */ = {isa = PBXBuildFile; fileRef = 2C5ADE3264929DA54AF3FA1C /* java.scm */; };
 		CCF5A17AD7B1A147E9BAA62D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AF2082FCB7D64A2C0B7347FE /* scanner.c */; };
 		CE30C7340922C9649647A93F /* FileTypeRegistryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C42462A7530601B7CE1682 /* FileTypeRegistryTests.swift */; };
+		CF44CA4A1F4B85CDB845F76D /* PermissionTroubleshooting.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD14E8E6A6C663A017D855C9 /* PermissionTroubleshooting.swift */; };
 		CF919BE0373885B6808F7738 /* erlang.scm in Resources */ = {isa = PBXBuildFile; fileRef = 3034EF16D0BF92F41E82A65D /* erlang.scm */; };
 		CFFA4BC7EF0B8823170C65EB /* FileInspector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F48AC0109F62736D7C201A8 /* FileInspector.swift */; };
 		D34CCB40C73BFAD2F64AA491 /* fortran.scm in Resources */ = {isa = PBXBuildFile; fileRef = CCC6C644FF04F54BD8591755 /* fortran.scm */; };
@@ -734,6 +735,7 @@
 		B9BFF42F641DCC5FCF5DC68E /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B9EA76F59325BED289AD2C56 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		BB924AA10E04581F37241C78 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
+		BD14E8E6A6C663A017D855C9 /* PermissionTroubleshooting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionTroubleshooting.swift; sourceTree = "<group>"; };
 		BD5DB2A713AD781FB0D8E596 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		BD6036B1F1328530A48B499B /* utf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utf.h; sourceTree = "<group>"; };
 		BE1F9DAE5695437180AAFFEC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -2753,6 +2755,7 @@
 				407083EF9D26B3F4BBDD0A13 /* FinderSelection.swift */,
 				66850074DD53D516403094B4 /* Info.plist */,
 				48CB5E092EE69E1F7731E467 /* MarkdownSettingsView.swift */,
+				BD14E8E6A6C663A017D855C9 /* PermissionTroubleshooting.swift */,
 				75DB0132A410F6E8F64E2C0E /* PreviewFontMenu.swift */,
 				96F8349878F4EC6C31AB51DD /* PreviewPanelController.swift */,
 				FA6FFA4C01CFA65DC6217152 /* PreviewPanelSettings.swift */,
@@ -3218,6 +3221,7 @@
 				E0893A56310320F2090BEDD1 /* FileTypesView.swift in Sources */,
 				0CB804FDDA90590910F7A506 /* FinderSelection.swift in Sources */,
 				03CD44494D7EAA65BEDA6401 /* MarkdownSettingsView.swift in Sources */,
+				CF44CA4A1F4B85CDB845F76D /* PermissionTroubleshooting.swift in Sources */,
 				1B53E414976D86B1D6FDE9B6 /* PreviewFontMenu.swift in Sources */,
 				0D6E36E614FE4015FD9D7E4D /* PreviewPanelController.swift in Sources */,
 				F274615B51DF3607F8BA6DCF /* PreviewPanelSettings.swift in Sources */,

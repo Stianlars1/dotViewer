@@ -41,6 +41,12 @@ struct QuickLookFindKeySettings: View {
                 }
                 .buttonStyle(.link)
             }
+
+            // Shown whenever the tap is not running, because the most confusing case is the one
+            // where System Settings already shows dotViewer as enabled. See PermissionTroubleshooting.
+            if !isRunning {
+                PermissionTroubleshooting(kind: .accessibility)
+            }
         }
         .onReceive(poll) { _ in
             let trusted = SearchKeyInterceptor.hasAccessibility()
