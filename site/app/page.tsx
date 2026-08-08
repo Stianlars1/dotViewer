@@ -125,20 +125,44 @@ const faqs = [
   {
     id: "override-everything",
     question: "Does it override every file type?",
-    answer:
-      "No. Some types are owned by macOS system handlers. dotViewer improves Quick Look wherever third-party extensions are allowed, and is honest about the cases it can't reach.",
+    answer: (
+      <>
+        No. Some types are owned by macOS system handlers and no third-party
+        extension can claim them. For those, press <Code>⌥Space</Code> instead —
+        dotViewer opens its own preview window on any text file, whether or not
+        macOS will route it.
+      </>
+    ),
     schemaQuestion: "Does it override every file type?",
     schemaAnswer:
-      "No. Some types are owned by macOS system handlers. dotViewer improves Quick Look wherever third-party extensions are allowed, and is honest about the cases it can't reach.",
+      "No. Some types are owned by macOS system handlers and no third-party extension can claim them. For those, press Option+Space instead — dotViewer opens its own preview window on any text file, whether or not macOS will route it.",
+  },
+  {
+    id: "option-space",
+    question: "What does ⌥Space do?",
+    answer: (
+      <>
+        It opens dotViewer&apos;s own preview window for the file selected in
+        Finder — the same syntax highlighting, themes and fonts as the Quick Look
+        preview, but on <b>any</b> text file, including the ones macOS refuses to
+        route. <Code>.ts</Code> is the clearest example: macOS claims it as
+        MPEG-2 transport stream video, so no Quick Look extension can ever see
+        it. <Code>Space</Code> itself is never intercepted — native Quick Look
+        keeps behaving exactly as it does today. Added in 1.5.0.
+      </>
+    ),
+    schemaQuestion: "What does Option+Space do in dotViewer?",
+    schemaAnswer:
+      "Option+Space opens dotViewer's own preview window for the file selected in Finder, with the same syntax highlighting, themes and fonts as the Quick Look preview, but on any text file — including ones macOS refuses to route to a Quick Look extension, such as .ts, which macOS claims as MPEG-2 transport stream video. Space itself is never intercepted, so native Quick Look is unaffected. Added in dotViewer 1.5.0.",
   },
   {
     id: "signed",
     question: "Is the app signed and notarized?",
     answer:
-      "Yes. The DMG is Developer ID signed and Apple-notarized, so Gatekeeper is happy on a normal Mac. The same binary ships via the Homebrew cask and the App Store.",
+      "Yes. The DMG is Developer ID signed and Apple-notarized, so Gatekeeper is happy on a normal Mac. The same binary ships via the Homebrew cask.",
     schemaQuestion: "Is the app signed and notarized?",
     schemaAnswer:
-      "Yes. The DMG is Developer ID signed and Apple-notarized, so Gatekeeper is happy on a normal Mac. The same binary ships via the Homebrew cask and the App Store.",
+      "Yes. The DMG is Developer ID signed and Apple-notarized, so Gatekeeper is happy on a normal Mac. The same binary ships via the Homebrew cask.",
   },
   {
     id: "homebrew",
@@ -159,10 +183,10 @@ const faqs = [
     id: "pricing",
     question: "Is dotViewer free or paid?",
     answer:
-      "Both. The direct DMG and the Homebrew cask are free. There's also a paid App Store option for people who prefer store-managed installation and want to support ongoing development.",
+      "Free. The direct DMG and the Homebrew cask are the same signed, notarized build, at no cost. If it saves you time, sponsoring development on GitHub is the way to support it.",
     schemaQuestion: "Is dotViewer free or paid?",
     schemaAnswer:
-      "Both. The direct DMG and the Homebrew cask are free. There's also a paid App Store option for people who prefer store-managed installation and want to support ongoing development.",
+      "Free. The direct DMG and the Homebrew cask are the same signed, notarized build, at no cost. If it saves you time, sponsoring development on GitHub is the way to support it.",
   },
   {
     id: "custom-fonts",
@@ -424,10 +448,10 @@ export default function HomePage() {
           <Reveal as="section" className={styles.block} id="install">
             <div className={styles.sectionHead}>
               <div className={styles.label}>Install</div>
-              <h2 className={styles.h2}>Three ways. Takes a minute.</h2>
+              <h2 className={styles.h2}>Two ways. Takes a minute.</h2>
               <p className={styles.sub}>
-                Homebrew, direct DMG, or the App Store — same signed binary.
-                Pick whichever matches your taste.
+                Homebrew or the direct DMG — same signed, notarized binary. Pick
+                whichever matches your taste.
               </p>
             </div>
 
@@ -590,9 +614,16 @@ export default function HomePage() {
                   extensions can't override it.
                 </p>
                 <p className={styles.covNote}>
-                  <Code>.ts</Code> is sometimes claimed by macOS as MPEG-2
-                  transport stream video — a platform routing quirk, not a
-                  dotViewer bug.
+                  <Code>.ts</Code> is claimed by macOS as MPEG-2 transport
+                  stream video — a platform routing quirk, not a dotViewer bug.
+                </p>
+                <p className={styles.covNote}>
+                  <b>Both have an answer since 1.5.0.</b> Press{" "}
+                  <Code>⌥Space</Code> instead of <Code>Space</Code> and dotViewer
+                  opens its own preview window — same highlighting, same themes,
+                  on any text file macOS won't route. <Code>Space</Code> is never
+                  intercepted, so native Quick Look keeps working exactly as it
+                  does today.
                 </p>
                 <p className={styles.covNote}>
                   Need a type that isn't shipped?{" "}

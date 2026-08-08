@@ -189,7 +189,7 @@ export function InstallTabs({
               ) : null}
             </div>
             <p className={styles.note}>
-              Gatekeeper-friendly on a normal Mac. macOS 13+, universal binary.
+              Gatekeeper-friendly on a normal Mac. macOS 15+, universal binary.
             </p>
           </motion.div>
         ) : null}

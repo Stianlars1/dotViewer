@@ -258,7 +258,7 @@ export function buildSecuritySchema(config: SiteConfig, latestRelease: ReleaseRe
       "Developer ID signed macOS app.",
       "Apple-notarized releases.",
       "Official DMG assets and SHA-256 checksum files published on GitHub Releases.",
-      "Optional App Store distribution.",
+      "Free — no purchase, no account, no subscription.",
       "No website login form, account portal, credential collection, or payment-card collection.",
     ].map((name, index) => ({
       "@type": "ListItem",

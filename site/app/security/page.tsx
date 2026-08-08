@@ -105,9 +105,9 @@ export default async function SecurityPage() {
       value: latestChecksum?.name ?? "SHA-256 files are published with releases",
     },
     {
-      href: appStoreHref ?? undefined,
-      label: "App Store",
-      value: appStoreHref ? "Published macOS app listing" : "Optional App Store listing",
+      href: config.homebrewTapUrl,
+      label: "Homebrew",
+      value: config.homebrewCommand,
     },
   ];
 
@@ -158,8 +158,8 @@ export default async function SecurityPage() {
               <h2>Signed and notarized</h2>
               <p>
                 Public DMG releases are Developer ID signed and Apple-notarized
-                for Gatekeeper. The direct DMG, Homebrew cask, and App Store
-                channel point users to the same macOS app.
+                for Gatekeeper. The direct DMG and the Homebrew cask deliver the
+                same signed binary.
               </p>
               <div className={styles.cardLinks}>
                 <Link href="/download">Download options</Link>
@@ -187,11 +187,11 @@ export default async function SecurityPage() {
 
             <article className={styles.trustCard}>
               <div className={styles.cardLabel}>official sources</div>
-              <h2>GitHub, Homebrew, App Store</h2>
+              <h2>GitHub and Homebrew</h2>
               <p>
                 The public source of truth is the <Code>{config.githubRepo}</Code>{" "}
-                repository. Users can install from the signed DMG, Homebrew cask,
-                or Apple&apos;s App Store listing.
+                repository. Users install from the signed DMG or the Homebrew
+                cask — there are no other official channels.
               </p>
               <div className={styles.cardLinks}>
                 <a href={repoHref}>Repository</a>
@@ -206,7 +206,7 @@ export default async function SecurityPage() {
               <p>
                 dotviewer.app has no login form, account portal, password
                 collection, payment-card collection, or upload flow for private
-                documents. App Store purchases, if used, are handled by Apple.
+                documents. dotViewer is free, and there is nothing to purchase.
               </p>
               <div className={styles.cardLinks}>
                 <a href={CREATOR_URL}>Creator site</a>

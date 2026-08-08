@@ -1,6 +1,5 @@
 const DEFAULT_SITE_URL = "https://dotviewer.app";
 const DEFAULT_GITHUB_REPO = "Stianlars1/dotViewer";
-const DEFAULT_APP_STORE_URL = "https://apps.apple.com/us/app/dotviewer/id6757806533?mt=12";
 const DEFAULT_HOMEBREW_TAP = "stianlars1/tap/dotviewer";
 const DEFAULT_HOMEBREW_TAP_REPO_URL = "https://github.com/Stianlars1/homebrew-tap";
 
@@ -73,10 +72,13 @@ export type SiteConfig = {
 };
 
 export function getSiteConfig(): SiteConfig {
-  const appStoreUrl =
-    normalizeUrl(process.env.APP_STORE_URL) ??
-    normalizeUrl(process.env.NEXT_PUBLIC_APP_STORE_URL) ??
-    DEFAULT_APP_STORE_URL;
+  // Mac App Store distribution is discontinued as of 1.5.0. The host app has to run unsandboxed —
+  // a sandboxed process cannot hold Accessibility permission, which the ⌘F and ⌥Space features
+  // require — so a MAS build cannot ship without being a crippled second binary. Any listing still
+  // reachable through App Store search is a frozen 1.4.0 that will never update, so the site must
+  // not send anyone to it. Deliberately unconditional: reading APP_STORE_URL here would let a stale
+  // Vercel environment variable put the link back.
+  const appStoreUrl: string | null = null;
   const directDownloadUrl = normalizeUrl(process.env.DIRECT_DOWNLOAD_URL);
   const githubRepo =
     normalizeRepo(process.env.GITHUB_REPO) ??
