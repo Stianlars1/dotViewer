@@ -4,15 +4,19 @@ import SwiftUI
 
 /// Explains the one permission failure users cannot diagnose on their own.
 ///
-/// macOS keys TCC grants to an app's **code signature**, not its path. When the signature changes —
-/// replacing a locally built copy with a release download, or any re-signing — the existing grant
-/// stops applying, but the old entry stays in the System Settings list *still showing as enabled*.
-/// The result is a flat contradiction: `AXIsProcessTrustedWithOptions` reports not-trusted while
-/// System Settings shows a ticked box.
+/// macOS keys TCC grants to an app's **code signature**, not its path or name. Two differently
+/// signed copies of dotViewer — a development build and a Developer ID release, say — are separate
+/// subjects to TCC despite sharing a bundle identifier, and System Settings lists them under one
+/// name. The result is a flat contradiction: `AXIsProcessTrustedWithOptions` reports not-trusted
+/// while System Settings shows a ticked box, because the ticked record belongs to the other copy.
 ///
-/// Worse, the "Grant Access…" button cannot fix it. Once an entry exists for the app, asking to
-/// prompt is a no-op — no dialog appears and nothing changes. The entry has to be removed and
-/// re-added.
+/// Observed directly on macOS 26.4: with the row switched on, the Developer ID build still logged
+/// "Accessibility not granted" across a full relaunch, and requesting the prompt raised the dialog
+/// again — macOS did not consider it authorised at all.
+///
+/// Toggling that row, or removing and re-adding it, can rebind the wrong copy, which is why the
+/// remedy offered here is `tccutil reset` for the whole bundle identifier followed by a single
+/// fresh grant. The "Grant Access…" button alone cannot resolve it.
 ///
 /// There is no API to read TCC, but the app can remember its own history: `accessibilityGrantSeen`
 /// records that the tap really did start once. If it did and the permission is now missing, the
@@ -37,6 +41,15 @@ struct PermissionTroubleshooting: View {
             case .automation: return "Privacy_Automation"
             }
         }
+
+        /// The TCC service name differs from the pane name for Automation — the pane says
+        /// "Automation", tccutil wants "AppleEvents".
+        var resetCommand: String {
+            switch self {
+            case .accessibility: return "tccutil reset Accessibility com.stianlars1.dotViewer"
+            case .automation: return "tccutil reset AppleEvents com.stianlars1.dotViewer"
+            }
+        }
     }
 
     let kind: Kind
@@ -47,6 +60,8 @@ struct PermissionTroubleshooting: View {
     /// invalidated. That is a diagnosis rather than a guess, so it leads instead of hiding behind a
     /// disclosure the user has no reason to open.
     private let isKnownStale: Bool
+
+    @State private var didCopy = false
 
     init(kind: Kind) {
         self.kind = kind
@@ -63,13 +78,24 @@ struct PermissionTroubleshooting: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Button("Open \(kind.paneName) Settings") {
-                    guard let url = URL(
-                        string: "x-apple.systempreferences:com.apple.preference.security?\(kind.settingsAnchor)"
-                    ) else { return }
-                    NSWorkspace.shared.open(url)
+                HStack(spacing: 12) {
+                    Button("Open \(kind.paneName) Settings") {
+                        guard let url = URL(
+                            string: "x-apple.systempreferences:com.apple.preference.security?\(kind.settingsAnchor)"
+                        ) else { return }
+                        NSWorkspace.shared.open(url)
+                    }
+                    .buttonStyle(.link)
+
+                    // Retyping a tccutil invocation by hand is an easy thing to get subtly wrong,
+                    // and getting it wrong resets the wrong service.
+                    Button(didCopy ? "Copied" : "Copy reset command") {
+                        NSPasteboard.general.clearContents()
+                        NSPasteboard.general.setString(kind.resetCommand, forType: .string)
+                        didCopy = true
+                    }
+                    .buttonStyle(.link)
                 }
-                .buttonStyle(.link)
             }
             .padding(.top, 4)
         } label: {
@@ -91,24 +117,28 @@ struct PermissionTroubleshooting: View {
         switch kind {
         case .accessibility:
             return """
-            macOS ties this permission to the app's code signature, not its location. If you \
-            previously ran a development build of dotViewer, or replaced the app in place, System \
-            Settings can still list dotViewer as enabled while macOS treats the new copy as a \
-            different app. Turning the switch off and on again does not clear it.
+            macOS ties this permission to the app's code signature, not its name or location. Two \
+            differently signed copies — a development build and a release download, say — are \
+            separate permissions to macOS, but System Settings lists them under the same name. So \
+            the switch next to "dotViewer" can be on while belonging to the other copy, and \
+            toggling it, or removing and re-adding it, can rebind the wrong one.
 
-            Fix it by removing the entry and adding it back: open Privacy & Security → \
-            Accessibility, select dotViewer, click −, then click + and choose \
-            /Applications/dotViewer.app. Quit and reopen dotViewer afterwards.
+            The reliable fix is to clear every Accessibility record for dotViewer and grant it \
+            once, fresh. Run this in Terminal, then reopen dotViewer and press Grant Access:
+
+            tccutil reset Accessibility com.stianlars1.dotViewer
             """
         case .automation:
             return """
-            macOS ties this permission to the app's code signature, not its location. If you \
-            previously ran a development build of dotViewer, or replaced the app in place, the \
-            existing Finder entry no longer applies to the new copy.
+            macOS ties this permission to the app's code signature, not its name or location. If \
+            you previously ran a development build of dotViewer, the Finder entry you can see may \
+            belong to that copy rather than this one.
 
-            Fix it by opening Privacy & Security → Automation, expanding dotViewer, and switching \
-            Finder off and then on again. If dotViewer is not listed, press ⌥Space once in Finder \
-            to make macOS ask. Quit and reopen dotViewer afterwards.
+            Try Privacy & Security → Automation first: expand dotViewer and switch Finder off and \
+            on again. If dotViewer is not listed at all, press ⌥Space once in Finder to make macOS \
+            ask. If neither works, clear the records and grant once, fresh:
+
+            tccutil reset AppleEvents com.stianlars1.dotViewer
             """
         }
     }

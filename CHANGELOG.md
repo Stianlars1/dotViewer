@@ -4,12 +4,19 @@
 
 ### Fixed
 
-- **Explained the permission failure that could not be diagnosed from the UI.** macOS ties Accessibility and Automation grants to an app's *code signature*, not its location. Upgrading in place, or replacing a locally built copy with a release download, silently invalidates the grant — while System Settings continues to list dotViewer as enabled. The app then reported "needs Accessibility access" against a ticked checkbox, and the "Grant Access…" button did nothing, because macOS raises no prompt once an entry already exists. ⌘F and ⌥Space simply stopped working with no way to find out why.
-  - Both permission cards now detect this case rather than guessing at it: the app records when the event tap has genuinely started, so a later launch can tell "never granted" apart from "granted, then invalidated". When it knows the grant was invalidated it says so directly and shows the fix — remove the entry from Privacy & Security and add it back — instead of hiding it behind a disclosure.
+- **Explained the permission failure that could not be diagnosed from the UI.** macOS ties Accessibility and Automation grants to an app's *code signature*, not its name or location. Two differently signed copies of dotViewer share a bundle identifier but are separate subjects to TCC, and System Settings lists them under a single name — so the switch beside "dotViewer" can be on while belonging to the other copy. The app then reported "⌘F search needs Accessibility access" against a ticked checkbox, granting from the prompt changed nothing, and ⌘F stopped working with no way to find out why.
+  - Both permission cards now detect this case rather than guessing at it: the app records when the event tap has genuinely started, so a later launch can tell "never granted" apart from "granted, then invalidated". When it knows the grant was invalidated it says so directly instead of hiding the explanation behind a disclosure.
+  - The remedy given is the one that actually works. Two differently signed copies share a bundle identifier but are separate subjects to TCC, and System Settings lists them under a single name — so toggling that row, or removing and re-adding it, can rebind the wrong copy. The cards now explain this and offer a one-click copy of `tccutil reset Accessibility com.stianlars1.dotViewer` (or `AppleEvents` for Finder access), which clears every record for the app so a single fresh grant binds correctly.
 
 ### Notes
 
-- No change to preview rendering, highlighting, or the ⌥Space panel itself. If ⌘F or ⌥Space stopped working after installing 1.5.0, this is the release that explains why, but the fix is still a manual one: remove dotViewer from **Privacy & Security → Accessibility**, add `/Applications/dotViewer.app` back, and relaunch. The same applies to **Automation → dotViewer → Finder** for ⌥Space.
+- No change to preview rendering, highlighting, or the ⌥Space panel itself. If ⌘F stopped working after installing 1.5.0, this release explains why, but the fix remains manual and is best done from Terminal:
+
+  ```
+  tccutil reset Accessibility com.stianlars1.dotViewer
+  ```
+
+  Then reopen dotViewer and press **Grant Access**. Only users who had also run a differently signed build of dotViewer are affected; a normal upgrade from an earlier release keeps its permissions.
 
 ## v1.5.0 (2026-08-07)
 
