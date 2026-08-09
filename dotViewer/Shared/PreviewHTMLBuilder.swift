@@ -197,7 +197,7 @@ public enum PreviewHTMLBuilder {
           <script>
           \(buildScript(defaultMode: info.defaultMarkdownMode, hasRendered: info.renderedHTML != nil, copyBehavior: info.copyBehavior, includeLineNumbersInCopy: info.includeLineNumbersInCopy))
           </script>
-          \(info.showSearchButton && info.enableSearchBridge ? SearchBridge.current().map(buildSearchBridgeClient) ?? "" : "")
+          \(info.enableSearchBridge ? SearchBridge.current().map(buildSearchBridgeClient) ?? "" : "")
         </body>
         </html>
         """
@@ -1567,6 +1567,9 @@ public enum PreviewHTMLBuilder {
             safeInit('initCopyBehavior', function() {
               \(buildCopyBehaviorScript(copyBehavior))
             });
+            safeInit('initSelectionAPI', function() {
+              \(buildSelectionAPIScript())
+            });
             """
         }
 
@@ -1919,6 +1922,58 @@ public enum PreviewHTMLBuilder {
         safeInit('initLineHighlight', initLineHighlight);
         safeInit('initSearch', initSearch);
         safeInit('initCopyBehavior', initCopyBehavior);
+        safeInit('initSelectionAPI', function() {
+          \(buildSelectionAPIScript())
+        });
+        """
+    }
+
+    // MARK: - Selection API
+
+    /// Selection commands the page exposes so they can be driven from outside.
+    ///
+    /// Quick Look previews receive no keyboard input, so ⌘A and ⌘C never reach this page — Finder
+    /// claims them and selects or copies *files* instead. The event tap forwards them over the
+    /// loopback bridge, and these are the entry points it calls. See `SearchBridge`.
+    ///
+    /// Selection is scoped to the visible content view rather than the document: a plain
+    /// `select all` would also take the header badge, the file size and the toast element, none of
+    /// which is "the file's contents".
+    private static func buildSelectionAPIScript() -> String {
+        """
+        window.__dvSelection = {
+          selectAll: function () {
+            var rendered = document.getElementById('rendered-view');
+            var raw = document.getElementById('raw-view');
+            var visible = (rendered && rendered.style.display !== 'none') ? rendered : raw;
+            if (!visible) return false;
+            var selection = window.getSelection();
+            if (!selection) return false;
+            var range = document.createRange();
+            range.selectNodeContents(visible);
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return true;
+          },
+
+          copy: function () {
+            var selection = window.getSelection();
+            if (!selection || selection.isCollapsed) return false;
+            // Deliberately routed through the document's own copy event rather than writing the
+            // clipboard directly: that handler already strips the line-number gutter and honours
+            // the include-line-numbers preference, so both paths stay identical by construction.
+            try {
+              return document.execCommand('copy');
+            } catch (e) {
+              return false;
+            }
+          },
+
+          clear: function () {
+            var selection = window.getSelection();
+            if (selection) selection.removeAllRanges();
+          }
+        };
         """
     }
 
@@ -2211,8 +2266,13 @@ public enum PreviewHTMLBuilder {
 
     // MARK: - Search Bridge Client
 
-    /// Subscribes the preview to the host app's loopback server so `Cmd+F` and typed characters —
-    /// which Finder claims before they ever reach this page — can be pushed in from outside.
+    /// Subscribes the preview to the host app's loopback server so keys Finder claims before they
+    /// ever reach this page — `Cmd+F` and typed characters, `Cmd+A` and `Cmd+C` — can be pushed in
+    /// from outside.
+    ///
+    /// Injected whenever the bridge is available, not only when the search bar is switched on:
+    /// selecting and copying the previewed file has nothing to do with searching it, and gating
+    /// this on the search setting would silently disable ⌘A for everyone using the default.
     /// See `SearchBridge` and docs/research/quicklook-search-keyboard-2026-08.md.
     private static func buildSearchBridgeClient(_ coordinates: SearchBridge.Coordinates) -> String {
         """
@@ -2225,6 +2285,22 @@ public enum PreviewHTMLBuilder {
           var stream;
 
           function apply(message) {
+            // Content selection is independent of the search bar and must work when it is closed,
+            // so it is handled before the search API is required to exist.
+            var selection = window.__dvSelection;
+            switch (message.type) {
+              case 'selectallcontent':
+                if (selection) selection.selectAll();
+                return;
+              case 'copyselection':
+                if (selection) selection.copy();
+                return;
+              case 'clearselection':
+                if (selection) selection.clear();
+                return;
+              default: break;
+            }
+
             var api = window.__dvSearch;
             if (!api) return;
             switch (message.type) {

@@ -2,15 +2,27 @@
 
 ## v1.5.1 (2026-08-09) — Current
 
+### Added
+
+- **⌘A selects the previewed file's contents, and ⌘C copies them** — in the ordinary `Space` Quick Look preview, not only in the ⌥Space panel. Previously both went to Finder instead: ⌘A selected every file in the window and ⌘C copied the file itself, while the person was plainly looking at its contents.
+  - The selection covers the content view only. A document-wide select-all would also take the file-type badge, the size and the toast, none of which is the file's contents.
+  - Copying honours **Include Line Numbers in Copy**, because it runs through the same copy path the mouse and the header button already use rather than writing the clipboard separately.
+  - ⌘C is only intercepted after a ⌘A in the preview. Without that, copying a file in Finder would silently stop working whenever a preview happened to be open — a worse regression than the feature is worth.
+  - While the search bar is open, ⌘A keeps selecting the query text.
+
 ### Fixed
 
 - **Explained the permission failure that could not be diagnosed from the UI.** macOS ties Accessibility and Automation grants to an app's *code signature*, not its name or location. Two differently signed copies of dotViewer share a bundle identifier but are separate subjects to TCC, and System Settings lists them under a single name — so the switch beside "dotViewer" can be on while belonging to the other copy. The app then reported "⌘F search needs Accessibility access" against a ticked checkbox, granting from the prompt changed nothing, and ⌘F stopped working with no way to find out why.
   - Both permission cards now detect this case rather than guessing at it: the app records when the event tap has genuinely started, so a later launch can tell "never granted" apart from "granted, then invalidated". When it knows the grant was invalidated it says so directly instead of hiding the explanation behind a disclosure.
   - The remedy given is the one that actually works. Two differently signed copies share a bundle identifier but are separate subjects to TCC, and System Settings lists them under a single name — so toggling that row, or removing and re-adding it, can rebind the wrong copy. The cards now explain this and offer a one-click copy of `tccutil reset Accessibility com.stianlars1.dotViewer` (or `AppleEvents` for Finder access), which clears every record for the app so a single fresh grant binds correctly.
 
+### Changed
+
+- The preview now subscribes to the loopback bridge whenever it is available, rather than only when **Show Find in Preview** is switched on. Selecting and copying a file has nothing to do with searching it, and the old condition would have left ⌘A dead for everyone on the default settings. ⌘F itself is still gated on the setting — entering search mode with no search bar on screen would swallow keystrokes with nothing to show for it.
+
 ### Notes
 
-- No change to preview rendering, highlighting, or the ⌥Space panel itself. If ⌘F stopped working after installing 1.5.0, this release explains why, but the fix remains manual and is best done from Terminal:
+- No change to preview rendering or highlighting. If ⌘F stopped working after installing 1.5.0, this release explains why, but the fix remains manual and is best done from Terminal:
 
   ```
   tccutil reset Accessibility com.stianlars1.dotViewer

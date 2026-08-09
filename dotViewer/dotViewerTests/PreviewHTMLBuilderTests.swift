@@ -314,6 +314,7 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         markdownRenderedContentAlignment: String = "center",
         themeName: String = "atomOneLight",
         renderedHTML: String?,
+        includeLineNumbersInCopy: Bool = false,
         codeFontFamilyName: String = PreviewFontFamily.defaultCodeFamily,
         markdownRenderedFontFamilyName: String = PreviewFontFamily.defaultMarkdownRenderedFamily
     ) -> PreviewInfo {
@@ -353,8 +354,105 @@ final class PreviewHTMLBuilderTests: XCTestCase {
             markdownTOCDefaultOpen: false,
             copyBehavior: "off",
             showSearchButton: false,
-            includeLineNumbersInCopy: false,
+            includeLineNumbersInCopy: includeLineNumbersInCopy,
             sourceDirectory: "/tmp"
         )
+    }
+
+    // MARK: - Selection API
+
+    /// ⌘A is delivered over the loopback bridge, so it is a no-op unless the page defines the
+    /// selection entry points. Both script branches must carry them — the plain-file branch and the
+    /// markdown branch are separate template strings and have drifted before.
+    func testSelectionAPIIsPresentForPlainFiles() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("window.__dvSelection"))
+        XCTAssertTrue(html.contains("selectAll:"))
+        XCTAssertTrue(html.contains("copy:"))
+    }
+
+    func testSelectionAPIIsPresentForMarkdownFiles() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: "<h1>Rendered</h1>"
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("window.__dvSelection"))
+        XCTAssertTrue(html.contains("selectAll:"))
+        XCTAssertTrue(html.contains("copy:"))
+    }
+
+    /// Selection is scoped to the content view. A document-wide select-all would sweep in the
+    /// header badge, the file size and the toast, which is not "the file's contents".
+    func testSelectAllTargetsTheContentViewRatherThanTheDocument() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("selectNodeContents(visible)"))
+        XCTAssertFalse(html.contains("selectNodeContents(document.body)"))
+    }
+
+    /// Copying must go through the document's copy event, which is where the line-number gutter is
+    /// stripped and the include-line-numbers preference is applied. Writing the clipboard directly
+    /// would bypass both and silently ignore the setting.
+    func testCopyRoutesThroughTheDocumentCopyEvent() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("document.execCommand('copy')"))
+        XCTAssertTrue(html.contains("addEventListener('copy'"))
+    }
+
+    func testIncludeLineNumbersPreferenceReachesTheCopyPath() {
+        let including = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil,
+            includeLineNumbersInCopy: true
+        )
+        let excluding = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil,
+            includeLineNumbersInCopy: false
+        )
+
+        let onHTML = PreviewHTMLBuilder.buildHTML(info: including, palette: ThemePalette.atomOneLight)
+        let offHTML = PreviewHTMLBuilder.buildHTML(info: excluding, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(onHTML.contains("const includeLineNumbers = true"))
+        XCTAssertTrue(offHTML.contains("const includeLineNumbers = false"))
     }
 }

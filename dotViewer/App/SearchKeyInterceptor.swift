@@ -31,6 +31,9 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
     private var query = ""
     private var activationObserver: NSObjectProtocol?
     private var queryIsSelected = false
+    /// Whether this tap put a selection into the preview with ⌘A. Gates ⌘C so that copying a file
+    /// in Finder keeps working whenever the user has not asked for the contents.
+    private var previewSelectionActive = false
 
     private init() {}
 
@@ -163,12 +166,33 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
         // No open dotViewer preview means nothing to type into — stay out of the way entirely.
         guard SearchBridgeServer.shared.subscriberCount > 0 else {
             endSearch(broadcast: false)
+            setPreviewSelection(false)
             return Unmanaged.passUnretained(event)
         }
 
-        if command, keyCode == kVK_ANSI_F {
+        // Gated on the setting because with the search bar switched off the page has no search UI
+        // to drive. Entering search mode anyway would swallow every subsequent keystroke with
+        // nothing on screen to show for it.
+        if command, keyCode == kVK_ANSI_F, SharedSettings.shared.showSearchButton {
             beginSearch()
             return nil  // swallow, so Finder's Find window never opens
+        }
+
+        // ⌘A and ⌘C over the previewed file. Finder otherwise claims both: ⌘A selects every file in
+        // the window and ⌘C copies the file itself, when the person is plainly looking at its
+        // contents. Only while not searching — there ⌘A means the query text instead.
+        if command, !optionOrControl, !isSearching, keyCode == kVK_ANSI_A {
+            SearchBridgeServer.shared.broadcast(kind: "selectallcontent")
+            setPreviewSelection(true)
+            return nil
+        }
+
+        // Deliberately conditional on a selection this tap actually made. Without that, ⌘C would be
+        // swallowed whenever a preview is open and copying the file in Finder would silently stop
+        // working — a worse regression than the feature is worth.
+        if command, !optionOrControl, !isSearching, keyCode == kVK_ANSI_C, hasPreviewSelection {
+            SearchBridgeServer.shared.broadcast(kind: "copyselection")
+            return nil
         }
 
         guard isSearching else { return Unmanaged.passUnretained(event) }
@@ -225,6 +249,16 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
     private var isSearching: Bool {
         lock.lock(); defer { lock.unlock() }
         return searchActive
+    }
+
+    private var hasPreviewSelection: Bool {
+        lock.lock(); defer { lock.unlock() }
+        return previewSelectionActive
+    }
+
+    private func setPreviewSelection(_ active: Bool) {
+        lock.lock(); defer { lock.unlock() }
+        previewSelectionActive = active
     }
 
     private func beginSearch() {

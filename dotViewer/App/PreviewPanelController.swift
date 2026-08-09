@@ -313,6 +313,15 @@ final class PreviewPanelController: NSObject {
             return true
         }
 
+        // Routed through the page rather than left to WebKit: a native select-all takes the whole
+        // document, including the header badge, the file size and the toast element. ⌘C is left
+        // alone — WebKit's own copy fires the page's copy handler, which already strips the
+        // line-number gutter according to the user's preference.
+        if command, !optionOrControl, !searchIsOpen, keyCode == kVK_ANSI_A {
+            evaluate("window.__dvSelection && window.__dvSelection.selectAll();")
+            return true
+        }
+
         guard searchIsOpen else { return false }
 
         switch keyCode {
