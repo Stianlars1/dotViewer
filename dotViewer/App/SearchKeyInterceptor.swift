@@ -79,6 +79,9 @@ public final class SearchKeyInterceptor: @unchecked Sendable {
         self.tap = tap
         self.runLoopSource = source
         observeApplicationSwitches()
+        // Remembered so a later launch can tell "never granted" from "granted, then invalidated by
+        // a signature change" — the one case where the Grant button cannot help.
+        SharedSettings.shared.accessibilityGrantSeen = true
         interceptLogger.info("Search key interception active")
         return true
     }

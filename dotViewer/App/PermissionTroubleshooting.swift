@@ -1,4 +1,5 @@
 import AppKit
+import Shared
 import SwiftUI
 
 /// Explains the one permission failure users cannot diagnose on their own.
@@ -11,8 +12,13 @@ import SwiftUI
 ///
 /// Worse, the "Grant Access…" button cannot fix it. Once an entry exists for the app, asking to
 /// prompt is a no-op — no dialog appears and nothing changes. The entry has to be removed and
-/// re-added. There is no API to read TCC and detect this, so the remedy is shown whenever the
-/// permission is missing rather than only when it is stale.
+/// re-added.
+///
+/// There is no API to read TCC, but the app can remember its own history: `accessibilityGrantSeen`
+/// records that the tap really did start once. If it did and the permission is now missing, the
+/// grant was invalidated rather than never given — a diagnosis, not a guess — so the view leads
+/// with that and opens itself. Otherwise it stays a quiet disclosure, since the ordinary case is
+/// simply that the user has not granted the permission yet.
 struct PermissionTroubleshooting: View {
     enum Kind {
         case accessibility
@@ -35,7 +41,19 @@ struct PermissionTroubleshooting: View {
 
     let kind: Kind
 
-    @State private var isExpanded = false
+    @State private var isExpanded: Bool
+
+    /// True when the tap has run before, so the permission was really held and has since been
+    /// invalidated. That is a diagnosis rather than a guess, so it leads instead of hiding behind a
+    /// disclosure the user has no reason to open.
+    private let isKnownStale: Bool
+
+    init(kind: Kind) {
+        self.kind = kind
+        let stale = SharedSettings.shared.accessibilityGrantSeen
+        self.isKnownStale = stale
+        _isExpanded = State(initialValue: stale)
+    }
 
     var body: some View {
         DisclosureGroup(isExpanded: $isExpanded) {
@@ -55,8 +73,17 @@ struct PermissionTroubleshooting: View {
             }
             .padding(.top, 4)
         } label: {
-            Text("Already granted, but still not working?")
+            if isKnownStale {
+                Label(
+                    "This permission was working before — macOS invalidated it",
+                    systemImage: "exclamationmark.triangle.fill"
+                )
                 .font(.caption)
+                .foregroundStyle(.orange)
+            } else {
+                Text("Already granted, but still not working?")
+                    .font(.caption)
+            }
         }
     }
 

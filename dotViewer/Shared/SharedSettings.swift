@@ -168,6 +168,18 @@ public final class SharedSettings: @unchecked Sendable {
         set { lock.withLock { defaults.set(newValue, forKey: "previewPanelEnabled") } }
     }
 
+    /// Set once the event tap has actually started, i.e. Accessibility was really held at some point.
+    ///
+    /// There is no API to read TCC, so this is how the app tells "never granted" apart from
+    /// "granted, then invalidated". macOS keys grants to the code signature, so replacing a
+    /// development build with a release download silently revokes the grant while System Settings
+    /// still shows it as enabled — and the prompt cannot be raised again. Knowing the difference is
+    /// what lets the UI say why instead of guessing. See `PermissionTroubleshooting`.
+    public var accessibilityGrantSeen: Bool {
+        get { lock.withLock { defaults.object(forKey: "accessibilityGrantSeen") as? Bool ?? false } }
+        set { lock.withLock { defaults.set(newValue, forKey: "accessibilityGrantSeen") } }
+    }
+
     public var previewWindowSizeMode: String {
         get {
             lock.withLock {
