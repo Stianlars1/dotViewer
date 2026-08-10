@@ -455,4 +455,75 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(onHTML.contains("const includeLineNumbers = true"))
         XCTAssertTrue(offHTML.contains("const includeLineNumbers = false"))
     }
+
+    // MARK: - Search field editing
+
+    /// The caret must be a real element. As a `::after` pseudo-element it could only ever render at
+    /// the end of the query, so arrow keys had nowhere to move to and were appended as text.
+    func testSearchCaretIsAnElementRatherThanAPseudoElement() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("caretEl.className = 'search-caret'"))
+        XCTAssertTrue(html.contains(".search-bar.open .search-query .search-caret"))
+        XCTAssertFalse(html.contains(".search-query:not(.placeholder)::after"))
+    }
+
+    /// Clearing the text must leave an empty field to keep typing in. Closing the bar when the query
+    /// empties made backspace and ⌘A-then-delete look like the window had been torn down.
+    func testEmptyQueryClearsRatherThanClosingTheSearchBar() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("setQuery('', 0);"))
+        XCTAssertFalse(html.contains("if (text && text.length) { searchWithQuery(text); } else { closeSearch(); }"))
+    }
+
+    /// Moving the insertion point re-renders only. Re-running the search would scroll the document
+    /// back to the first match on every arrow key.
+    func testCaretMessageDoesNotRerunTheSearch() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("caret: function (text, caretPos)"))
+        XCTAssertTrue(html.contains("setQuery(text || '', caretPos);"))
+    }
+
+    /// The displayed query keeps its whitespace; only the matching term is trimmed. Trimming the
+    /// display would swallow a trailing space as it is typed and shift the caret out from under it.
+    func testDisplayedQueryIsNotTrimmed() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("setQuery(text || '', caretPos);"))
+        XCTAssertTrue(html.contains("findMatches((text || '').trim());"))
+    }
 }

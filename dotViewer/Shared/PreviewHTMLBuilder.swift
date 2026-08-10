@@ -1226,22 +1226,25 @@ public enum PreviewHTMLBuilder {
         .search-bar .search-query.all-selected {
           background: color-mix(in srgb, var(--accent) 35%, var(--bg));
         }
-        .search-bar.open .search-query.all-selected::after { display: none; }
-        .search-bar.open .search-query:not(.placeholder)::after {
-          content: "";
+        /* The caret is a real element, not a pseudo-element, so it can render at any offset in
+           the query rather than only at the end. Hidden while everything is selected, because the
+           selection highlight already shows where input will land. */
+        .search-caret { display: none; }
+        .search-bar.open .search-query .search-caret {
           display: inline-block;
           width: 1px;
           height: 1.05em;
-          margin-left: 1px;
+          margin: 0 1px;
           vertical-align: text-bottom;
           background: var(--accent);
           animation: dv-caret-blink 1.1s steps(1) infinite;
         }
+        .search-bar.open .search-query.all-selected .search-caret { display: none; }
         @keyframes dv-caret-blink {
           50% { opacity: 0; }
         }
         @media (prefers-reduced-motion: reduce) {
-          .search-bar.open .search-query::after { animation: none; }
+          .search-bar.open .search-query .search-caret { animation: none; }
         }
         .search-bar .search-action-btn {
           display: inline-flex;
@@ -2091,6 +2094,7 @@ public enum PreviewHTMLBuilder {
           var highlights = [];
           var currentIdx = -1;
           var currentQuery = '';
+          var caretIndex = 0;
           var HIGHLIGHT_CLASS = 'search-highlight';
           var CURRENT_CLASS = 'search-highlight-current';
 
@@ -2111,16 +2115,30 @@ public enum PreviewHTMLBuilder {
             searchNext.disabled = true;
           }
 
-          function setQuery(text) {
+          function setQuery(text, caretPos) {
             currentQuery = text || '';
+            // The caret is an element rather than a ::after pseudo-element so it can sit anywhere
+            // in the string. Pinned to the end, arrow keys had nowhere to move to.
+            caretIndex = (typeof caretPos === 'number')
+              ? Math.max(0, Math.min(caretPos, currentQuery.length))
+              : currentQuery.length;
+
+            while (searchQuery.firstChild) searchQuery.removeChild(searchQuery.firstChild);
+
+            var caretEl = document.createElement('span');
+            caretEl.className = 'search-caret';
+
             if (currentQuery) {
-              searchQuery.textContent = currentQuery;
               searchQuery.classList.remove('placeholder');
               searchQuery.title = currentQuery;
+              searchQuery.appendChild(document.createTextNode(currentQuery.slice(0, caretIndex)));
+              searchQuery.appendChild(caretEl);
+              searchQuery.appendChild(document.createTextNode(currentQuery.slice(caretIndex)));
             } else {
-              searchQuery.textContent = 'No query';
               searchQuery.classList.add('placeholder');
               searchQuery.title = 'Select text then click 🔍, or paste from clipboard';
+              searchQuery.appendChild(caretEl);
+              searchQuery.appendChild(document.createTextNode('No query'));
             }
           }
 
@@ -2206,10 +2224,11 @@ public enum PreviewHTMLBuilder {
             updateCount();
           }
 
-          function searchWithQuery(text) {
-            var trimmed = (text || '').trim();
-            setQuery(trimmed);
-            findMatches(trimmed);
+          function searchWithQuery(text, caretPos) {
+            setQuery(text || '', caretPos);
+            // Trimmed only for matching. Trimming what is displayed would eat a trailing space the
+            // moment it is typed, and move the caret out from under it.
+            findMatches((text || '').trim());
           }
 
           function openSearch() {
@@ -2281,8 +2300,21 @@ public enum PreviewHTMLBuilder {
           window.__dvSearch = {
             open: openSearch,
             close: closeSearch,
-            query: function (text) {
-              if (text && text.length) { searchWithQuery(text); } else { closeSearch(); }
+            query: function (text, caretPos) {
+              // Deliberately does not close on an empty string. Deleting the last character, or
+              // selecting all and pressing delete, should leave an empty field to keep typing in —
+              // closing the bar there loses the user's place and reads as a crash.
+              if (text && text.length) {
+                searchWithQuery(text, caretPos);
+              } else {
+                setQuery('', 0);
+                clearHighlights();
+              }
+            },
+            caret: function (text, caretPos) {
+              // Moving the insertion point re-renders only; re-running the search would scroll the
+              // document back to the first match on every arrow key.
+              setQuery(text || '', caretPos);
             },
             next: function () { goToMatch(currentIdx + 1); },
             prev: function () { goToMatch(currentIdx - 1); },
@@ -2338,7 +2370,8 @@ public enum PreviewHTMLBuilder {
             if (!api) return;
             switch (message.type) {
               case 'open':  api.open(); break;
-              case 'query': api.open(); api.query(message.value || ''); api.setSelected(false); break;
+              case 'query': api.open(); api.query(message.value || '', message.caret); api.setSelected(false); break;
+              case 'caret': api.caret(message.value || '', message.caret); break;
               case 'selectall': api.setSelected(true); break;
               case 'next':  api.next(); break;
               case 'prev':  api.prev(); break;

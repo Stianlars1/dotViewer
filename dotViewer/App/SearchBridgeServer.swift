@@ -100,8 +100,12 @@ public final class SearchBridgeServer: @unchecked Sendable {
 
     /// Push an event to every open preview. `kind` is the client-side action: `query`, `next`,
     /// `prev`, `close`, `open`.
-    public func broadcast(kind: String, value: String = "") {
-        let payload: [String: String] = ["type": kind, "value": value]
+    /// - Parameter caret: insertion point within `value`, when the message carries a query. The page
+    ///   has no editable field to hold one — the query is a span — so the position travels with the
+    ///   text and the page renders the caret between two text nodes.
+    public func broadcast(kind: String, value: String = "", caret: Int? = nil) {
+        var payload: [String: Any] = ["type": kind, "value": value]
+        if let caret { payload["caret"] = caret }
         guard let json = try? JSONSerialization.data(withJSONObject: payload),
               let text = String(data: json, encoding: .utf8) else { return }
         send(raw: "data: \(text)\n\n")
