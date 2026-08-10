@@ -1,6 +1,17 @@
 # Changelog
 
-## v1.5.1 (2026-08-09) — Current
+## v1.5.2 (2026-08-10) — Current
+
+### Changed
+
+- **Copy confirmations now read as successes.** The toast that appears after copying was styled the same as every other message — neutral surface, neutral text — so the one thing it was there to confirm was the one thing it did not say. It now carries a success colour and a check mark, with a token defined for both light and dark appearances. Its motion is unchanged: the existing fade-and-rise was already right, and the gap was semantic rather than kinetic.
+- Error and hint toasts are deliberately left neutral. A failed clipboard read styled as a success would be worse than a plain one.
+
+### Fixed
+
+- The **Copy reset command** button in the permission troubleshooting section said "Copied" permanently after the first press. It now reverts after two seconds, and a second press restarts that window instead of being cut short by the first press's timer.
+
+## v1.5.1 (2026-08-09)
 
 ### Added
 

@@ -334,6 +334,9 @@ public enum PreviewHTMLBuilder {
               --heading: \(palette.isDark ? palette.type : palette.text);
               --gutter: \(palette.isDark ? "#3B3F51" : "#C0C4CC");
               --header: \(palette.isDark ? "#1F232B" : "#F2F3F5");
+              /* Not a syntax token, so it is not in the palette: this is UI semantics. Both values
+                 clear WCAG AA on their own surface. */
+              --success: \(palette.isDark ? "#3FB950" : "#1A7F37");
               --surface: \(palette.isDark ? "#1E222A" : "#F5F7FA");
               --surface-strong: \(palette.isDark ? "#2B303B" : "#E9EDF2");
               --border: \(palette.isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.08)");
@@ -1076,6 +1079,19 @@ public enum PreviewHTMLBuilder {
           transform: translateY(0);
         }
 
+        /* A copy confirmation is a success, and read as one. The existing fade-and-rise is left
+           untouched: it was already the right motion, and the gap was semantic, not kinetic. */
+        .toast.success {
+          background: color-mix(in srgb, var(--success) 14%, var(--surface-strong));
+          border-color: color-mix(in srgb, var(--success) 45%, var(--border));
+          color: var(--success);
+        }
+        .toast.success::before {
+          content: "✓";
+          margin-right: 5px;
+          font-weight: 600;
+        }
+
         .toc-sidebar {
           width: 220px;
           flex-shrink: 0;
@@ -1465,9 +1481,10 @@ public enum PreviewHTMLBuilder {
             const toast = document.getElementById('toast');
             let toastTimer = null;
 
-            function showToast(message, html) {
+            function showToast(message, html, variant) {
               if (!toast) return;
               if (html) { toast.innerHTML = html; } else { toast.textContent = message; }
+              toast.classList.toggle('success', variant === 'success');
               toast.classList.add('show');
               if (toastTimer) clearTimeout(toastTimer);
               toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 1200);
@@ -1514,12 +1531,12 @@ public enum PreviewHTMLBuilder {
                 copyButton.addEventListener('click', () => {
                   const sel = window.getSelection().toString();
                   if (sel.length > 0) {
-                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                    writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
                   } else {
                     const rawSource = document.getElementById('raw-source');
                     const text = rawSource ? (rawSource.value || '') : '';
                     const payload = includeLineNumbers ? numberedText(text) : text;
-                    writeClipboard(payload).then(() => showToast('Copied'));
+                    writeClipboard(payload).then(() => showToast('Copied', null, 'success'));
                   }
                 });
               }
@@ -1548,7 +1565,7 @@ public enum PreviewHTMLBuilder {
                 if (text.length > 0) {
                   e.clipboardData.setData('text/plain', text);
                   e.preventDefault();
-                  showToast('Copied selection');
+                  showToast('Copied selection', null, 'success');
                 }
               });
 
@@ -1603,9 +1620,10 @@ public enum PreviewHTMLBuilder {
         let tocPanel = null;
         let tocResizeHandle = null;
 
-        function showToast(message, html) {
+        function showToast(message, html, variant) {
           if (!toast) return;
           if (html) { toast.innerHTML = html; } else { toast.textContent = message; }
+          toast.classList.toggle('success', variant === 'success');
           toast.classList.add('show');
           if (toastTimer) clearTimeout(toastTimer);
           toastTimer = setTimeout(() => { toast.classList.remove('show'); toast.style.pointerEvents = ''; }, 1200);
@@ -1817,7 +1835,7 @@ public enum PreviewHTMLBuilder {
             copyButton.addEventListener('click', () => {
               const sel = window.getSelection().toString();
               if (sel.length > 0) {
-                writeClipboard(sel).then(() => showToast('Copied selection'));
+                writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
               } else {
                 let text = '';
                 if (currentMode === 'rendered' && renderedView) {
@@ -1827,7 +1845,7 @@ public enum PreviewHTMLBuilder {
                   text = rawSource ? (rawSource.value || '') : '';
                 }
                 const payload = includeLineNumbers && currentMode !== 'rendered' ? numberedText(text) : text;
-                writeClipboard(payload).then(() => showToast('Copied'));
+                writeClipboard(payload).then(() => showToast('Copied', null, 'success'));
               }
             });
           }
@@ -1856,7 +1874,7 @@ public enum PreviewHTMLBuilder {
             if (text.length > 0) {
               e.clipboardData.setData('text/plain', text);
               e.preventDefault();
-              showToast('Copied selection');
+              showToast('Copied selection', null, 'success');
             }
           });
 
@@ -1901,7 +1919,7 @@ public enum PreviewHTMLBuilder {
             // Copy URL to clipboard as reliable fallback
             writeClipboard(url).then(function() {
               var label = isFile ? 'Path' : 'Link';
-              showToast(label + ' copied to clipboard');
+              showToast(label + ' copied to clipboard', null, 'success');
             });
           });
         }
@@ -1992,7 +2010,7 @@ public enum PreviewHTMLBuilder {
             // gesture and WebKit will refuse to do it here. See KI-009.
             if (window.__dvBridge && window.__dvBridge.post) {
               window.__dvBridge.post('/clipboard', text);
-              if (typeof showToast === 'function') showToast('Copied');
+              if (typeof showToast === 'function') showToast('Copied', null, 'success');
               return true;
             }
 
@@ -2424,7 +2442,7 @@ public enum PreviewHTMLBuilder {
                 copyTimer = setTimeout(() => {
                   const sel = window.getSelection().toString();
                   if (sel.length > 0) {
-                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                    writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
                   }
                 }, 150);
               });
@@ -2474,7 +2492,7 @@ public enum PreviewHTMLBuilder {
               btn.addEventListener('click', () => {
                 const sel = window.getSelection().toString();
                 if (sel.length > 0) {
-                  writeClipboard(sel).then(() => showToast('Copied selection'));
+                  writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
                 }
                 btn.classList.remove('visible');
               });
@@ -2529,7 +2547,7 @@ public enum PreviewHTMLBuilder {
                       toastButton.addEventListener('click', () => {
                         writeClipboard(captured).then(() => {
                           toast.style.pointerEvents = '';
-                          showToast('Copied selection');
+                          showToast('Copied selection', null, 'success');
                         });
                       });
                     }
@@ -2548,7 +2566,7 @@ public enum PreviewHTMLBuilder {
                 setTimeout(() => {
                   const sel = window.getSelection().toString();
                   if (pendingText && sel.length === 0) {
-                    writeClipboard(pendingText).then(() => showToast('Copied selection'));
+                    writeClipboard(pendingText).then(() => showToast('Copied selection', null, 'success'));
                     pendingText = null;
                     if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
                     return;
@@ -2573,7 +2591,7 @@ public enum PreviewHTMLBuilder {
                 if ((Date.now() - dragStart) > 500) {
                   const sel = window.getSelection().toString();
                   if (sel.length > 0) {
-                    writeClipboard(sel).then(() => showToast('Copied selection'));
+                    writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
                   }
                 }
               });
@@ -2623,7 +2641,7 @@ public enum PreviewHTMLBuilder {
                   if (reversals >= 3) {
                     const sel = window.getSelection().toString();
                     if (sel.length > 0) {
-                      writeClipboard(sel).then(() => showToast('Copied selection'));
+                      writeClipboard(sel).then(() => showToast('Copied selection', null, 'success'));
                     }
                     deactivateShake();
                   }
@@ -2686,7 +2704,7 @@ public enum PreviewHTMLBuilder {
                           });
                         }
                       } else {
-                        showToast('Copied selection');
+                        showToast('Copied selection', null, 'success');
                       }
                     });
                   }

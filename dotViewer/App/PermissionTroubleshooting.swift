@@ -62,6 +62,7 @@ struct PermissionTroubleshooting: View {
     private let isKnownStale: Bool
 
     @State private var didCopy = false
+    @State private var copyResetTask: Task<Void, Never>?
 
     init(kind: Kind) {
         self.kind = kind
@@ -92,9 +93,20 @@ struct PermissionTroubleshooting: View {
                     Button(didCopy ? "Copied" : "Copy reset command") {
                         NSPasteboard.general.clearContents()
                         NSPasteboard.general.setString(kind.resetCommand, forType: .string)
-                        didCopy = true
+                        withAnimation(.easeOut(duration: 0.15)) { didCopy = true }
+
+                        // Reverts so the button stops claiming a copy that happened a while ago.
+                        // Cancelling first means a second click restarts the window rather than
+                        // being cut short by the previous press's timer.
+                        copyResetTask?.cancel()
+                        copyResetTask = Task {
+                            try? await Task.sleep(for: .seconds(2))
+                            guard !Task.isCancelled else { return }
+                            withAnimation(.easeOut(duration: 0.15)) { didCopy = false }
+                        }
                     }
                     .buttonStyle(.link)
+                    .foregroundStyle(didCopy ? Color.green : Color.accentColor)
                 }
             }
             .padding(.top, 4)

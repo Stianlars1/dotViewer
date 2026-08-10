@@ -526,4 +526,58 @@ final class PreviewHTMLBuilderTests: XCTestCase {
         XCTAssertTrue(html.contains("setQuery(text || '', caretPos);"))
         XCTAssertTrue(html.contains("findMatches((text || '').trim());"))
     }
+
+    // MARK: - Toast semantics
+
+    /// A copy confirmation should read as a success. The motion was already correct; only the
+    /// colour was missing, so this asserts the variant exists and is wired to a defined token.
+    func testCopyToastHasASuccessVariantBackedByAToken() {
+        let dark = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: dark, palette: ThemePalette.atomOneLight)
+
+        XCTAssertTrue(html.contains("--success:"))
+        XCTAssertTrue(html.contains(".toast.success"))
+        XCTAssertTrue(html.contains("toast.classList.toggle('success', variant === 'success')"))
+    }
+
+    /// Errors must not be styled as successes. "Clipboard access denied" in green would be a lie.
+    func testFailureToastsAreNotMarkedAsSuccess() {
+        let info = makeInfo(
+            codeContentWidthMode: "auto",
+            codeContentCustomMaxWidth: 1280,
+            markdownRenderedWidthMode: "auto",
+            markdownRenderedCustomMaxWidth: 980,
+            renderedHTML: nil
+        )
+
+        let html = PreviewHTMLBuilder.buildHTML(info: info, palette: ThemePalette.atomOneLight)
+
+        XCTAssertFalse(html.contains("showToast('Clipboard access denied', null, 'success')"))
+        XCTAssertFalse(html.contains("showToast('Clipboard not available', null, 'success')"))
+        XCTAssertTrue(html.contains("showToast('Copied', null, 'success')"))
+    }
+
+    /// Both themes need a success colour, since the token is chosen per appearance rather than
+    /// coming from the syntax palette.
+    func testSuccessTokenIsDefinedForBothAppearances() {
+        for palette in [ThemePalette.atomOneLight, ThemePalette.githubDark] {
+            let info = makeInfo(
+                codeContentWidthMode: "auto",
+                codeContentCustomMaxWidth: 1280,
+                markdownRenderedWidthMode: "auto",
+                markdownRenderedCustomMaxWidth: 980,
+                themeName: palette.name,
+                renderedHTML: nil
+            )
+            let html = PreviewHTMLBuilder.buildHTML(info: info, palette: palette)
+            XCTAssertTrue(html.contains("--success:"), "missing success token for \(palette.name)")
+        }
+    }
 }
