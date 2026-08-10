@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 import Network
 import Shared
@@ -160,8 +161,15 @@ public final class SearchBridgeServer: @unchecked Sendable {
         }
     }
 
+    private static let headerTerminator = Data("\r\n\r\n".utf8)
+
+    /// A clipboard write carries the selected text, which for a select-all is the whole file, so
+    /// this is sized for a document rather than for a search query. Still bounded: an unbounded
+    /// read on a socket is a memory exhaustion waiting to happen, loopback or not.
+    private static let maxRequestBytes = 16 * 1024 * 1024
+
     private func receiveRequest(on connection: NWConnection, accumulated: Data) {
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 8192) { [weak self] chunk, _, isComplete, error in
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 65_536) { [weak self] chunk, _, isComplete, error in
             guard let self else { return }
             var buffer = accumulated
             if let chunk { buffer.append(chunk) }
@@ -171,24 +179,54 @@ public final class SearchBridgeServer: @unchecked Sendable {
                 return
             }
 
-            // Requests here are tiny; wait for the end of the header block before routing.
-            guard let text = String(data: buffer, encoding: .utf8), text.contains("\r\n\r\n") else {
-                if buffer.count > 64 * 1024 { connection.cancel(); return }
+            if buffer.count > Self.maxRequestBytes {
+                serverLogger.error("Rejected oversized request")
+                connection.cancel()
+                return
+            }
+
+            // Deliberately searched as bytes rather than decoded first: a POST body is UTF-8 text
+            // that routinely splits across reads, and decoding a partial buffer fails mid-character.
+            guard let terminator = buffer.range(of: Self.headerTerminator) else {
                 self.receiveRequest(on: connection, accumulated: buffer)
                 return
             }
 
-            self.route(request: text, on: connection)
+            guard let headerText = String(data: buffer[..<terminator.lowerBound], encoding: .utf8) else {
+                connection.cancel()
+                return
+            }
+
+            let body = buffer[terminator.upperBound...]
+            let expected = Self.contentLength(in: headerText)
+            guard body.count >= expected else {
+                self.receiveRequest(on: connection, accumulated: buffer)
+                return
+            }
+
+            self.route(request: headerText, body: Data(body.prefix(expected)), on: connection)
         }
     }
 
-    private func route(request: String, on connection: NWConnection) {
+    private static func contentLength(in header: String) -> Int {
+        for line in header.split(separator: "\r\n") {
+            let parts = line.split(separator: ":", maxSplits: 1)
+            guard parts.count == 2,
+                  parts[0].trimmingCharacters(in: .whitespaces).lowercased() == "content-length"
+            else { continue }
+            return max(0, Int(parts[1].trimmingCharacters(in: .whitespaces)) ?? 0)
+        }
+        return 0
+    }
+
+    private func route(request: String, body: Data, on connection: NWConnection) {
         guard let requestLine = request.split(separator: "\r\n").first else {
             connection.cancel()
             return
         }
         let parts = requestLine.split(separator: " ")
         guard parts.count >= 2 else { connection.cancel(); return }
+        let method = String(parts[0]).uppercased()
 
         let target = String(parts[1])
         let path = target.split(separator: "?").first.map(String.init) ?? target
@@ -206,11 +244,40 @@ public final class SearchBridgeServer: @unchecked Sendable {
         case "/push":
             broadcast(kind: params["type"] ?? "query", value: params["value"] ?? "")
             respond(connection, status: "200 OK", body: "ok", close: true)
+        case "/clipboard":
+            guard method == "POST" else {
+                respond(connection, status: "405 Method Not Allowed", body: "post only", close: true)
+                return
+            }
+            writeClipboard(body: body, on: connection)
         case "/health":
             respond(connection, status: "200 OK", body: "subscribers=\(subscriberCount)", close: true)
         default:
             respond(connection, status: "404 Not Found", body: "no", close: true)
         }
+    }
+
+    /// Writes text the preview page selected into the system pasteboard.
+    ///
+    /// The page cannot do this itself. A Quick Look preview never receives a user gesture — that is
+    /// the whole reason the event tap exists — and WebKit refuses both `document.execCommand('copy')`
+    /// and the async Clipboard API without one. Every in-page route is measured in KI-009. The host
+    /// app is an ordinary process with no such restriction, so the page hands the text back over the
+    /// same loopback channel and the write happens here.
+    private func writeClipboard(body: Data, on connection: NWConnection) {
+        guard let text = String(data: body, encoding: .utf8), !text.isEmpty else {
+            respond(connection, status: "400 Bad Request", body: "empty", close: true)
+            return
+        }
+
+        // NSPasteboard is main-thread only; this runs on the listener queue.
+        DispatchQueue.main.async {
+            NSPasteboard.general.clearContents()
+            NSPasteboard.general.setString(text, forType: .string)
+        }
+
+        serverLogger.info("Clipboard write of \(text.count, privacy: .public) characters")
+        respond(connection, status: "200 OK", body: "ok", close: true)
     }
 
     private func openStream(_ connection: NWConnection) {

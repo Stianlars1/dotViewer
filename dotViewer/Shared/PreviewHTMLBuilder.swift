@@ -1956,12 +1956,45 @@ public enum PreviewHTMLBuilder {
             return true;
           },
 
+          // Mirrors the document's copy handler exactly — same helpers, same preference — so a
+          // keyboard copy and a mouse copy produce identical text.
+          selectionText: function () {
+            var selection = window.getSelection();
+            if (!selection || selection.rangeCount === 0) return '';
+            var fragment = selection.getRangeAt(0).cloneContents();
+            var lines = fragment.querySelectorAll('.line');
+            if (lines.length === 0) {
+              return fragment.textContent || selection.toString();
+            }
+            var values = [];
+            for (var i = 0; i < lines.length; i++) {
+              var line = lines[i];
+              var lineNumber = extractLineNumber(line);
+              removeLineNumbers(line);
+              var codeLine = line.querySelector('.code-line');
+              var prefix = includeLineNumbers && lineNumber ? lineNumber + ' ' : '';
+              values.push(prefix + (codeLine ? codeLine.textContent : line.textContent));
+            }
+            return values.join('\\n');
+          },
+
           copy: function () {
             var selection = window.getSelection();
             if (!selection || selection.isCollapsed) return false;
-            // Deliberately routed through the document's own copy event rather than writing the
-            // clipboard directly: that handler already strips the line-number gutter and honours
-            // the include-line-numbers preference, so both paths stay identical by construction.
+
+            var text = this.selectionText();
+            if (!text) return false;
+
+            // Preferred path: the host writes the pasteboard, because this page has no user
+            // gesture and WebKit will refuse to do it here. See KI-009.
+            if (window.__dvBridge && window.__dvBridge.post) {
+              window.__dvBridge.post('/clipboard', text);
+              if (typeof showToast === 'function') showToast('Copied');
+              return true;
+            }
+
+            // A real window — the Option+Space panel — does have a gesture, so the document's own
+            // copy event is available and already applies the same rules.
             try {
               return document.execCommand('copy');
             } catch (e) {
@@ -2313,6 +2346,22 @@ public enum PreviewHTMLBuilder {
               default: break;
             }
           }
+
+          // The page cannot write the clipboard itself — no user gesture ever reaches it, and
+          // WebKit refuses the Clipboard API without one (KI-009). Handing the text back to the
+          // host over the same loopback channel sidesteps the restriction entirely.
+          window.__dvBridge = {
+            post: function (path, body) {
+              try {
+                return fetch(BASE + path + '?nonce=' + encodeURIComponent(NONCE), {
+                  method: 'POST',
+                  body: body
+                });
+              } catch (e) {
+                return null;
+              }
+            }
+          };
 
           try {
             // EventSource reconnects on its own if the host app restarts, so no retry logic here.

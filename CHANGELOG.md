@@ -6,7 +6,7 @@
 
 - **⌘A selects the previewed file's contents, and ⌘C copies them** — in the ordinary `Space` Quick Look preview, not only in the ⌥Space panel. Previously both went to Finder instead: ⌘A selected every file in the window and ⌘C copied the file itself, while the person was plainly looking at its contents.
   - The selection covers the content view only. A document-wide select-all would also take the file-type badge, the size and the toast, none of which is the file's contents.
-  - Copying honours **Include Line Numbers in Copy**, because it runs through the same copy path the mouse and the header button already use rather than writing the clipboard separately.
+  - Copying honours **Include Line Numbers in Copy**: the page builds the text with the same helpers and the same preference the mouse and header-button paths use, then hands it to the app, which writes the pasteboard. The page cannot write it itself — a Quick Look preview never receives a user gesture, and WebKit refuses both `execCommand('copy')` and the Clipboard API without one (see KI-009). The text travels over the existing nonce-gated loopback channel, which stays bound to `127.0.0.1`.
   - ⌘C is only intercepted after a ⌘A in the preview. Without that, copying a file in Finder would silently stop working whenever a preview happened to be open — a worse regression than the feature is worth.
   - While the search bar is open, ⌘A keeps selecting the query text.
 
