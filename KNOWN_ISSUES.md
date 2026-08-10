@@ -177,11 +177,23 @@
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Fixed (workaround v2 — configurable presets) |
+| **Status** | Fixed properly in v1.5.1 — see "Actual fix" below |
 
 **Impact**: Users cannot copy selected text from the Quick Look preview window using Cmd+C. Copy button and right-click "Copy" work, but the keyboard shortcut does not.
 
 **Root cause**: Quick Look's host window intercepts keyboard events at the NSResponder chain level before they reach the WKWebView's DOM. The `keydown` and `copy` events never fire in JavaScript. This is a confirmed platform limitation affecting all data-based HTML Quick Look extensions on macOS.
+
+### Actual fix (2026-08-10, v1.5.1)
+
+Solved by combining two pieces that did not exist when the workarounds were written:
+
+1. **The keystroke** now reaches us. `SearchKeyInterceptor` is a `CGEventTap` in the *unsandboxed host app*, built for ⌘F search. Approach 2 below failed because the helper was a child of a **sandboxed** app; the host app was later unsandboxed for exactly this class of problem, which makes the tap possible. ⌘C is intercepted there and forwarded to the page.
+
+2. **The clipboard write** moved out of the page. The page still cannot write the clipboard — a Quick Look preview never receives a user gesture, and WebKit refuses both `document.execCommand('copy')` and the async Clipboard API without one. That is the same wall approach 1 hit. So the page builds the text (same helpers and the same include-line-numbers preference as the mouse path) and POSTs it to the host over the existing nonce-gated loopback bridge, and `SearchBridgeServer` writes `NSPasteboard`. The host is an ordinary process with no gesture requirement.
+
+⌘A is handled the same way, scoped to the content view rather than the document.
+
+Verified end to end: 33 bytes in, 33 identical bytes on the pasteboard, multi-byte UTF-8 intact. The copy presets below remain — they are still the mouse-driven path and the default behaviour.
 
 **Fix v1 (2026-02-10)**: Auto-copy on selection — a debounced `mouseup` listener detects text selections and automatically copies them to the clipboard using `navigator.clipboard.writeText()`. Mouse events reach WebKit's DOM (unlike keyboard events), and `mouseup` counts as a trusted user gesture for the Clipboard API.
 
