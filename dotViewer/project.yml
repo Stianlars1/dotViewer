@@ -1706,6 +1706,16 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - go-version
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gpx
+            UTTypeDescription: GPS Exchange Format (XML)
+            UTTypeConformsTo:
+              - public.xml
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gpx
+              public.mime-type:
+                - application/gpx+xml
           - UTTypeIdentifier: com.stianlars1.dotviewer.gql
             UTTypeDescription: GraphQL
             UTTypeConformsTo:
@@ -5103,6 +5113,7 @@ targets:
               - com.stianlars1.dotviewer.gnumakefile
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
+              - com.stianlars1.dotviewer.gpx
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
               - com.stianlars1.dotviewer.graphql
@@ -5895,6 +5906,7 @@ targets:
               - com.stianlars1.dotviewer.gnumakefile
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
+              - com.stianlars1.dotviewer.gpx
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
               - com.stianlars1.dotviewer.graphql

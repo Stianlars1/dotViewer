@@ -1,6 +1,12 @@
 # Changelog
 
-## v1.5.2 (2026-08-10) — Current
+## Unreleased
+
+### Added
+
+- **GPX (.gpx) routes to the XML previewer.** Reported in [#25](https://github.com/Stianlars1/dotViewer/issues/25). GPS Exchange Format files are XML underneath, but macOS was routing them past dotViewer because the extension was neither claimed by us nor covered by a system UTI Quick Look would forward. `.gpx` is now declared as an exported UTI (`com.stianlars1.dotviewer.gpx`) that conforms to `public.xml` and `public.plain-text`, is listed in `QLSupportedContentTypes` for both the preview and thumbnail extensions, and is mapped to the XML entry in `DefaultFileTypes.json` so it renders with the XML tree-sitter grammar and theme like any other XML file. Users who added `.gpx` via *Settings → Custom File Types* no longer need to — the mapping ships by default. Coverage is now **600 extensions** across 404 language definitions.
+
+## v1.5.2 (2026-08-10)
 
 ### Changed
 

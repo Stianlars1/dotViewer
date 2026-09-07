@@ -145,6 +145,7 @@ KNOWN_UTIS = {
     "jsx":      "com.stianlars1.dotviewer.jsx",
     "fs":       "com.stianlars1.dotviewer.fsharp",
     "vb":       "com.stianlars1.dotviewer.vb",
+    "gpx":      "com.stianlars1.dotviewer.gpx",
 }
 
 # Extensions whose system UTI is for a DIFFERENT file type
@@ -268,6 +269,7 @@ BASE_CONTENT_TYPES = {
     "com.stianlars1.dotviewer.jsx",
     "com.stianlars1.dotviewer.fsharp",
     "com.stianlars1.dotviewer.vb",
+    "com.stianlars1.dotviewer.gpx",
 }
 
 

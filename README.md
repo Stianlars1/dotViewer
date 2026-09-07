@@ -258,7 +258,7 @@ These numbers are from the current codebase.
 | Metric | Value |
 |---|---:|
 | Built-in file type entries (`DefaultFileTypes.json`) | `404` |
-| Explicit extensions in registry | `599` |
+| Explicit extensions in registry | `600` |
 | Filename patterns in registry | `295` |
 | Tree-sitter grammar integrations (`TreeSitterHighlighter`) | `53` |
 | Tree-sitter query files (`TreeSitterQueries/*.scm`) | `53` |
@@ -268,8 +268,8 @@ These numbers are from the current codebase.
 | Window-size modes | `5` |
 | Themes (including system-following pairs) | `14` |
 | Preview font-family pickers | `2` |
-| UTExportedTypeDeclarations in shipped app metadata | `635` |
-| QLSupportedContentTypes per extension target | `753` |
+| UTExportedTypeDeclarations in shipped app metadata | `636` |
+| QLSupportedContentTypes per extension target | `754` |
 
 ## Website And Download Analytics
 

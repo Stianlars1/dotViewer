@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1"
+     creator="dotViewer test fixture"
+     xmlns="http://www.topografix.com/GPX/1/1"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+    <metadata>
+        <name>dotViewer sample route</name>
+        <desc>A short GPX sample used to exercise dotViewer XML routing.</desc>
+        <author>
+            <name>Stian Larsen</name>
+        </author>
+        <time>2026-09-07T12:00:00Z</time>
+    </metadata>
+    <wpt lat="59.9139" lon="10.7522">
+        <ele>10</ele>
+        <name>Oslo</name>
+    </wpt>
+    <wpt lat="60.3913" lon="5.3221">
+        <ele>3</ele>
+        <name>Bergen</name>
+    </wpt>
+    <trk>
+        <name>Oslo → Bergen</name>
+        <trkseg>
+            <trkpt lat="59.9139" lon="10.7522">
+                <ele>10</ele>
+                <time>2026-09-07T12:00:00Z</time>
+            </trkpt>
+            <trkpt lat="60.3913" lon="5.3221">
+                <ele>3</ele>
+                <time>2026-09-07T18:30:00Z</time>
+            </trkpt>
+        </trkseg>
+    </trk>
+</gpx>

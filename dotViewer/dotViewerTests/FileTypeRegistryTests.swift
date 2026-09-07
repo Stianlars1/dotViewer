@@ -60,6 +60,28 @@ final class FileTypeRegistryTests: XCTestCase {
         XCTAssertEqual(registry.highlightLanguage(for: "yml"), "yaml")
     }
 
+    // MARK: - Issue #25 — GPX routes to the XML renderer
+
+    func testGpxExtensionResolvesToXml() {
+        XCTAssertEqual(registry.highlightLanguage(for: "gpx"), "xml")
+        XCTAssertEqual(registry.highlightLanguage(for: "GPX"), "xml",
+                       "GPX lookup must be case-insensitive")
+    }
+
+    func testGpxDisplayName() {
+        // We surface .gpx under the shared XML display name so Finder shows
+        // a familiar type label instead of the generic "GPX Document".
+        XCTAssertEqual(registry.displayName(for: "gpx"), "XML")
+    }
+
+    func testGpxFileTypeInBuiltIns() {
+        // The XML entry that owns .gpx must still be reachable by id.
+        let xml = registry.fileType(byId: "xml")
+        XCTAssertNotNil(xml)
+        XCTAssertTrue(xml?.extensions.contains("gpx") == true,
+                      "XML entry should list gpx among its extensions")
+    }
+
     // MARK: - Filename Resolution
 
     func testFilenameResolution() {

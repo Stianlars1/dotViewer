@@ -47,6 +47,28 @@ final class FileTypeResolutionTests: XCTestCase {
         XCTAssertEqual(key, "mdoc")
     }
 
+    // MARK: - Issue #25 — GPX (XML) routing
+
+    func testGpxExtensionResolvesToGpxKey() {
+        let url = URL(fileURLWithPath: "/tmp/route.gpx")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "gpx")
+    }
+
+    func testGpxUppercaseExtensionResolvesToGpxKey() {
+        let url = URL(fileURLWithPath: "/tmp/ROUTE.GPX")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "gpx")
+    }
+
+    func testGpxWithDottedBasenameStillResolves() {
+        // Common export pattern: 2026-09-07.oslo-bergen.gpx — must not lose
+        // routing to the intermediate segment lookup path.
+        let url = URL(fileURLWithPath: "/tmp/2026-09-07.oslo-bergen.gpx")
+        let key = FileTypeResolution.bestKey(for: url)
+        XCTAssertEqual(key, "gpx")
+    }
+
     // MARK: - Dotfiles
 
     func testDotGitignore() {

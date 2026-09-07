@@ -104,7 +104,7 @@ Canonical scope — what this product must support:
 - **Copy behavior**: 8 configurable presets for how text selections interact with clipboard (auto-copy default)
 - **Settings**: font families, font size (synced between code and markdown by default), theme, word wrap, line numbers, copy behavior, search bar toggle (synced via App Group)
 - **Custom file types**: user-defined extension → language mappings
-- **File type coverage**: 404 definitions, 599 extensions, 295 filenames
+- **File type coverage**: 404 definitions, 600 extensions, 295 filenames
 - **Binary gating**: reject binary files, detect MPEG-TS transport streams
 - **Sensitive file detection**: warn on .env, credentials, keys
 - **Extension conflict scanner**: detects competing third-party QL extensions, one-click resolve via `pluginkit`
@@ -112,8 +112,8 @@ Canonical scope — what this product must support:
 
 ## Key Concepts
 
-- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 753 UTIs covering all 599 extensions in DefaultFileTypes.json: 635 custom exports (`com.stianlars1.dotviewer.*`), plus system and vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
-- **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 599 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
+- **UTI routing**: Quick Look matches on **exact UTType identifiers** (not conformance). `public.data` in `QLSupportedContentTypes` does NOT catch dynamic UTIs (`dyn.*`). We declare 754 UTIs covering all 600 extensions in DefaultFileTypes.json: 636 custom exports (`com.stianlars1.dotviewer.*`), plus system and vendor UTIs. Pre-computed `dyn.*` codes were removed (non-functional — encoding mismatch with macOS). Use `scripts/dotviewer-gen-utis.py` to regenerate from DefaultFileTypes.json. See KI-010.
+- **Custom file types**: User-added extensions (via Settings) work for highlighting and display name for files that reach our extension. All 600 extensions in DefaultFileTypes.json are pre-declared as UTIs, so most developer files are routed automatically.
 - **Multi-dot file resolution**: `FileTypeResolution.bestKey()` tries full name → progressive prefix stripping → bare extension → intermediate segment scanning. For `.claude.json.backup.xxx`, this resolves to `json`.
 - **XPC protocol**: `HighlightServiceProtocol` — the QuickLookExtension calls `highlight(code:language:theme:showLineNumbers:requestId:reply:)` on the XPC service. The reply returns HTML as `NSData`.
 - **App Group**: Settings (font families, font size, theme) sync between the host app and extensions via `group.stianlars1.dotViewer.shared`.
