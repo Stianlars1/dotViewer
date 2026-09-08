@@ -6,6 +6,10 @@
 
 - **GPX (.gpx) routes to the XML previewer.** Reported in [#25](https://github.com/Stianlars1/dotViewer/issues/25). GPS Exchange Format files are XML underneath, but macOS was routing them past dotViewer because the extension was neither claimed by us nor covered by a system UTI Quick Look would forward. `.gpx` is now declared as an exported UTI (`com.stianlars1.dotviewer.gpx`) that conforms to `public.xml` and `public.plain-text`, is listed in `QLSupportedContentTypes` for both the preview and thumbnail extensions, and is mapped to the XML entry in `DefaultFileTypes.json` so it renders with the XML tree-sitter grammar and theme like any other XML file. Users who added `.gpx` via *Settings → Custom File Types* no longer need to — the mapping ships by default. Coverage is now **600 extensions** across 404 language definitions.
 
+### Fixed
+
+- **`scripts/dotviewer-gen-utis.py --apply` preserves GPX metadata on regeneration.** Flagged by an automated review on [#26](https://github.com/Stianlars1/dotViewer/pull/26). The generator built each UTI export from `get_conformance(lang)` alone, which for XML emits only `public.plain-text`, and never emitted a `public.mime-type` tag. On the next full regeneration the GPX block would have silently lost its `public.xml` parent and the `application/gpx+xml` MIME declaration that ship in `project.yml`. A per-identifier override table (`UTI_METADATA_OVERRIDES`) now round-trips both, is applied through a small pure helper (`apply_metadata_overrides`), and is guarded by unit tests under `scripts/tests/test_gen_utis_overrides.py` — including a check that the block in `project.yml` still matches what the generator would emit.
+
 ## v1.5.2 (2026-08-10)
 
 ### Changed

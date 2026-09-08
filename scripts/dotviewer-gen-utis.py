@@ -272,6 +272,51 @@ BASE_CONTENT_TYPES = {
     "com.stianlars1.dotviewer.gpx",
 }
 
+# ──────────────────────────────────────────────────────────────────────────────
+# Per-UTI metadata overrides. get_conformance() only knows about highlight
+# languages; some of our exported UTIs also carry an extra parent UTI (e.g.
+# public.xml for GPX) and a public.mime-type tag. When those are present in
+# `project.yml`, we must round-trip them here so `--apply` does not silently
+# drop them on regeneration. Keyed by full UTI identifier.
+# ──────────────────────────────────────────────────────────────────────────────
+UTI_METADATA_OVERRIDES = {
+    "com.stianlars1.dotviewer.gpx": {
+        # public.xml is prepended so that macOS treats .gpx as XML for routing
+        # purposes even when the extension is what a query hits on.
+        "extra_conforms_to": ["public.xml"],
+        "mime_types": ["application/gpx+xml"],
+    },
+}
+
+
+def apply_metadata_overrides(identifier, conforms_to):
+    """Merge per-UTI overrides into (conforms_to, mime_types).
+
+    Returns a tuple (conforms_to_list, mime_types_list). The conforms list is
+    a copy with any override parents prepended (deduped, order preserved).
+    """
+    override = UTI_METADATA_OVERRIDES.get(identifier, {})
+    extras = override.get("extra_conforms_to", [])
+    merged = list(conforms_to)
+    for parent in reversed(extras):  # reversed → prepend keeps declared order
+        if parent not in merged:
+            merged.insert(0, parent)
+    return merged, list(override.get("mime_types", []))
+
+
+def build_export(ext, identifier, info):
+    """Assemble one exported-type dict, honouring any UTI metadata overrides."""
+    conforms, mime_types = apply_metadata_overrides(
+        identifier, get_conformance(info.get("lang", ""))
+    )
+    return {
+        "ext": ext,
+        "identifier": identifier,
+        "description": info.get("display", ext),
+        "conforms_to": conforms,
+        "mime_types": mime_types,
+    }
+
 
 def get_conformance(lang):
     """Return UTTypeConformsTo list for a highlight language."""
@@ -468,20 +513,11 @@ def main():
     new_exports = []
     for ext, info in sorted(needs_export.items()):
         uti_name = make_uti_name(ext)
-        new_exports.append({
-            "ext": ext,
-            "identifier": f"com.stianlars1.dotviewer.{uti_name}",
-            "description": info["display"],
-            "conforms_to": get_conformance(info["lang"]),
-        })
+        identifier = f"com.stianlars1.dotviewer.{uti_name}"
+        new_exports.append(build_export(ext, identifier, info))
     for ext, uti in sorted(already_custom.items()):
         info = extensions.get(ext, {"lang": "", "display": ext})
-        new_exports.append({
-            "ext": ext,
-            "identifier": uti,
-            "description": info["display"],
-            "conforms_to": get_conformance(info["lang"]),
-        })
+        new_exports.append(build_export(ext, uti, info))
     new_exports.sort(key=lambda e: e["ext"])
 
     # Build complete QLSupportedContentTypes
@@ -522,6 +558,10 @@ def main():
             print(f"            UTTypeTagSpecification:")
             print(f"              public.filename-extension:")
             print(f"                - {yaml_extension_literal(exp['ext'])}")
+            if exp.get("mime_types"):
+                print(f"              public.mime-type:")
+                for m in exp["mime_types"]:
+                    print(f"                - {m}")
 
         # ── QLSupportedContentTypes ──────────────────────────────────────
         print(f"\n{'=' * 70}")
