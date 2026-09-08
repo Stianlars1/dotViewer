@@ -1,6 +1,20 @@
 # Changelog
 
-## v1.5.2 (2026-08-10) — Current
+## v1.5.3 (2026-09-08)
+
+### Added
+
+- GPX previews use XML highlighting in Finder Quick Look and Option + Space, including files registered as `com.topografix.gpx`. Resolves [#25](https://github.com/Stianlars1/dotViewer/issues/25).
+- GAP source (`.g`, `.gi`) and test (`.tst`) previews, with tree-sitter highlighting and multiline test input support. Expected output remains plain text. Clear GAP `.gd` declarations are recognized automatically; ambiguous or Godot files retain GDScript. Explicit custom mappings take priority, with GAP and GAP Test available in the language picker. Resolves [#24](https://github.com/Stianlars1/dotViewer/issues/24).
+
+### Fixed
+
+- UTI regeneration preserves GPX XML/MIME metadata and its vendor compatibility type.
+- Preview and thumbnail language/label resolution agree, including explicit filename overrides.
+- Thumbnail rendering preserves successful empty token results instead of applying generic keyword colors to plain test output.
+
+
+## v1.5.2 (2026-08-10)
 
 ### Changed
 

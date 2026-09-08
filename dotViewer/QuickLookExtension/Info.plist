@@ -338,6 +338,11 @@
 				<string>com.stianlars1.dotviewer.gnumakefile</string>
 				<string>com.stianlars1.dotviewer.go</string>
 				<string>com.stianlars1.dotviewer.go_version</string>
+				<string>com.stianlars1.dotviewer.g</string>
+				<string>com.stianlars1.dotviewer.gi</string>
+				<string>com.stianlars1.dotviewer.tst</string>
+				<string>com.stianlars1.dotviewer.gpx</string>
+				<string>com.topografix.gpx</string>
 				<string>com.stianlars1.dotviewer.gql</string>
 				<string>com.stianlars1.dotviewer.gradle</string>
 				<string>com.stianlars1.dotviewer.graphql</string>

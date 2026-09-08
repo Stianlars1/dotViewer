@@ -10,8 +10,8 @@ settings:
     CODE_SIGN_IDENTITY: "Apple Development"
     "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development"
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "1.5.2"
-    CURRENT_PROJECT_VERSION: "9"
+    MARKETING_VERSION: "1.5.3"
+    CURRENT_PROJECT_VERSION: "10"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
     ENABLE_HARDENED_RUNTIME: YES
@@ -36,6 +36,7 @@ schemes:
       config: Debug
       targets:
         - dotViewerTests
+
 targets:
   dotViewer:
     type: application
@@ -1706,6 +1707,40 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - go-version
+          - UTTypeIdentifier: com.stianlars1.dotviewer.g
+            UTTypeDescription: GAP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - g
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gi
+            UTTypeDescription: GAP
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gi
+          - UTTypeIdentifier: com.stianlars1.dotviewer.tst
+            UTTypeDescription: GAP Test
+            UTTypeConformsTo:
+              - public.source-code
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - tst
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gpx
+            UTTypeDescription: GPS Exchange Format (XML)
+            UTTypeConformsTo:
+              - public.xml
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gpx
+              public.mime-type:
+                - application/gpx+xml
           - UTTypeIdentifier: com.stianlars1.dotviewer.gql
             UTTypeDescription: GraphQL
             UTTypeConformsTo:
@@ -5103,6 +5138,11 @@ targets:
               - com.stianlars1.dotviewer.gnumakefile
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
+              - com.stianlars1.dotviewer.g
+              - com.stianlars1.dotviewer.gi
+              - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gpx
+              - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
               - com.stianlars1.dotviewer.graphql
@@ -5895,6 +5935,11 @@ targets:
               - com.stianlars1.dotviewer.gnumakefile
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
+              - com.stianlars1.dotviewer.g
+              - com.stianlars1.dotviewer.gi
+              - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gpx
+              - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
               - com.stianlars1.dotviewer.gradle
               - com.stianlars1.dotviewer.graphql
@@ -6364,6 +6409,12 @@ targets:
     platform: macOS
     sources:
       - HighlightXPC
+      - path: TreeSitterVendor/tree-sitter-gap/src
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-gaptst/src
+        excludes:
+          - "*.json"
       - path: TreeSitterVendor/tree-sitter/lib/src
         group: TreeSitterVendor/Core
         excludes:
@@ -6684,9 +6735,39 @@ targets:
     platform: macOS
     sources:
       - dotViewerTests
+      - path: HighlightXPC/TreeSitterHighlighter.swift
+      - path: HighlightXPC/GAPTestInputRanges.swift
+      - path: HighlightXPC/TreeSitterQueries/gap.scm
+        buildPhase: resources
+      - path: HighlightXPC/TreeSitterQueries/gaptst.scm
+        buildPhase: resources
+      - path: HighlightXPC/TreeSitterQueries/json.scm
+        buildPhase: resources
+      - path: HighlightXPC/TreeSitterQueries/xml.scm
+        buildPhase: resources
+      - path: QuickLookThumbnailExtension/TextThumbnailRenderer.swift
+      - path: TreeSitterVendor/tree-sitter/lib/src
+        excludes:
+          - "lib.c"
+      - path: TreeSitterVendor/tree-sitter-gap/src
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-gaptst/src
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-json/src
+        excludes:
+          - "*.json"
+      - path: TreeSitterVendor/tree-sitter-xml/xml/src
+        excludes:
+          - "*.json"
     dependencies:
       - target: Shared
     settings:
       base:
+        SWIFT_OBJC_BRIDGING_HEADER: HighlightXPC/HighlightXPC-Bridging-Header.h
+        USE_HEADERMAP: NO
+        HEADER_SEARCH_PATHS:
+          - "$(SRCROOT)/TreeSitterVendor/tree-sitter/lib/include"
         PRODUCT_BUNDLE_IDENTIFIER: com.stianlars1.dotViewer.Tests
         GENERATE_INFOPLIST_FILE: YES

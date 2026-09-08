@@ -6,6 +6,8 @@
 extern "C" {
 #endif
 
+const TSLanguage *tree_sitter_gap(void);
+const TSLanguage *tree_sitter_gaptst(void);
 const TSLanguage *tree_sitter_swift(void);
 const TSLanguage *tree_sitter_python(void);
 const TSLanguage *tree_sitter_javascript(void);

@@ -1,0 +1,183 @@
+[
+  {
+    "type": "else_clause",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "test_case",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "exec_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "gap_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "if_statement",
+    "named": true,
+    "fields": {
+      "condition": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "gap_expression",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "else_clause",
+          "named": true
+        },
+        {
+          "type": "test_case",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "local_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "gap_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "test_case",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "input_line",
+          "named": true
+        },
+        {
+          "type": "output_line",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "test_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "exec_statement",
+          "named": true
+        },
+        {
+          "type": "if_statement",
+          "named": true
+        },
+        {
+          "type": "local_statement",
+          "named": true
+        },
+        {
+          "type": "test_case",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "\n",
+    "named": false
+  },
+  {
+    "type": "#@else",
+    "named": false
+  },
+  {
+    "type": "#@exec",
+    "named": false
+  },
+  {
+    "type": "#@fi",
+    "named": false
+  },
+  {
+    "type": "#@if",
+    "named": false
+  },
+  {
+    "type": "#@local",
+    "named": false
+  },
+  {
+    "type": "> ",
+    "named": false
+  },
+  {
+    "type": "comment",
+    "named": true
+  },
+  {
+    "type": "gap> ",
+    "named": false
+  },
+  {
+    "type": "gap_expression",
+    "named": true
+  },
+  {
+    "type": "input_line",
+    "named": true
+  },
+  {
+    "type": "output_line",
+    "named": true
+  }
+]
