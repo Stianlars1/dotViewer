@@ -221,7 +221,7 @@ enum TextThumbnailRenderer {
     ) -> QLThumbnailReply {
         // Pre-convert tree-sitter tokens to per-line colored tokens
         let perLineTokens: [[ColoredToken]]?
-        if let treeSitterTokens, !treeSitterTokens.isEmpty {
+        if let treeSitterTokens {
             perLineTokens = TreeSitterTokenConverter.convert(
                 tokens: treeSitterTokens,
                 lines: snippet.lines,

@@ -257,19 +257,25 @@ These numbers are from the current codebase.
 
 | Metric | Value |
 |---|---:|
-| Built-in file type entries (`DefaultFileTypes.json`) | `404` |
-| Explicit extensions in registry | `600` |
+| Built-in file type entries (`DefaultFileTypes.json`) | `406` |
+| Explicit extensions in registry | `603` |
 | Filename patterns in registry | `295` |
-| Tree-sitter grammar integrations (`TreeSitterHighlighter`) | `53` |
-| Tree-sitter query files (`TreeSitterQueries/*.scm`) | `53` |
+| Tree-sitter grammar integrations (`TreeSitterLanguageRegistry`) | `55` |
+| Tree-sitter query files (`TreeSitterQueries/*.scm`) | `55` |
 | Highlight language picker options | `55` |
 | Picker options with tree-sitter grammar label | `52` |
 | Copy behavior presets | `8` |
 | Window-size modes | `5` |
 | Themes (including system-following pairs) | `14` |
 | Preview font-family pickers | `2` |
-| UTExportedTypeDeclarations in shipped app metadata | `636` |
-| QLSupportedContentTypes per extension target | `754` |
+| UTExportedTypeDeclarations in shipped app metadata | `639` |
+| QLSupportedContentTypes per extension target | `758` |
+
+### GPX and GAP files
+
+GPX (`.gpx`) uses XML syntax highlighting through both Finder Space and dotViewer's Option + Space panel. Routing includes the vendor type `com.topografix.gpx` as well as dotViewer's own type.
+
+GAP source (`.g`, `.gi`) and tests (`.tst`) use dedicated tree-sitter grammars. Test prompts and GAP input are highlighted; expected output stays plain. For `.gd`, clear GAP declarations or assignment/block syntax selects GAP. Godot signatures and ambiguous files keep the existing GDScript mapping. Custom File Types offers **GAP** and **GAP Test**, and explicit filename or extension mappings take precedence.
 
 ## Website And Download Analytics
 

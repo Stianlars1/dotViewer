@@ -167,6 +167,7 @@ UTI_CONFLICTS = {
 
 # Base QLSupportedContentTypes — always included
 BASE_CONTENT_TYPES = {
+    "com.topografix.gpx",
     "public.data",
     "public.executable",
     "public.mpeg-2-transport-stream",
@@ -326,7 +327,7 @@ def get_conformance(lang):
         "nim", "nix", "objc", "ocaml", "pascal", "perl", "php", "python",
         "r", "ruby", "rust", "scala", "swift", "typescript", "tsx", "jsx",
         "vb", "zig", "crystal", "coffeescript", "clojure", "hcl", "graphviz",
-        "solidity", "gdscript", "gleam", "vue", "wat", "qml", "purs",
+        "gap", "gaptst", "solidity", "gdscript", "gleam", "vue", "wat", "qml", "purs",
         "fortran77", "fortran90", "delphi", "ada", "verilog", "vhd",
         "smalltalk", "eiffel", "pro", "lisp",
     }

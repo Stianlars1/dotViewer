@@ -98,10 +98,11 @@ public enum PreviewContentBuilder {
         let fileMtime = fileMeta.mtime
         let isEmptyFile = fileSize == 0
 
-        var languageId = registry.highlightLanguage(for: key) ?? "plaintext"
-        var languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
+        let resolvedLanguage = FileLanguageResolver.resolve(url: url, key: key)
+        var languageId = resolvedLanguage.id
+        var languageName = resolvedLanguage.displayName
 
-        if actualPathExtension.isEmpty,
+        if actualPathExtension.isEmpty, !resolvedLanguage.isCustomMapping,
            let detected = ShebangLanguageDetector.detect(url: url) ?? detectedLanguage(forMimeType: mimeType) {
             languageId = detected.languageId
             languageName = detected.displayName

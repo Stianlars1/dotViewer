@@ -321,6 +321,25 @@
     "highlightLanguage": "gambas"
   },
   {
+    "id": "gap",
+    "displayName": "GAP",
+    "extensions": [
+      "g",
+      "gi"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gap"
+  },
+  {
+    "id": "gaptst",
+    "displayName": "GAP Test",
+    "extensions": [
+      "tst"
+    ],
+    "filenames": [],
+    "highlightLanguage": "gaptst"
+  },
+  {
     "id": "gdscript",
     "displayName": "GDScript",
     "extensions": [

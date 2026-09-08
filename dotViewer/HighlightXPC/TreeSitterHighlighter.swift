@@ -10,8 +10,13 @@ final class TreeSitterHighlighter {
 
     private let configs: [String: LanguageConfig]
 
-    init() {
-        configs = Self.loadConfigs()
+    init(languages: [(String, OpaquePointer?)], queryLoader: (String) -> String?) {
+        configs = Self.loadConfigs(languages: languages, queryLoader: queryLoader)
+    }
+
+    deinit {
+        // Aliases share queries with their canonical language.
+        for query in Set(configs.values.map(\.query)) { ts_query_delete(query) }
     }
 
     func extractTokens(
@@ -19,84 +24,10 @@ final class TreeSitterHighlighter {
         language: String,
         shouldCancel: (() -> Bool)? = nil
     ) -> [HighlightToken]? {
-        if shouldCancel?() == true { return nil }
-        let loweredLanguage = language.lowercased()
-
-        guard let data = code.data(using: .utf8) else { return [] }
-
-        guard let config = configs[loweredLanguage] else {
-            guard loweredLanguage != "plaintext", !loweredLanguage.isEmpty else { return [] }
-            let captures = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
-            if shouldCancel?() == true { return nil }
-            return captures.map { HighlightToken(s: $0.start, e: $0.end, c: Self.mapCaptureToClass($0.name).dropTokPrefix()) }
+        guard let captures = captures(data: Data(code.utf8), language: language.lowercased(), shouldCancel: shouldCancel) else { return nil }
+        return captures.map {
+            HighlightToken(s: $0.start, e: $0.end, c: Self.mapCaptureToClass($0.name).dropTokPrefix())
         }
-
-        guard let parser = ts_parser_new() else { return [] }
-        defer { ts_parser_delete(parser) }
-
-        if !ts_parser_set_language(parser, config.language) { return [] }
-
-        let tree: OpaquePointer? = data.withUnsafeBytes { buffer in
-            guard let baseAddress = buffer.baseAddress else { return nil }
-            return ts_parser_parse_string(parser, nil, baseAddress.assumingMemoryBound(to: CChar.self), UInt32(data.count))
-        }
-        guard let tree else { return [] }
-        defer { ts_tree_delete(tree) }
-
-        if shouldCancel?() == true { return nil }
-
-        guard let cursor = ts_query_cursor_new() else { return [] }
-        defer { ts_query_cursor_delete(cursor) }
-
-        let rootNode = ts_tree_root_node(tree)
-        ts_query_cursor_exec(cursor, config.query, rootNode)
-
-        var captures: [Capture] = []
-        var match = TSQueryMatch()
-        var captureIndex: UInt32 = 0
-        var captureCount = 0
-
-        while ts_query_cursor_next_capture(cursor, &match, &captureIndex) {
-            captureCount += 1
-            if captureCount % 200 == 0, shouldCancel?() == true { return nil }
-            guard let capturePtr = match.captures else { continue }
-            let captureBuffer = UnsafeBufferPointer(start: capturePtr, count: Int(match.capture_count))
-            let capture = captureBuffer[Int(captureIndex)]
-            let node = capture.node
-            let start = Int(ts_node_start_byte(node))
-            let end = Int(ts_node_end_byte(node))
-            if start >= end || start < 0 || end > data.count { continue }
-
-            var nameLength: UInt32 = 0
-            guard let namePtr = ts_query_capture_name_for_id(config.query, capture.index, &nameLength) else { continue }
-            let nameBytes = UnsafeBufferPointer(start: UnsafeRawPointer(namePtr).assumingMemoryBound(to: UInt8.self), count: Int(nameLength))
-            let name = String(decoding: nameBytes, as: UTF8.self)
-            captures.append(Capture(start: start, end: end, name: name))
-        }
-
-        if captures.isEmpty {
-            let fallback = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
-            if shouldCancel?() == true { return nil }
-            captures = fallback
-        }
-
-        captures.sort { lhs, rhs in
-            if lhs.start == rhs.start { return lhs.end > rhs.end }
-            return lhs.start < rhs.start
-        }
-
-        if shouldCancel?() == true { return nil }
-
-        // Deduplicate overlapping captures (same logic as renderHighlighted)
-        var tokens: [HighlightToken] = []
-        var currentIndex = 0
-        for capture in captures {
-            if capture.start < currentIndex { continue }
-            let className = Self.mapCaptureToClass(capture.name).dropTokPrefix()
-            tokens.append(HighlightToken(s: capture.start, e: capture.end, c: className))
-            currentIndex = capture.end
-        }
-        return tokens
     }
 
     func highlight(
@@ -105,125 +36,95 @@ final class TreeSitterHighlighter {
         showLineNumbers: Bool,
         shouldCancel: (() -> Bool)? = nil
     ) -> String? {
-        if shouldCancel?() == true {
-            return nil
-        }
-        let loweredLanguage = language.lowercased()
-        guard let config = configs[loweredLanguage] else {
-            // We support a small set of tree-sitter grammars. For everything else, we still apply a
-            // lightweight heuristic highlighter so "supported file types" don't silently turn into
-            // plain text.
-            guard loweredLanguage != "plaintext", !loweredLanguage.isEmpty else {
-                return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
-            }
-            guard let data = code.data(using: .utf8) else {
-                return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
-            }
-            let captures = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
-            if shouldCancel?() == true {
-                return nil
-            }
-            return Self.renderHighlighted(data: data, captures: captures, showLineNumbers: showLineNumbers)
-        }
+        let data = Data(code.utf8)
+        guard let captures = captures(data: data, language: language.lowercased(), shouldCancel: shouldCancel) else { return nil }
+        return Self.renderHighlighted(data: data, captures: captures, showLineNumbers: showLineNumbers)
+    }
 
-        guard let data = code.data(using: .utf8) else {
-            return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
+    private func captures(
+        data: Data,
+        language: String,
+        ranges: [TSRange]? = nil,
+        shouldCancel: (() -> Bool)?
+    ) -> [Capture]? {
+        if shouldCancel?() == true { return nil }
+        guard !data.isEmpty else { return [] }
+        guard let config = configs[language] else {
+            guard language != "plaintext", !language.isEmpty else { return [] }
+            let result = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
+            return shouldCancel?() == true ? nil : result
         }
-
-        guard let parser = ts_parser_new() else {
-            return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
-        }
+        guard let parser = ts_parser_new() else { return [] }
         defer { ts_parser_delete(parser) }
-
-        if !ts_parser_set_language(parser, config.language) {
-            return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
+        guard ts_parser_set_language(parser, config.language) else { return [] }
+        if let ranges {
+            guard ranges.withUnsafeBufferPointer({ ts_parser_set_included_ranges(parser, $0.baseAddress, UInt32($0.count)) }) else { return [] }
         }
-
-        let tree: OpaquePointer? = data.withUnsafeBytes { buffer in
-            guard let baseAddress = buffer.baseAddress else {
-                return nil
-            }
-            return ts_parser_parse_string(
-                parser,
-                nil,
-                baseAddress.assumingMemoryBound(to: CChar.self),
-                UInt32(data.count)
-            )
+        let tree = data.withUnsafeBytes { buffer -> OpaquePointer? in
+            guard let base = buffer.baseAddress else { return nil }
+            return ts_parser_parse_string(parser, nil, base.assumingMemoryBound(to: CChar.self), UInt32(buffer.count))
         }
-
-        guard let tree else {
-            return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
-        }
+        guard let tree else { return [] }
         defer { ts_tree_delete(tree) }
-
-        if shouldCancel?() == true {
-            return nil
-        }
-
-        guard let cursor = ts_query_cursor_new() else {
-            return Self.renderPlain(code: code, showLineNumbers: showLineNumbers)
-        }
+        if shouldCancel?() == true { return nil }
+        guard let cursor = ts_query_cursor_new() else { return [] }
         defer { ts_query_cursor_delete(cursor) }
-
-        let rootNode = ts_tree_root_node(tree)
-        ts_query_cursor_exec(cursor, config.query, rootNode)
-
-        var captures: [Capture] = []
+        let root = ts_tree_root_node(tree)
+        ts_query_cursor_exec(cursor, config.query, root)
+        var result: [Capture] = []
         var match = TSQueryMatch()
         var captureIndex: UInt32 = 0
-        var captureCount = 0
-
+        var count = 0
         while ts_query_cursor_next_capture(cursor, &match, &captureIndex) {
-            captureCount += 1
-            if captureCount % 200 == 0, shouldCancel?() == true {
-                return nil
+            count += 1
+            if count % 200 == 0, shouldCancel?() == true { return nil }
+            guard let pointer = match.captures else { continue }
+            let capture = pointer[Int(captureIndex)]
+            let start = Int(ts_node_start_byte(capture.node))
+            let end = Int(ts_node_end_byte(capture.node))
+            guard start < end, end <= data.count else { continue }
+            var length: UInt32 = 0
+            guard let namePointer = ts_query_capture_name_for_id(config.query, capture.index, &length) else { continue }
+            let name = String(decoding: UnsafeBufferPointer(start: UnsafeRawPointer(namePointer).assumingMemoryBound(to: UInt8.self), count: Int(length)), as: UTF8.self)
+            if let ranges {
+                // A multiline node can span excluded prompts or expected output. Clip each
+                // capture to the included source regions before mapping it onto the transcript.
+                for range in ranges {
+                    let lower = max(start, Int(range.start_byte))
+                    let upper = min(end, Int(range.end_byte))
+                    if lower < upper { result.append(Capture(start: lower, end: upper, name: name)) }
+                }
+            } else {
+                result.append(Capture(start: start, end: end, name: name))
             }
-            guard let capturePtr = match.captures else { continue }
-            let captureBuffer = UnsafeBufferPointer(start: capturePtr, count: Int(match.capture_count))
-            let capture = captureBuffer[Int(captureIndex)]
-            let node = capture.node
-            let start = Int(ts_node_start_byte(node))
-            let end = Int(ts_node_end_byte(node))
-
-            if start >= end || start < 0 || end > data.count {
-                continue
-            }
-
-            var nameLength: UInt32 = 0
-            guard let namePtr = ts_query_capture_name_for_id(config.query, capture.index, &nameLength) else {
-                continue
-            }
-
-            let nameBytes = UnsafeBufferPointer(start: UnsafeRawPointer(namePtr).assumingMemoryBound(to: UInt8.self),
-                                                count: Int(nameLength))
-            let name = String(decoding: nameBytes, as: UTF8.self)
-
-            captures.append(Capture(start: start, end: end, name: name))
         }
 
-        if captures.isEmpty {
-            let fallback = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
-            if shouldCancel?() == true {
-                return nil
+        if language == "gaptst" {
+            // Parse each test's input together, including continuation lines. Tree-sitter included
+            // ranges keep offsets in the original UTF-8 file and exclude prompts/expected output.
+            guard let groups = GAPTestInputRanges.collect(from: root, shouldCancel: shouldCancel) else { return nil }
+            for group in groups {
+                guard let injected = captures(data: data, language: "gap", ranges: group, shouldCancel: shouldCancel) else { return nil }
+                result.append(contentsOf: injected)
             }
-            captures = fallback
+        } else if result.isEmpty, ranges == nil {
+            result = Self.fallbackHighlightCaptures(data: data, shouldCancel: shouldCancel)
         }
-
-        captures.sort { lhs, rhs in
-            if lhs.start == rhs.start {
-                return lhs.end > rhs.end
-            }
-            return lhs.start < rhs.start
+        if shouldCancel?() == true { return nil }
+        result.sort {
+            if $0.start != $1.start { return $0.start < $1.start }
+            return $0.end > $1.end
         }
-
-        if shouldCancel?() == true {
-            return nil
+        var end = 0
+        return result.filter { capture in
+            guard capture.start >= end else { return false }
+            end = capture.end
+            return true
         }
-        return Self.renderHighlighted(data: data, captures: captures, showLineNumbers: showLineNumbers)
     }
 }
 
-private extension TreeSitterHighlighter {
+extension TreeSitterHighlighter {
     struct Capture {
         let start: Int
         let end: Int
@@ -241,68 +142,14 @@ private extension TreeSitterHighlighter {
         "union", "using", "var", "virtual", "void", "where", "while", "with", "yield"
     ]
 
-    private static func loadConfigs() -> [String: LanguageConfig] {
+    private static func loadConfigs(languages: [(String, OpaquePointer?)], queryLoader: (String) -> String?) -> [String: LanguageConfig] {
         var configs: [String: LanguageConfig] = [:]
 
-        let languages: [(String, OpaquePointer?)] = [
-            ("swift", tree_sitter_swift()),
-            ("python", tree_sitter_python()),
-            ("javascript", tree_sitter_javascript()),
-            ("typescript", tree_sitter_typescript()),
-            ("tsx", tree_sitter_tsx()),
-            ("json", tree_sitter_json()),
-            ("yaml", tree_sitter_yaml()),
-            ("markdown", tree_sitter_markdown()),
-            ("bash", tree_sitter_bash()),
-            ("html", tree_sitter_html()),
-            ("css", tree_sitter_css()),
-            ("xml", tree_sitter_xml()),
-            ("ini", tree_sitter_ini()),
-            ("toml", tree_sitter_toml()),
-            ("c", tree_sitter_c()),
-            ("cpp", tree_sitter_cpp()),
-            ("go", tree_sitter_go()),
-            ("rust", tree_sitter_rust()),
-            ("java", tree_sitter_java()),
-            ("ruby", tree_sitter_ruby()),
-            ("php", tree_sitter_php()),
-            ("lua", tree_sitter_lua()),
-            ("sql", tree_sitter_sql()),
-            ("dockerfile", tree_sitter_dockerfile()),
-            ("r", tree_sitter_r()),
-            ("scala", tree_sitter_scala()),
-            ("kotlin", tree_sitter_kotlin()),
-            ("c_sharp", tree_sitter_c_sharp()),
-            ("perl", tree_sitter_perl()),
-            ("dart", tree_sitter_dart()),
-            ("elixir", tree_sitter_elixir()),
-            ("haskell", tree_sitter_haskell()),
-            ("ocaml", tree_sitter_ocaml()),
-            ("zig", tree_sitter_zig()),
-            ("make", tree_sitter_make()),
-            ("cmake", tree_sitter_cmake()),
-            ("graphql", tree_sitter_graphql()),
-            ("hcl", tree_sitter_hcl()),
-            ("nix", tree_sitter_nix()),
-            ("scss", tree_sitter_scss()),
-            ("regex", tree_sitter_regex()),
-            ("julia", tree_sitter_julia()),
-            ("erlang", tree_sitter_erlang()),
-            ("clojure", tree_sitter_clojure()),
-            ("vim", tree_sitter_vim()),
-            ("fortran", tree_sitter_fortran()),
-            ("pascal", tree_sitter_pascal()),
-            ("d", tree_sitter_d()),
-            ("gleam", tree_sitter_gleam()),
-            ("objc", tree_sitter_objc()),
-            ("wat", tree_sitter_wat()),
-            ("fish", tree_sitter_fish()),
-            ("awk", tree_sitter_awk()),
-        ]
+
 
         for (id, language) in languages {
             guard let language,
-                  let queryString = loadQuery(named: id),
+                  let queryString = queryLoader(id),
                   let query = compileQuery(queryString, language: language)
             else {
                 continue

@@ -71,7 +71,8 @@ final class ThumbnailProvider: QLThumbnailProvider {
             }
 
             let encoding = fileAttributes?.stringEncoding ?? .utf8
-            let languageName = registry.displayName(for: key) ?? (key.isEmpty ? "Text" : key.uppercased())
+            let resolvedLanguage = FileLanguageResolver.resolve(url: url, key: key)
+            let languageName = resolvedLanguage.displayName
 
             if Task.isCancelled {
                 await MainActor.run {
@@ -110,7 +111,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
             }
 
             // Request tree-sitter tokens from XPC (1.5s timeout for thumbnails)
-            let languageId = registry.highlightLanguage(for: key) ?? ""
+            let languageId = resolvedLanguage.id
             var treeSitterTokens: [HighlightToken]? = nil
             if !languageId.isEmpty {
                 let snippetCode = snippet.lines.joined(separator: "\n")
@@ -121,7 +122,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
                     requestId: requestId,
                     timeout: 1.5
                 )
-                if case .success(let tokens) = result, !tokens.isEmpty {
+                if case .success(let tokens) = result {
                     treeSitterTokens = tokens
                 }
             }

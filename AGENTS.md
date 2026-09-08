@@ -481,3 +481,11 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
   - Browser check on `http://127.0.0.1:3300/security` → route rendered with signing/privacy/vendor facts and `AboutPage` JSON-LD
   - Browser checks on `/` and `/download` → `/security` links present
   - Emulated 390px mobile viewport → no horizontal overflow
+
+## 2026-09-08
+
+### GPX and GAP Quick Look support (PR #26)
+- Outcome: Added vendor-compatible GPX routing and complete GAP source/test highlighting, including multiline transcript input and conservative GAP/Godot `.gd` disambiguation. Explicit filename/extension mappings win; thumbnails preserve successful empty token results.
+- Files: `dotViewer/project.yml`, `Shared/FileLanguageResolver.swift`, `Shared/GAPSourceDetector.swift`, `Shared/DefaultFileTypes.json`, `HighlightXPC/TreeSitterHighlighter.swift`, `HighlightXPC/GAPTestInputRanges.swift`, pinned GAP/GAPTST grammars and queries, thumbnail provider/renderer, tests and fixtures.
+- Verified: 204 XCTest tests pass; 10 Python routing/generator tests pass; UTI audit 711/711 (includes export-based coverage); Developer ID archive/export and strict signature check pass. Installed 1.5.3 (10) locally, without notarization or publication. Finder Space shows highlighted GPX (including `.gpx`), GAP `.gd` and `.tst`; `.g`/`.gi` plus upstream GAP files have successful preview logs. Godot retains GDScript.
+- Follow-ups: Local system thumbnail generation still supplies plain GAP thumbnails and fails GPX thumbnail generation; dotViewer thumbnail invocation was not observed. The new shared token conversion is tested, but native thumbnail routing is not signed off. No merge or public release performed.
