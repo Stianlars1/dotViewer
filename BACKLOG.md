@@ -42,8 +42,8 @@ From v1 requirements and future direction.
 | B-040 | ~~Preview window size controls~~ | ~~Done~~ | Completed 2026-04-03, extended 2026-04-16 — Preview window size now offers 5 modes (`Fixed`, `Auto`, `Aspect Ratio`, `Fit Content`, `Remember`) in a dedicated Window Size settings section. |
 | B-041 | ~~Extension conflict scanner~~ | ~~Done~~ | Completed 2026-04-16 — Built-in conflict detection in StatusView via `pluginkit`. Scans for competing third-party QL preview extensions, per-extension disable, one-click "Resolve All", and stale registration cleanup. Inspired by Oil3/PluginKits. |
 | B-042 | ~~Preview font family preferences~~ | ~~Done~~ | Completed 2026-04-29 — Added installed macOS font pickers for Code/RAW and rendered Markdown. Applies to HTML previews, plain-text fallback, rendered markdown prose, CSV/TSV/manpage rich previews, Settings theme preview, and Finder thumbnails. |
-| B-043 | GPX routing and XML highlighting | Implemented in PR #26 | Supports both `com.topografix.gpx` and the dotViewer export in preview and thumbnail declarations; generator keeps both. Pending merge/release. |
-| B-044 | GAP source and test previews | Implemented in PR #26 | Ships `.g`/`.gi`/`.tst`, GAP and GAP-test grammars with input injections, conservative `.gd` detection, and explicit language overrides. Godot defaults retained. Pending merge/release. |
+| B-043 | GPX routing and XML highlighting | Released in 1.5.3 | Supports both `com.topografix.gpx` and the dotViewer export in preview and thumbnail declarations; generator keeps both. Released through PR #26. |
+| B-044 | GAP source and test previews | Released in 1.5.3 | Ships `.g`/`.gi`/`.tst`, GAP and GAP-test grammars with input injections, conservative `.gd` detection, and explicit language overrides. Godot defaults retained. Released through PR #26. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.
