@@ -35,6 +35,13 @@ BOLD='\033[1m'
 NC='\033[0m'
 
 VERSION="${1:-}"
+RELEASE_ARGS=("${@:2}")
+for argument in "${RELEASE_ARGS[@]}"; do
+    case "$argument" in
+        --reuse-exported-app|--build-number=*) ;;
+        *) echo "Unsupported publish argument: $argument" >&2; exit 1 ;;
+    esac
+done
 
 if [ -z "$VERSION" ]; then
     echo -e "${RED}Usage: $0 <version>${NC}"
@@ -124,7 +131,7 @@ echo ""
 echo -e "${BOLD}Step 2/5:${NC} Building Developer ID release (DMG + notarize)..."
 echo ""
 
-"$SCRIPT_DIR/release.sh" "$VERSION"
+"$SCRIPT_DIR/release.sh" "$VERSION" "${RELEASE_ARGS[@]}"
 
 if [ ! -f "$DMG_PATH" ]; then
     echo -e "${RED}Error: DMG not found at $DMG_PATH${NC}"

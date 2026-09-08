@@ -38,27 +38,31 @@ actor ExtensionConflictScanner {
     private let dotViewerPreviewId = "com.stianlars1.dotViewer.QuickLookPreview"
     private let dotViewerThumbnailId = "com.stianlars1.dotViewer.QuickLookThumbnail"
 
-    private init() {}
+    private let command: @Sendable (String, [String]) async throws -> String
+
+    init(command: @escaping @Sendable (String, [String]) async throws -> String = { path, arguments in
+        try await StatusProcessRunner.run(path: path, arguments: arguments)
+    }) {
+        self.command = command
+    }
 
     // MARK: - Discovery
 
     /// Scans all registered Quick Look preview extensions.
-    func scanPreviewExtensions() async -> [QLExtensionInfo] {
-        guard let output = try? await runPluginkit(arguments: ["-mDvvv", "-p", "com.apple.quicklook.preview"]) else {
-            return []
-        }
+    func scanPreviewExtensions() async throws -> [QLExtensionInfo] {
+        let output = try await runPluginkit(arguments: ["-mDvvv", "-p", "com.apple.quicklook.preview"])
         return parsePluginkitOutput(output)
     }
 
     /// Returns only non-Apple, non-dotViewer extensions that are currently enabled.
-    func scanConflicts() async -> [QLExtensionInfo] {
-        let all = await scanPreviewExtensions()
+    func scanConflicts() async throws -> [QLExtensionInfo] {
+        let all = try await scanPreviewExtensions()
         return all.filter { $0.isThirdPartyConflict }
     }
 
     /// Returns stale dotViewer registrations (old build paths that are not /Applications/dotViewer.app).
-    func scanStaleDotViewerRegistrations() async -> [QLExtensionInfo] {
-        let all = await scanPreviewExtensions()
+    func scanStaleDotViewerRegistrations() async throws -> [QLExtensionInfo] {
+        let all = try await scanPreviewExtensions()
         return all.filter { ext in
             ext.isDotViewer && !ext.path.hasPrefix("/Applications/dotViewer.app")
         }
@@ -104,17 +108,18 @@ actor ExtensionConflictScanner {
     }
 
     /// Disables all third-party conflicts and ensures dotViewer is enabled.
-    func resolveAllConflicts() async -> Int {
-        let conflicts = await scanConflicts()
+    enum ResolutionFailure: Error { case commandFailed }
+
+    func resolveAllConflicts() async throws -> Int {
+        let conflicts = try await scanConflicts()
         var resolved = 0
         for ext in conflicts {
-            if await disableExtension(ext.id) {
-                resolved += 1
-            }
+            guard await disableExtension(ext.id) else { throw ResolutionFailure.commandFailed }
+            resolved += 1
         }
-        _ = await ensureDotViewerEnabled()
+        guard await ensureDotViewerEnabled() else { throw ResolutionFailure.commandFailed }
         // Reset Quick Look cache so changes take effect immediately
-        _ = try? await runProcess(path: "/usr/bin/qlmanage", arguments: ["-r"])
+        _ = try await runProcess(path: "/usr/bin/qlmanage", arguments: ["-r"])
         return resolved
     }
 
@@ -204,18 +209,6 @@ actor ExtensionConflictScanner {
     }
 
     private func runProcess(path: String, arguments: [String]) async throws -> String {
-        let process = Process()
-        process.executableURL = URL(fileURLWithPath: path)
-        process.arguments = arguments
-
-        let pipe = Pipe()
-        process.standardOutput = pipe
-        process.standardError = Pipe()
-
-        try process.run()
-        process.waitUntilExit()
-
-        let data = pipe.fileHandleForReading.readDataToEndOfFile()
-        return String(data: data, encoding: .utf8) ?? ""
+        try await command(path, arguments)
     }
 }

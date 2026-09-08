@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.5.4 (2026-09-09)
+
+### Fixed
+
+- The app status page now completes extension and conflict checks instead of waiting indefinitely on blocked command output. Checks have a five-second deadline and display a retryable error when status cannot be confirmed.
+- Failed conflict changes and unknown/superseded registrations no longer produce a misleading green result.
+- Restored the established DropDMG installer layout. Packaging now stops if DropDMG fails instead of creating an unstyled installer. Third-party notices are included inside the app bundle.
+
 ## v1.5.3 (2026-09-08)
 
 ### Added
