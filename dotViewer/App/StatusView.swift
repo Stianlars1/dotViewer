@@ -1,14 +1,18 @@
 import SwiftUI
 import AppKit
 import Shared
+import OSLog
 
 struct StatusView: View {
     @StateObject private var helper = ExtensionHelper.shared
     @State private var extensionStatus: ExtensionStatus = .checking
     @State private var conflicts: [QLExtensionInfo] = []
     @State private var staleRegistrations: [QLExtensionInfo] = []
-    @State private var isScanning = false
+    @State private var isScanning = true
+    @State private var scanError: String?
+    private let statusLogger = Logger(subsystem: "com.stianlars1.dotViewer", category: "ExtensionStatus")
     @State private var resolveResult: String?
+    @State private var resolveFailed = false
 
     var body: some View {
         ScrollView {
@@ -30,7 +34,7 @@ struct StatusView: View {
                 VStack(spacing: 16) {
                     
                     Group {
-                        if extensionStatus != .enabled && extensionStatus != .checking  {
+                        if extensionStatus == .disabled {
                             
                             HStack(spacing: 12) {
                                 Image(systemName: "puzzlepiece.extension")
@@ -75,6 +79,7 @@ struct StatusView: View {
                         }
                         .buttonStyle(.borderless)
                         .help("Refresh status")
+                        .disabled(extensionStatus == .checking)
 
                         
                     }
@@ -82,9 +87,6 @@ struct StatusView: View {
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
 
                     if case .disabled = extensionStatus {
-                        setupSteps
-                        openSettingsButton
-                    } else if case .error = extensionStatus {
                         setupSteps
                         openSettingsButton
                     }
@@ -212,23 +214,22 @@ private extension StatusView {
     @MainActor
     func scanForConflicts() async {
         isScanning = true
-        let scanner = ExtensionConflictScanner.shared
-        let foundConflicts = await scanner.scanConflicts()
-
-        // Stale registrations only accumulate from building repeatedly out of different source
-        // directories — a developer situation. A customer installs one bundle in /Applications and
-        // will never see this, so surfacing it in a release build is pure noise. Detection stays,
-        // gated to debug, because it is genuinely useful while working on the app.
-        #if DEBUG
-        let foundStale = await scanner.scanStaleDotViewerRegistrations()
-        #else
-        let foundStale: [QLExtensionInfo] = []
-        #endif
-
-        withAnimation {
-            conflicts = foundConflicts
-            staleRegistrations = foundStale
-            isScanning = false
+        scanError = nil
+        defer { isScanning = false }
+        do {
+            let all = try await ExtensionConflictScanner.shared.scanPreviewExtensions()
+            withAnimation {
+                conflicts = all.filter { $0.isThirdPartyConflict }
+                #if DEBUG
+                staleRegistrations = all.filter { $0.isDotViewer && !$0.path.hasPrefix("/Applications/dotViewer.app") }
+                #else
+                staleRegistrations = []
+                #endif
+            }
+            statusLogger.info("Conflict scan completed: \(conflicts.count) competing extensions")
+        } catch {
+            scanError = "Could not check extension conflicts. Try again."
+            statusLogger.error("Conflict scan failed or timed out")
         }
     }
 
@@ -253,10 +254,17 @@ private extension StatusView {
                 }
                 .buttonStyle(.borderless)
                 .help("Rescan for conflicts")
+                .disabled(isScanning)
             }
 
             VStack(alignment: .leading, spacing: 12) {
-                if conflicts.isEmpty && staleRegistrations.isEmpty {
+                if isScanning {
+                    Label("Checking extension conflicts…", systemImage: "hourglass")
+                        .foregroundStyle(.secondary)
+                } else if let scanError {
+                    Label(scanError, systemImage: "exclamationmark.triangle")
+                        .foregroundStyle(.orange)
+                } else if conflicts.isEmpty && staleRegistrations.isEmpty {
                     HStack(spacing: 10) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
@@ -282,8 +290,14 @@ private extension StatusView {
 
                         Button {
                             Task {
-                                let count = await ExtensionConflictScanner.shared.resolveAllConflicts()
-                                resolveResult = "Disabled \(count) conflicting extension\(count == 1 ? "" : "s"). dotViewer now has priority."
+                                resolveFailed = false
+                                do {
+                                    let count = try await ExtensionConflictScanner.shared.resolveAllConflicts()
+                                    resolveResult = "Disabled \(count) conflicting extension\(count == 1 ? "" : "s")."
+                                } catch {
+                                    resolveFailed = true
+                                    resolveResult = "Could not resolve extension conflicts. Try again."
+                                }
                                 await scanForConflicts()
                                 await checkExtensionStatus()
                             }
@@ -328,7 +342,7 @@ private extension StatusView {
                 if let result = resolveResult {
                     Text(result)
                         .font(.caption)
-                        .foregroundStyle(.green)
+                        .foregroundStyle(resolveFailed ? .orange : .green)
                         .transition(.opacity)
                 }
             }

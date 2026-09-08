@@ -12,6 +12,7 @@ set -euo pipefail
 #
 #  Options:
 #    --app-store              Build for App Store submission (no DMG/notarization)
+#    --reuse-exported-app     Resume packaging a verified export (requires --build-number)
 #    --skip-notarize          Skip notarization (testing only)
 #    --skip-dmg               Build and notarize app only, skip DMG creation
 #    --github                 Create GitHub release after build (requires gh CLI)
@@ -33,42 +34,12 @@ KEYCHAIN_PROFILE="AC_PASSWORD"
 DROPDMG_PROFILE="dotviewer"
 
 VERSION=""
+REUSE_EXPORTED_APP=false
 SKIP_NOTARIZE=false
 SKIP_DMG=false
 APP_STORE=false
 CREATE_GITHUB_RELEASE=false
 BUILD_NUMBER=""
-
-create_manual_dmg() {
-    local staging_dir="$BUILD_DIR/dmg-staging"
-    local temp_dmg="$BUILD_DIR/$APP_NAME-$VERSION-temp.dmg"
-
-    rm -rf "$staging_dir" "$temp_dmg" "$DMG_PATH"
-    mkdir -p "$staging_dir"
-
-    ditto "$APP_PATH" "$staging_dir/$APP_NAME.app"
-    ln -s /Applications "$staging_dir/Applications"
-
-    print_warning "Using hdiutil fallback to create DMG"
-
-    hdiutil create \
-        -volname "$APP_NAME" \
-        -srcfolder "$staging_dir" \
-        -fs HFS+ \
-        -format UDRW \
-        "$temp_dmg" \
-        -quiet
-
-    hdiutil convert \
-        "$temp_dmg" \
-        -format UDZO \
-        -imagekey zlib-level=9 \
-        -o "$DMG_PATH" \
-        -quiet
-
-    rm -f "$temp_dmg"
-    rm -rf "$staging_dir"
-}
 
 sign_dmg_if_needed() {
     if codesign --verify --verbose=2 "$DMG_PATH" >/dev/null 2>&1; then
@@ -203,6 +174,7 @@ Arguments:
 
 Options:
   --app-store       Build for App Store submission
+  --reuse-exported-app  Resume a verified export (requires --build-number)
   --skip-notarize   Skip notarization (testing only)
   --skip-dmg        Build app only, skip DMG creation
   --github          Create GitHub release after build
@@ -220,6 +192,10 @@ USAGE
 
 for arg in "$@"; do
     case $arg in
+        --reuse-exported-app)
+            REUSE_EXPORTED_APP=true
+            shift
+            ;;
         --skip-notarize)
             SKIP_NOTARIZE=true
             ;;
@@ -371,6 +347,19 @@ echo ""
 print_step "Step 1/8: Checking prerequisites..."
 check_prerequisites
 
+if [ "$REUSE_EXPORTED_APP" = true ]; then
+    if [ "$APP_STORE" = true ] || [ -z "$BUILD_NUMBER" ]; then
+        print_error "Reusing an exported app requires Developer ID mode and --build-number."
+        exit 1
+    fi
+    EXPORTED_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist" 2>/dev/null || true)
+    EXPORTED_BUILD=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP_PATH/Contents/Info.plist" 2>/dev/null || true)
+    if [ "$EXPORTED_VERSION" != "$VERSION" ] || [ "$EXPORTED_BUILD" != "$BUILD_NUMBER" ]; then
+        print_error "Exported app version/build does not match $VERSION ($BUILD_NUMBER). Refusing to package it."
+        exit 1
+    fi
+    print_step "Reusing verified export: $APP_PATH ($EXPORTED_VERSION, build $EXPORTED_BUILD)"
+else
 print_step "Step 2/8: Cleaning build directory..."
 rm -rf "$BUILD_DIR"
 mkdir -p "$BUILD_DIR"
@@ -380,6 +369,14 @@ print_step "Step 3/8: Creating archive..."
 echo ""
 
 XCODEBUILD_VERSION_ARGS=(MARKETING_VERSION="$VERSION")
+# Opt-in workaround for Xcode 26.6 hanging in compiler metadata probes. These
+# wrappers forward every compilation argument to the unmodified Apple tools.
+if [ "${DOTVIEWER_USE_COMPILER_WRAPPERS:-0}" = "1" ]; then
+    echo "    Using Apple compiler wrappers for the Xcode discovery-pipe workaround"
+    XCODEBUILD_VERSION_ARGS+=(CC="$SCRIPT_DIR/compiler/apple-clang-wrapper.sh")
+    XCODEBUILD_VERSION_ARGS+=(CPLUSPLUS="$SCRIPT_DIR/compiler/apple-clangxx-wrapper.sh")
+fi
+
 if [ -n "$BUILD_NUMBER" ]; then
     XCODEBUILD_VERSION_ARGS+=(CURRENT_PROJECT_VERSION="$BUILD_NUMBER")
 fi
@@ -452,6 +449,8 @@ if [ "$APP_STORE" = true ]; then
     exit 0
 fi
 
+fi
+
 if [ ! -d "$APP_PATH" ]; then
     print_error "Export failed - no app created"
     exit 1
@@ -516,44 +515,10 @@ fi
 
 if [ "$SKIP_DMG" = false ]; then
     print_step "Step 7/8: Creating DMG installer..."
-    if command -v dropdmg >/dev/null 2>&1; then
-        echo "    Using DropDMG profile: $DROPDMG_PROFILE"
-
-        DROPDMG_OUTPUT=$(dropdmg \
-            --config-name="$DROPDMG_PROFILE" \
-            --destination="$EXPORT_PATH" \
-            --base-name="$APP_NAME-$VERSION" \
-            "$APP_PATH" 2>&1) || {
-            print_warning "DropDMG failed:"
-            echo "$DROPDMG_OUTPUT"
-            create_manual_dmg
-        }
-
-        CREATED_DMG=$(echo "${DROPDMG_OUTPUT:-}" | tail -1)
-
-        if [ -f "$CREATED_DMG" ]; then
-            DMG_PATH="$CREATED_DMG"
-            DMG_FILENAME=$(basename "$DMG_PATH")
-            print_success "DMG created: $DMG_FILENAME"
-        elif [ -f "$DMG_PATH" ]; then
-            print_success "DMG created: $DMG_FILENAME"
-        else
-            FOUND_DMG=$(find "$EXPORT_PATH" -name "*.dmg" -type f 2>/dev/null | head -1)
-            if [ -n "$FOUND_DMG" ]; then
-                DMG_PATH="$FOUND_DMG"
-                DMG_FILENAME=$(basename "$DMG_PATH")
-                print_success "DMG created: $DMG_FILENAME"
-            elif [ -f "$DMG_PATH" ]; then
-                print_success "DMG created: $DMG_FILENAME"
-            else
-                create_manual_dmg
-                print_success "DMG created: $DMG_FILENAME"
-            fi
-        fi
-    else
-        create_manual_dmg
-        print_success "DMG created: $DMG_FILENAME"
-    fi
+    echo "    Using DropDMG profile: $DROPDMG_PROFILE"
+    DMG_PATH=$("$SCRIPT_DIR/package-dmg.sh" "$APP_PATH" "$EXPORT_PATH" "$VERSION" "$DROPDMG_PROFILE")
+    DMG_FILENAME=$(basename "$DMG_PATH")
+    print_success "Styled DMG created: $DMG_FILENAME"
 
     DMG_SIZE=$(du -h "$DMG_PATH" | cut -f1)
     sign_dmg_if_needed
