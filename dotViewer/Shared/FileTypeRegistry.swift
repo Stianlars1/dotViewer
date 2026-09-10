@@ -228,6 +228,11 @@ public final class FileTypeRegistry: @unchecked Sendable {
             "mxml": "xml",
             "crystal": "ruby",
             "gdscript": "python",
+            // gnuplot's syntax is script-like (# comments, string literals,
+            // command-first statements). Aliasing to the bash grammar gives
+            // us decent tokenisation until a real tree-sitter-gnuplot grammar
+            // is vendored. The registry keeps "Gnuplot" as the display label.
+            "gnuplot": "bash",
             "lisp": "clojure",
             "coffeescript": "javascript",
             "solidity": "javascript",

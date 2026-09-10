@@ -82,6 +82,56 @@ final class FileTypeRegistryTests: XCTestCase {
                       "XML entry should list gpx among its extensions")
     }
 
+    // MARK: - Issue #29 — Gnuplot script routing
+
+    func testGnuplotPrimaryExtensionsResolve() {
+        // gnuplot script files come with several accepted extensions; every
+        // one must land on the Gnuplot registry entry and be highlighted with
+        // the bash grammar (see FileTypeRegistry aliases). The reporter of
+        // #29 specifically asked for .gp and .gnuplot to be pre-configured;
+        // the rest come from the wider gnuplot ecosystem (docs, gallery,
+        // third-party grammars).
+        for ext in ["gp", "gnuplot", "gnu", "gpi", "plt", "plot", "dem"] {
+            XCTAssertEqual(registry.highlightLanguage(for: ext), "bash",
+                           "\(ext) should highlight with the bash grammar")
+            XCTAssertEqual(registry.displayName(for: ext), "Gnuplot",
+                           "\(ext) should show as Gnuplot in the badge")
+        }
+    }
+
+    func testGnuplotExtensionsCaseInsensitive() {
+        // Uppercase extensions are common on Windows-shared files and in
+        // documentation. The registry is case-insensitive by contract; make
+        // that explicit for the new entry.
+        XCTAssertEqual(registry.highlightLanguage(for: "GP"), "bash")
+        XCTAssertEqual(registry.highlightLanguage(for: "PLT"), "bash")
+        XCTAssertEqual(registry.displayName(for: "Gnuplot"), "Gnuplot")
+    }
+
+    func testGnuplotFilenamesResolve() {
+        // gnuplot reads gnuplotrc / .gnuplot / .gnuplot_history at startup.
+        // The registry stores filenames with the leading dot stripped, so
+        // lookups happen through the same extension map.
+        XCTAssertEqual(registry.highlightLanguage(for: "gnuplotrc"), "bash")
+        XCTAssertEqual(registry.highlightLanguage(for: "gnuplot_history"), "bash")
+        XCTAssertEqual(registry.displayName(for: "gnuplotrc"), "Gnuplot")
+    }
+
+    func testGnuplotEntryInBuiltIns() {
+        // The registry must expose gnuplot by id for the Settings language
+        // picker and any future custom-mapping flows.
+        let gp = registry.fileType(byId: "gnuplot")
+        XCTAssertNotNil(gp)
+        XCTAssertEqual(gp?.displayName, "Gnuplot")
+        for ext in ["gp", "gnuplot", "gnu", "gpi", "plt", "plot", "dem"] {
+            XCTAssertTrue(gp?.extensions.contains(ext) == true,
+                          "Gnuplot entry is missing extension \(ext)")
+        }
+        XCTAssertTrue(gp?.filenames.contains("gnuplotrc") == true)
+        XCTAssertTrue(gp?.filenames.contains(".gnuplot") == true)
+        XCTAssertTrue(gp?.filenames.contains(".gnuplot_history") == true)
+    }
+
     // MARK: - Filename Resolution
 
     func testFilenameResolution() {

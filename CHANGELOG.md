@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Gnuplot source-file previews. The registry now recognises `.gp`, `.gnuplot`, `.gnu`, `.gpi`, `.plt`, `.plot`, and `.dem`, plus the `gnuplotrc`, `.gnuplot`, and `.gnuplot_history` startup files gnuplot itself reads at launch. Highlighting is routed through the bash grammar (comments, strings, and command-first keywords line up with gnuplot's shell-like syntax) with "Gnuplot" as the display label. Resolves [#29](https://github.com/Stianlars1/dotViewer/issues/29).
+- UTI declarations for the eight new gnuplot extensions in `dotViewer/project.yml`, so Finder routes those files to the extension without falling through to `dyn.*`.
+
 ## v1.5.4 (2026-09-09)
 
 ### Fixed

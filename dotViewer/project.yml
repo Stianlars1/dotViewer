@@ -1051,6 +1051,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - deliverfile
+          - UTTypeIdentifier: com.stianlars1.dotviewer.dem
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - dem
           - UTTypeIdentifier: com.stianlars1.dotviewer.desktop
             UTTypeDescription: INI
             UTTypeConformsTo:
@@ -1685,6 +1692,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gnad
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnu
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnu
           - UTTypeIdentifier: com.stianlars1.dotviewer.gnumakefile
             UTTypeDescription: Make
             UTTypeConformsTo:
@@ -1692,6 +1706,20 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gnumakefile
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnuplot
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnuplot
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnuplot_history
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnuplot_history
           - UTTypeIdentifier: com.stianlars1.dotviewer.go
             UTTypeDescription: Go
             UTTypeConformsTo:
@@ -1731,6 +1759,20 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - tst
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gp
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gp
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gpi
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gpi
           - UTTypeIdentifier: com.stianlars1.dotviewer.gpx
             UTTypeDescription: GPS Exchange Format (XML)
             UTTypeConformsTo:
@@ -3055,6 +3097,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - plex
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plot
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plot
           - UTTypeIdentifier: com.stianlars1.dotviewer.plperl
             UTTypeDescription: PL/Perl
             UTTypeConformsTo:
@@ -3069,6 +3118,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - plpython
+          - UTTypeIdentifier: com.stianlars1.dotviewer.plt
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - plt
           - UTTypeIdentifier: com.stianlars1.dotviewer.pltcl
             UTTypeDescription: PL/Tcl
             UTTypeConformsTo:
@@ -5050,6 +5106,7 @@ targets:
               - com.stianlars1.dotviewer.default
               - com.stianlars1.dotviewer.defaults
               - com.stianlars1.dotviewer.deliverfile
+              - com.stianlars1.dotviewer.dem
               - com.stianlars1.dotviewer.desktop
               - com.stianlars1.dotviewer.dev
               - com.stianlars1.dotviewer.development
@@ -5135,12 +5192,17 @@ targets:
               - com.stianlars1.dotviewer.gleam
               - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gnu
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.gnuplot
+              - com.stianlars1.dotviewer.gnuplot_history
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.g
               - com.stianlars1.dotviewer.gi
               - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gp
+              - com.stianlars1.dotviewer.gpi
               - com.stianlars1.dotviewer.gpx
               - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
@@ -5323,8 +5385,10 @@ targets:
               - com.stianlars1.dotviewer.pkb
               - com.stianlars1.dotviewer.pks
               - com.stianlars1.dotviewer.plex
+              - com.stianlars1.dotviewer.plot
               - com.stianlars1.dotviewer.plperl
               - com.stianlars1.dotviewer.plpython
+              - com.stianlars1.dotviewer.plt
               - com.stianlars1.dotviewer.pltcl
               - com.stianlars1.dotviewer.plx
               - com.stianlars1.dotviewer.pmod
@@ -5847,6 +5911,7 @@ targets:
               - com.stianlars1.dotviewer.default
               - com.stianlars1.dotviewer.defaults
               - com.stianlars1.dotviewer.deliverfile
+              - com.stianlars1.dotviewer.dem
               - com.stianlars1.dotviewer.desktop
               - com.stianlars1.dotviewer.dev
               - com.stianlars1.dotviewer.development
@@ -5932,12 +5997,17 @@ targets:
               - com.stianlars1.dotviewer.gleam
               - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gnu
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.gnuplot
+              - com.stianlars1.dotviewer.gnuplot_history
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.g
               - com.stianlars1.dotviewer.gi
               - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gp
+              - com.stianlars1.dotviewer.gpi
               - com.stianlars1.dotviewer.gpx
               - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
@@ -6120,8 +6190,10 @@ targets:
               - com.stianlars1.dotviewer.pkb
               - com.stianlars1.dotviewer.pks
               - com.stianlars1.dotviewer.plex
+              - com.stianlars1.dotviewer.plot
               - com.stianlars1.dotviewer.plperl
               - com.stianlars1.dotviewer.plpython
+              - com.stianlars1.dotviewer.plt
               - com.stianlars1.dotviewer.pltcl
               - com.stianlars1.dotviewer.plx
               - com.stianlars1.dotviewer.pmod
