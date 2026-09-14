@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.5 (2026-09-14)
+
+### Fixed
+
+- Restored matching Developer ID provisioning profiles in the recovery signing workflow. Release verification now rejects missing, expired, mismatched or development profiles before notarization and packaging. Addresses the 1.5.4 launch-signature regression reported on Intel/macOS 15 (#28).
+- Added Godot's `public.gd` routing identifier to both Quick Look extensions. GAP `.gd` content detection and explicit language overrides remain in place, while Godot scripts retain their existing language (#24).
+
+### Added
+
+- Dedicated tree-sitter Gnuplot highlighting and a Gnuplot language-picker option (#29). Supports `.gnuplot`, `.gplt`, `.gnu`, and the `gnuplotrc`, `.gnuplot`, `.gnuplot_history` filenames.
+- `.gp` previews use Gnuplot when recognizable plotting commands are present; ambiguous PARI/GP content stays plain text unless explicitly mapped. Conflicting `.gpi`, `.gpl`, `.plt`, `.plot` and `.dem` extensions are not claimed as Gnuplot by default.
+
 ## v1.5.4 (2026-09-09)
 
 ### Fixed

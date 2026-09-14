@@ -53,6 +53,7 @@
 		230D1FB76C264D84009A205B /* ExtensionStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2C791F666CCAF1377B0272 /* ExtensionStatusChecker.swift */; };
 		2487835A8004A6F250F5B43E /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = B2762C2D8151DFE6EC73D30C /* scanner.c */; };
 		25B64762D019C6D7D339F183 /* FileLanguageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0900B117B796A0F5DE115EC4 /* FileLanguageResolver.swift */; };
+		27D7E05074D22DBD16892832 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F3E382FBC808FDDBFA3EFB01 /* parser.c */; };
 		297EE7E6A5EA61A0DAC785ED /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AC6C5AF5824DE36A10CC0676 /* scanner.c */; };
 		29F3628C328EBD310B4C4C28 /* SearchBridgeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49A0CC00DB41E6F8996BAA5 /* SearchBridgeServer.swift */; };
 		2A60298B793C7B6982263F41 /* PreviewSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */; };
@@ -104,7 +105,9 @@
 		4AC916533C42015F7595E060 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6A91F867EFD4D88A90DAEDFD /* parser.c */; };
 		4C28280B6AD346C5D1D6D973 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A652354FAA97CF3B3A0A2DF /* parser.c */; };
 		4E2FD02532A8D768CA65B350 /* toml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 8BC70D59C38219CD20BD0EE9 /* toml.scm */; };
+		4E43E607DC590CBF2A8D8F18 /* GnuplotHighlightingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */; };
 		4EE5EF9D8D456959CC4009B2 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C821E9C8D577521126C5707F /* scanner.c */; };
+		4F01F778D3795DA53876324A /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F3E382FBC808FDDBFA3EFB01 /* parser.c */; };
 		506C0556355CBFF81365D92E /* ocaml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 15F7B9F7B830EA6C6424E715 /* ocaml.scm */; };
 		514C7EABD3596631DC98DEFC /* PlistConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */; };
 		5179FC5219C6CEF8CCF0CC10 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 2F28A738C9558D8B2E66CECC /* scanner.c */; };
@@ -123,6 +126,7 @@
 		5D474A5678A143A702CFA4EE /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E64FF42A9E144894CB208 /* parser.c */; };
 		5E00624AC61E32F3BFB8A8BB /* lexer.c in Sources */ = {isa = PBXBuildFile; fileRef = D3ECA0599AF1AA56322FCF9E /* lexer.c */; };
 		5E0351A9B397D96BFE300A18 /* DelimitedTextRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0775AE59AE72EE58BB6E16D1 /* DelimitedTextRendererTests.swift */; };
+		61302237DE2BD9126D3225CD /* gnuplot.scm in Resources */ = {isa = PBXBuildFile; fileRef = 7D65CE57641BB0BBD4C77018 /* gnuplot.scm */; };
 		61A3B9F0BF63DBABD4C3E013 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C014E5690DB7BD869DFEE0A /* parser.c */; };
 		62820B4E093D5C91A336A581 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 702885C55933CE2DF39B87BC /* parser.c */; };
 		6286B86174FF7BE2E25E6B04 /* hcl.scm in Resources */ = {isa = PBXBuildFile; fileRef = 1F66F9F9B894F449666DE46F /* hcl.scm */; };
@@ -135,6 +139,7 @@
 		6B12BEC9C1473AAC77121C28 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F0F9B57446BBF270B6838217 /* scanner.c */; };
 		6B8BE4ADF082A46EF569CA0B /* regex.scm in Resources */ = {isa = PBXBuildFile; fileRef = D7E359E21E48F94E1FACE881 /* regex.scm */; };
 		6BFAD180BB692038E8895BBB /* json.scm in Resources */ = {isa = PBXBuildFile; fileRef = FC060A4B8651EABB4D49D720 /* json.scm */; };
+		6D8CC563034EECE03908B432 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FE103F979F797D6B4182AB /* scanner.c */; };
 		6D946A6B9B80FA1041FC3FC7 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 14619558D20AA956A456A5DD /* scanner.c */; };
 		6EE6C17F5CB0267A3E69657B /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F51B594E5300E8EF03BD5D01 /* parser.c */; };
 		72644D09592FA397BE3FFCA1 /* TransportStreamDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81CD5D92885F535F277D5CD1 /* TransportStreamDetector.swift */; };
@@ -243,6 +248,7 @@
 		C72CC4227C584DCC8C6E2FFB /* ManPageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C8351E9AF53E0D733C8E3E2 /* ManPageRenderer.swift */; };
 		C764C2FCEB2A092090041E42 /* ThumbnailProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972C53407D049382BC2CA84E /* ThumbnailProvider.swift */; };
 		C77295B62E8E04A460DD144D /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = E0CF22092CE466C3D4A4201C /* parser.c */; };
+		C7FB9A23DEC1776043132E72 /* gnuplot.scm in Resources */ = {isa = PBXBuildFile; fileRef = 7D65CE57641BB0BBD4C77018 /* gnuplot.scm */; };
 		C896508988D12A1DF92CB701 /* stdlib-symbols.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0E41DF4EACEE51C1C314A88D /* stdlib-symbols.txt */; };
 		C9956E93A736CE473FB7D345 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = CC943593ADA7924AE0EE049F /* parser.c */; };
 		C9C8789A28828AFBFE7D2857 /* lexer.c in Sources */ = {isa = PBXBuildFile; fileRef = D3ECA0599AF1AA56322FCF9E /* lexer.c */; };
@@ -276,6 +282,7 @@
 		E0893A56310320F2090BEDD1 /* FileTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */; };
 		E10F6AA8E42CBB9822713EB1 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 2C74B9D80268562A529F34ED /* parser.c */; };
 		E12AC9EC174DB042AE4C51D8 /* PreviewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2600D325717411A861AF988C /* PreviewCache.swift */; };
+		E27D8D59C77D24E280F0AFAF /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FE103F979F797D6B4182AB /* scanner.c */; };
 		E3760C032D097908F79BB9D4 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C4FCE33CD25B72239D819B2B /* parser.c */; };
 		E3FDEBF28457DCDC5FE445E4 /* kotlin.scm in Resources */ = {isa = PBXBuildFile; fileRef = 0B0D0CD5596EBDCC278F9952 /* kotlin.scm */; };
 		E4194384CCDEFDF57B096F87 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C6E80C50DA50ABD2C6B8C169 /* parser.c */; };
@@ -306,6 +313,7 @@
 		FC334B0B7C6BB549900EF8B8 /* TextThumbnailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8304A796C2941B436301A23D /* TextThumbnailRenderer.swift */; };
 		FC91671347C29EEFD12CD6C1 /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 0BA96BDBC4F62077C0777329 /* node.c */; };
 		FD018BAAACF09B46857A5ED4 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C278B8B1FD3A99C5443D97F2 /* parser.c */; };
+		FF0FB99FBC7F9851F31674F9 /* GnuplotSourceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E727B0E7808FBD701C0F856 /* GnuplotSourceDetector.swift */; };
 		FFB01B1BDCC4121BABC6DA50 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 549F786C834DC9754CF19831 /* scanner.c */; };
 		FFCD26DA6D8DA29D7AB75461 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = C76D2E6938B01F93E11599CC /* stack.c */; };
 		FFFE45C60C0F99263FB425F5 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 549F786C834DC9754CF19831 /* scanner.c */; };
@@ -558,6 +566,7 @@
 		2DA5A626E895D4CEC0865323 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		2DD1DDF286ACDDE6ADE89172 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		2DE5E848F2A20903C8D1C29D /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		2E54B7D083E5BD37A5AB91E5 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		2F28A738C9558D8B2E66CECC /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		2F3850F61D4DE001496A9B86 /* QuickLookPreview.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookPreview.entitlements; sourceTree = "<group>"; };
 		3034EF16D0BF92F41E82A65D /* erlang.scm */ = {isa = PBXFileReference; path = erlang.scm; sourceTree = "<group>"; };
@@ -702,6 +711,7 @@
 		7AD81394CDE8A0A16E052B98 /* css.scm */ = {isa = PBXFileReference; path = css.scm; sourceTree = "<group>"; };
 		7B8AE043A1B3EA0E7E78DEBE /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		7C261705A9780EF7E3E2318D /* umachine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = umachine.h; sourceTree = "<group>"; };
+		7D65CE57641BB0BBD4C77018 /* gnuplot.scm */ = {isa = PBXFileReference; path = gnuplot.scm; sourceTree = "<group>"; };
 		7E4311C90440961FF488EF55 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		7EB0601B5F2F6C26217E897E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConverterTests.swift; sourceTree = "<group>"; };
@@ -724,6 +734,7 @@
 		8DD8841D2305C2E3BFA80041 /* tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = tree.c; sourceTree = "<group>"; };
 		8E3F4565FD7F0473F6ED1A91 /* TransportStreamDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportStreamDetectorTests.swift; sourceTree = "<group>"; };
 		8E64E470EBF5F471D12382A1 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
+		8E727B0E7808FBD701C0F856 /* GnuplotSourceDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GnuplotSourceDetector.swift; sourceTree = "<group>"; };
 		8FDA9390099304FC192BABF6 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		913660CA2DAB7C73A823F989 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		91BE035EFDD6E8CFE9855489 /* unicode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = unicode.h; sourceTree = "<group>"; };
@@ -792,6 +803,7 @@
 		B4CE0B3F397EC48B4C4C506C /* urename.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = urename.h; sourceTree = "<group>"; };
 		B4FF44F4002C6B1316D80781 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		B5451F56D8EC17B2B4B90B13 /* elixir.scm */ = {isa = PBXFileReference; path = elixir.scm; sourceTree = "<group>"; };
+		B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GnuplotHighlightingTests.swift; sourceTree = "<group>"; };
 		B6B238E625F9D018F934EE12 /* typescript.scm */ = {isa = PBXFileReference; path = typescript.scm; sourceTree = "<group>"; };
 		B7AAAA55D4ADD9363669F976 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		B91262659161E3199C818280 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -862,6 +874,7 @@
 		DB803B4AB7C187E753E3BAFD /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		DBCAB78BBC6ACA108529B62E /* stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stack.h; sourceTree = "<group>"; };
 		DC3FE34EADE1CE63ED60B8DA /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		DD33F489DABA09DFA0441893 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		DE53571252E57053F8C6B11D /* bash.scm */ = {isa = PBXFileReference; path = bash.scm; sourceTree = "<group>"; };
 		DF380AC23E492584E4DD108E /* ts_assert.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ts_assert.h; sourceTree = "<group>"; };
 		DFBCEEE697E46EC382484903 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
@@ -887,6 +900,7 @@
 		EAD8F1E0CB199DB08147075B /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		EB9940A7D28B8F2ED3CEEDFC /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		EC0C3734603E88A6A10E7FF8 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
+		EC2AD75E944EFB1E79B7B928 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		EEF8DF1B43A1A16BC47AAC8B /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		EF4F67BBBF772569C203FC64 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		EF5C639F57C9F53459BEA84C /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -897,12 +911,14 @@
 		F2CC76F8041E37818FF3B3D4 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		F30E6DA2A6552880D5187B0B /* PreviewProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewProvider.swift; sourceTree = "<group>"; };
 		F311B466F42A9C1C893BBD66 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
+		F3E382FBC808FDDBFA3EFB01 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		F40FA09E5558EDB91A3C8ACD /* TreeSitterLanguageRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeSitterLanguageRegistry.swift; sourceTree = "<group>"; };
 		F49A0CC00DB41E6F8996BAA5 /* SearchBridgeServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBridgeServer.swift; sourceTree = "<group>"; };
 		F4C42462A7530601B7CE1682 /* FileTypeRegistryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypeRegistryTests.swift; sourceTree = "<group>"; };
 		F51B594E5300E8EF03BD5D01 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		F5410DBEA3E116BEFCBABB57 /* MarkdownRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownRendererTests.swift; sourceTree = "<group>"; };
 		F5D754495D0C3C229FB30B20 /* QuickLookThumbnail.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = QuickLookThumbnail.entitlements; sourceTree = "<group>"; };
+		F5FE103F979F797D6B4182AB /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		F610A9071AF41AA633F263C1 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		F6B411D3F499621A8F8E03CB /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		F8ADCB9D1451BDF312E01869 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -1277,6 +1293,7 @@
 				E2E05DB7F8F7245E5B8621C8 /* gap.scm */,
 				FAFF1186D93439151FA1040B /* gaptst.scm */,
 				9A7E425846D6D10AEEFB6B51 /* gleam.scm */,
+				7D65CE57641BB0BBD4C77018 /* gnuplot.scm */,
 				D1C78368E91D4E3D142CCC94 /* go.scm */,
 				DAD85F88D667FAE2B68BBDF6 /* graphql.scm */,
 				55291594EA761209AE8195BD /* haskell.scm */,
@@ -1671,6 +1688,7 @@
 				C77CB2907DE5EE12C6C29DBC /* Shared */,
 				E0B2C43D78AF9E54DF65EB13 /* src */,
 				A2F5B69998C452D2E043ADCC /* src */,
+				A648E682926AAF44F0345E0D /* src */,
 				F2997FACEDF1AC6DDF833891 /* TreeSitterVendor */,
 				65B4BB16C2A5ECB8B8C04225 /* Utilities */,
 				09A018E0CB6B37B4C6B4F542 /* Frameworks */,
@@ -2201,6 +2219,17 @@
 			path = tree_sitter;
 			sourceTree = "<group>";
 		};
+		A648E682926AAF44F0345E0D /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F3E382FBC808FDDBFA3EFB01 /* parser.c */,
+				F5FE103F979F797D6B4182AB /* scanner.c */,
+				E10B944A1E7F64823BD1703F /* tree_sitter */,
+			);
+			name = src;
+			path = "TreeSitterVendor/tree-sitter-gnuplot/src";
+			sourceTree = "<group>";
+		};
 		A7A7C8B8C958DDA7C64CED03 /* src */ = {
 			isa = PBXGroup;
 			children = (
@@ -2487,6 +2516,7 @@
 				A05C85FCC252B3A37BFB8D44 /* FileTypeRegistry.swift */,
 				5EAF9989E40E74125D5B54F0 /* FileTypeResolution.swift */,
 				1671C42D25FEF7BDD21E57B4 /* GAPSourceDetector.swift */,
+				8E727B0E7808FBD701C0F856 /* GnuplotSourceDetector.swift */,
 				5A5FD8541E287C169C8663D1 /* HighlightProtocol.swift */,
 				5C683E94C18AC3CDF1A81579 /* HighlightXPCClient.swift */,
 				5319F43D8CFD469AA65FF86C /* Info.plist */,
@@ -2681,6 +2711,7 @@
 				F4C42462A7530601B7CE1682 /* FileTypeRegistryTests.swift */,
 				FB47D953DD137AC898742457 /* FileTypeResolutionTests.swift */,
 				41A58B9034153DF443F889AE /* GAPHighlightingTests.swift */,
+				B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */,
 				A7464DCF71E0AFB4D1714024 /* ManPageRendererTests.swift */,
 				F5410DBEA3E116BEFCBABB57 /* MarkdownRendererTests.swift */,
 				7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */,
@@ -2749,6 +2780,16 @@
 			);
 			name = src;
 			path = "TreeSitterVendor/tree-sitter-gap/src";
+			sourceTree = "<group>";
+		};
+		E10B944A1E7F64823BD1703F /* tree_sitter */ = {
+			isa = PBXGroup;
+			children = (
+				EC2AD75E944EFB1E79B7B928 /* alloc.h */,
+				DD33F489DABA09DFA0441893 /* array.h */,
+				2E54B7D083E5BD37A5AB91E5 /* parser.h */,
+			);
+			path = tree_sitter;
 			sourceTree = "<group>";
 		};
 		E8CAC7B65883CE45BA22F156 /* tree_sitter */ = {
@@ -3121,6 +3162,7 @@
 				7AB902F836ACCBAAB0A96BF1 /* README.md in Resources */,
 				7CACEA663307713DA519B12F /* gap.scm in Resources */,
 				3D0236CFB3CA3E4F58DD75F0 /* gaptst.scm in Resources */,
+				C7FB9A23DEC1776043132E72 /* gnuplot.scm in Resources */,
 				328E9C2C547B3512220B8965 /* json.scm in Resources */,
 				A380A6F4A8E021ABE9AAB071 /* stdlib-symbols.txt in Resources */,
 				662B1CDB6FD6CF81468C55A4 /* xml.scm in Resources */,
@@ -3160,6 +3202,7 @@
 				F30517865060CD5D1F11F059 /* gap.scm in Resources */,
 				CD99E5CAC56721823C8725CD /* gaptst.scm in Resources */,
 				C6F5D81ABB80B33B79016C92 /* gleam.scm in Resources */,
+				61302237DE2BD9126D3225CD /* gnuplot.scm in Resources */,
 				BF54717C42E2BD14505D91EE /* go.scm in Resources */,
 				73ED19194D4A884D163EEC9E /* grammar.json.rej in Resources */,
 				E475EA069BB1C64D967116EB /* graphql.scm in Resources */,
@@ -3238,6 +3281,7 @@
 				C9C8789A28828AFBFE7D2857 /* lexer.c in Sources */,
 				1803A6CC4D735EC0BF354CC9 /* main.swift in Sources */,
 				FC91671347C29EEFD12CD6C1 /* node.c in Sources */,
+				4F01F778D3795DA53876324A /* parser.c in Sources */,
 				586658066A865286E3BB9489 /* parser.c in Sources */,
 				3953DB1DEBC1852B9D6FFDC6 /* parser.c in Sources */,
 				A88F4C928A9FFD74522CB050 /* parser.c in Sources */,
@@ -3296,6 +3340,7 @@
 				AC9CB7AAE200B72FE4CCE9EE /* parser.c in Sources */,
 				1E83BAE72970F83539C9BE17 /* point.c in Sources */,
 				D5DC41A099E87A88F118897D /* query.c in Sources */,
+				6D8CC563034EECE03908B432 /* scanner.c in Sources */,
 				921029728D41B3466C71FBA9 /* scanner.c in Sources */,
 				FFB01B1BDCC4121BABC6DA50 /* scanner.c in Sources */,
 				643BB683175A9440CA505A7E /* scanner.c in Sources */,
@@ -3397,6 +3442,7 @@
 				464E28F3A86D25C4AAC00A4B /* FileTypeRegistry.swift in Sources */,
 				C4C007466CB4CC0453722B8A /* FileTypeResolution.swift in Sources */,
 				8F260BC46D46BB6A5FB3524E /* GAPSourceDetector.swift in Sources */,
+				FF0FB99FBC7F9851F31674F9 /* GnuplotSourceDetector.swift in Sources */,
 				FA1D1B2EF1A8D8440C8AB12F /* HighlightProtocol.swift in Sources */,
 				BBAE975323777DE74BF2498C /* HighlightXPCClient.swift in Sources */,
 				8FD1A4C43BDB23E469C66F8F /* LanguageDetector.swift in Sources */,
@@ -3435,6 +3481,7 @@
 				F43722B0C8BAD2E8DA6F0CC6 /* FileTypeResolutionTests.swift in Sources */,
 				F233DF70D58C87A9492F6855 /* GAPHighlightingTests.swift in Sources */,
 				D527738DFE3D858AEEE72CEA /* GAPTestInputRanges.swift in Sources */,
+				4E43E607DC590CBF2A8D8F18 /* GnuplotHighlightingTests.swift in Sources */,
 				0F17DB28435310CAACF0A2A1 /* ManPageRendererTests.swift in Sources */,
 				D98056158B68EDA24EE8B06C /* MarkdownRendererTests.swift in Sources */,
 				514C7EABD3596631DC98DEFC /* PlistConverterTests.swift in Sources */,
@@ -3457,12 +3504,14 @@
 				5E00624AC61E32F3BFB8A8BB /* lexer.c in Sources */,
 				2F82ACF31AFE566CE3F46A39 /* node.c in Sources */,
 				F609A583421BB50BFA1B9B98 /* parser.c in Sources */,
+				27D7E05074D22DBD16892832 /* parser.c in Sources */,
 				08C655085F37220ED3B8CEC7 /* parser.c in Sources */,
 				5D474A5678A143A702CFA4EE /* parser.c in Sources */,
 				3EB30A0B48DCBBCADE34CAED /* parser.c in Sources */,
 				6EE6C17F5CB0267A3E69657B /* parser.c in Sources */,
 				B740059F5848218775D5A1CC /* point.c in Sources */,
 				4927BB7FA97559DD1EA3A07D /* query.c in Sources */,
+				E27D8D59C77D24E280F0AFAF /* scanner.c in Sources */,
 				E9D196DC40783437E7E30740 /* scanner.c in Sources */,
 				FFFE45C60C0F99263FB425F5 /* scanner.c in Sources */,
 				7760918E9B0B17BC710C204B /* scanner.c in Sources */,
@@ -3684,7 +3733,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
@@ -3701,7 +3750,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -3892,7 +3941,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 11;
+				CURRENT_PROJECT_VERSION = 12;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 7F5ZSQFCQ4;
@@ -3915,7 +3964,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.5.4;
+				MARKETING_VERSION = 1.5.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

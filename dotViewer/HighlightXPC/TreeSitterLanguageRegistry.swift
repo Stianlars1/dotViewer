@@ -3,6 +3,7 @@ import Foundation
 extension TreeSitterHighlighter {
     convenience init() {
         let languages: [(String, OpaquePointer?)] = [
+            ("gnuplot", tree_sitter_gnuplot()),
             ("gap", tree_sitter_gap()),
             ("gaptst", tree_sitter_gaptst()),
             ("swift", tree_sitter_swift()),

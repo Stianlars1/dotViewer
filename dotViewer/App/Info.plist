@@ -3869,6 +3869,23 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gnu</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gnu</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
 			<string>Make</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.gnumakefile</string>
@@ -3877,6 +3894,58 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>gnumakefile</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gplt</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gplt</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gnuplot</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gnuplot</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gnuplot_history</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gnuplot_history</string>
 				</array>
 			</dict>
 		</dict>
@@ -3966,6 +4035,23 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>tst</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gp</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gp</string>
 				</array>
 			</dict>
 		</dict>

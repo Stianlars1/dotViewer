@@ -10,8 +10,8 @@ settings:
     CODE_SIGN_IDENTITY: "Apple Development"
     "CODE_SIGN_IDENTITY[sdk=macosx*]": "Apple Development"
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "1.5.4"
-    CURRENT_PROJECT_VERSION: "11"
+    MARKETING_VERSION: "1.5.5"
+    CURRENT_PROJECT_VERSION: "12"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
     ENABLE_HARDENED_RUNTIME: YES
@@ -1685,6 +1685,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gnad
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnu
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnu
           - UTTypeIdentifier: com.stianlars1.dotviewer.gnumakefile
             UTTypeDescription: Make
             UTTypeConformsTo:
@@ -1692,6 +1699,28 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - gnumakefile
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gplt
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.script
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gplt
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnuplot
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnuplot
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gnuplot_history
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gnuplot_history
           - UTTypeIdentifier: com.stianlars1.dotviewer.go
             UTTypeDescription: Go
             UTTypeConformsTo:
@@ -1731,6 +1760,13 @@ targets:
             UTTypeTagSpecification:
               public.filename-extension:
                 - tst
+          - UTTypeIdentifier: com.stianlars1.dotviewer.gp
+            UTTypeDescription: Gnuplot
+            UTTypeConformsTo:
+              - public.plain-text
+            UTTypeTagSpecification:
+              public.filename-extension:
+                - gp
           - UTTypeIdentifier: com.stianlars1.dotviewer.gpx
             UTTypeDescription: GPS Exchange Format (XML)
             UTTypeConformsTo:
@@ -4826,6 +4862,7 @@ targets:
           NSExtensionAttributes:
             QLIsDataBasedPreview: true
             QLSupportedContentTypes:
+              - public.gd # Godot declares .gd with this exact UTI
               # System UTIs
               - public.ada-source
               - public.alembic
@@ -5135,12 +5172,17 @@ targets:
               - com.stianlars1.dotviewer.gleam
               - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gnu
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.gplt
+              - com.stianlars1.dotviewer.gnuplot
+              - com.stianlars1.dotviewer.gnuplot_history
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.g
               - com.stianlars1.dotviewer.gi
               - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gp
               - com.stianlars1.dotviewer.gpx
               - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
@@ -5623,6 +5665,7 @@ targets:
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).ThumbnailProvider
           NSExtensionAttributes:
             QLSupportedContentTypes:
+              - public.gd # Godot declares .gd with this exact UTI
               # System UTIs
               - public.ada-source
               - public.alembic
@@ -5932,12 +5975,17 @@ targets:
               - com.stianlars1.dotviewer.gleam
               - com.stianlars1.dotviewer.glsl
               - com.stianlars1.dotviewer.gnad
+              - com.stianlars1.dotviewer.gnu
               - com.stianlars1.dotviewer.gnumakefile
+              - com.stianlars1.dotviewer.gplt
+              - com.stianlars1.dotviewer.gnuplot
+              - com.stianlars1.dotviewer.gnuplot_history
               - com.stianlars1.dotviewer.go
               - com.stianlars1.dotviewer.go_version
               - com.stianlars1.dotviewer.g
               - com.stianlars1.dotviewer.gi
               - com.stianlars1.dotviewer.tst
+              - com.stianlars1.dotviewer.gp
               - com.stianlars1.dotviewer.gpx
               - com.topografix.gpx
               - com.stianlars1.dotviewer.gql
@@ -6409,6 +6457,9 @@ targets:
     platform: macOS
     sources:
       - HighlightXPC
+      - path: TreeSitterVendor/tree-sitter-gnuplot/src
+        excludes:
+          - "*.json"
       - path: TreeSitterVendor/tree-sitter-gap/src
         excludes:
           - "*.json"
@@ -6740,6 +6791,8 @@ targets:
       - path: Utilities/ExtensionConflictScanner.swift
       - path: HighlightXPC/TreeSitterHighlighter.swift
       - path: HighlightXPC/GAPTestInputRanges.swift
+      - path: HighlightXPC/TreeSitterQueries/gnuplot.scm
+        buildPhase: resources
       - path: HighlightXPC/TreeSitterQueries/gap.scm
         buildPhase: resources
       - path: HighlightXPC/TreeSitterQueries/gaptst.scm
@@ -6752,6 +6805,9 @@ targets:
       - path: TreeSitterVendor/tree-sitter/lib/src
         excludes:
           - "lib.c"
+      - path: TreeSitterVendor/tree-sitter-gnuplot/src
+        excludes:
+          - "*.json"
       - path: TreeSitterVendor/tree-sitter-gap/src
         excludes:
           - "*.json"

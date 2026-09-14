@@ -82,6 +82,41 @@ final class FileTypeRegistryTests: XCTestCase {
                       "XML entry should list gpx among its extensions")
     }
 
+
+    func testGnuplotPrimaryExtensionsResolve() {
+        for ext in ["gp", "gnuplot", "gnu", "gplt"] {
+            XCTAssertEqual(registry.highlightLanguage(for: ext), "gnuplot",
+                           "\(ext) should highlight with the bash grammar")
+            XCTAssertEqual(registry.displayName(for: ext), "Gnuplot",
+                           "\(ext) should show as Gnuplot in the badge")
+        }
+    }
+
+    func testGnuplotExtensionsCaseInsensitive() {
+        XCTAssertEqual(registry.highlightLanguage(for: "GP"), "gnuplot")
+        XCTAssertEqual(registry.highlightLanguage(for: "GPLT"), "gnuplot")
+        XCTAssertEqual(registry.displayName(for: "Gnuplot"), "Gnuplot")
+    }
+
+    func testGnuplotFilenamesResolve() {
+        XCTAssertEqual(registry.highlightLanguage(for: "gnuplotrc"), "gnuplot")
+        XCTAssertEqual(registry.highlightLanguage(for: "gnuplot_history"), "gnuplot")
+        XCTAssertEqual(registry.displayName(for: "gnuplotrc"), "Gnuplot")
+    }
+
+    func testGnuplotEntryInBuiltIns() {
+        let gp = registry.fileType(byId: "gnuplot")
+        XCTAssertNotNil(gp)
+        XCTAssertEqual(gp?.displayName, "Gnuplot")
+        for ext in ["gp", "gnuplot", "gnu", "gplt"] {
+            XCTAssertTrue(gp?.extensions.contains(ext) == true,
+                          "Gnuplot entry is missing extension \(ext)")
+        }
+        XCTAssertTrue(gp?.filenames.contains("gnuplotrc") == true)
+        XCTAssertTrue(gp?.filenames.contains(".gnuplot") == true)
+        XCTAssertTrue(gp?.filenames.contains(".gnuplot_history") == true)
+    }
+
     // MARK: - Filename Resolution
 
     func testFilenameResolution() {

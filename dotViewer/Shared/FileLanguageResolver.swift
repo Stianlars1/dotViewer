@@ -28,6 +28,10 @@ public enum FileLanguageResolver {
             return ResolvedFileLanguage(id: custom.highlightLanguage, displayName: custom.displayName, isCustomMapping: true)
         }
         let type = registry.fileType(for: key)
+        if type?.id == "gnuplot", key.lowercased() == "gp",
+           !GnuplotSourceDetector.matches(sample ?? readSample(url)) {
+            return ResolvedFileLanguage(id: "plaintext", displayName: "GP")
+        }
         if type?.id == "gdscript", GAPSourceDetector.matches(sample ?? readSample(url)) {
             return ResolvedFileLanguage(id: "gap", displayName: "GAP")
         }

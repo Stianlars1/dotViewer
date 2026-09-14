@@ -69,6 +69,47 @@ final class FileTypeResolutionTests: XCTestCase {
         XCTAssertEqual(key, "gpx")
     }
 
+    func testGnuplotExtensionsResolveToTheirRegistryKeys() {
+        for ext in ["gp", "gnuplot", "gnu", "gplt"] {
+            let url = URL(fileURLWithPath: "/tmp/example.\(ext)")
+            XCTAssertEqual(FileTypeResolution.bestKey(for: url), ext)
+        }
+    }
+
+    func testGnuplotDottedBasenameStillResolves() {
+        // Users often keep dated exports like 2026-09-10.demo.gp. Multi-dot
+        // resolution must still hit the extension path.
+        let url = URL(fileURLWithPath: "/tmp/2026-09-10.demo.gp")
+        XCTAssertEqual(FileTypeResolution.bestKey(for: url), "gp")
+    }
+
+    func testGnuplotUppercaseExtension() {
+        let url = URL(fileURLWithPath: "/tmp/SIMPLE.GP")
+        XCTAssertEqual(FileTypeResolution.bestKey(for: url), "gp")
+    }
+
+    func testGnuplotRcFilenameResolves() {
+        // gnuplotrc has no leading dot and no extension — it should hit the
+        // filename branch of the registry, which stores it as `gnuplotrc` in
+        // the flat map.
+        let url = URL(fileURLWithPath: "/etc/gnuplotrc")
+        XCTAssertEqual(FileTypeResolution.bestKey(for: url), "gnuplotrc")
+    }
+
+    func testDotGnuplotFilenameResolves() {
+        // .gnuplot in $HOME is the per-user startup file. Registry stores it
+        // with the leading dot stripped.
+        let url = URL(fileURLWithPath: "/Users/example/.gnuplot")
+        XCTAssertEqual(FileTypeResolution.bestKey(for: url), "gnuplot")
+    }
+
+    func testDotGnuplotHistoryFilenameResolves() {
+        // The interactive-history file is a plain-text log; treating it as
+        // gnuplot ensures a legible preview instead of falling to Text.
+        let url = URL(fileURLWithPath: "/Users/example/.gnuplot_history")
+        XCTAssertEqual(FileTypeResolution.bestKey(for: url), "gnuplot_history")
+    }
+
     // MARK: - Dotfiles
 
     func testDotGitignore() {

@@ -6,6 +6,8 @@ import plistlib
 import re
 import subprocess
 import tempfile
+import shutil
+from developer_id_profiles import find_profile, needs_profile, validate_app
 from pathlib import Path
 
 
@@ -40,6 +42,9 @@ def main():
             result = subprocess.run(['/usr/bin/codesign', '-d', '--entitlements', ':-', str(bundle)], capture_output=True, check=True)
             entitlements = plistlib.loads(result.stdout) if result.stdout.strip() else {}
             entitlements.pop('com.apple.security.get-task-allow', None)
+            if needs_profile(entitlements):
+                profile = find_profile(entitlements, args.identity)
+                shutil.copyfile(profile, bundle / 'Contents/embedded.provisionprofile')
             command = ['/usr/bin/codesign', '--force', '--sign', args.identity, '--options', 'runtime', '--timestamp', '--preserve-metadata=identifier']
             if entitlements:
                 path = Path(temporary) / f'{index}.plist'
@@ -50,6 +55,7 @@ def main():
             if result.returncode:
                 raise RuntimeError(result.stderr.decode(errors='replace'))
     subprocess.run(['/usr/bin/codesign', '--verify', '--deep', '--strict', str(args.destination)], check=True)
+    validate_app(args.destination)
     signing = subprocess.run(['/usr/bin/codesign', '-dvv', str(args.destination)], capture_output=True, text=True, check=True).stderr
     if 'Authority=Developer ID Application:' not in signing or 'TeamIdentifier=7F5ZSQFCQ4' not in signing:
         raise RuntimeError('Expected a Developer ID Application signature for the dotViewer team')

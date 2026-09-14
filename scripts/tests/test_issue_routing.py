@@ -26,6 +26,13 @@ class IssueRoutingTests(unittest.TestCase):
                     data = plistlib.loads((ROOT / 'dotViewer' / directory / 'Info.plist').read_bytes())
                     self.assertIn(exports[ext], data['NSExtension']['NSExtensionAttributes']['QLSupportedContentTypes'])
 
+    def test_godot_vendor_uti_is_accepted_without_exporting_it(self):
+        app = plistlib.loads((ROOT / 'dotViewer/App/Info.plist').read_bytes())
+        self.assertNotIn('public.gd', [e['UTTypeIdentifier'] for e in app['UTExportedTypeDeclarations']])
+        for directory in ('QuickLookExtension', 'QuickLookThumbnailExtension'):
+            data = plistlib.loads((ROOT / 'dotViewer' / directory / 'Info.plist').read_bytes())
+            self.assertIn('public.gd', data['NSExtension']['NSExtensionAttributes']['QLSupportedContentTypes'])
+
     def test_generator_preserves_vendor_alias(self):
         import importlib.util
         spec = importlib.util.spec_from_file_location('gen_utis', ROOT / 'scripts/dotviewer-gen-utis.py')

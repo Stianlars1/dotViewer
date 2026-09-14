@@ -150,6 +150,7 @@ public struct HighlightLanguage: Identifiable, Hashable, Sendable {
         HighlightLanguage(id: "gap", displayName: "GAP", hasTreeSitterGrammar: true),
         HighlightLanguage(id: "gaptst", displayName: "GAP Test", hasTreeSitterGrammar: true),
         HighlightLanguage(id: "gleam", displayName: "Gleam", hasTreeSitterGrammar: true),
+        HighlightLanguage(id: "gnuplot", displayName: "Gnuplot", hasTreeSitterGrammar: true),
         HighlightLanguage(id: "go", displayName: "Go", hasTreeSitterGrammar: true),
         HighlightLanguage(id: "graphql", displayName: "GraphQL", hasTreeSitterGrammar: true),
         HighlightLanguage(id: "haskell", displayName: "Haskell", hasTreeSitterGrammar: true),

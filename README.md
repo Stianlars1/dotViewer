@@ -257,9 +257,9 @@ These numbers are from the current codebase.
 
 | Metric | Value |
 |---|---:|
-| Built-in file type entries (`DefaultFileTypes.json`) | `406` |
-| Explicit extensions in registry | `603` |
-| Filename patterns in registry | `295` |
+| Built-in file type entries (`DefaultFileTypes.json`) | `407` |
+| Explicit extensions in registry | `610` |
+| Filename patterns in registry | `298` |
 | Tree-sitter grammar integrations (`TreeSitterLanguageRegistry`) | `55` |
 | Tree-sitter query files (`TreeSitterQueries/*.scm`) | `55` |
 | Highlight language picker options | `55` |

@@ -167,6 +167,7 @@ UTI_CONFLICTS = {
 
 # Base QLSupportedContentTypes — always included
 BASE_CONTENT_TYPES = {
+    "public.gd",  # Godot macos_tools.app declares .gd as public.gd.
     "com.topografix.gpx",
     "public.data",
     "public.executable",
@@ -331,7 +332,7 @@ def get_conformance(lang):
         "fortran77", "fortran90", "delphi", "ada", "verilog", "vhd",
         "smalltalk", "eiffel", "pro", "lisp",
     }
-    script = {"sh", "bash", "bat", "powershell", "fish", "awk", "tcl"}
+    script = {"gnuplot", "sh", "bash", "bat", "powershell", "fish", "awk", "tcl"}
 
     if lang in source:
         return ["public.source-code", "public.plain-text"]

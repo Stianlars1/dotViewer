@@ -349,6 +349,22 @@
     "highlightLanguage": "gdscript"
   },
   {
+    "id": "gnuplot",
+    "displayName": "Gnuplot",
+    "extensions": [
+      "gp",
+      "gnuplot",
+      "gplt",
+      "gnu"
+    ],
+    "filenames": [
+      "gnuplotrc",
+      ".gnuplot",
+      ".gnuplot_history"
+    ],
+    "highlightLanguage": "gnuplot"
+  },
+  {
     "id": "haskell",
     "displayName": "Haskell",
     "extensions": [
