@@ -513,3 +513,11 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Verified: Downloaded the public latest DMG and matched SHA-256 `2330815811818682b3a9774a6080211d4b5a80c40fafd2d3a57c42fa46eb590a` against GitHub and the cask. Gatekeeper accepted both installer and installed app. Mounted/downloaded installer contains `.DS_Store`, `.DropDMGBackground/background.tiff`, app 1.5.4 (11), Applications alias and internal notices. Opened the downloaded installer in Finder and visually confirmed the original purple background, dotted arrow and icon positions. Ejected the old plain 1.5.3 installer and test images; left the corrected 1.5.4 installer open.
 - Release: https://github.com/Stianlars1/dotViewer/releases/tag/v1.5.4 ; source tag is merge commit `ea1026b2719013d7ec51e543ea5c42be56c6ac01`.
 - Evidence: `/tmp/dotviewer-1.5.4-publish.log`, `/tmp/dotviewer-1.5.4-verification/`, and `/tmp/dotviewer-status-final-tests.log`. Installed app is the notarized 1.5.4 (11) candidate; existing thumbnail-routing limitation is unchanged.
+
+## 2026-09-14
+
+### 1.5.5 release fixes and Gnuplot support
+- Outcome: Restored matching Developer ID profiles in export recovery and added a mandatory provisioning check before packaging. Added Godot `public.gd` compatibility routing, dedicated Gnuplot grammar/picker, `.gplt`, and conservative `.gp` detection. Custom DropDMG workflow retained.
+- Files: `scripts/developer_id_profiles.py`, `scripts/sign-developer-id-app.py`, `scripts/release.sh`, `dotViewer/project.yml`, Gnuplot grammar/query/resolver, regression tests, `docs/releases/WORKFLOW.md`.
+- Verified: 231 XCTest tests, 20 Python tests; refresh/install and Gnuplot/JSON preview smoke pass. Status refresh and conflict rescan complete. New provisioning gate rejects public 1.5.4 and accepts public 1.5.3.
+- Follow-ups: Final 1.5.5 release validation recorded separately. Reporter confirmation on Intel/macOS 15 and their `.gd` associations remains pending.

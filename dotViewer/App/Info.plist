@@ -2385,23 +2385,6 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Gnuplot</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.dem</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>dem</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
 			<string>INI</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.desktop</string>
@@ -3917,6 +3900,24 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>public.script</string>
+				<string>public.plain-text</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Gnuplot</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.stianlars1.dotviewer.gplt</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>gplt</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -4051,23 +4052,6 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>gp</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Gnuplot</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.gpi</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>gpi</string>
 				</array>
 			</dict>
 		</dict>
@@ -7213,23 +7197,6 @@
 				<string>public.plain-text</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Gnuplot</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.plot</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>plot</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
 			<string>PL/Perl</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.stianlars1.dotviewer.plperl</string>
@@ -7255,23 +7222,6 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>plpython</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.plain-text</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Gnuplot</string>
-			<key>UTTypeIdentifier</key>
-			<string>com.stianlars1.dotviewer.plt</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>plt</string>
 				</array>
 			</dict>
 		</dict>

@@ -14,7 +14,7 @@ Capture a process sample first; the observed compiler and export stalls were blo
 
 `DOTVIEWER_USE_COMPILER_WRAPPERS=1` opts into wrappers that forward compilation unchanged to the active Apple clang/clang++ through `xcrun`. This avoids the hanging compiler-discovery route; it changes no application source. Both architectures and tests must still pass.
 
-If Xcode's export stage hangs after a successful archive, `scripts/sign-developer-id-app.py SOURCE DESTINATION --identity CERTIFICATE_SHA1` can explicitly re-sign the freshly built bundle using the exact Developer ID certificate. It preserves declared entitlements, removes the development debugging entitlement and embedded development profiles, signs inner bundles first, and verifies the complete result. It refuses to overwrite an existing destination. This does not notarize or publish anything.
+If Xcode's export stage hangs after a successful archive, `scripts/sign-developer-id-app.py SOURCE DESTINATION --identity CERTIFICATE_SHA1` can explicitly re-sign the freshly built bundle using the exact Developer ID certificate. It preserves declared entitlements, removes the development debugging entitlement, and replaces development profiles with matching Developer ID distribution profiles before signing inner bundles first. Profiles must authorize the bundle ID, app groups and exact signing certificate and must be unexpired. Never remove a required profile without replacing it. `developer_id_profiles.py` checks every app, extension and XPC bundle before packaging. It refuses to overwrite an existing destination. This does not notarize or publish anything.
 
 Resume the ordinary notarization/DropDMG/publication steps with:
 

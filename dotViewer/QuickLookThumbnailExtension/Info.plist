@@ -26,6 +26,7 @@
 		<dict>
 			<key>QLSupportedContentTypes</key>
 			<array>
+				<string>public.gd</string>
 				<string>public.ada-source</string>
 				<string>public.alembic</string>
 				<string>public.assembly-source</string>
@@ -248,7 +249,6 @@
 				<string>com.stianlars1.dotviewer.default</string>
 				<string>com.stianlars1.dotviewer.defaults</string>
 				<string>com.stianlars1.dotviewer.deliverfile</string>
-				<string>com.stianlars1.dotviewer.dem</string>
 				<string>com.stianlars1.dotviewer.desktop</string>
 				<string>com.stianlars1.dotviewer.dev</string>
 				<string>com.stianlars1.dotviewer.development</string>
@@ -336,6 +336,7 @@
 				<string>com.stianlars1.dotviewer.gnad</string>
 				<string>com.stianlars1.dotviewer.gnu</string>
 				<string>com.stianlars1.dotviewer.gnumakefile</string>
+				<string>com.stianlars1.dotviewer.gplt</string>
 				<string>com.stianlars1.dotviewer.gnuplot</string>
 				<string>com.stianlars1.dotviewer.gnuplot_history</string>
 				<string>com.stianlars1.dotviewer.go</string>
@@ -344,7 +345,6 @@
 				<string>com.stianlars1.dotviewer.gi</string>
 				<string>com.stianlars1.dotviewer.tst</string>
 				<string>com.stianlars1.dotviewer.gp</string>
-				<string>com.stianlars1.dotviewer.gpi</string>
 				<string>com.stianlars1.dotviewer.gpx</string>
 				<string>com.topografix.gpx</string>
 				<string>com.stianlars1.dotviewer.gql</string>
@@ -527,10 +527,8 @@
 				<string>com.stianlars1.dotviewer.pkb</string>
 				<string>com.stianlars1.dotviewer.pks</string>
 				<string>com.stianlars1.dotviewer.plex</string>
-				<string>com.stianlars1.dotviewer.plot</string>
 				<string>com.stianlars1.dotviewer.plperl</string>
 				<string>com.stianlars1.dotviewer.plpython</string>
-				<string>com.stianlars1.dotviewer.plt</string>
 				<string>com.stianlars1.dotviewer.pltcl</string>
 				<string>com.stianlars1.dotviewer.plx</string>
 				<string>com.stianlars1.dotviewer.pmod</string>

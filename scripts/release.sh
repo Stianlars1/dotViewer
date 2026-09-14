@@ -459,11 +459,15 @@ fi
 print_success "Exported: $APP_PATH"
 
 print_step "Step 5/8: Verifying code signature..."
-if codesign --verify --deep --strict "$APP_PATH" >/dev/null 2>&1; then
+if codesign --verify --deep --strict --all-architectures "$APP_PATH" >/dev/null 2>&1; then
     print_success "Code signature valid"
 else
     print_error "Code signature verification failed"
     exit 1
+fi
+
+if [ "$APP_STORE" = false ]; then
+    python3 "$SCRIPT_DIR/developer_id_profiles.py" "$APP_PATH"
 fi
 
 SIGNING_INFO=$(codesign -dv "$APP_PATH" 2>&1 | grep "Authority" | head -1 || true)

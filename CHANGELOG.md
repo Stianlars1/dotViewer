@@ -1,11 +1,16 @@
 # Changelog
 
-## Unreleased
+## v1.5.5 (2026-09-14)
+
+### Fixed
+
+- Restored matching Developer ID provisioning profiles in the recovery signing workflow. Release verification now rejects missing, expired, mismatched or development profiles before notarization and packaging. Addresses the 1.5.4 launch-signature regression reported on Intel/macOS 15 (#28).
+- Added Godot's `public.gd` routing identifier to both Quick Look extensions. GAP `.gd` content detection and explicit language overrides remain in place, while Godot scripts retain their existing language (#24).
 
 ### Added
 
-- Gnuplot source-file previews. The registry now recognises `.gp`, `.gnuplot`, `.gnu`, `.gpi`, `.plt`, `.plot`, and `.dem`, plus the `gnuplotrc`, `.gnuplot`, and `.gnuplot_history` startup files gnuplot itself reads at launch. Highlighting is routed through the bash grammar (comments, strings, and command-first keywords line up with gnuplot's shell-like syntax) with "Gnuplot" as the display label. Resolves [#29](https://github.com/Stianlars1/dotViewer/issues/29).
-- UTI declarations for the eight new gnuplot extensions in `dotViewer/project.yml`, so Finder routes those files to the extension without falling through to `dyn.*`.
+- Dedicated tree-sitter Gnuplot highlighting and a Gnuplot language-picker option (#29). Supports `.gnuplot`, `.gplt`, `.gnu`, and the `gnuplotrc`, `.gnuplot`, `.gnuplot_history` filenames.
+- `.gp` previews use Gnuplot when recognizable plotting commands are present; ambiguous PARI/GP content stays plain text unless explicitly mapped. Conflicting `.gpi`, `.gpl`, `.plt`, `.plot` and `.dem` extensions are not claimed as Gnuplot by default.
 
 ## v1.5.4 (2026-09-09)
 

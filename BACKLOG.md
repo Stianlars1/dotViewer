@@ -44,7 +44,7 @@ From v1 requirements and future direction.
 | B-042 | ~~Preview font family preferences~~ | ~~Done~~ | Completed 2026-04-29 — Added installed macOS font pickers for Code/RAW and rendered Markdown. Applies to HTML previews, plain-text fallback, rendered markdown prose, CSV/TSV/manpage rich previews, Settings theme preview, and Finder thumbnails. |
 | B-043 | GPX routing and XML highlighting | Released in 1.5.3 | Supports both `com.topografix.gpx` and the dotViewer export in preview and thumbnail declarations; generator keeps both. Released through PR #26. |
 | B-044 | GAP source and test previews | Released in 1.5.3 | Ships `.g`/`.gi`/`.tst`, GAP and GAP-test grammars with input injections, conservative `.gd` detection, and explicit language overrides. Godot defaults retained. Released through PR #26. |
-| B-045 | Gnuplot script previews | Unreleased | Adds a `gnuplot` registry entry (id / display / highlight) for `.gp`, `.gnuplot`, `.gnu`, `.gpi`, `.plt`, `.plot`, `.dem`, plus the `gnuplotrc` / `.gnuplot` / `.gnuplot_history` startup files. Falls back to the bash grammar until a real tree-sitter-gnuplot vendor is added. UTI exports and Quick Look content-type declarations regenerated. Resolves [#29](https://github.com/Stianlars1/dotViewer/issues/29). Optional follow-up: vendor `dpezto/tree-sitter-gnuplot` for real gnuplot highlighting. |
+| B-045 | Gnuplot script previews | Implemented for 1.5.5 | Dedicated grammar, picker, conservative extension defaults and `.gp` content detection. |
 
 Revisit criteria:
 - `B-011`: Reopen before major rendering architecture changes or when regression risk requires XPC/snapshot coverage.

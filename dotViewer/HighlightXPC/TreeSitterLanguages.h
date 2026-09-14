@@ -6,6 +6,7 @@
 extern "C" {
 #endif
 
+const TSLanguage *tree_sitter_gnuplot(void);
 const TSLanguage *tree_sitter_gap(void);
 const TSLanguage *tree_sitter_gaptst(void);
 const TSLanguage *tree_sitter_swift(void);

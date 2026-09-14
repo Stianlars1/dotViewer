@@ -69,25 +69,10 @@ final class FileTypeResolutionTests: XCTestCase {
         XCTAssertEqual(key, "gpx")
     }
 
-    // MARK: - Issue #29 — Gnuplot resolution
-
-    func testGnuplotPrimaryExtensionResolves() {
-        // The two safest gnuplot extensions per issue #29 are `.gp` and
-        // `.gnuplot`; both must land on a registry key that the language
-        // resolver picks up as gnuplot.
-        XCTAssertEqual(FileTypeResolution.bestKey(for: URL(fileURLWithPath: "/tmp/simple.gp")), "gp")
-        XCTAssertEqual(FileTypeResolution.bestKey(for: URL(fileURLWithPath: "/tmp/simple.gnuplot")), "gnuplot")
-    }
-
-    func testGnuplotSecondaryExtensionsResolve() {
-        // `.gnu`, `.plt`, `.plot`, `.dem`, `.gpi` are widely used in the
-        // gnuplot ecosystem (gallery downloads, third-party grammars, editor
-        // filetype detection). Binary-only file types on those extensions are
-        // gated separately by looksTextual, so registering here is safe.
-        for ext in ["gnu", "gpi", "plt", "plot", "dem"] {
+    func testGnuplotExtensionsResolveToTheirRegistryKeys() {
+        for ext in ["gp", "gnuplot", "gnu", "gplt"] {
             let url = URL(fileURLWithPath: "/tmp/example.\(ext)")
-            XCTAssertEqual(FileTypeResolution.bestKey(for: url), ext,
-                           "Extension .\(ext) should resolve to \(ext)")
+            XCTAssertEqual(FileTypeResolution.bestKey(for: url), ext)
         }
     }
 
