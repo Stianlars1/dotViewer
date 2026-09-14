@@ -521,3 +521,8 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Files: `scripts/developer_id_profiles.py`, `scripts/sign-developer-id-app.py`, `scripts/release.sh`, `dotViewer/project.yml`, Gnuplot grammar/query/resolver, regression tests, `docs/releases/WORKFLOW.md`.
 - Verified: 231 XCTest tests, 20 Python tests; refresh/install and Gnuplot/JSON preview smoke pass. Status refresh and conflict rescan complete. New provisioning gate rejects public 1.5.4 and accepts public 1.5.3.
 - Follow-ups: Final 1.5.5 release validation recorded separately. Reporter confirmation on Intel/macOS 15 and their `.gd` associations remains pending.
+
+### 1.5.5 publication verification
+- Outcome: PR #30 merged; 1.5.5 (12) released through the existing scripts and custom DropDMG profile. Homebrew and the live download page serve the new release. Issue threads #24, #28 and #29 received release links.
+- Verified: Downloaded public checksum matches GitHub/local/Homebrew; public app and DMG pass signing/provisioning/Gatekeeper/stapling checks; installed public app cold-launches ready. Native arm64 and Rosetta x86_64 launch tested on macOS 26.4.1. Finder Space Gnuplot colors and final public installer design visually checked.
+- Details: `docs/releases/1.5.5-verification.md`. Physical Intel/macOS 15 and reporter-specific `.gd` routing confirmation remain pending.
