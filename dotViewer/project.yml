@@ -6789,6 +6789,7 @@ targets:
       - path: Utilities/StatusProcessRunner.swift
       - path: Utilities/ExtensionStatusChecker.swift
       - path: Utilities/ExtensionConflictScanner.swift
+      - path: App/SettingsTabPage.swift
       - path: HighlightXPC/TreeSitterHighlighter.swift
       - path: HighlightXPC/GAPTestInputRanges.swift
       - path: HighlightXPC/TreeSitterQueries/gnuplot.scm

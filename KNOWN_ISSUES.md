@@ -406,3 +406,26 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 1. Gated `hasTOC` on `info.markdownShowTOC` — when OFF, no TOC button, sidebar, or resize handle HTML is generated
 2. Moved outer-scope `const` declarations and event listener setup before the `setMode(currentMode)` call, eliminating the TDZ crash
 3. When ON, the button always starts `active` (auto-opens sidebar in rendered mode)
+
+---
+
+## KI-019 — Settings tab buttons unresponsive to mouse clicks on Intel Macs
+
+| Field | Value |
+|-------|-------|
+| **Priority** | High |
+| **Status** | Fixed |
+
+**Impact**: On Intel Macs running macOS 15.7.7 (reported on `macMini8,1`), the sub-page tabs inside Settings → Markdown (`Rendered`, `Custom CSS`) and Settings → Settings (`Window`, `Limits`, `Preview UI`, `Performance`, `Theme`, `Danger Zone`) could not be switched with the mouse. Keyboard navigation (`Tab` + `Space`) still worked. Apple Silicon Macs on the same macOS version were unaffected.
+
+**Root cause**: `SettingsTabBar` uses `Button(.plain)` inside a `ScrollView(.horizontal)`. On Intel Macs, SwiftUI's scroll-view pan-gesture recogniser can win arbitration against the button's own tap recogniser and swallow the click before the button's action ever fires. The button's action itself was fine — that's why the keyboard path (which bypasses gesture arbitration) kept working.
+
+**Fix (2026-09-17)**:
+1. Extracted the per-tab view into a testable `SettingsTabButton` in `SettingsTabPage.swift`.
+2. Widened the outer button's hit shape from a rounded rectangle to a plain `Rectangle` so the whole padded region is hittable — not just the pill fill's visible bounds.
+3. Attached a `.simultaneousGesture(TapGesture())` fallback that runs in parallel with the scroll view's pan. Even if the pan recogniser wins, the tap still fires and the selection binding still updates. Reassigning the same value is a no-op, so the redundancy is harmless.
+4. Regression test `SettingsTabButtonTests` hosts the row in an `NSHostingView`, walks to the AppKit buttons SwiftUI produces, and confirms `performClick` on each one updates the binding.
+
+**Reproduction (pre-fix)**: On an Intel Mac running macOS 15.x, open dotViewer → Settings → Markdown or Settings → Settings and try clicking the sub-tabs across the top. On Apple Silicon everything works; on Intel the click is swallowed and only `Tab` + `Space` moves the selection.
+
+**Related**: [#31](https://github.com/Stianlars1/dotViewer/issues/31)
