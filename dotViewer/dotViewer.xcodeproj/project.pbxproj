@@ -135,6 +135,7 @@
 		63DBF86D7108C13C22E9DACE /* language.c in Sources */ = {isa = PBXBuildFile; fileRef = 2D074F499C7F93C3A07E846E /* language.c */; };
 		643BB683175A9440CA505A7E /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 20C92EDF310CD4E589420923 /* scanner.c */; };
 		662B1CDB6FD6CF81468C55A4 /* xml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 431FA0AD1A85B076C5513EDB /* xml.scm */; };
+		688CFF95B92EE89487F1DEF4 /* SettingsTabBarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82915318D8733D860BE3115B /* SettingsTabBarTests.swift */; };
 		68A57A827F63430F4E336D91 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 836CFB168237C21283719580 /* parser.c */; };
 		6B12BEC9C1473AAC77121C28 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F0F9B57446BBF270B6838217 /* scanner.c */; };
 		6B8BE4ADF082A46EF569CA0B /* regex.scm in Resources */ = {isa = PBXBuildFile; fileRef = D7E359E21E48F94E1FACE881 /* regex.scm */; };
@@ -224,6 +225,7 @@
 		B548223D6098650689040422 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6588BD94C8B3E8E981E09054 /* parser.c */; };
 		B740059F5848218775D5A1CC /* point.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E5B4B8B2BE624CC2AB301D3 /* point.c */; };
 		B81283C71BD5B54F5B33FE1B /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = CBBBCAEBB0EDCD475E164C9F /* parser.c */; };
+		B9C9494CE17A13D3BB64DB86 /* SettingsTabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7083CF25AFD42E08D47759CD /* SettingsTabPage.swift */; };
 		BA4C701A06F027A0BA6B6C73 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F610A9071AF41AA633F263C1 /* scanner.c */; };
 		BAB6A7F67AABA0F69223F8D1 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 3341525A97ECB634C877F9AC /* parser.c */; };
 		BAE8F201DAD91F654AE3134B /* yaml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 782445C0DE57BC5CC590D29E /* yaml.scm */; };
@@ -719,6 +721,7 @@
 		7FC1599EB7A4D43ED77D4FEC /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		809007882E8A33BFD529FD1F /* dotViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dotViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81CD5D92885F535F277D5CD1 /* TransportStreamDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportStreamDetector.swift; sourceTree = "<group>"; };
+		82915318D8733D860BE3115B /* SettingsTabBarTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTabBarTests.swift; sourceTree = "<group>"; };
 		8304A796C2941B436301A23D /* TextThumbnailRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextThumbnailRenderer.swift; sourceTree = "<group>"; };
 		8335B10AC5E60968A9477607 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		836CFB168237C21283719580 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
@@ -2719,6 +2722,7 @@
 				04A0ABE391778142703FAE25 /* PreviewFontFamilyTests.swift */,
 				1553062A87D77F723DD6AF7A /* PreviewHTMLBuilderTests.swift */,
 				A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */,
+				82915318D8733D860BE3115B /* SettingsTabBarTests.swift */,
 				D5BF0FAFDC3FDD7FF21D7489 /* ShebangLanguageDetectorTests.swift */,
 				9C58C5CE09DF2311F9A4F29F /* StatusProcessRunnerTests.swift */,
 				4273283E6FC90DB807240AD4 /* SystemAppearanceTests.swift */,
@@ -3489,6 +3493,8 @@
 				21ECB209262AAFBAD7315DC1 /* PreviewFontFamilyTests.swift in Sources */,
 				990442FDC16503E0AA3639DA /* PreviewHTMLBuilderTests.swift in Sources */,
 				BC4DE0C7687255897B7DDC25 /* PreviewSizingTests.swift in Sources */,
+				688CFF95B92EE89487F1DEF4 /* SettingsTabBarTests.swift in Sources */,
+				B9C9494CE17A13D3BB64DB86 /* SettingsTabPage.swift in Sources */,
 				95DA26E9E69171A526B6BA01 /* ShebangLanguageDetectorTests.swift in Sources */,
 				736B371C6114155A44D47111 /* StatusProcessRunner.swift in Sources */,
 				39746430044AB2D040BCAF3E /* StatusProcessRunnerTests.swift in Sources */,

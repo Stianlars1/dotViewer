@@ -16,41 +16,42 @@ struct SettingsTabBar: View {
     @Binding var selection: String
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4) {
-                ForEach(tabs) { tab in
-                    SettingsTabButton(tab: tab, selection: $selection)
-                }
+        // The scroll view is only the overflow fallback for windows too narrow for the row.
+        // Issue #31: on macOS 15 (reported on an Intel Mac mini) mouse clicks on these tabs never
+        // arrived while they sat inside the horizontal ScrollView, yet Tab + Space still worked.
+        // Whenever the row fits — the usual case — it is laid out plainly, with no scroll view in
+        // the click path at all. `ViewThatFits` falls back to its last child when nothing fits.
+        ViewThatFits(in: .horizontal) {
+            tabRow
+            ScrollView(.horizontal, showsIndicators: false) {
+                tabRow
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 10)
         }
-        // Horizontal scrolling is the overflow behaviour for narrow windows; the row never wraps
-        // or collapses, so the tabs stay where the user last saw them.
+        // The row never wraps or collapses, so the tabs stay where the user last saw them.
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+
+    private var tabRow: some View {
+        HStack(spacing: 4) {
+            ForEach(tabs) { tab in
+                SettingsTabButton(tab: tab, selection: $selection)
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
     }
 }
 
 /// A single tab in the settings header row.
 ///
-/// Extracted from the `ForEach` inline closure so the click-path is explicit — and so the
-/// belt-and-braces hit-testing workaround below has one home instead of being duplicated per
-/// call site.
-///
-/// The workaround exists because of a real, reproducible SwiftUI bug on Intel Macs
-/// (issue #31, seen on macMini8,1 / macOS 15.7.7): `Button(.plain)` nested inside a
-/// `ScrollView(.horizontal)` sometimes never fires on mouse click. Keyboard navigation
-/// (Tab + Space) works, which is the giveaway — the button's action is fine, the pan gesture
-/// recognizer on the scroll view is eating the tap before the button ever sees it. The three
-/// mitigations here are all cheap and all pull in different directions so the click reaches
-/// the selection binding regardless of which recognizer wins:
-///   1. `.contentShape(Rectangle())` on the outer button — makes the whole padded region
-///      hittable, not just the rounded pill's visible fill.
-///   2. `.contentShape(Rectangle())` on the label — belt for anyone who reads the label
-///      before the button chrome.
-///   3. `.simultaneousGesture(TapGesture())` — runs in parallel with the scroll view's pan,
-///      so even if the Button's own tap recognizer loses arbitration the selection still
-///      updates. Assigning the same value twice is a no-op, so the redundancy is harmless.
+/// Issue #31 (macMini8,1, macOS 15.7.7): mouse clicks on these tabs never selected them, while
+/// Tab + Space did — so the action was fine and the click was lost before reaching it. We could
+/// not reproduce it on macOS 26, so the root cause is unconfirmed; these are cheap, defensive
+/// mitigations layered on top of keeping the row out of the scroll view (see `SettingsTabBar`):
+///   1. `.contentShape(Rectangle())` — the whole padded region is hittable, not just the pill.
+///   2. `.simultaneousGesture(TapGesture())` — a second, independent route from a click to the
+///      selection, in case the button's own tap loses gesture arbitration. Assigning the same
+///      value twice is a no-op, so the redundancy is harmless.
 struct SettingsTabButton: View {
     let tab: SettingsTab
     @Binding var selection: String

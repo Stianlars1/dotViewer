@@ -4,7 +4,7 @@
 
 ### Fixed
 
-- Settings tabs in the Markdown (`Rendered`, `Custom CSS`) and Settings (`Window`, `Limits`, `Preview UI`, `Performance`, `Theme`, `Danger Zone`) sub-pages are once again clickable on Intel Macs. The horizontal scroll view around the tab row was winning gesture arbitration against the inner `Button(.plain)` on `macMini8,1` / macOS 15.7.7, so mouse clicks never reached the action and only `Tab` + `Space` navigation worked. The tab button now widens its hit shape to a plain rectangle and pairs with a `.simultaneousGesture(TapGesture())` fallback that fires in parallel with the pan recogniser, so the selection binding updates either way ([#31](https://github.com/Stianlars1/dotViewer/issues/31)).
+- Settings sub-tabs (Markdown → `Rendered`, `Custom CSS`; Settings → `Window` … `Danger Zone`) ignored mouse clicks on a `macMini8,1` running macOS 15.7.7, while `Tab` + `Space` still worked ([#31](https://github.com/Stianlars1/dotViewer/issues/31)). The tab row no longer sits inside a horizontal scroll view unless the window is too narrow for it, each tab is hittable across its whole padded area, and a parallel tap gesture gives clicks a second route to the selection. Not reproducible on macOS 26, so confirmation from affected Macs is still pending.
 
 ## v1.5.5 (2026-09-14)
 
