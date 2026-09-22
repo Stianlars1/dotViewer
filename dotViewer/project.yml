@@ -6790,6 +6790,8 @@ targets:
       - path: Utilities/ExtensionStatusChecker.swift
       - path: Utilities/ExtensionConflictScanner.swift
       - path: App/SettingsTabPage.swift
+      - path: App/Settings/SettingsPane.swift
+      - path: App/Settings/SettingsCatalog.swift
       - path: App/AnimatedLogoView.swift
       - path: App/Color+Hex.swift
       - path: App/LogoLayers.xcassets
