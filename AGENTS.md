@@ -531,3 +531,8 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Outcome: Audited releases, branches and worktrees; the only unreleased code was the #31 branch, which had never been built (crashed session, stale git locks). Reworked it (`ViewThatFits` tab row, real-mouse tests), fixed custom mappings losing to disabled built-in types (#24) and widened `.gp` Gnuplot detection (#29). Published 1.5.6 (13); replies posted on #24, #25, #28, #29 and #31.
 - Verified: 242 XCTest, 20 Python, UTI coverage; exported and DMG-mounted app pass strict signing, provisioning (6 bundles), Gatekeeper and stapling; universal binaries; checksum matches GitHub asset and Homebrew cask; installed in place with Accessibility intact; Quick Look smoke routes #29 scripts to Gnuplot and PARI/GP to plain text.
 - Details: `docs/releases/1.5.6-verification.md`. Pending: #31 confirmation on Intel/macOS 15 (auto-closed by the inherited "Fix #31" commit, reopened), `publish.sh` bash 3.2 empty-array bug.
+
+### 1.5.7 animated Status logo (2026-09-22)
+- Outcome: Replaced the Status page eye symbol with `AnimatedLogoView`, a SwiftUI port of the website's pointer-following hero logo (same layers, springs, parallax, idle motion and entrance; light/dark tile from the app icon variants). Released 1.5.7 (14).
+- Verified: 247 XCTest; offscreen renders in both appearances; notarized/stapled app and DMG, provisioning for 6 bundles, universal binaries, checksum = GitHub asset = Homebrew cask; site serves 1.5.7; public build installed in place with Accessibility intact.
+- Details: `docs/releases/1.5.7-verification.md`. Live pointer following was confirmed by hand only.

@@ -2,22 +2,14 @@
 
 ## Status
 
-**v1.5.6 (13) is published and verified** — GitHub release (Latest), Homebrew cask, dotviewer.app/download.
-Tag `v1.5.6` = `00be50b` on `main`. Evidence: `docs/releases/1.5.6-verification.md`.
+**v1.5.7 (14) is the latest published release** (2026-09-22) — Status page logo that follows the pointer
+(`dotViewer/App/AnimatedLogoView.swift`, a port of `site/components/logo-animated.tsx`). Evidence:
+`docs/releases/1.5.7-verification.md`. 1.5.6 (same day) shipped the #31/#24/#29 fixes —
+`docs/releases/1.5.6-verification.md`.
 
-1.5.6 contents (see CHANGELOG):
-
-- **#31** Settings sub-tabs ignored mouse clicks on a macMini8,1 / macOS 15.7.7. `SettingsTabBar` uses
-  `ViewThatFits`, so the horizontal `ScrollView` is only an overflow fallback; tabs get a full-rect hit
-  shape plus a parallel `TapGesture`. **Root cause unconfirmed** — does not reproduce on macOS 26.
-- **#24** Custom mappings (extension, or filename for its own file only) now win over a disabled built-in
-  type; disabling GDScript no longer kills a `.gd` → GAP mapping.
-- **#29** `.gp` Gnuplot detection keys on syntax PARI/GP cannot express, comments stripped. kiryph's 11
-  unrecognised scripts: 1.5.5 → 0/11, 1.5.6 → 11/11.
-
-This Mac now runs the public 1.5.6 in `/Applications` (installed in place from the shipped DMG; same
-Developer ID signature, Accessibility grant intact). The replaced 1.5.5 app sits in this session's scratchpad
-under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable from GitHub.
+This Mac runs the public 1.5.7 in `/Applications` (same Developer ID signature, Accessibility intact).
+Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the session scratchpad under
+`/private/tmp` (cleared on reboot); every public version stays downloadable from GitHub.
 
 ## What happened to the "left-behind" work
 
