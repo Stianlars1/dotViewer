@@ -1,46 +1,62 @@
-# Handoff — 2026-08-10
+# Handoff — 2026-09-22
 
 ## Status
 
-**v1.5.2 is published and is the current release.** `main` is clean and pushed, tags `v1.5.0`,
-`v1.5.1` and `v1.5.2` all point at commits on `main`. Nothing is in flight.
+**v1.5.5 is the latest published release (2026-09-14). 1.5.6 is merged and pushed to `main`
+(`05718f7`) but NOT published** — publishing needs an explicit go-ahead (`./scripts/publish.sh 1.5.6`).
 
-Three releases went out across 2026-08-07 → 2026-08-10. All verified live: GitHub release,
-notarized DMG with the DropDMG installer window, Homebrew cask checksum, and dotviewer.app.
+1.5.6 contents (see CHANGELOG):
 
-## What shipped
+- **#31** Settings sub-tabs ignored mouse clicks on a macMini8,1 / macOS 15.7.7. `SettingsTabBar` now uses
+  `ViewThatFits`, so the horizontal `ScrollView` is only an overflow fallback; tabs get a full-rect hit
+  shape plus a parallel `TapGesture`. **Root cause unconfirmed** — does not reproduce on macOS 26.
+- **#24** `isExtensionEnabled` checked a disabled built-in type before custom mappings, so disabling
+  GDScript also killed a `.gd` → GAP mapping. Custom mappings (extension, or filename for its own file
+  only) now win. Previews, ⌥Space and thumbnails pass the filename.
+- **#29** `GnuplotSourceDetector` keys on syntax PARI/GP cannot express (commands at statement start,
+  all `set` options + abbreviations, braced blocks, `ARGn`/`MOUSE_X`, `**`), with comments stripped.
+  kiryph's 11 unrecognised scripts: 1.5.5 detected 0/11, 1.5.6 detects 11/11.
 
-### v1.5.0 — the ⌥Space preview panel
+Verification: 242/242 unit tests; full app scheme builds; all bundles report 1.5.6 (13). The dev build was
+deliberately NOT installed or launched (see TCC notes below). An independent review found one real bug
+(filename mappings compared against the key) — fixed in `c0ab686` with a regression test.
 
-dotViewer's own preview window, for the files macOS will never route to a Quick Look extension.
-`.ts` resolves to `public.mpeg-2-transport-stream` (system-declared, conforms to `public.movie`), so
-no third-party extension can ever claim it. `Space` is never intercepted — the panel is additive.
+## What happened to the "left-behind" work
 
-The rendering pipeline was **extracted rather than duplicated**:
+- `fix/issue-31-intel-mac-settings-tabs` (`68b016b`) was the only unreleased code. It had **never been
+  built**: the session that made it crashed mid-commit, leaving 0-byte `.git/index.lock`, `.git/HEAD.lock`
+  (and an old `objects/maintenance.lock`) plus an index that made `git status` show phantom staged
+  reversals. Locks removed, index resynced, tests rewritten, then merged.
+- `codex/v1.1.0-victor-feedback`: its 2 unmerged commits (Vercel/GA analytics) are superseded by `main`'s
+  `site/components/site-analytics.tsx`. Nothing to merge.
+- `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
+  `main`. Archive only — never merge.
+- Stale `/private/tmp` worktree entries pruned.
 
-```
-Shared/PreviewContentBuilder.build(url:systemIsDark:enableSearchBridge:forceSearchUI:)
-   → .rendered(PreviewRender) | .systemFallback
-        ↑                              ↑
-  PreviewProvider (Quick Look)   PreviewPanelController (⌥Space)
-```
+## Next steps
 
-### v1.5.1 — ⌘A / ⌘C, and an editable search field
+1. **Publish 1.5.6** after approval: `./scripts/publish.sh 1.5.6`, then verify GitHub release assets,
+   Homebrew cask and dotviewer.app/download. If it ships on another day, fix the date in the CHANGELOG
+   heading first.
+2. **Issue replies after publishing**: announce on #24 and #29; post the drafted #31 reply (not yet posted —
+   #31 wasn't in the list the user asked to answer) and ask kiryph to confirm on the Mac mini. Keep #31
+   open until confirmed.
+3. **Optional corpus check** for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
+   `examples/*.gp` (needs a download — ask first).
+4. **Optional #31 check without the reporter**: a macOS 15 VM (e.g. `tart`) can test the OS half of the
+   Intel-vs-macOS-15 confound; the Intel half cannot be emulated.
+5. **Housekeeping (ask first)**: `v2.5-claude-work` holds only 3,917 staged build artifacts + `.DS_Store`;
+   `v2.5-pr26` and `v2.5-status-fix` are clean detached worktrees of merged PRs; 8 local branches are fully
+   merged into `main`.
+6. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
+   right-click Quick Action for ⌥Space; arrow-key navigation in the panel; Shift+arrow selection in the
+   search field; no App-target tests for `SearchBridgeServer` / `SearchKeyInterceptor` /
+   `PreviewPanelController`.
 
-- **⌘A / ⌘C in Quick Look.** Both previously went to Finder — ⌘A selected every file in the window,
-  ⌘C copied the file itself. Selection is scoped to the content view, not the document.
-- **The clipboard write moved host-side.** See KI-009; this is the interesting one.
-- **The search field became editable.** Arrow keys were being *typed into the query*: AppKit maps
-  arrows, Home/End and the function row into the Unicode Private Use Area (U+F700–U+F8FF), which
-  passed a control-character filter and appended invisible padding. Clearing the text also closed
-  the bar. The caret is now a real element with an insertion point the arrows drive.
-- **The TCC signature trap** explained in-app, with the remedy that actually works.
+## Open questions
 
-### v1.5.2 — copy confirmations read as successes
-
-`--success` token for both appearances, check mark, motion left alone (it was already right).
-Error and hint toasts stay neutral deliberately. Also fixed the "Copied" button label sticking
-forever.
+- Publish 1.5.6 now, or hold for more changes?
+- Post the #31 reply now, or together with the 1.5.6 announcement?
 
 ## Hard-won platform knowledge (do not re-derive)
 
@@ -77,21 +93,6 @@ Local verification build without notarizing:
 `./scripts/release.sh <version> --skip-notarize --skip-dmg`, then `ditto` the export
 to `/Applications` — Developer ID signed, so the TCC grant survives.
 
-## Next steps
-
-1. **App Store listing is still live at $4.99 serving 1.4.0**, which can never update — 1.5.0+ needs
-   the unsandboxed build. The site no longer links it (`appStoreUrl` is unconditionally `null`), but
-   removing the listing needs App Store Connect. **Only you can do this.**
-2. **`v2.5-claude-work` worktree** (branch `claude-work`) has **3917 tracked files under
-   `dotViewer/build`**, with staged additions. Committed build output is almost certainly not
-   intended. Left untouched deliberately — deleting it would destroy tracked content.
-3. **Right-click Quick Action** for the ⌥Space panel — the other half of the original design.
-4. **Arrow-key navigation between selected files** in the panel. Deferred at v1 (single file only).
-5. **Shift+arrow selection in the search field.** The caret model added in 1.5.1 supports a single
-   insertion point; extending it to a selection range is the natural follow-up.
-6. **No tests** for `SearchBridgeServer`, `SearchKeyInterceptor` or `PreviewPanelController` — they
-   live in the App target, which has no test host. `Shared` is covered (180 tests).
-
 ## Known behaviour, by design
 
 - **The ⌥Space panel activates the app.** That is what guarantees it receives ⌘F/Esc;
@@ -114,7 +115,11 @@ to `/Applications` — Developer ID signed, so the TCC grant survives.
 - `dotViewer/App/PreviewPanelController.swift` — NSPanel + WKWebView
 - `dotViewer/App/PermissionTroubleshooting.swift` — the TCC explanation and reset command
 - `docs/research/quicklook-search-keyboard-2026-08.md` — every measurement, including dead ends
-- `KNOWN_ISSUES.md` — KI-009 now records the real ⌘C fix, not just the workarounds
+- `KNOWN_ISSUES.md` — KI-009 now records the real ⌘C fix, not just the workarounds; KI-019 is #31
+- `dotViewer/App/SettingsTabPage.swift` + `dotViewerTests/SettingsTabBarTests.swift` — #31 (tests send
+  real mouse events to an ordered-in offscreen window; SwiftUI ignores clicks on a never-shown window)
+- `dotViewer/Shared/FileTypeRegistry.swift` `isExtensionEnabled` — #24 custom-mapping precedence
+- `dotViewer/Shared/GnuplotSourceDetector.swift` + `dotViewerTests/GnuplotSourceDetectorTests.swift` — #29
 
 ## Security notes (do not regress)
 
