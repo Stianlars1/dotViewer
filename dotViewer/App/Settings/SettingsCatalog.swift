@@ -141,10 +141,14 @@ enum SettingsCatalog {
         return rank(matches, tokens: tokens)
     }
 
-    /// Orders search results. Matches arrive in catalog (pane) order.
+    /// Orders search results: settings whose title contains every typed word first, then those found
+    /// through their pane's name or a keyword. Both groups keep catalog order, which is the sidebar's.
     static func rank(_ matches: [SettingsEntry], tokens: [String]) -> [SettingsEntry] {
-        // TODO(owner): decide how results are ordered — see the Settings plan, Task 8.
-        matches
+        func titleHasEveryToken(_ entry: SettingsEntry) -> Bool {
+            let title = fold(entry.title)
+            return tokens.allSatisfy(title.contains)
+        }
+        return matches.filter(titleHasEveryToken) + matches.filter { !titleHasEveryToken($0) }
     }
 
     private static func fold(_ text: String) -> String {
