@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00EC2C2733B1483C1F8EDEC0 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E900FD3C801406DCBF758908 /* SettingsModel.swift */; };
 		02DA01EC1E22D4046ED7B571 /* scala.scm in Resources */ = {isa = PBXBuildFile; fileRef = 93FAF2FE5D188454E650D2C0 /* scala.scm */; };
 		03AE24A7824F13C8E3CFA030 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 660D41E28B30126E791C2001 /* scanner.c */; };
 		03CD44494D7EAA65BEDA6401 /* MarkdownSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48CB5E092EE69E1F7731E467 /* MarkdownSettingsView.swift */; };
@@ -117,6 +118,7 @@
 		52FB7B09FE3C401A99DE8782 /* ExtensionStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2C791F666CCAF1377B0272 /* ExtensionStatusChecker.swift */; };
 		54A7B575F78A9D5449C21642 /* dotViewerIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E382F929CE2E0E9C5930A970 /* dotViewerIcon.xcassets */; };
 		556193E8EE3326859D24A956 /* ExtensionConflictScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1600CF95A024537E6678A0A /* ExtensionConflictScanner.swift */; };
+		55AED8177D8616E426C300C0 /* SettingsRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94B43548D3A1CD59278FC3E5 /* SettingsRows.swift */; };
 		55DEDFE5DF511CEDF599CF5E /* GnuplotSourceDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30652DAF937CFB45FF1FB0A /* GnuplotSourceDetectorTests.swift */; };
 		56B72506A63A7422FB04C514 /* python.scm in Resources */ = {isa = PBXBuildFile; fileRef = 495F272442ACE57172676182 /* python.scm */; };
 		56C75FA0534A62F40D84EEBC /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 423C73D3B421422B908D31F6 /* parser.c */; };
@@ -763,6 +765,7 @@
 		93FAF2FE5D188454E650D2C0 /* scala.scm */ = {isa = PBXFileReference; path = scala.scm; sourceTree = "<group>"; };
 		9468FD13624DE7DC91D54F3A /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		94799DD326B5C3DB66078B00 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		94B43548D3A1CD59278FC3E5 /* SettingsRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRows.swift; sourceTree = "<group>"; };
 		954C608F0C4C8DAB0ACBBF6B /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		96114592B8D53F2BBCE91F03 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		96A047E488D85AE0D46E8913 /* SensitiveFileDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveFileDetector.swift; sourceTree = "<group>"; };
@@ -916,6 +919,7 @@
 		E7FBDDB7FD6DD64F0C171C0E /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		E8332DEF18E8165ECBC6A5DE /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		E8E32B1DDB8A74130CF231CB /* rust.scm */ = {isa = PBXFileReference; path = rust.scm; sourceTree = "<group>"; };
+		E900FD3C801406DCBF758908 /* SettingsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsModel.swift; sourceTree = "<group>"; };
 		E992ABA023798DA5379414BD /* php.scm */ = {isa = PBXFileReference; path = php.scm; sourceTree = "<group>"; };
 		EA20289FA76882B885FC7A9F /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		EABBCC567DC71BF7792BB13E /* objc.scm */ = {isa = PBXFileReference; path = objc.scm; sourceTree = "<group>"; };
@@ -2087,7 +2091,9 @@
 			isa = PBXGroup;
 			children = (
 				244D71FFDCDF2736C36CEDA1 /* SettingsCatalog.swift */,
+				E900FD3C801406DCBF758908 /* SettingsModel.swift */,
 				D2AF1C209B9EC4F37D56C38F /* SettingsPane.swift */,
+				94B43548D3A1CD59278FC3E5 /* SettingsRows.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -3464,7 +3470,9 @@
 				29F3628C328EBD310B4C4C28 /* SearchBridgeServer.swift in Sources */,
 				13473DAD053B46E941686F6B /* SearchKeyInterceptor.swift in Sources */,
 				442003B218C7EE046EC65853 /* SettingsCatalog.swift in Sources */,
+				00EC2C2733B1483C1F8EDEC0 /* SettingsModel.swift in Sources */,
 				F152B7203E5B91FEB033B2F7 /* SettingsPane.swift in Sources */,
+				55AED8177D8616E426C300C0 /* SettingsRows.swift in Sources */,
 				7E49E14F9B6C917231909CDB /* SettingsTabPage.swift in Sources */,
 				08D65E4506DA242667AFE60F /* SettingsView.swift in Sources */,
 				8AE0019F447B2CE6DB3A87D5 /* StatusProcessRunner.swift in Sources */,
