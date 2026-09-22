@@ -2,49 +2,46 @@
 
 ## Status
 
-**v1.5.5 is the latest published release (2026-09-14). 1.5.6 is merged and pushed to `main`
-(`05718f7`) but NOT published** — publishing needs an explicit go-ahead (`./scripts/publish.sh 1.5.6`).
+**v1.5.6 (13) is published and verified** — GitHub release (Latest), Homebrew cask, dotviewer.app/download.
+Tag `v1.5.6` = `00be50b` on `main`. Evidence: `docs/releases/1.5.6-verification.md`.
 
 1.5.6 contents (see CHANGELOG):
 
-- **#31** Settings sub-tabs ignored mouse clicks on a macMini8,1 / macOS 15.7.7. `SettingsTabBar` now uses
+- **#31** Settings sub-tabs ignored mouse clicks on a macMini8,1 / macOS 15.7.7. `SettingsTabBar` uses
   `ViewThatFits`, so the horizontal `ScrollView` is only an overflow fallback; tabs get a full-rect hit
   shape plus a parallel `TapGesture`. **Root cause unconfirmed** — does not reproduce on macOS 26.
-- **#24** `isExtensionEnabled` checked a disabled built-in type before custom mappings, so disabling
-  GDScript also killed a `.gd` → GAP mapping. Custom mappings (extension, or filename for its own file
-  only) now win. Previews, ⌥Space and thumbnails pass the filename.
-- **#29** `GnuplotSourceDetector` keys on syntax PARI/GP cannot express (commands at statement start,
-  all `set` options + abbreviations, braced blocks, `ARGn`/`MOUSE_X`, `**`), with comments stripped.
-  kiryph's 11 unrecognised scripts: 1.5.5 detected 0/11, 1.5.6 detects 11/11.
+- **#24** Custom mappings (extension, or filename for its own file only) now win over a disabled built-in
+  type; disabling GDScript no longer kills a `.gd` → GAP mapping.
+- **#29** `.gp` Gnuplot detection keys on syntax PARI/GP cannot express, comments stripped. kiryph's 11
+  unrecognised scripts: 1.5.5 → 0/11, 1.5.6 → 11/11.
 
-Verification: 242/242 unit tests; full app scheme builds; all bundles report 1.5.6 (13). The dev build was
-deliberately NOT installed or launched (see TCC notes below). An independent review found one real bug
-(filename mappings compared against the key) — fixed in `c0ab686` with a regression test.
+This Mac now runs the public 1.5.6 in `/Applications` (installed in place from the shipped DMG; same
+Developer ID signature, Accessibility grant intact). The replaced 1.5.5 app sits in this session's scratchpad
+under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable from GitHub.
 
 ## What happened to the "left-behind" work
 
 - `fix/issue-31-intel-mac-settings-tabs` (`68b016b`) was the only unreleased code. It had **never been
   built**: the session that made it crashed mid-commit, leaving 0-byte `.git/index.lock`, `.git/HEAD.lock`
   (and an old `objects/maintenance.lock`) plus an index that made `git status` show phantom staged
-  reversals. Locks removed, index resynced, tests rewritten, then merged.
+  reversals. Locks removed, index resynced, tests rewritten, merged, released.
+- Its commit title "Fix #31: …" is a GitHub closing keyword, so pushing `main` **auto-closed #31** before
+  kiryph could confirm. Reopen it by hand if you want it open until confirmation.
 - `codex/v1.1.0-victor-feedback`: its 2 unmerged commits (Vercel/GA analytics) are superseded by `main`'s
   `site/components/site-analytics.tsx`. Nothing to merge.
 - `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
   `main`. Archive only — never merge.
-- Stale `/private/tmp` worktree entries pruned.
 
 ## Next steps
 
-1. **Publish 1.5.6** after approval: `./scripts/publish.sh 1.5.6`, then verify GitHub release assets,
-   Homebrew cask and dotviewer.app/download. If it ships on another day, fix the date in the CHANGELOG
-   heading first.
-2. **Issue replies after publishing**: announce on #24 and #29; post the drafted #31 reply (not yet posted —
-   #31 wasn't in the list the user asked to answer) and ask kiryph to confirm on the Mac mini. Keep #31
-   open until confirmed.
-3. **Optional corpus check** for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
+1. **Wait for kiryph on #31** (release reply posted). If clicks still fail on macOS 15, a macOS 15 VM
+   (e.g. `tart`) can split the Intel-vs-macOS-15 confound; the Intel half cannot be emulated.
+2. **Tell #24 and #29 that 1.5.6 is out** (not yet posted — ask first).
+3. **Fix `publish.sh` on bash 3.2**: without `--build-number` it dies on the empty `RELEASE_ARGS` array
+   under `set -u`. A task chip was created for it. Until fixed, publish with
+   `./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>`.
+4. **Optional corpus check** for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
    `examples/*.gp` (needs a download — ask first).
-4. **Optional #31 check without the reporter**: a macOS 15 VM (e.g. `tart`) can test the OS half of the
-   Intel-vs-macOS-15 confound; the Intel half cannot be emulated.
 5. **Housekeeping (ask first)**: `v2.5-claude-work` holds only 3,917 staged build artifacts + `.DS_Store`;
    `v2.5-pr26` and `v2.5-status-fix` are clean detached worktrees of merged PRs; 8 local branches are fully
    merged into `main`.
@@ -55,8 +52,8 @@ deliberately NOT installed or launched (see TCC notes below). An independent rev
 
 ## Open questions
 
-- Publish 1.5.6 now, or hold for more changes?
-- Post the #31 reply now, or together with the 1.5.6 announcement?
+- Reopen #31 until kiryph confirms?
+- Announce 1.5.6 on #24 and #29?
 
 ## Hard-won platform knowledge (do not re-derive)
 
@@ -81,7 +78,8 @@ page cannot do without a gesture must be done by the host app instead — that i
 
 ## Release process
 
-`./scripts/publish.sh <version>` — 5 steps: notarized DMG → tag → GitHub release → Homebrew cask.
+`./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>` — 5 steps: notarized DMG → tag →
+GitHub release → Homebrew cask. The flag is required until the bash 3.2 empty-array bug is fixed.
 There is deliberately **no App Store stage**; it was removed because the host app is unsandboxed and
 that stage ran *after* the release was already live under `set -euo pipefail`.
 

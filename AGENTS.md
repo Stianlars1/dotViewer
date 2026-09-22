@@ -526,3 +526,8 @@ Summary of agent-assisted development. See [CHANGELOG.md](CHANGELOG.md) for full
 - Outcome: PR #30 merged; 1.5.5 (12) released through the existing scripts and custom DropDMG profile. Homebrew and the live download page serve the new release. Issue threads #24, #28 and #29 received release links.
 - Verified: Downloaded public checksum matches GitHub/local/Homebrew; public app and DMG pass signing/provisioning/Gatekeeper/stapling checks; installed public app cold-launches ready. Native arm64 and Rosetta x86_64 launch tested on macOS 26.4.1. Finder Space Gnuplot colors and final public installer design visually checked.
 - Details: `docs/releases/1.5.5-verification.md`. Physical Intel/macOS 15 and reporter-specific `.gd` routing confirmation remain pending.
+
+### 1.5.6 fixes and publication (2026-09-22)
+- Outcome: Audited releases, branches and worktrees; the only unreleased code was the #31 branch, which had never been built (crashed session, stale git locks). Reworked it (`ViewThatFits` tab row, real-mouse tests), fixed custom mappings losing to disabled built-in types (#24) and widened `.gp` Gnuplot detection (#29). Published 1.5.6 (13); replies posted on #24, #25, #28, #29 and #31.
+- Verified: 242 XCTest, 20 Python, UTI coverage; exported and DMG-mounted app pass strict signing, provisioning (6 bundles), Gatekeeper and stapling; universal binaries; checksum matches GitHub asset and Homebrew cask; installed in place with Accessibility intact; Quick Look smoke routes #29 scripts to Gnuplot and PARI/GP to plain text.
+- Details: `docs/releases/1.5.6-verification.md`. Pending: #31 confirmation on Intel/macOS 15 (issue auto-closed by the inherited "Fix #31" commit), `publish.sh` bash 3.2 empty-array bug.

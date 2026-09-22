@@ -414,7 +414,7 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Fix ready for 1.5.6, awaiting reporter confirmation |
+| **Status** | Fixed in 1.5.6, awaiting reporter confirmation |
 
 **Impact**: On a `macMini8,1` running macOS 15.7.7, the sub-page tabs in Settings → Markdown (`Rendered`, `Custom CSS`) and Settings → Settings (`Window`, `Limits`, `Preview UI`, `Performance`, `Theme`, `Danger Zone`) could not be switched with the mouse. `Tab` + `Space` still worked. The same reporter's M5 MacBook Air (a newer macOS) was unaffected, so Intel vs. Apple silicon and macOS 15 vs. 26 are confounded.
 
