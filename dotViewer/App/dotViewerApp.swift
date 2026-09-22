@@ -32,12 +32,14 @@ struct dotViewerApp: App {
                 .appUIFontSizing(appUIFontSizePreset)
         }
 
-        // A Settings scene is what gives the app menu its "Settings…" item and ⌘,.
+        // A Settings scene is what gives the app menu its "Settings…" item and ⌘,. It ignores the
+        // content's ideal size (it opened at 900 × 532), so the first size is set here.
         Settings {
             SettingsWindow()
                 .appUIFontSizing(appUIFontSizePreset)
         }
         .windowResizability(.contentMinSize)
+        .defaultSize(width: 780, height: 620)
     }
 }
 

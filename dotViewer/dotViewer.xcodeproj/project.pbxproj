@@ -58,6 +58,7 @@
 		2487835A8004A6F250F5B43E /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = B2762C2D8151DFE6EC73D30C /* scanner.c */; };
 		25B64762D019C6D7D339F183 /* FileLanguageResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0900B117B796A0F5DE115EC4 /* FileLanguageResolver.swift */; };
 		27D7E05074D22DBD16892832 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F3E382FBC808FDDBFA3EFB01 /* parser.c */; };
+		290EE838B279C64D602C0A5E /* SettingsWindowLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DF30BF87DB1FECEF984A59 /* SettingsWindowLayoutTests.swift */; };
 		297EE7E6A5EA61A0DAC785ED /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AC6C5AF5824DE36A10CC0676 /* scanner.c */; };
 		29F3628C328EBD310B4C4C28 /* SearchBridgeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49A0CC00DB41E6F8996BAA5 /* SearchBridgeServer.swift */; };
 		2A60298B793C7B6982263F41 /* PreviewSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */; };
@@ -769,6 +770,7 @@
 		83E1F0AB13B357E5A6A22992 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		83F2BF562B9B4BF0AAED5D42 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedLogoView.swift; sourceTree = "<group>"; };
+		84DF30BF87DB1FECEF984A59 /* SettingsWindowLayoutTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsWindowLayoutTests.swift; sourceTree = "<group>"; };
 		86993D5AFCCA1C3EBA2891DA /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		86F5D9BA48BB8C5131C336B9 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		87E3922E260DBA9159F739EE /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
@@ -2805,6 +2807,7 @@
 				C39266B1F037D31A11C0C2B5 /* SettingsCatalogTests.swift */,
 				611B384C9AB6C31F4626C6DB /* SettingsSidebarTests.swift */,
 				6795EA0D329C5782857A6605 /* SettingsSnapshotTests.swift */,
+				84DF30BF87DB1FECEF984A59 /* SettingsWindowLayoutTests.swift */,
 				D5BF0FAFDC3FDD7FF21D7489 /* ShebangLanguageDetectorTests.swift */,
 				9C58C5CE09DF2311F9A4F29F /* StatusProcessRunnerTests.swift */,
 				4273283E6FC90DB807240AD4 /* SystemAppearanceTests.swift */,
@@ -3609,6 +3612,7 @@
 				9FB0479D9E05F64048D93B45 /* SettingsSidebarTests.swift in Sources */,
 				D6FD4891FEB4B0DBEEAAC984 /* SettingsSnapshotTests.swift in Sources */,
 				F6DE40148D4931B56E9B9FA2 /* SettingsWindow.swift in Sources */,
+				290EE838B279C64D602C0A5E /* SettingsWindowLayoutTests.swift in Sources */,
 				95DA26E9E69171A526B6BA01 /* ShebangLanguageDetectorTests.swift in Sources */,
 				03408A657871B5E87E4C92B9 /* ShortcutsPane.swift in Sources */,
 				736B371C6114155A44D47111 /* StatusProcessRunner.swift in Sources */,

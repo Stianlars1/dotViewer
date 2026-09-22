@@ -13,9 +13,11 @@ struct SettingsWindow: View {
 
     var body: some View {
         NavigationSplitView {
+            // Order matters: a column width set before `.toolbar(removing:)` is dropped, and the
+            // sidebar falls back to 140 pt (SettingsWindowLayoutTests).
             SettingsSidebar(selection: $selection, query: query, onOpen: open)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 210, max: 260)
                 .toolbar(removing: .sidebarToggle)
+                .navigationSplitViewColumnWidth(min: 190, ideal: 210, max: 260)
         } detail: {
             let pane = selection ?? .general
             SettingsPaneView(pane: pane)
@@ -24,7 +26,7 @@ struct SettingsWindow: View {
                 .navigationTitle(pane.title)
         }
         .searchable(text: $query, placement: .sidebar, prompt: "Search")
-        .frame(minWidth: 720, idealWidth: 780, minHeight: 500, idealHeight: 620)
+        .frame(minWidth: 720, minHeight: 500)
         .onAppear {
             if selection == nil { selection = SettingsPane(rawValue: storedPane) ?? .general }
         }
