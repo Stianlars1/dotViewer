@@ -26,7 +26,7 @@ under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable 
   (and an old `objects/maintenance.lock`) plus an index that made `git status` show phantom staged
   reversals. Locks removed, index resynced, tests rewritten, merged, released.
 - Its commit title "Fix #31: …" is a GitHub closing keyword, so pushing `main` **auto-closed #31** before
-  kiryph could confirm. Reopen it by hand if you want it open until confirmation.
+  kiryph could confirm. Reopened by hand; close it once kiryph confirms.
 - `codex/v1.1.0-victor-feedback`: its 2 unmerged commits (Vercel/GA analytics) are superseded by `main`'s
   `site/components/site-analytics.tsx`. Nothing to merge.
 - `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
@@ -34,9 +34,9 @@ under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable 
 
 ## Next steps
 
-1. **Wait for kiryph on #31** (release reply posted). If clicks still fail on macOS 15, a macOS 15 VM
+1. **Wait for kiryph on #31** (release reply posted, issue reopened). If clicks still fail on macOS 15, a macOS 15 VM
    (e.g. `tart`) can split the Intel-vs-macOS-15 confound; the Intel half cannot be emulated.
-2. **Tell #24 and #29 that 1.5.6 is out** (not yet posted — ask first).
+2. Release announcements posted on #24 and #29 (both stay closed).
 3. **Fix `publish.sh` on bash 3.2**: without `--build-number` it dies on the empty `RELEASE_ARGS` array
    under `set -u`. A task chip was created for it. Until fixed, publish with
    `./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>`.
@@ -52,8 +52,7 @@ under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable 
 
 ## Open questions
 
-- Reopen #31 until kiryph confirms?
-- Announce 1.5.6 on #24 and #29?
+- None pending from this session.
 
 ## Hard-won platform knowledge (do not re-derive)
 
