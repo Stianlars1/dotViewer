@@ -428,3 +428,24 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 **Superseded (unreleased, `feat/settings-window`)**: Settings moved into their own window (⌘,), and the custom tab bar is gone. Panes are rows of a native sidebar `List`, which AppKit backs with an `NSTableView`, so there is no custom hit-testing left to lose a click. `SettingsSidebarTests` keeps the method from `SettingsTabBarTests`: real mouse-down/up events swept down the hosted sidebar must select every pane in order, and must open a search result. One detail when porting it: `NSTableView.mouseDown(with:)` runs its own tracking loop that waits for the mouse-up in the event queue, so the test posts the up before it delivers the down. Status stays "awaiting reporter confirmation" until the new window has been tried on macOS 15.
 
 **Related**: [#31](https://github.com/Stianlars1/dotViewer/issues/31)
+
+---
+
+## KI-020 — "Interface text size" has no effect
+
+| Field | Value |
+|-------|-------|
+| **Priority** | Medium |
+| **Status** | Open — needs a decision (found 2026-09-23) |
+
+**Impact**: Settings → Appearance → Interface text size (added 2026-02-17 as "App UI Text Size") changes nothing. dotViewer's windows look the same from Extra Small to XXX Large.
+
+**Root cause**: The setting applies SwiftUI's `.dynamicTypeSize` at the root of each window (`App/AppUIFontSizing.swift`). On macOS that modifier does not change text layout: body, headline and toggle text measure 95 × 58 pt at every size from `.xSmall` to `.accessibility5` (macOS 26.4). The research that chose it (`docs/research/preview-width-and-app-font-size-research.md`, Approach D) assumed semantic text would scale; that was never checked. The installed 1.5.8 build confirmed it: switching to XXX Large left every label in both windows the same size.
+
+**Measured alternatives** (a two-row grouped `Form`, 131 pt tall):
+- `.controlSize(.large)` → 138 pt, `.controlSize(.extraLarge)` → 146 pt: controls grow, text barely.
+- A root `.font(.system(size: 16))` → 136 pt: only text without its own font changes.
+
+**Options**:
+1. Remove the setting. It has never worked, so nobody loses anything; the stored value is harmless.
+2. Real scaling: a font-scale environment value read by a few helpers that replace the `.font(.body)`, `.font(.subheadline)` … calls in app views, plus `.controlSize` for the larger steps. Medium effort, touches every app view (the research's Approach E, rejected at the time as risky).

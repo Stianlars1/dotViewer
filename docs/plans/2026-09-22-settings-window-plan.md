@@ -52,7 +52,7 @@
 - `struct SettingsEntry: Identifiable, Hashable, Sendable { id: SettingID; pane: SettingsPane; title: String; keywords: [String] }`
 - `enum SettingsCatalog { static let entries: [SettingsEntry]; static func entry(_ id: SettingID) -> SettingsEntry; static func search(_ query: String) -> [SettingsEntry]; static func rank(_ matches: [SettingsEntry], tokens: [String]) -> [SettingsEntry] }`
 
-- [ ] **Step 1: Write the failing tests** (`SettingsCatalogTests.swift`)
+- [x] **Step 1: Write the failing tests** (`SettingsCatalogTests.swift`)
 
 ```swift
 import XCTest
@@ -99,7 +99,7 @@ final class SettingsCatalogTests: XCTestCase {
 }
 ```
 
-- [ ] **Step 2: Add sources to the test target and run — expect failure**
+- [x] **Step 2: Add sources to the test target and run — expect failure**
 
 In `project.yml` under `dotViewerTests: sources:` add:
 ```yaml
@@ -108,7 +108,7 @@ In `project.yml` under `dotViewerTests: sources:` add:
 ```
 Run the test command. Expected: build FAILS (types not defined).
 
-- [ ] **Step 3: Implement `SettingsPane.swift`**
+- [x] **Step 3: Implement `SettingsPane.swift`**
 
 ```swift
 import Foundation
@@ -153,7 +153,7 @@ enum SettingsPane: String, CaseIterable, Identifiable, Hashable {
 }
 ```
 
-- [ ] **Step 4: Implement `SettingsCatalog.swift`** — `SettingID` cases and entries exactly as this table; `search` folds case/diacritics/width, splits on whitespace, requires every token to occur in `title + pane.title + keywords`; `rank` returns its input (catalog order) and carries a `// TODO(owner):` note — the ranking rule is the owner's call (Task 8).
+- [x] **Step 4: Implement `SettingsCatalog.swift`** — `SettingID` cases and entries exactly as this table; `search` folds case/diacritics/width, splits on whitespace, requires every token to occur in `title + pane.title + keywords`; `rank` returns its input (catalog order) and carries a `// TODO(owner):` note — the ranking rule is the owner's call (Task 8).
 
 | ID | Pane | Title | Keywords |
 |---|---|---|---|
@@ -254,8 +254,8 @@ enum SettingsCatalog {
 ```
 (The `entries` array literal is written out in full from the table; the comment above is not left in the file.)
 
-- [ ] **Step 5: `xcodegen generate`, run tests — expect PASS** (all prior tests + 8 new).
-- [ ] **Step 6: Commit** `feat(settings): add settings pane list and searchable catalog`
+- [x] **Step 5: `xcodegen generate`, run tests — expect PASS** (all prior tests + 8 new).
+- [x] **Step 6: Commit** `feat(settings): add settings pane list and searchable catalog`
 
 ### Task 2: Settings model
 
@@ -345,7 +345,7 @@ final class SettingsModel {
 }
 ```
 
-- [ ] **Step 1:** write the file per the table. **Step 2:** build the app scheme (`xcodebuild -project dotViewer.xcodeproj -scheme dotViewer -derivedDataPath build build`) — expect success. **Step 3:** commit `feat(settings): add observable settings model`.
+- [x] **Step 1:** write the file per the table. **Step 2:** build the app scheme (`xcodebuild -project dotViewer.xcodeproj -scheme dotViewer -derivedDataPath build build`) — expect success. **Step 3:** commit `feat(settings): add observable settings model`.
 
 ### Task 3: Row components
 
@@ -469,7 +469,7 @@ extension Binding where Value == Int {
 }
 ```
 
-- [ ] **Step 1:** write the file. **Step 2:** build — success. **Step 3:** commit `feat(settings): add shared settings row components`.
+- [x] **Step 1:** write the file. **Step 2:** build — success. **Step 3:** commit `feat(settings): add shared settings row components`.
 
 ### Task 4: The seven panes
 
@@ -602,7 +602,7 @@ Row specification for the other panes (title — description — control — bin
 - Section "Diagnostics": "Performance logging" — "Writes preview timings to the system log." — toggle — `performanceLogging` — `.performanceLogging`
 - Section "Uninstall": `LabeledContent { Button("Uninstall…", role: .destructive) } label: { SettingsLabel("Uninstall dotViewer", description: "Moves dotViewer to the Trash and quits.") }` — `.uninstall`; the button runs the existing `uninstallApp()` alert flow (moved from `SettingsView.swift`)
 
-- [ ] **Step 1:** write the seven files. **Step 2:** build app scheme — success. **Step 3:** commit `feat(settings): build the seven settings panes`.
+- [x] **Step 1:** write the seven files. **Step 2:** build app scheme — success. **Step 3:** commit `feat(settings): build the seven settings panes`.
 
 ### Task 5: Settings window with sidebar and search
 
@@ -652,8 +652,8 @@ struct SettingsWindow: View {
 }
 ```
 
-- [ ] **Step 1: Write the failing sidebar test** — hosts `SettingsSidebar` with a recording binding in an ordered-in offscreen `NSWindow`, finds the `NSTableView`/`NSOutlineView`, sends real `leftMouseDown`/`leftMouseUp` events to the centre of every row, asserts the recorded selection equals each pane in order; and with `query: "wrap"` asserts clicking the first result calls `onOpen` with `.wordWrap`. (Harness follows `SettingsTabBarTests`' `makeHarness`/event helpers — copy them into the new file before deleting the old one in Task 6.)
-- [ ] **Step 2:** run — FAIL (types missing). **Step 3:** implement `SettingsWindow.swift` (above + `SettingsSidebar`, `SettingsPaneView`). **Step 4:** run — PASS. **Step 5:** commit `feat(settings): add sidebar settings window with search`.
+- [x] **Step 1: Write the failing sidebar test** — hosts `SettingsSidebar` with a recording binding in an ordered-in offscreen `NSWindow`, finds the `NSTableView`/`NSOutlineView`, sends real `leftMouseDown`/`leftMouseUp` events to the centre of every row, asserts the recorded selection equals each pane in order; and with `query: "wrap"` asserts clicking the first result calls `onOpen` with `.wordWrap`. (Harness follows `SettingsTabBarTests`' `makeHarness`/event helpers — copy them into the new file before deleting the old one in Task 6.)
+- [x] **Step 2:** run — FAIL (types missing). **Step 3:** implement `SettingsWindow.swift` (above + `SettingsSidebar`, `SettingsPaneView`). **Step 4:** run — PASS. **Step 5:** commit `feat(settings): add sidebar settings window with search`.
 
 ### Task 6: Wire into the app, remove the old pages
 
@@ -706,17 +706,23 @@ private struct SettingsFooterLink: View {
 }
 ```
 
-- [ ] **Step 1:** make the edits and deletions. **Step 2:** `xcodegen generate`; full test run — PASS (247 − 3 tab-bar tests + new ones). **Step 3:** grep the repo for `SettingsView(`, `MarkdownSettingsView`, `SettingsTabBar` — no hits. **Step 4:** commit `feat(settings): open settings in their own window (⌘,)`.
+- [x] **Step 1:** make the edits and deletions. **Step 2:** `xcodegen generate`; full test run — PASS (247 − 3 tab-bar tests + new ones). **Step 3:** grep the repo for `SettingsView(`, `MarkdownSettingsView`, `SettingsTabBar` — no hits. **Step 4:** commit `feat(settings): open settings in their own window (⌘,)`.
 
 ### Task 7: Snapshots and visual pass
 
 **Files:** Create `dotViewer/dotViewerTests/SettingsSnapshotTests.swift` — skipped unless `DV_SNAPSHOT_DIR` is set; hosts `SettingsWindow` (preselected pane via `UserDefaults.standard` key `settingsSelectedPane`) at 820×640 in light and dark (`NSAppearance(named:)`), renders with `bitmapImageRepForCachingDisplay`/`cacheDisplay`, writes `<pane>-<light|dark>.png`.
 
-- [ ] **Step 1:** write the test. **Step 2:** `TEST_RUNNER_DV_SNAPSHOT_DIR=<scratchpad>/snapshots xcodebuild … test -only-testing:dotViewerTests/SettingsSnapshotTests`. **Step 3:** review every PNG against the formula (leading labels, trailing controls, equal insets, no clipped text, consistent section spacing); fix and re-render until clean. **Step 4:** commit `test(settings): render settings panes for review`.
+- [x] **Step 1:** write the test. **Step 2:** `TEST_RUNNER_DV_SNAPSHOT_DIR=<scratchpad>/snapshots xcodebuild … test -only-testing:dotViewerTests/SettingsSnapshotTests`. **Step 3:** review every PNG against the formula (leading labels, trailing controls, equal insets, no clipped text, consistent section spacing); fix and re-render until clean. **Step 4:** commit `test(settings): render settings panes for review`.
 
 ### Task 8: Search ranking (owner's contribution) and docs
 
-- [ ] **Step 1:** owner writes `SettingsCatalog.rank(_:tokens:)` (5–10 lines); add a test that pins the chosen order for one query.
-- [ ] **Step 2:** docs — KNOWN_ISSUES KI-019 (tab bar replaced by a native sidebar list; status stays "awaiting confirmation"), CHANGELOG "Unreleased" entry, CLAUDE.md host-app file list, AGENTS.md work log.
-- [ ] **Step 3:** full test run — PASS; commit `docs: record the settings window redesign`.
-- [ ] **Step 4 (owner go-ahead only):** Developer ID build `./scripts/release.sh <ver> --skip-notarize --skip-dmg`, back up `/Applications/dotViewer.app`, install, hands-on check (⌘, and menu item, footer, every pane, search, persistence into a Quick Look preview, interface text sizes).
+- [x] **Step 1:** owner writes `SettingsCatalog.rank(_:tokens:)` (5–10 lines); add a test that pins the chosen order for one query.
+- [x] **Step 2:** docs — KNOWN_ISSUES KI-019 (tab bar replaced by a native sidebar list; status stays "awaiting confirmation"), CHANGELOG "Unreleased" entry, CLAUDE.md host-app file list, AGENTS.md work log.
+- [x] **Step 3:** full test run — PASS; commit `docs: record the settings window redesign`.
+- [x] **Step 4 (owner go-ahead only):** Developer ID build `./scripts/release.sh <ver> --skip-notarize --skip-dmg`, back up `/Applications/dotViewer.app`, install, hands-on check (⌘, and menu item, footer, every pane, search, persistence into a Quick Look preview, interface text sizes).
+
+## Result (2026-09-23)
+
+All tasks done on `feat/settings-window`. Search ranking: titles that contain every typed word first, then pane and keyword matches, each group in catalog order (owner's choice). A local Developer ID 1.5.8 build is installed in `/Applications` (the public 1.5.7 is backed up) and was checked by hand through the accessibility API (`scripts/dotviewer-ax.swift`): ⌘, (a real keystroke), the menu item and the footer open the window; every pane shows the stored values; typed search lists results in the chosen order and opens them; a switch flipped in Settings reaches the Quick Look extension (and was flipped back); Accessibility and Finder access survived the upgrade.
+
+The check found two bugs. Fixed: the sidebar opened at 140 pt and the window at 900 × 532 (`.toolbar(removing:)` must come before the column width; the Settings scene needs `.defaultSize`), now pinned by `SettingsWindowLayoutTests`. Not fixed: "Interface text size" has never had any effect on macOS (KI-020) — a decision for the owner.

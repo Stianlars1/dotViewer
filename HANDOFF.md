@@ -1,4 +1,4 @@
-# Handoff — 2026-09-22
+# Handoff — 2026-09-23
 
 ## Status
 
@@ -7,9 +7,13 @@
 `docs/releases/1.5.7-verification.md`. 1.5.6 (same day) shipped the #31/#24/#29 fixes —
 `docs/releases/1.5.6-verification.md`.
 
-This Mac runs the public 1.5.7 in `/Applications` (same Developer ID signature, Accessibility intact).
-Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the session scratchpad under
-`/private/tmp` (cleared on reboot); every public version stays downloadable from GitHub.
+**This Mac runs a local, unnotarized 1.5.8 (14) Developer ID build of `feat/settings-window`** in
+`/Applications`, installed 2026-09-23 for the Settings hands-on check. It has the same designated
+requirement as the release, so Accessibility and Finder access carried over. To go back: the public
+1.5.7 app is in the session scratchpad (`…/scratchpad/backup/dotViewer-1.5.7.app`, cleared on reboot);
+the 1.5.7 release archive (with dSYMs), export and DMG moved from `dotViewer/build/` to
+`~/Library/Developer/Xcode/Archives/2026-09-22/` so `release.sh` could not wipe them; the DMG is also on
+GitHub. Every public version stays downloadable from GitHub.
 
 ## What happened to the "left-behind" work
 
@@ -28,12 +32,11 @@ Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the sessio
 
 - **`feat/settings-window`**: Settings redesigned as their own window (⌘,, dotViewer → Settings…) with
   a sidebar of seven panes, System Settings-style grouped rows, and sidebar search. Spec and plan:
-  `docs/plans/2026-09-22-settings-window-{design,plan}.md`. Tasks 1–7 done and committed; 254 tests
-  pass; 20 offscreen renders reviewed (re-render with `DV_SNAPSHOT_DIR`, see
-  `SettingsSnapshotTests.swift`). **Not installed or tried by hand yet.** Left: the owner writes
-  `SettingsCatalog.rank(_:tokens:)` (search result order, `TODO(owner)`) plus a test pinning it; then,
-  with the owner's go-ahead, a Developer ID build + install + hands-on check (plan Task 8 step 4); then
-  a PR.
+  `docs/plans/2026-09-22-settings-window-{design,plan}.md`. **All plan tasks done**; 256 tests pass;
+  search ranks title matches first (owner's choice). Installed and checked by hand (see the plan's
+  "Result" section): the check fixed a 140 pt sidebar / 900 × 532 window, and found that "Interface
+  text size" has never worked on macOS (KI-020, owner to decide: remove or build real scaling).
+  Left: KI-020 decision, then push + PR (not pushed yet).
 - **`feat/usage-stats-and-updates`**: research doc only,
   `docs/plans/2026-09-22-usage-stats-telemetry-updates.md` (download stats, opt-in telemetry, Sparkle).
   Waiting for the owner's approval and answers to its §9 open questions before any code.
@@ -59,8 +62,8 @@ Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the sessio
 
 ## Open questions
 
-- Settings search: how should results be ordered? (owner writes `SettingsCatalog.rank`)
-- Settings window: go-ahead for a Developer ID build installed over `/Applications` for a hands-on check?
+- KI-020: remove "Interface text size", or build real text scaling for the app's windows?
+- Settings window: push `feat/settings-window` and open a PR?
 - Usage stats / telemetry / updates: approve the research doc and answer its §9 questions.
 
 ## Hard-won platform knowledge (do not re-derive)
