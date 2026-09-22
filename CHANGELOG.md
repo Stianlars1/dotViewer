@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Settings open in their own window, from dotViewer → Settings… or ⌘,. A sidebar lists General, Appearance, Markdown, Window, Copy, Shortcuts and Advanced. Every pane is laid out like System Settings: the setting's name, with a short description where one helps, on the left; the control on the right; switches for on and off. Markdown's settings moved in from their own page, and the theme preview sits directly above the theme picker.
+- A search field above the sidebar finds any setting by its name or a related word ("dark", "clipboard", "permission"), opens its pane and highlights the row.
+- The main window's sidebar keeps Status and File Types, with a Settings link and its ⌘, shortcut at the bottom.
+- The tab bar that lost mouse clicks on an Intel Mac with macOS 15 is gone: panes are rows of a native sidebar list ([#31](https://github.com/Stianlars1/dotViewer/issues/31)).
+
 ## v1.5.7 (2026-09-22)
 
 ### Changed

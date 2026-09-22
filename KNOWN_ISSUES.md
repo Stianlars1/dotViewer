@@ -414,7 +414,7 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 | Field | Value |
 |-------|-------|
 | **Priority** | High |
-| **Status** | Fixed in 1.5.6, awaiting reporter confirmation |
+| **Status** | Fixed in 1.5.6, awaiting reporter confirmation; the tab bar itself is removed in the unreleased Settings window |
 
 **Impact**: On a `macMini8,1` running macOS 15.7.7, the sub-page tabs in Settings → Markdown (`Rendered`, `Custom CSS`) and Settings → Settings (`Window`, `Limits`, `Preview UI`, `Performance`, `Theme`, `Danger Zone`) could not be switched with the mouse. `Tab` + `Space` still worked. The same reporter's M5 MacBook Air (a newer macOS) was unaffected, so Intel vs. Apple silicon and macOS 15 vs. 26 are confounded.
 
@@ -424,5 +424,7 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 1. `SettingsTabBar` uses `ViewThatFits`: the row is laid out plainly whenever it fits, and the horizontal scroll view is only the fallback for windows too narrow for it. In the reporter's screenshots the row fits, which takes the scroll view out of the click path.
 2. `SettingsTabButton` is hittable across its whole padded rectangle and adds a `.simultaneousGesture(TapGesture())` as a second route from a click to the selection.
 3. `SettingsTabBarTests` sends real mouse-down/up events to a hosted row (plain and scrolling layouts) and asserts every visible tab is selectable, and that no `NSScrollView` exists when the row fits.
+
+**Superseded (unreleased, `feat/settings-window`)**: Settings moved into their own window (⌘,), and the custom tab bar is gone. Panes are rows of a native sidebar `List`, which AppKit backs with an `NSTableView`, so there is no custom hit-testing left to lose a click. `SettingsSidebarTests` keeps the method from `SettingsTabBarTests`: real mouse-down/up events swept down the hosted sidebar must select every pane in order, and must open a search result. One detail when porting it: `NSTableView.mouseDown(with:)` runs its own tracking loop that waits for the mouse-up in the event queue, so the test posts the up before it delivers the down. Status stays "awaiting reporter confirmation" until the new window has been tried on macOS 15.
 
 **Related**: [#31](https://github.com/Stianlars1/dotViewer/issues/31)

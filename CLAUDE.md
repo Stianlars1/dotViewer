@@ -86,7 +86,13 @@ Runs out-of-process. Provides syntax highlighting via tree-sitter.
 
 ### Host App
 Settings UI for the extension (font families, font size, theme). Source in `dotViewer/App/`.
-- `dotViewerApp.swift`, `ContentView.swift`, `SettingsView.swift`
+- `dotViewerApp.swift` — main window plus the `Settings` scene (dotViewer → Settings…, ⌘,)
+- `ContentView.swift` — main window: Status and File Types, `Settings/SettingsFooterLink.swift` at the bottom of the sidebar
+- `Settings/SettingsWindow.swift` — Settings window: sidebar of panes, sidebar search, pane host that scrolls to and highlights a search result
+- `Settings/SettingsPane.swift` (the seven panes and their sidebar groups), `Settings/Panes/*Pane.swift` (one grouped `Form` per pane)
+- `Settings/SettingsModel.swift` — `@Observable` model; every property writes through to `SharedSettings`
+- `Settings/SettingsRows.swift` — shared rows (label + description, slider, status, font picker) and `settingsPaneStyle()`
+- `Settings/SettingsCatalog.swift` — every setting's `SettingID`, pane, title and search keywords. A new setting needs a catalog entry and `.settingsAnchor(id)` on its row, or search can't find it
 - `StatusView.swift` — shows extension registration status + extension conflict scanner UI
 - `Utilities/ExtensionHelper.swift`, `ExtensionStatusChecker.swift`
 - `Utilities/ExtensionConflictScanner.swift` — discovers competing Quick Look extensions via `pluginkit`, offers per-extension disable and one-click "Resolve All"

@@ -24,6 +24,20 @@ Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the sessio
 - `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
   `main`. Archive only — never merge.
 
+## In progress (later on 2026-09-22) — two local branches, neither pushed
+
+- **`feat/settings-window`**: Settings redesigned as their own window (⌘,, dotViewer → Settings…) with
+  a sidebar of seven panes, System Settings-style grouped rows, and sidebar search. Spec and plan:
+  `docs/plans/2026-09-22-settings-window-{design,plan}.md`. Tasks 1–7 done and committed; 254 tests
+  pass; 20 offscreen renders reviewed (re-render with `DV_SNAPSHOT_DIR`, see
+  `SettingsSnapshotTests.swift`). **Not installed or tried by hand yet.** Left: the owner writes
+  `SettingsCatalog.rank(_:tokens:)` (search result order, `TODO(owner)`) plus a test pinning it; then,
+  with the owner's go-ahead, a Developer ID build + install + hands-on check (plan Task 8 step 4); then
+  a PR.
+- **`feat/usage-stats-and-updates`**: research doc only,
+  `docs/plans/2026-09-22-usage-stats-telemetry-updates.md` (download stats, opt-in telemetry, Sparkle).
+  Waiting for the owner's approval and answers to its §9 open questions before any code.
+
 ## Next steps
 
 1. **Wait for kiryph on #31** (release reply posted, issue reopened). If clicks still fail on macOS 15, a macOS 15 VM
@@ -45,7 +59,9 @@ Backups of the replaced 1.5.5, 1.5.6 and the local 1.5.7 build sit in the sessio
 
 ## Open questions
 
-- None pending from this session.
+- Settings search: how should results be ordered? (owner writes `SettingsCatalog.rank`)
+- Settings window: go-ahead for a Developer ID build installed over `/Applications` for a hands-on check?
+- Usage stats / telemetry / updates: approve the research doc and answer its §9 questions.
 
 ## Hard-won platform knowledge (do not re-derive)
 
@@ -106,8 +122,11 @@ to `/Applications` — Developer ID signed, so the TCC grant survives.
 - `dotViewer/App/PermissionTroubleshooting.swift` — the TCC explanation and reset command
 - `docs/research/quicklook-search-keyboard-2026-08.md` — every measurement, including dead ends
 - `KNOWN_ISSUES.md` — KI-009 now records the real ⌘C fix, not just the workarounds; KI-019 is #31
-- `dotViewer/App/SettingsTabPage.swift` + `dotViewerTests/SettingsTabBarTests.swift` — #31 (tests send
-  real mouse events to an ordered-in offscreen window; SwiftUI ignores clicks on a never-shown window)
+- `dotViewer/App/Settings/SettingsWindow.swift` + `dotViewerTests/SettingsSidebarTests.swift` — #31 on
+  `feat/settings-window`, where the tab bar is replaced by a native sidebar list (tests send real mouse
+  events to an ordered-in offscreen window; SwiftUI ignores clicks on a never-shown window, and the
+  mouse-up must be queued before the down because `NSTableView` tracks the click itself). On `main`
+  it is still `App/SettingsTabPage.swift` + `SettingsTabBarTests.swift`
 - `dotViewer/Shared/FileTypeRegistry.swift` `isExtensionEnabled` — #24 custom-mapping precedence
 - `dotViewer/Shared/GnuplotSourceDetector.swift` + `dotViewerTests/GnuplotSourceDetectorTests.swift` — #29
 
