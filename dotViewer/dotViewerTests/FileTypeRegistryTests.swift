@@ -178,4 +178,26 @@ final class FileTypeRegistryTests: XCTestCase {
         // Should have at least a few categories populated
         XCTAssertGreaterThan(grouped.keys.count, 3)
     }
+
+    // MARK: - Enabled state (#24)
+
+    func testDisabledBuiltInTypeTurnsItsExtensionOff() {
+        XCTAssertFalse(registry.isExtensionEnabled("gd", customMappings: [], disabledTypes: ["gdscript"]))
+        XCTAssertTrue(registry.isExtensionEnabled("gd", customMappings: [], disabledTypes: []))
+        XCTAssertTrue(registry.isExtensionEnabled("not-a-registered-ext", customMappings: [], disabledTypes: ["gdscript"]))
+    }
+
+    func testCustomMappingWinsOverDisabledBuiltInType() {
+        let gap = CustomExtension(extensionName: "gd", displayName: "GAP", highlightLanguage: "gap")
+        XCTAssertTrue(registry.isExtensionEnabled("gd", customMappings: [gap], disabledTypes: ["gdscript"]))
+        XCTAssertTrue(registry.isExtensionEnabled("GD", customMappings: [gap], disabledTypes: ["gdscript"]))
+    }
+
+    func testFilenameMappingWinsOnlyForItsOwnFile() {
+        let special = CustomExtension(extensionName: "", displayName: "Special", highlightLanguage: "plaintext", filenameMatch: "GROUP.GD")
+        XCTAssertTrue(registry.isExtensionEnabled("gd", filename: "group.gd", customMappings: [special], disabledTypes: ["gdscript"]))
+        XCTAssertFalse(registry.isExtensionEnabled("gd", filename: "other.gd", customMappings: [special], disabledTypes: ["gdscript"]))
+        XCTAssertFalse(registry.isExtensionEnabled("gd", customMappings: [special], disabledTypes: ["gdscript"]),
+                       "An empty extension on a filename mapping must not match extension keys")
+    }
 }

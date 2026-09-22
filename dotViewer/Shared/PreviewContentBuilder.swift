@@ -75,7 +75,7 @@ public enum PreviewContentBuilder {
         }
 
         let isTextual = typeIsTextual || isBinaryPlist || (forceTextForUnknown && looksTextualSample)
-        let isExtensionEnabled = registry.isExtensionEnabled(key)
+        let isExtensionEnabled = registry.isExtensionEnabled(key, filename: url.lastPathComponent)
         let isKnownType = registry.fileType(for: key) != nil || registry.highlightLanguage(for: key) != nil
         let allowUnknown = settings.previewAllFileTypes
 

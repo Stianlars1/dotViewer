@@ -5,6 +5,11 @@
 ### Fixed
 
 - Settings sub-tabs (Markdown → `Rendered`, `Custom CSS`; Settings → `Window` … `Danger Zone`) ignored mouse clicks on a `macMini8,1` running macOS 15.7.7, while `Tab` + `Space` still worked ([#31](https://github.com/Stianlars1/dotViewer/issues/31)). The tab row no longer sits inside a horizontal scroll view unless the window is too narrow for it, each tab is hittable across its whole padded area, and a parallel tap gesture gives clicks a second route to the selection. Not reproducible on macOS 26, so confirmation from affected Macs is still pending.
+- A custom mapping now wins even when the built-in type that owns the same extension is switched off. Previously, disabling GDScript also disabled a `.gd` → GAP mapping, and those files fell back to plain text ([#24](https://github.com/Stianlars1/dotViewer/issues/24)). Filename mappings count too, in previews and thumbnails.
+
+### Improved
+
+- `.gp` Gnuplot detection recognises far more real scripts while still leaving PARI/GP alone ([#29](https://github.com/Stianlars1/dotViewer/issues/29)): every `set`/`unset` option and the common abbreviations (`set t`, `set o`, `set xr`), commands after `;`, `bind`, `undefine`, `load`/`call`/`eval`, `print` without parentheses, `do for` and braced `if`/`while` blocks, `ARG1`/`MOUSE_X`-style variables, and `**`. Comments no longer count as evidence either way. All 11 scripts reported as unrecognised are now detected; 1.5.5 detected none of them.
 
 ## v1.5.5 (2026-09-14)
 

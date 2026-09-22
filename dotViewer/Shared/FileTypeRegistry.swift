@@ -659,17 +659,28 @@ public final class FileTypeRegistry: @unchecked Sendable {
         return grouped
     }
 
-    public func isExtensionEnabled(_ ext: String) -> Bool {
+    public func isExtensionEnabled(
+        _ ext: String,
+        filename: String? = nil,
+        customMappings: [CustomExtension]? = nil,
+        disabledTypes: Set<String>? = nil
+    ) -> Bool {
         let lowered = ext.lowercased()
-        let disabled = SharedSettings.shared.disabledFileTypes
+        let loweredFilename = filename?.lowercased()
 
-        if let type = extensionToType[lowered] {
-            return !disabled.contains(type.id)
+        // A custom mapping is the most specific thing the user told us, so it wins even when the
+        // built-in type sharing the extension is switched off — e.g. `.gd` mapped to GAP with
+        // GDScript disabled (#24). Checked first, like every other custom-mapping lookup.
+        let customs = customMappings ?? SharedSettings.shared.customExtensions
+        if customs.contains(where: { custom in
+            guard let match = custom.filenameMatch?.lowercased() else { return custom.extensionName == lowered }
+            return match == lowered || match == loweredFilename
+        }) {
+            return true
         }
 
-        let customs = SharedSettings.shared.customExtensions
-        if customs.contains(where: { $0.extensionName == lowered || $0.filenameMatch?.lowercased() == lowered }) {
-            return true
+        if let type = extensionToType[lowered] {
+            return !(disabledTypes ?? SharedSettings.shared.disabledFileTypes).contains(type.id)
         }
 
         return true

@@ -52,7 +52,7 @@ final class ThumbnailProvider: QLThumbnailProvider {
 
             let registry = FileTypeRegistry.shared
             let key = FileTypeResolution.bestKey(for: url, registry: registry)
-            let isExtensionEnabled = registry.isExtensionEnabled(key)
+            let isExtensionEnabled = registry.isExtensionEnabled(key, filename: url.lastPathComponent)
             let isKnownType = registry.fileType(for: key) != nil || registry.highlightLanguage(for: key) != nil
 
             if !isExtensionEnabled || (!isKnownType && !settings.allowUnknown) {

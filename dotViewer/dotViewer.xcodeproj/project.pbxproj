@@ -114,6 +114,7 @@
 		52FB7B09FE3C401A99DE8782 /* ExtensionStatusChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2C791F666CCAF1377B0272 /* ExtensionStatusChecker.swift */; };
 		54A7B575F78A9D5449C21642 /* dotViewerIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E382F929CE2E0E9C5930A970 /* dotViewerIcon.xcassets */; };
 		556193E8EE3326859D24A956 /* ExtensionConflictScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1600CF95A024537E6678A0A /* ExtensionConflictScanner.swift */; };
+		55DEDFE5DF511CEDF599CF5E /* GnuplotSourceDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E30652DAF937CFB45FF1FB0A /* GnuplotSourceDetectorTests.swift */; };
 		56B72506A63A7422FB04C514 /* python.scm in Resources */ = {isa = PBXBuildFile; fileRef = 495F272442ACE57172676182 /* python.scm */; };
 		56C75FA0534A62F40D84EEBC /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 423C73D3B421422B908D31F6 /* parser.c */; };
 		56CA68AB91DA398533FF8D69 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = E5651D2CF119B4A06F7050B6 /* scanner.c */; };
@@ -887,6 +888,7 @@
 		E1DD59D1507E76DA612E986E /* atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atomic.h; sourceTree = "<group>"; };
 		E1EF4AE16269A43EEBF504F2 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		E2E05DB7F8F7245E5B8621C8 /* gap.scm */ = {isa = PBXFileReference; path = gap.scm; sourceTree = "<group>"; };
+		E30652DAF937CFB45FF1FB0A /* GnuplotSourceDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GnuplotSourceDetectorTests.swift; sourceTree = "<group>"; };
 		E35284FD83AB2F8C103B687C /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		E382F929CE2E0E9C5930A970 /* dotViewerIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = dotViewerIcon.xcassets; sourceTree = "<group>"; };
 		E502D007EC6170FC69D29B43 /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
@@ -2715,6 +2717,7 @@
 				FB47D953DD137AC898742457 /* FileTypeResolutionTests.swift */,
 				41A58B9034153DF443F889AE /* GAPHighlightingTests.swift */,
 				B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */,
+				E30652DAF937CFB45FF1FB0A /* GnuplotSourceDetectorTests.swift */,
 				A7464DCF71E0AFB4D1714024 /* ManPageRendererTests.swift */,
 				F5410DBEA3E116BEFCBABB57 /* MarkdownRendererTests.swift */,
 				7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */,
@@ -3486,6 +3489,7 @@
 				F233DF70D58C87A9492F6855 /* GAPHighlightingTests.swift in Sources */,
 				D527738DFE3D858AEEE72CEA /* GAPTestInputRanges.swift in Sources */,
 				4E43E607DC590CBF2A8D8F18 /* GnuplotHighlightingTests.swift in Sources */,
+				55DEDFE5DF511CEDF599CF5E /* GnuplotSourceDetectorTests.swift in Sources */,
 				0F17DB28435310CAACF0A2A1 /* ManPageRendererTests.swift in Sources */,
 				D98056158B68EDA24EE8B06C /* MarkdownRendererTests.swift in Sources */,
 				514C7EABD3596631DC98DEFC /* PlistConverterTests.swift in Sources */,
