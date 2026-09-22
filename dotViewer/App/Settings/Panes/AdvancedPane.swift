@@ -10,7 +10,7 @@ struct AdvancedPane: View {
         Form {
             Section("Preview cache") {
                 Toggle(isOn: $model.previewCacheEnabled) {
-                    SettingsLabel("Preview cache", description: "Reuses recently rendered previews.")
+                    SettingsLabel("Cache rendered previews", description: "Reuses a preview when you reopen the same file soon after.")
                 }
                 .settingsAnchor(.previewCache)
 

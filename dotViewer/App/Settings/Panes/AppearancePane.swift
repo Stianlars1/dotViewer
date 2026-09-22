@@ -83,23 +83,24 @@ private struct ThemePreview: View {
         let keyword = Color(hex: palette.keyword)
         let plain = Color(hex: palette.text)
 
+        // Code is `verbatim`: a literal `Text` is Markdown, which would eat the backslash in `\(name)`.
         VStack(alignment: .leading, spacing: 2) {
-            Text("// Preview of your theme")
+            Text(verbatim: "// Preview of your theme")
                 .foregroundStyle(Color(hex: palette.comment))
             Text("""
-                \(Text("func ").foregroundStyle(keyword))\
-                \(Text("greet").foregroundStyle(Color(hex: palette.function)))\
-                \(Text("(name: ").foregroundStyle(plain))\
-                \(Text("String").foregroundStyle(Color(hex: palette.type)))\
-                \(Text(") -> ").foregroundStyle(plain))\
-                \(Text("String").foregroundStyle(Color(hex: palette.type)))\
-                \(Text(" {").foregroundStyle(plain))
+                \(Text(verbatim: "func ").foregroundStyle(keyword))\
+                \(Text(verbatim: "greet").foregroundStyle(Color(hex: palette.function)))\
+                \(Text(verbatim: "(name: ").foregroundStyle(plain))\
+                \(Text(verbatim: "String").foregroundStyle(Color(hex: palette.type)))\
+                \(Text(verbatim: ") -> ").foregroundStyle(plain))\
+                \(Text(verbatim: "String").foregroundStyle(Color(hex: palette.type)))\
+                \(Text(verbatim: " {").foregroundStyle(plain))
                 """)
             Text("""
-                \(Text("    return ").foregroundStyle(keyword))\
-                \(Text("\"Hello, \\(name)!\"").foregroundStyle(Color(hex: palette.string)))
+                \(Text(verbatim: "    return ").foregroundStyle(keyword))\
+                \(Text(verbatim: "\"Hello, \\(name)!\"").foregroundStyle(Color(hex: palette.string)))
                 """)
-            Text("}")
+            Text(verbatim: "}")
                 .foregroundStyle(plain)
         }
         .font(Font(PreviewFontResolver.codeFont(familyName: fontFamily, size: fontSize)))

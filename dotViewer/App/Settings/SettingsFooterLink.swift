@@ -16,7 +16,8 @@ struct SettingsFooterLink: View {
                     .padding(.vertical, 1)
                     .overlay(RoundedRectangle(cornerRadius: 4).strokeBorder(.quaternary))
             }
-            .padding(.horizontal, 8)
+            // 10 + 10 puts the icon and title on the same leading edges as the sidebar rows above.
+            .padding(.horizontal, 10)
             .padding(.vertical, 6)
             .contentShape(Rectangle())
         }

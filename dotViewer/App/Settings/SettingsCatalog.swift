@@ -108,7 +108,7 @@ enum SettingsCatalog {
               keywords: ["automation", "apple events", "permission", "privacy", "tcc"]),
 
         // Advanced
-        .init(id: .previewCache, pane: .advanced, title: "Preview cache",
+        .init(id: .previewCache, pane: .advanced, title: "Cache rendered previews",
               keywords: ["cache", "speed", "performance"]),
         .init(id: .cacheLifetime, pane: .advanced, title: "Keep previews for",
               keywords: ["ttl", "cache", "expiry", "time", "seconds"]),

@@ -53,10 +53,19 @@ struct SettingsSliderRow: View {
         self.format = format
     }
 
+    /// Snaps to `step` in the binding rather than passing `step` to the slider: a stepped macOS
+    /// slider draws a tick mark per step, which on a 10…500 range is a dotted line of 49 ticks.
+    private var snapped: Binding<Double> {
+        Binding(
+            get: { value },
+            set: { value = min(range.upperBound, max(range.lowerBound, ($0 / step).rounded() * step)) }
+        )
+    }
+
     var body: some View {
         LabeledContent {
             HStack(spacing: 10) {
-                Slider(value: $value, in: range, step: step)
+                Slider(value: snapped, in: range)
                     .labelsHidden()
                     .frame(width: 180)
                 Text(format(value))
