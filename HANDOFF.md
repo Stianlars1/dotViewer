@@ -42,9 +42,10 @@ under `/private/tmp`, which is cleared on reboot — 1.5.5 remains downloadable 
    `./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>`.
 4. **Optional corpus check** for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
    `examples/*.gp` (needs a download — ask first).
-5. **Housekeeping (ask first)**: `v2.5-claude-work` holds only 3,917 staged build artifacts + `.DS_Store`;
-   `v2.5-pr26` and `v2.5-status-fix` are clean detached worktrees of merged PRs; 8 local branches are fully
-   merged into `main`.
+5. Housekeeping done 2026-09-22: the `v2.5-claude-work`, `v2.5-pr26` and `v2.5-status-fix` worktrees were
+   moved to the Trash (recoverable until emptied) and 8 merged local branches deleted. Still present: the 4
+   merged remote branches of PRs #2, #26, #27 and #30, and the unmerged `codex/v1.1.0-victor-feedback`,
+   `v1-legacy` and `claude/research-quicklook-performance-7zcd5` (superseded or v1 history — keep or archive).
 6. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
    right-click Quick Action for ⌥Space; arrow-key navigation in the panel; Shift+arrow selection in the
    search field; no App-target tests for `SearchBridgeServer` / `SearchKeyInterceptor` /
