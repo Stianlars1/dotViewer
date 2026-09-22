@@ -13,15 +13,13 @@ struct StatusView: View {
     private let statusLogger = Logger(subsystem: "com.stianlars1.dotViewer", category: "ExtensionStatus")
     @State private var resolveResult: String?
     @State private var resolveFailed = false
+    @State private var pointer = PointerLocation()
 
     var body: some View {
         ScrollView {
             VStack(spacing: 32) {
                 VStack(spacing: 12) {
-                    Image(systemName: "eye.fill")
-                        .font(.system(size: 64))
-                        .foregroundStyle(.blue.gradient)
-                        .modifier(BounceEffectModifierFallback())
+                    AnimatedLogoView(size: 96, pointer: pointer)
                     Text("dotViewer")
                         .font(.largeTitle)
                         .fontWeight(.bold)
@@ -154,6 +152,13 @@ struct StatusView: View {
                 .frame(maxWidth: 420)
             }
             .padding(32)
+        }
+        // The logo looks at the pointer anywhere on the page, like the site's hero.
+        .onContinuousHover(coordinateSpace: .global) { phase in
+            switch phase {
+            case .active(let location): pointer.point = location
+            case .ended: pointer.point = nil
+            }
         }
         .navigationTitle("Status")
         .onAppear {
@@ -464,27 +469,6 @@ private struct SetupStepRow: View {
             Text(text)
                 .font(.subheadline)
                 .foregroundStyle(.primary)
-        }
-    }
-}
-
-@available(macOS 15.0, *)
-private struct BounceEffectModifier: ViewModifier {
-    @State private var didAppear = false
-
-    func body(content: Content) -> some View {
-        content
-            .symbolEffect(.bounce.up.byLayer, options: .nonRepeating, value: didAppear)
-            .onAppear { didAppear = true }
-    }
-}
-
-private struct BounceEffectModifierFallback: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(macOS 15.0, *) {
-            content.modifier(BounceEffectModifier())
-        } else {
-            content
         }
     }
 }

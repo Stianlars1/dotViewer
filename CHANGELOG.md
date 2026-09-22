@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- The Status page shows the website's hero logo instead of an eye symbol, and it looks at your pointer: the blob, ring and pupil drift toward it by different amounts, the blob turns slowly and the pupil breathes, with the site's springs and timings. Light and dark appearances follow the app icon's variants. Reduce Motion keeps it still, and the idle motion pauses while dotViewer is in the background.
+
 ## v1.5.6 (2026-09-22)
 
 ### Fixed

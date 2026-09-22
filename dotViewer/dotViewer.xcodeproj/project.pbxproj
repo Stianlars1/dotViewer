@@ -103,7 +103,9 @@
 		487D7C642139D91E56D2E181 /* SensitiveFileDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A047E488D85AE0D46E8913 /* SensitiveFileDetector.swift */; };
 		4927BB7FA97559DD1EA3A07D /* query.c in Sources */ = {isa = PBXBuildFile; fileRef = 0733183F4544DA26E299F4C5 /* query.c */; };
 		4AC916533C42015F7595E060 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6A91F867EFD4D88A90DAEDFD /* parser.c */; };
+		4AFFC90D55A769E126F8A480 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06C6DEF843AABF7499524CF /* Color+Hex.swift */; };
 		4C28280B6AD346C5D1D6D973 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A652354FAA97CF3B3A0A2DF /* parser.c */; };
+		4CF254B2E77AD4546B9FEEEF /* AnimatedLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */; };
 		4E2FD02532A8D768CA65B350 /* toml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 8BC70D59C38219CD20BD0EE9 /* toml.scm */; };
 		4E43E607DC590CBF2A8D8F18 /* GnuplotHighlightingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */; };
 		4EE5EF9D8D456959CC4009B2 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C821E9C8D577521126C5707F /* scanner.c */; };
@@ -127,6 +129,7 @@
 		5D474A5678A143A702CFA4EE /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 1E3E64FF42A9E144894CB208 /* parser.c */; };
 		5E00624AC61E32F3BFB8A8BB /* lexer.c in Sources */ = {isa = PBXBuildFile; fileRef = D3ECA0599AF1AA56322FCF9E /* lexer.c */; };
 		5E0351A9B397D96BFE300A18 /* DelimitedTextRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0775AE59AE72EE58BB6E16D1 /* DelimitedTextRendererTests.swift */; };
+		6033E675AF767BF715CBDE87 /* LogoLayers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8C7B7BE163EE2662C7FFA7C /* LogoLayers.xcassets */; };
 		61302237DE2BD9126D3225CD /* gnuplot.scm in Resources */ = {isa = PBXBuildFile; fileRef = 7D65CE57641BB0BBD4C77018 /* gnuplot.scm */; };
 		61A3B9F0BF63DBABD4C3E013 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C014E5690DB7BD869DFEE0A /* parser.c */; };
 		62820B4E093D5C91A336A581 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 702885C55933CE2DF39B87BC /* parser.c */; };
@@ -185,6 +188,7 @@
 		925CC7654091096EB2C8B39B /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = CD2A168767046C9DD8937BF5 /* scanner.c */; };
 		933023CBB8E819D78AD315F6 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 4FA012772D8C269B93E81B6D /* scanner.c */; };
 		946DECFA3495F9605A18E298 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 33FF5512C060F0BE28B9E1AD /* parser.c */; };
+		95377330CE6B55618E5A195D /* AnimatedLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */; };
 		95DA26E9E69171A526B6BA01 /* ShebangLanguageDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5BF0FAFDC3FDD7FF21D7489 /* ShebangLanguageDetectorTests.swift */; };
 		98FB27A05F77656FFE753796 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 92D920625F2F6D6629846068 /* parser.c */; };
 		98FB5B246E96E89684514892 /* DelimitedTextRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71B0A37567CDBB3C9B28B166 /* DelimitedTextRenderer.swift */; };
@@ -232,6 +236,7 @@
 		BAE8F201DAD91F654AE3134B /* yaml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 782445C0DE57BC5CC590D29E /* yaml.scm */; };
 		BB0DAE10E181BD8BEB2DEB56 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F8ADCB9D1451BDF312E01869 /* README.md */; };
 		BBAE975323777DE74BF2498C /* HighlightXPCClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C683E94C18AC3CDF1A81579 /* HighlightXPCClient.swift */; };
+		BC1D351B31B8116DC786A102 /* LogoLayers.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C8C7B7BE163EE2662C7FFA7C /* LogoLayers.xcassets */; };
 		BC4DE0C7687255897B7DDC25 /* PreviewSizingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1654E02E57722F8FC2B2B28 /* PreviewSizingTests.swift */; };
 		BDA91D3FEAC9B1410FD0C19F /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C30C14D3BCA470BF35CD9DE2 /* scanner.c */; };
 		BE03690EC5C4E5F2FE9017CC /* HighlightXPC.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2C9DA3B1F0B6196C23740046 /* HighlightXPC.xpc */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -316,6 +321,7 @@
 		FC334B0B7C6BB549900EF8B8 /* TextThumbnailRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8304A796C2941B436301A23D /* TextThumbnailRenderer.swift */; };
 		FC91671347C29EEFD12CD6C1 /* node.c in Sources */ = {isa = PBXBuildFile; fileRef = 0BA96BDBC4F62077C0777329 /* node.c */; };
 		FD018BAAACF09B46857A5ED4 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = C278B8B1FD3A99C5443D97F2 /* parser.c */; };
+		FEE386A0A0FF04143B00591C /* AnimatedLogoViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32E77F6809B16542CB342F97 /* AnimatedLogoViewTests.swift */; };
 		FF0FB99FBC7F9851F31674F9 /* GnuplotSourceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E727B0E7808FBD701C0F856 /* GnuplotSourceDetector.swift */; };
 		FFB01B1BDCC4121BABC6DA50 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 549F786C834DC9754CF19831 /* scanner.c */; };
 		FFCD26DA6D8DA29D7AB75461 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = C76D2E6938B01F93E11599CC /* stack.c */; };
@@ -575,6 +581,7 @@
 		3034EF16D0BF92F41E82A65D /* erlang.scm */ = {isa = PBXFileReference; path = erlang.scm; sourceTree = "<group>"; };
 		30D49A4FC2B9C47AD978DEFC /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTypesView.swift; sourceTree = "<group>"; };
+		32E77F6809B16542CB342F97 /* AnimatedLogoViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedLogoViewTests.swift; sourceTree = "<group>"; };
 		3341525A97ECB634C877F9AC /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		33FF5512C060F0BE28B9E1AD /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		3472F067B93F72A3A86F58EC /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
@@ -728,6 +735,7 @@
 		836CFB168237C21283719580 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		83E1F0AB13B357E5A6A22992 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		83F2BF562B9B4BF0AAED5D42 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedLogoView.swift; sourceTree = "<group>"; };
 		86993D5AFCCA1C3EBA2891DA /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		86F5D9BA48BB8C5131C336B9 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		87E3922E260DBA9159F739EE /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
@@ -844,6 +852,7 @@
 		C76D2E6938B01F93E11599CC /* stack.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = stack.c; sourceTree = "<group>"; };
 		C7E92CF65C05ED70096E21C0 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		C821E9C8D577521126C5707F /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
+		C8C7B7BE163EE2662C7FFA7C /* LogoLayers.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = LogoLayers.xcassets; sourceTree = "<group>"; };
 		C98B1EDA72F4D84D9AA1E82C /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		CA8D1A1D9DE22B7920085F10 /* PreviewRequestCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewRequestCoordinator.swift; sourceTree = "<group>"; };
 		CA9308234010C55C3231E813 /* AppUIFontSizing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUIFontSizing.swift; sourceTree = "<group>"; };
@@ -2709,6 +2718,7 @@
 		DA9C281821A03F07DEF55654 /* dotViewerTests */ = {
 			isa = PBXGroup;
 			children = (
+				32E77F6809B16542CB342F97 /* AnimatedLogoViewTests.swift */,
 				0775AE59AE72EE58BB6E16D1 /* DelimitedTextRendererTests.swift */,
 				57650CF38D886063939CEAEA /* ExtensionStatusTests.swift */,
 				42A2D8BDC8DB414F765A2441 /* FileAttributesTests.swift */,
@@ -2917,6 +2927,7 @@
 			isa = PBXGroup;
 			children = (
 				C0951EE51E03E8716B50F3FF /* AddCustomExtensionSheet.swift */,
+				83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */,
 				CA9308234010C55C3231E813 /* AppUIFontSizing.swift */,
 				E06C6DEF843AABF7499524CF /* Color+Hex.swift */,
 				09F26B2C6544012B75082740 /* ContentView.swift */,
@@ -2927,6 +2938,7 @@
 				318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */,
 				407083EF9D26B3F4BBDD0A13 /* FinderSelection.swift */,
 				66850074DD53D516403094B4 /* Info.plist */,
+				C8C7B7BE163EE2662C7FFA7C /* LogoLayers.xcassets */,
 				48CB5E092EE69E1F7731E467 /* MarkdownSettingsView.swift */,
 				BD14E8E6A6C663A017D855C9 /* PermissionTroubleshooting.swift */,
 				75DB0132A410F6E8F64E2C0E /* PreviewFontMenu.swift */,
@@ -3166,6 +3178,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BC1D351B31B8116DC786A102 /* LogoLayers.xcassets in Resources */,
 				7AB902F836ACCBAAB0A96BF1 /* README.md in Resources */,
 				7CACEA663307713DA519B12F /* gap.scm in Resources */,
 				3D0236CFB3CA3E4F58DD75F0 /* gaptst.scm in Resources */,
@@ -3180,6 +3193,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6033E675AF767BF715CBDE87 /* LogoLayers.xcassets in Resources */,
 				0EAF8E67F90671ED2BAB92B0 /* ThirdPartyNotices.txt in Resources */,
 				AEE8D6352BD8ECD5CA8DD249 /* dotViewerIcon.icon in Resources */,
 				54A7B575F78A9D5449C21642 /* dotViewerIcon.xcassets in Resources */,
@@ -3413,6 +3427,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				14CABC697CCF00403C2A0116 /* AddCustomExtensionSheet.swift in Sources */,
+				95377330CE6B55618E5A195D /* AnimatedLogoView.swift in Sources */,
 				A24F8B95DDCED59E254E3407 /* AppUIFontSizing.swift in Sources */,
 				7A3C491AB1715D870A7E6FA2 /* Color+Hex.swift in Sources */,
 				1CEA6AA39DAC6F95D7541230 /* ContentView.swift in Sources */,
@@ -3478,6 +3493,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CF254B2E77AD4546B9FEEEF /* AnimatedLogoView.swift in Sources */,
+				FEE386A0A0FF04143B00591C /* AnimatedLogoViewTests.swift in Sources */,
+				4AFFC90D55A769E126F8A480 /* Color+Hex.swift in Sources */,
 				5E0351A9B397D96BFE300A18 /* DelimitedTextRendererTests.swift in Sources */,
 				556193E8EE3326859D24A956 /* ExtensionConflictScanner.swift in Sources */,
 				52FB7B09FE3C401A99DE8782 /* ExtensionStatusChecker.swift in Sources */,
