@@ -6789,7 +6789,6 @@ targets:
       - path: Utilities/StatusProcessRunner.swift
       - path: Utilities/ExtensionStatusChecker.swift
       - path: Utilities/ExtensionConflictScanner.swift
-      - path: App/SettingsTabPage.swift
       # The Settings window and what its panes use, so the sidebar can be tested with real clicks
       # and the panes rendered offscreen without building (and registering) the app.
       - path: App/Settings

@@ -31,6 +31,13 @@ struct dotViewerApp: App {
             ContentView()
                 .appUIFontSizing(appUIFontSizePreset)
         }
+
+        // A Settings scene is what gives the app menu its "Settings…" item and ⌘,.
+        Settings {
+            SettingsWindow()
+                .appUIFontSizing(appUIFontSizePreset)
+        }
+        .windowResizability(.contentMinSize)
     }
 }
 
