@@ -155,7 +155,7 @@ Copy actions that always remain available (regardless of preset):
 - Custom mapping by extension.
 - Custom mapping by filename (for example `Jenkinsfile`, `Dockerfile`).
 - Multi-dot extension custom mapping (for example `env.local`).
-- Built-in mapping override confirmation for conflicts.
+- Built-in mapping override confirmation for conflicts. A custom mapping still applies when the built-in type for that extension is disabled.
 
 ### 6) Finder Thumbnails
 - Native CoreGraphics rendering (no WKWebView).
