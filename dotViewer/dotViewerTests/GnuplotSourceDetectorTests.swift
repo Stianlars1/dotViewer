@@ -23,6 +23,7 @@ final class GnuplotSourceDetectorTests: XCTestCase {
             "mouse variables": "cursor_x = MOUSE_X\n",
             "print without parentheses": "print sprintf(\"%d steps\", n)\n",
             "plain plot": "plot sin(x)\n",
+            "iterated set": "set for [i = 1:3] label i sprintf(\"%d\", i) at i, 0\n",
         ]
         for (name, source) in samples {
             XCTAssertTrue(GnuplotSourceDetector.matches(source), name)
@@ -41,6 +42,7 @@ final class GnuplotSourceDetectorTests: XCTestCase {
             "banner comments": "/*****************************/\n/* helpers                   */\n/*****************************/\nsq(x) = x^2;\n",
             "variable named plot": "plot = 3;\nplot, 4\n",
             "gnuplot only in comments and strings": "# plot sin(x)\nprint(\"set title hello\")\n",
+            "user function named bind": "bind(x) = x + 1;\nbind (3)\n",
             "empty": "",
         ]
         for (name, source) in samples {

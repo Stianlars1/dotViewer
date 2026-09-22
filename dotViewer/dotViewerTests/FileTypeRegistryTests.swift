@@ -193,11 +193,17 @@ final class FileTypeRegistryTests: XCTestCase {
         XCTAssertTrue(registry.isExtensionEnabled("GD", customMappings: [gap], disabledTypes: ["gdscript"]))
     }
 
-    func testFilenameMappingWinsOnlyForItsOwnFile() {
-        let special = CustomExtension(extensionName: "", displayName: "Special", highlightLanguage: "plaintext", filenameMatch: "GROUP.GD")
+    func testFilenameMappingWinsOnlyForItsOwnFile() throws {
+        // Stored the way AddCustomExtensionSheet stores filename mappings.
+        let special = CustomExtension(extensionName: "group.gd", displayName: "Special", highlightLanguage: "plaintext", filenameMatch: "GROUP.GD")
         XCTAssertTrue(registry.isExtensionEnabled("gd", filename: "group.gd", customMappings: [special], disabledTypes: ["gdscript"]))
         XCTAssertFalse(registry.isExtensionEnabled("gd", filename: "other.gd", customMappings: [special], disabledTypes: ["gdscript"]))
-        XCTAssertFalse(registry.isExtensionEnabled("gd", customMappings: [special], disabledTypes: ["gdscript"]),
-                       "An empty extension on a filename mapping must not match extension keys")
+
+        // `Dockerfile` is both a filename and an extension, so both files below share one key.
+        let dockerfile = CustomExtension(extensionName: "dockerfile", displayName: "Mine", highlightLanguage: "plaintext", filenameMatch: "Dockerfile")
+        let dockerType = try XCTUnwrap(registry.fileType(for: "dockerfile")).id
+        XCTAssertTrue(registry.isExtensionEnabled("dockerfile", filename: "Dockerfile", customMappings: [dockerfile], disabledTypes: [dockerType]))
+        XCTAssertFalse(registry.isExtensionEnabled("dockerfile", filename: "worker.dockerfile", customMappings: [dockerfile], disabledTypes: [dockerType]),
+                       "A filename mapping must not re-enable other files that share its key")
     }
 }

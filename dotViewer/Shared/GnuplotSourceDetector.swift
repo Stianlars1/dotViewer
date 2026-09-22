@@ -23,7 +23,7 @@ public enum GnuplotSourceDetector {
         "output", "overflow", "palette", "parametric", "pixmap", "pm3d", "pointintervalbox",
         "pointsize", "polar", "print", "psdir", "samples", "size", "spiderplot", "style", "surface",
         "table", "terminal", "termoption", "term", "theta", "tics", "ticscale", "ticslevel",
-        "timefmt", "timestamp", "title", "view", "walls", "xyplane", "zeroaxis", "zero",
+        "timefmt", "timestamp", "title", "view", "walls", "xyplane", "zeroaxis", "zero", "for",
         "t", "o", "out", "xr", "yr", "zr", "xl", "yl", "zl", "tit", "sty", "st", "lt", "ps", "samp", "iso",
     ].joined(separator: "|")
 
@@ -34,7 +34,7 @@ public enum GnuplotSourceDetector {
         statement + "(?:s|re)?plot\\h+[^\\s(=,;]",
         statement + "replot\\h*(?:$|;)",
         statement + "(?:set|unset|show)\\h+(?:\(options))\\b",
-        statement + "(?:bind|undefine|printerr)\\h+\\S",
+        statement + "(?:bind|undefine|printerr)\\h+[^\\s(=]",
         statement + "(?:load|call|eval|stats|save|system|cd)\\h+[\"']",
         statement + "print\\h+[^\\s(]",
         statement + "pause\\h+(?:-?\\d|mouse)",

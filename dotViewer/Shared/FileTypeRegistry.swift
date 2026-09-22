@@ -672,9 +672,11 @@ public final class FileTypeRegistry: @unchecked Sendable {
         // built-in type sharing the extension is switched off — e.g. `.gd` mapped to GAP with
         // GDScript disabled (#24). Checked first, like every other custom-mapping lookup.
         let customs = customMappings ?? SharedSettings.shared.customExtensions
+        // A filename mapping covers only the file it names. Comparing it against the key would
+        // let a `Dockerfile` mapping re-enable every `*.dockerfile`, since both share that key.
         if customs.contains(where: { custom in
             guard let match = custom.filenameMatch?.lowercased() else { return custom.extensionName == lowered }
-            return match == lowered || match == loweredFilename
+            return match == loweredFilename
         }) {
             return true
         }
