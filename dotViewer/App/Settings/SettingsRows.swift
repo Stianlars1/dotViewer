@@ -99,6 +99,37 @@ struct SettingsStatusRow<Actions: View>: View {
     }
 }
 
+/// A font menu with a Reset button that appears only when the choice differs from the default.
+struct SettingsFontPicker: View {
+    @Binding var selection: String
+    let families: [String]
+    let defaultFamily: String
+
+    var body: some View {
+        HStack(spacing: 8) {
+            if selection != defaultFamily {
+                Button("Reset") { selection = defaultFamily }
+                    .controlSize(.small)
+            }
+            Picker("Font", selection: $selection) {
+                ForEach(families, id: \.self) { family in
+                    Text(PreviewFontMenu.title(for: family)).tag(family)
+                }
+            }
+            .labelsHidden()
+            .fixedSize()
+        }
+    }
+}
+
+extension View {
+    /// The one look every pane shares: System Settings-style grouped rows, switches for on/off.
+    func settingsPaneStyle() -> some View {
+        formStyle(.grouped)
+            .toggleStyle(.switch)
+    }
+}
+
 extension EnvironmentValues {
     /// The setting a search result pointed at; its row is highlighted briefly.
     @Entry var highlightedSetting: SettingID? = nil
