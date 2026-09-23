@@ -1,48 +1,44 @@
 import { analyticsDownloads, analyticsPageViews } from "../db/schema";
 import { getDb } from "../db/client";
-import { isInternalHost, summarizeUserAgent, type DownloadChannel } from "./classify.ts";
+import { summarizeUserAgent, type DownloadChannel } from "./classify.ts";
+import type { RequestContext } from "./context.ts";
+import { dayVisitorCode, dbSaltStore, saltFor, utcDay, type SaltStore } from "./day-visitor.ts";
 import type { DownloadEvent, PageViewEvent } from "./payload.ts";
 
-// The first-party log stores coarse facts only: time, path, referrer host, UTM tags, country,
-// browser and OS family, device class and bot/internal flags. No cookies, IP addresses, visitor or
-// session IDs, cities or full user agents (see /privacy). The user agent is read to classify the
-// request and then dropped.
+// The first-party log stores coarse facts: time, path, referrer host, UTM tags, country, browser
+// and OS family, device class, bot/internal flags and a code for the visitor that is valid for one
+// UTC day. No cookies are read except the consent ones, and a visitor ID is stored only with consent
+// to dotViewer statistics (see /privacy). IP addresses and user agents are never stored.
 
-export type RequestContext = {
-  country: string | null;
-  internal: boolean;
-  userAgent: string | null;
-};
+export { getRequestContext, type RequestContext } from "./context.ts";
 
-function hostOf(url: string): string | null {
+let saltStore: SaltStore | null = null;
+
+/** The visitor's code for today, or null when the salt can't be had (the log row is kept anyway). */
+async function dayVisitor(context: RequestContext, now = new Date()): Promise<string | null> {
+  const db = getDb();
+  if (!db) return null;
+  saltStore ??= dbSaltStore(db);
   try {
-    return new URL(url).host;
-  } catch {
+    return dayVisitorCode(await saltFor(saltStore, utcDay(now)), context.ip, context.userAgent);
+  } catch (error) {
+    console.error("[analytics] no visitor salt", error);
     return null;
   }
 }
 
-export function getRequestContext(request: Request): RequestContext {
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? hostOf(request.url);
-  const country = request.headers.get("x-vercel-ip-country");
-
-  return {
-    country: country && /^[A-Z]{2}$/.test(country) ? country : null,
-    internal: isInternalHost(host),
-    userAgent: request.headers.get("user-agent"),
-  };
-}
-
-function classification(context: RequestContext, referrerHost: string | null) {
+function classification(context: RequestContext, referrerHost: string | null, dayCode: string | null) {
   const summary = summarizeUserAgent(context.userAgent);
   return {
     browser: summary.browser,
     country: context.country,
+    dayVisitor: dayCode,
     device: summary.device,
     isBot: summary.isBot,
     isInternal: context.internal,
     os: summary.os,
     referrerHost,
+    visitorId: context.visitorId,
   };
 }
 
@@ -54,7 +50,7 @@ export async function recordPageView(event: PageViewEvent, context: RequestConte
 
   try {
     await db.insert(analyticsPageViews).values({
-      ...classification(context, event.referrerHost),
+      ...classification(context, event.referrerHost, await dayVisitor(context)),
       path: event.path,
       title: event.title,
       url: event.url,
@@ -80,8 +76,10 @@ export async function recordDownload(event: DownloadRecord, context: RequestCont
   }
 
   try {
+    // Day codes count website visitors; app updates and Homebrew fetches through /updates are not visits.
+    const code = event.channel === "website" ? await dayVisitor(context) : null;
     await db.insert(analyticsDownloads).values({
-      ...classification(context, event.referrerHost),
+      ...classification(context, event.referrerHost, code),
       assetKind: event.assetKind,
       channel: event.channel,
       path: event.path,
