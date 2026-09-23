@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import { basicCredentialsMatch } from "../../lib/stats/auth";
 import { loadStats, type StatsReport } from "../../lib/stats/queries";
 import type { Ranked } from "../../lib/stats/report";
 import styles from "./page.module.css";
 
-// Private numbers for the owner, behind Basic Auth (proxy.ts). Read on every request.
+// Private numbers for the owner, behind Basic Auth (proxy.ts). Read on every request. The page
+// checks the credentials again, so a future change to the proxy's matcher cannot expose it.
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -110,7 +114,17 @@ function RankedList({ empty, items, title }: { empty: string; items: Ranked[]; t
   );
 }
 
+async function requireOwner() {
+  const user = process.env.STATS_USER;
+  const password = process.env.STATS_PASSWORD;
+  const authorization = (await headers()).get("authorization");
+  if (!user || !password || !basicCredentialsMatch(authorization, user, password)) {
+    notFound();
+  }
+}
+
 export default async function StatsPage() {
+  await requireOwner();
   const now = new Date();
   const report = await loadStats(now);
   const { downloads } = report;
