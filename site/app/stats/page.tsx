@@ -62,36 +62,83 @@ function Freshness({ now, report }: { now: Date; report: StatsReport }) {
   );
 }
 
+type Bar = { key: string; label: string | null; title: string; value: number };
+
+/**
+ * Bars in an SVG stretched to the panel's width at a fixed height, with the dates in HTML below. A
+ * chart that scaled with its viewBox grew tall on wide windows and took its labels with it.
+ */
+function BarChart({
+  bars,
+  gap,
+  height,
+  label,
+  minHeight,
+}: {
+  bars: Bar[];
+  gap: number;
+  height: number;
+  label: string;
+  minHeight: number;
+}) {
+  const width = 640;
+  const max = Math.max(...bars.map((bar) => bar.value), 1);
+  const barWidth = (width - gap * (bars.length - 1)) / bars.length;
+  const left = (index: number) => `${((index * (barWidth + gap)) / width) * 100}%`;
+
+  return (
+    <div className={styles.chart}>
+      <svg aria-label={label} preserveAspectRatio="none" role="img" style={{ height }} viewBox={`0 0 ${width} ${height}`}>
+        {bars.map((bar, index) => {
+          const barHeight = bar.value > 0 ? Math.max(2, (bar.value / max) * height) : minHeight;
+          return (
+            <rect
+              className={styles.bar}
+              height={barHeight}
+              key={bar.key}
+              rx={2}
+              width={barWidth}
+              x={index * (barWidth + gap)}
+              y={height - barHeight}
+            >
+              <title>{bar.title}</title>
+            </rect>
+          );
+        })}
+      </svg>
+      <div aria-hidden="true" className={styles.axis}>
+        {bars.map((bar, index) =>
+          bar.label ? (
+            <span key={bar.key} style={{ left: left(index) }}>
+              {bar.label}
+            </span>
+          ) : null,
+        )}
+      </div>
+    </div>
+  );
+}
+
 function WeeklyBars({ weeks }: { weeks: { downloads: number | null; week: string }[] }) {
   const bars = weeks.filter((week): week is { downloads: number; week: string } => week.downloads !== null).slice(-26);
   if (bars.length === 0) {
     return <p className={styles.empty}>Weekly numbers start one week after the first daily snapshot.</p>;
   }
 
-  const height = 160;
-  const width = 640;
-  const gap = 6;
-  const max = Math.max(...bars.map((bar) => bar.downloads), 1);
-  const barWidth = (width - gap * (bars.length - 1)) / bars.length;
-
+  const every = Math.ceil(bars.length / 8);
   return (
-    <svg aria-label="Downloads per week" className={styles.chart} role="img" viewBox={`0 0 ${width} ${height + 22}`}>
-      {bars.map((bar, index) => {
-        const barHeight = Math.max(2, (bar.downloads / max) * height);
-        const x = index * (barWidth + gap);
-        return (
-          <g key={bar.week}>
-            <title>{`Week of ${bar.week}: ${bar.downloads} downloads`}</title>
-            <rect className={styles.bar} height={barHeight} rx={3} width={barWidth} x={x} y={height - barHeight} />
-            {index % Math.ceil(bars.length / 8) === 0 ? (
-              <text className={styles.axis} x={x} y={height + 16}>
-                {bar.week.slice(5)}
-              </text>
-            ) : null}
-          </g>
-        );
-      })}
-    </svg>
+    <BarChart
+      bars={bars.map((bar, index) => ({
+        key: bar.week,
+        label: index % every === 0 ? bar.week.slice(5) : null,
+        title: `Week of ${bar.week}: ${bar.downloads} downloads`,
+        value: bar.downloads,
+      }))}
+      gap={6}
+      height={160}
+      label="Downloads per week"
+      minHeight={2}
+    />
   );
 }
 
@@ -100,30 +147,19 @@ function DailyBars({ days }: { days: { day: string; visitors: number }[] }) {
     return <p className={styles.empty}>No visitors counted yet; day codes started with the consent update.</p>;
   }
 
-  const height = 120;
-  const width = 640;
-  const gap = 3;
-  const max = Math.max(...days.map((day) => day.visitors), 1);
-  const barWidth = (width - gap * (days.length - 1)) / days.length;
-
   return (
-    <svg aria-label="Visitors per day" className={styles.chart} role="img" viewBox={`0 0 ${width} ${height + 22}`}>
-      {days.map((day, index) => {
-        const barHeight = day.visitors > 0 ? Math.max(2, (day.visitors / max) * height) : 0;
-        const x = index * (barWidth + gap);
-        return (
-          <g key={day.day}>
-            <title>{`${day.day}: ${day.visitors} visitors`}</title>
-            <rect className={styles.bar} height={barHeight} rx={2} width={barWidth} x={x} y={height - barHeight} />
-            {index % 7 === 0 ? (
-              <text className={styles.axis} x={x} y={height + 16}>
-                {day.day.slice(5)}
-              </text>
-            ) : null}
-          </g>
-        );
-      })}
-    </svg>
+    <BarChart
+      bars={days.map((day, index) => ({
+        key: day.day,
+        label: index % 7 === 0 ? day.day.slice(5) : null,
+        title: `${day.day}: ${day.visitors} visitors`,
+        value: day.visitors,
+      }))}
+      gap={3}
+      height={120}
+      label="Visitors per day"
+      minHeight={0}
+    />
   );
 }
 

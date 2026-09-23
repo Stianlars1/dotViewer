@@ -126,10 +126,10 @@
   margin: 6px 0 14px;
 }
 
-.chart {
+/* Fixed height at any width: the SVG stretches sideways only, and the dates are HTML text. */
+.chart svg {
   display: block;
   width: 100%;
-  height: auto;
 }
 
 .bar {
@@ -137,8 +137,18 @@
 }
 
 .axis {
-  fill: var(--dv-muted-2);
+  position: relative;
+  height: 16px;
+  margin-top: 6px;
+  color: var(--dv-muted-2);
   font-size: 11px;
+  line-height: 16px;
+}
+
+.axis span {
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
 }
 
 .tableScroll {
