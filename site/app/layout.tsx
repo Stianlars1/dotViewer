@@ -6,6 +6,7 @@ import { CREATOR_NAME, CREATOR_URL } from "../lib/structured-data";
 import { geistMono, geistSans } from "../lib/fonts/geist/geist";
 import { inter } from "../lib/fonts/inter/inter";
 import { LightboxProvider } from "../components/image-lightbox";
+import { ConsentBanner } from "../components/consent-banner";
 import { SiteAnalytics } from "../components/site-analytics";
 
 const { googleAnalyticsId, siteUrl } = getSiteConfig();
@@ -83,6 +84,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <Suspense fallback={null}>
           <SiteAnalytics googleAnalyticsId={googleAnalyticsId} />
         </Suspense>
+        <ConsentBanner googleAnalyticsId={googleAnalyticsId} />
       </body>
     </html>
   );

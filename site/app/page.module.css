@@ -859,6 +859,22 @@
   color: var(--dv-ink);
 }
 
+/* Cookie settings: a button, since it opens the consent choices, styled like the links around it. */
+.footerButton {
+  padding: 0;
+  color: var(--dv-muted);
+  font: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  transition: color 0.15s ease;
+  appearance: none;
+}
+
+.footerButton:hover {
+  color: var(--dv-ink);
+}
+
 /* Responsive */
 @media (max-width: 960px) {
   .installShell {

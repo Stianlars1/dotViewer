@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { AnimatedStat } from "../components/animated-stat";
 import { AuroraBackground } from "../components/aurora-background";
+import { CookieSettingsButton } from "../components/cookie-settings-button";
 import { HeroSection, type HeroTitlePiece } from "../components/hero-section";
 import { ImageLightbox } from "../components/image-lightbox";
 import { InstallTabs } from "../components/install-tabs";
@@ -718,6 +719,7 @@ export default function HomePage() {
               <Link href="/download">Download</Link>
               <Link href="/security">Security</Link>
               <Link href="/privacy">Privacy</Link>
+              <CookieSettingsButton className={styles.footerButton} />
               {appStoreHref ? <a href={appStoreHref}>App Store</a> : null}
               <a href={releasesHref}>Releases</a>
               <a href={repoHref}>GitHub</a>

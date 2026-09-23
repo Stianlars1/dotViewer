@@ -1,0 +1,211 @@
+/* The consent card: bottom left, never covering the page; full width with 16 px gutters on phones. */
+
+.banner {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 1000;
+  width: min(420px, calc(100vw - 32px));
+  padding: 18px 18px 14px;
+  color: var(--dv-ink);
+  font-size: 14px;
+  line-height: 1.45;
+  background: var(--dv-card);
+  border: 1px solid var(--dv-line);
+  border-radius: var(--dv-radius);
+  box-shadow: var(--dv-shadow-lg);
+}
+
+.banner:focus {
+  outline: none;
+}
+
+.banner:focus-visible {
+  outline: 2px solid var(--dv-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .banner {
+    animation: rise 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}
+
+.text {
+  margin: 0 0 14px;
+}
+
+.text a,
+.details a {
+  color: var(--dv-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.title {
+  margin: 0 0 8px;
+  font-size: 15px;
+  font-weight: 650;
+}
+
+/* Reject and Accept share one style and one width: neither is easier to press. */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option ~ .actions {
+  margin-top: 14px;
+}
+
+.button,
+.secondary {
+  min-height: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-weight: 600;
+  border: 1px solid var(--dv-ink);
+  border-radius: var(--dv-radius-sm);
+  cursor: pointer;
+  appearance: none;
+}
+
+.button {
+  color: #fff;
+  background: var(--dv-ink);
+}
+
+.secondary {
+  color: var(--dv-ink);
+  background: transparent;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--dv-bg);
+}
+
+.button:disabled,
+.secondary:disabled,
+.textButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.textButton {
+  margin-top: 8px;
+  padding: 4px 0;
+  color: var(--dv-muted);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  appearance: none;
+}
+
+.button:focus-visible,
+.secondary:focus-visible,
+.textButton:focus-visible,
+.switch:focus-visible,
+.text a:focus-visible,
+.details a:focus-visible {
+  outline: 2px solid var(--dv-accent);
+  outline-offset: 2px;
+}
+
+.option {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid var(--dv-line);
+  cursor: pointer;
+}
+
+.option span {
+  display: grid;
+  gap: 2px;
+}
+
+.option strong {
+  font-weight: 600;
+}
+
+.option small {
+  color: var(--dv-muted);
+  font-size: 13px;
+}
+
+/* A native checkbox drawn as a switch; role="switch" tells assistive technology. */
+.switch {
+  position: relative;
+  flex: none;
+  width: 38px;
+  height: 22px;
+  margin: 2px 0 0;
+  background: rgba(11, 18, 32, 0.45);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  appearance: none;
+}
+
+.switch::before {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(11, 18, 32, 0.25);
+  transition: transform 0.15s ease;
+  content: "";
+}
+
+.switch:checked {
+  background: var(--dv-accent);
+}
+
+.switch:checked::before {
+  transform: translateX(16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch,
+  .switch::before {
+    transition: none;
+  }
+}
+
+.details {
+  margin: 10px 0 0;
+  font-size: 13px;
+}
+
+.error {
+  margin: 10px 0 0;
+  color: #b42318;
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .banner {
+    right: 16px;
+    width: auto;
+  }
+}
