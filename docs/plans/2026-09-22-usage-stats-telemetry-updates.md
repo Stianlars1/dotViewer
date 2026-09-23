@@ -1,7 +1,8 @@
 # Download stats, usage telemetry and in-app updates — research and plan
 
 - **Date:** 2026-09-22 · **Branch:** `feat/usage-stats-and-updates`
-- **Status:** proposal — awaiting approval. Research only; no code, env var, DB or deploy changed.
+- **Status:** approved 2026-09-22. Phase 1 (site) implemented and tested locally on this branch, 2026-09-23 —
+  **not applied to the database, not deployed** (see §10). Phases 2–3 not started.
 - **Scope:** (1) one trustworthy download number per version/week, (2) privacy-respecting active-user
   telemetry, (3) update prompts and automatic updates.
 
@@ -476,4 +477,43 @@ Blocking Phase 3:
 Later:
 
 10. **"Open at login"** so ⌥Space, ⌘F, update checks and telemetry work without opening the app?
+
+## 10. Phase 1 — status and deploy runbook (2026-09-23)
+
+Built on this branch in five commits (`8057cde` … `55da8e7`): cookieless first-party log with the §2
+fixes, `db/sql/001`, a backfill/scrub script, the daily snapshot cron, `/updates/<file>`, `/stats` behind
+Basic Auth, `/privacy`, README updates. 26 unit tests (`npm test`), typecheck and `next build` pass.
+
+**Tested end to end** against a throwaway local Postgres (Docker `postgres:17-alpine`) created with the
+production schema from `main` and seeded with old-format rows: the migration applies twice without
+error and matches `schema.ts` exactly (`drizzle-kit push` finds no changes); the backfill classifies
+old rows and scrubs only with `--apply --scrub`; every route answered as designed (beacons 202/400/413,
+redirects to the right GitHub asset, cron 401 without the secret and a real snapshot with it — 26
+assets, 421 DMG downloads, Homebrew 18/35/55 — `/stats` 401/200); stored rows hold no IP, cookie,
+visitor/session ID, city or user agent even when an old page sends a `visitorId`; `/stats` visits are
+not logged; no `Set-Cookie` anywhere.
+
+**Decisions taken on the §9 questions** (defaults, change freely):
+- Q4 stats access: Basic Auth (`proxy.ts`).
+- Q5 Google Analytics: code kept dormant, unchanged; `/privacy` says it is not used.
+- Q2 scrub: script ready (`--apply --scrub`), **not run** — irreversible, your call. `/privacy` is accurate
+  either way: it says what the site did until 23 September, not that old rows were cleaned.
+- Q3 test database: a local Docker container instead; none is needed in production.
+- Q1 database region: still open. `/privacy` names dbHost without a region; add it once known.
+
+**Runbook — in this order** (nothing below has been done):
+1. Review the branch; `cd site && npm test && npm run typecheck`.
+2. Apply the schema change *before* deploying (the new code writes the new columns):
+   `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f site/db/sql/001-cookieless-analytics-and-snapshots.sql`
+3. Old rows: `node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --env-file=.env.local scripts/backfill-analytics.ts`
+   (dry run), then `--apply`; add `--scrub` only if you decide to remove the old identifiers.
+4. Environment variables on the Vercel project **`dotviewer`** (production): `STATS_USER`,
+   `STATS_PASSWORD`, `CRON_SECRET` — e.g. `vercel env add CRON_SECRET production` from `site/`.
+5. Merge and deploy. Vercel picks up the cron from `vercel.json`.
+6. Verify: `curl -I https://dotviewer.app/stats` → 401; open it with the credentials; run the snapshot
+   once by hand — `curl -H "Authorization: Bearer $CRON_SECRET" https://dotviewer.app/api/cron/snapshots`
+   → `"ok":true`; confirm the job in the project's Cron tab; the next day `/stats` shows a fresh snapshot.
+
+Phase 2 (Sparkle) needs the EdDSA key from you first (§5.3); `/updates/<file>` is already in place for
+its enclosure URLs.
 
