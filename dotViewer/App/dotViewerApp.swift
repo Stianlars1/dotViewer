@@ -10,6 +10,7 @@ struct dotViewerApp: App {
     init() {
         // The code font picker used to allow proportional faces; clear any that got stored.
         PreviewFontMenu.migrateInvalidCodeFontIfNeeded()
+        StaleWindowFrames.remove()
 
         // Quick Look previews cannot receive keyboard input, so search queries are pushed to them
         // over a loopback connection instead. The preview only subscribes if this is running.
@@ -27,7 +28,9 @@ struct dotViewerApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
+        // Named, so the window's saved frame survives updates: an unnamed WindowGroup's autosave
+        // key includes its content's type name, which for a private modifier holds a per-build address.
+        WindowGroup(id: "main") {
             ContentView()
                 .appUIFontSizing(appUIFontSizePreset)
         }

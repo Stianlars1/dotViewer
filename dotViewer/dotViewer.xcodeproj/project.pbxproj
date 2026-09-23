@@ -63,6 +63,7 @@
 		297EE7E6A5EA61A0DAC785ED /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = AC6C5AF5824DE36A10CC0676 /* scanner.c */; };
 		29F3628C328EBD310B4C4C28 /* SearchBridgeServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F49A0CC00DB41E6F8996BAA5 /* SearchBridgeServer.swift */; };
 		2A60298B793C7B6982263F41 /* PreviewSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43515F4B0CF50AB16F8F54C0 /* PreviewSizing.swift */; };
+		2A60A411D0FF753C294A3966 /* StaleWindowFrames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFF4062E60F47C5B14865A8 /* StaleWindowFrames.swift */; };
 		2B9184E53A3A29C76522DC59 /* ExtensionStatusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57650CF38D886063939CEAEA /* ExtensionStatusTests.swift */; };
 		2C8C728D22D503D38E72A81A /* subtree.c in Sources */ = {isa = PBXBuildFile; fileRef = 2528870C1075C47DFE5C7466 /* subtree.c */; };
 		2DA6FF4E72C9E18EFA5C6D36 /* zig.scm in Resources */ = {isa = PBXBuildFile; fileRef = 48E275897CAC520C94CBD5DA /* zig.scm */; };
@@ -108,6 +109,7 @@
 		465268D4439B4BD3EAD53CF5 /* TextLineUtilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6851701DA4DBF346A53B322C /* TextLineUtilitiesTests.swift */; };
 		466ABC8B39C11280CD523C81 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E900FD3C801406DCBF758908 /* SettingsModel.swift */; };
 		46ED5C6CAFE33FD70E67E756 /* TreeSitterLanguageRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40FA09E5558EDB91A3C8ACD /* TreeSitterLanguageRegistry.swift */; };
+		474DACC97CB95A1818767F39 /* StaleWindowFrames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DFF4062E60F47C5B14865A8 /* StaleWindowFrames.swift */; };
 		47F9B9CC27AF059D9D206C4F /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F51B594E5300E8EF03BD5D01 /* parser.c */; };
 		487D7C642139D91E56D2E181 /* SensitiveFileDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A047E488D85AE0D46E8913 /* SensitiveFileDetector.swift */; };
 		4927BB7FA97559DD1EA3A07D /* query.c in Sources */ = {isa = PBXBuildFile; fileRef = 0733183F4544DA26E299F4C5 /* query.c */; };
@@ -245,6 +247,7 @@
 		AAC4443487E5E72176EAAAB1 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 6661B93B1FF32747FAF0C34C /* scanner.c */; };
 		AB77B04B0570B06E281BC72B /* tree_cursor.c in Sources */ = {isa = PBXBuildFile; fileRef = BFC07377DDCEDAED291C5023 /* tree_cursor.c */; };
 		AC9CB7AAE200B72FE4CCE9EE /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 5CCA7B433C072919D107EB7B /* parser.c */; };
+		AD014D1521157EC78A707DA4 /* StaleWindowFramesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EBBB012C30DC9E6818E9CC /* StaleWindowFramesTests.swift */; };
 		AED4B1917DFBE964545067B4 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = C76D2E6938B01F93E11599CC /* stack.c */; };
 		AEE8D6352BD8ECD5CA8DD249 /* dotViewerIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 12269A5260EB6C5648B59650 /* dotViewerIcon.icon */; };
 		B05122F6BB64A04F7C1D0307 /* get_changed_ranges.c in Sources */ = {isa = PBXBuildFile; fileRef = E03091B085411A8CF75AFDF4 /* get_changed_ranges.c */; };
@@ -713,6 +716,7 @@
 		64805DAC958207FD83FAFE86 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		64A41538932B52865AC9F6C8 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		64C4FCBEE59CB117A9BA84DD /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		64EBBB012C30DC9E6818E9CC /* StaleWindowFramesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaleWindowFramesTests.swift; sourceTree = "<group>"; };
 		65361B4CECEA266A8E500572 /* alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = alloc.h; sourceTree = "<group>"; };
 		6588BD94C8B3E8E981E09054 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		660D41E28B30126E791C2001 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
@@ -764,6 +768,7 @@
 		7C261705A9780EF7E3E2318D /* umachine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = umachine.h; sourceTree = "<group>"; };
 		7D65CE57641BB0BBD4C77018 /* gnuplot.scm */ = {isa = PBXFileReference; path = gnuplot.scm; sourceTree = "<group>"; };
 		7DEDA6E3C408BF697DE2D4AA /* AdvancedPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedPane.swift; sourceTree = "<group>"; };
+		7DFF4062E60F47C5B14865A8 /* StaleWindowFrames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaleWindowFrames.swift; sourceTree = "<group>"; };
 		7E4311C90440961FF488EF55 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
 		7EB0601B5F2F6C26217E897E /* array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = array.h; sourceTree = "<group>"; };
 		7EE35EAD45364AE6E137364F /* PlistConverterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlistConverterTests.swift; sourceTree = "<group>"; };
@@ -2817,6 +2822,7 @@
 				6795EA0D329C5782857A6605 /* SettingsSnapshotTests.swift */,
 				84DF30BF87DB1FECEF984A59 /* SettingsWindowLayoutTests.swift */,
 				D5BF0FAFDC3FDD7FF21D7489 /* ShebangLanguageDetectorTests.swift */,
+				64EBBB012C30DC9E6818E9CC /* StaleWindowFramesTests.swift */,
 				9C58C5CE09DF2311F9A4F29F /* StatusProcessRunnerTests.swift */,
 				4273283E6FC90DB807240AD4 /* SystemAppearanceTests.swift */,
 				6851701DA4DBF346A53B322C /* TextLineUtilitiesTests.swift */,
@@ -3024,6 +3030,7 @@
 				96F8349878F4EC6C31AB51DD /* PreviewPanelController.swift */,
 				F49A0CC00DB41E6F8996BAA5 /* SearchBridgeServer.swift */,
 				67069D54CF96C31073669D1F /* SearchKeyInterceptor.swift */,
+				7DFF4062E60F47C5B14865A8 /* StaleWindowFrames.swift */,
 				92E05B3CBF1B83F9A14DD59A /* StatusView.swift */,
 				1A28A2AF500DAD3163AF63F0 /* ThirdPartyNotices.txt */,
 				8E198EFC741702EF7B7AA6B0 /* Settings */,
@@ -3529,6 +3536,7 @@
 				55AED8177D8616E426C300C0 /* SettingsRows.swift in Sources */,
 				808701F01A250B4587DCC97F /* SettingsWindow.swift in Sources */,
 				837F97BA98D2325D668C9656 /* ShortcutsPane.swift in Sources */,
+				2A60A411D0FF753C294A3966 /* StaleWindowFrames.swift in Sources */,
 				8AE0019F447B2CE6DB3A87D5 /* StatusProcessRunner.swift in Sources */,
 				3418E8FD801565C1528BDD3D /* StatusView.swift in Sources */,
 				B64EC64CC27A3FC3630CA9E8 /* WindowPane.swift in Sources */,
@@ -3628,6 +3636,8 @@
 				290EE838B279C64D602C0A5E /* SettingsWindowLayoutTests.swift in Sources */,
 				95DA26E9E69171A526B6BA01 /* ShebangLanguageDetectorTests.swift in Sources */,
 				03408A657871B5E87E4C92B9 /* ShortcutsPane.swift in Sources */,
+				474DACC97CB95A1818767F39 /* StaleWindowFrames.swift in Sources */,
+				AD014D1521157EC78A707DA4 /* StaleWindowFramesTests.swift in Sources */,
 				736B371C6114155A44D47111 /* StatusProcessRunner.swift in Sources */,
 				39746430044AB2D040BCAF3E /* StatusProcessRunnerTests.swift in Sources */,
 				87EFE2F9AB2AC0E3FEF460E8 /* StatusView.swift in Sources */,
