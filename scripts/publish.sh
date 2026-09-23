@@ -36,7 +36,9 @@ NC='\033[0m'
 
 VERSION="${1:-}"
 RELEASE_ARGS=("${@:2}")
-for argument in "${RELEASE_ARGS[@]}"; do
+# `${RELEASE_ARGS[@]+"${RELEASE_ARGS[@]}"}` rather than `"${RELEASE_ARGS[@]}"`: macOS's bash 3.2
+# treats an empty array as unset, which `set -u` turns into a fatal error.
+for argument in ${RELEASE_ARGS[@]+"${RELEASE_ARGS[@]}"}; do
     case "$argument" in
         --reuse-exported-app|--build-number=*) ;;
         *) echo "Unsupported publish argument: $argument" >&2; exit 1 ;;
@@ -131,7 +133,7 @@ echo ""
 echo -e "${BOLD}Step 2/5:${NC} Building Developer ID release (DMG + notarize)..."
 echo ""
 
-"$SCRIPT_DIR/release.sh" "$VERSION" "${RELEASE_ARGS[@]}"
+"$SCRIPT_DIR/release.sh" "$VERSION" ${RELEASE_ARGS[@]+"${RELEASE_ARGS[@]}"}
 
 if [ ! -f "$DMG_PATH" ]; then
     echo -e "${RED}Error: DMG not found at $DMG_PATH${NC}"
