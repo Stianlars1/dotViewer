@@ -495,10 +495,15 @@ not logged; no `Set-Cookie` anywhere.
 
 **Decisions taken on the §9 questions** (defaults, change freely):
 - Q4 stats access: Basic Auth (`proxy.ts`).
-- Q5 Google Analytics: code kept dormant, unchanged; `/privacy` says it is not used.
+- Q5 Google Analytics: dormant in phase 1; since 2026-09-23 loaded only with consent
+  (`docs/plans/2026-09-23-consent-banner-design.md`).
 - Q2 scrub: **run 2026-09-23 on the owner's request** (`--apply --scrub`): 799 page-view and 219 download
   rows lost their visitor/session IDs, city, region, user agent and request ID; all 1,029 rows kept,
   none holds an identifying value. `/privacy` now says the old values were deleted the same day.
+- Follow-up the same day (`db/sql/003`, after the owner reviewed `/stats`): the 797 page-view and 96
+  download rows that still held the full linking address got the site's name in `referrer_host`
+  (never derived by the backfill, so Referrers was empty), then lost the address; 53 page addresses
+  lost everything after `?` or `#`. New beacons are stored without query strings. `/privacy` says so.
 - Q3 test database: a local Docker container instead; none is needed in production.
 - Q1 database region: still open. `/privacy` names dbHost without a region; add it once known.
 

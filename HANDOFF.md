@@ -24,11 +24,12 @@ redeploying a commit from before the banner would bake the GA ID into code that 
 
 ## Next steps
 
-1. **Owner: look at `/stats` → Visitors.** Consent records 1 and 2 (2026-09-23 11:53 and 11:54 UTC) are
-   Claude's live test (Accept, then withdraw everything); they count in the 30-day consent shares.
-   Delete them if you prefer (`DELETE FROM analytics_consents WHERE id IN (1, 2)`) — ask first. The
-   test page views are logged as bots and never count. The first cron run after the deploy is the
-   first with retention; its JSON now carries `retention`.
+1. **`/stats` after the owner's first look (2026-09-23), all done:** the two test consent records are
+   deleted; `db/sql/003` gave old rows their linking site's name and deleted the full linking addresses
+   and the query strings of page addresses; new beacons keep no query string; the charts have a fixed
+   height. v1.5.8's GitHub count and the all-time total catch up at the next snapshot (04:17 UTC; 1.5.8
+   was published at 07:42). The first cron run after the deploy is the first with retention; its JSON
+   now carries `retention`.
 2. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
    may settle it; ask kiryph to try 1.5.8 on the Intel Mac mini (macOS 15.7.7) — needs the owner's OK
    to post.

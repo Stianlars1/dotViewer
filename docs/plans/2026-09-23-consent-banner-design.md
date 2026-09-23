@@ -188,7 +188,7 @@ set, in the built-in browser. Its user agent contains `Claude/`, so its own rows
   removes the script, clears `window.gtag` and sets `ga-disable-<id>`. The next page load keeps the
   card closed and makes no request to Google.
 - Database: consent records 1 (card, both allowed, with a visitor ID) and 2 (settings, both off, no ID)
-  are these test choices. Page views after the deploy carry day codes; the `/privacy` view after Accept
+  were these test choices (deleted afterwards at the owner's request). Page views after the deploy carry day codes; the `/privacy` view after Accept
   carries record 1's visitor ID and the view after withdrawing carries none; one salt row, today's.
 
 Rolling back: use Vercel's Instant Rollback, which reuses an earlier build. Do not redeploy a commit
