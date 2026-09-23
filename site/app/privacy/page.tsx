@@ -14,6 +14,8 @@ export const metadata: Metadata = {
 };
 
 const UPDATED = "23 September 2026";
+// When the log stopped setting cookies and storing identifiers. Fixed, unlike UPDATED.
+const COOKIELESS_SINCE = "23 September 2026";
 
 export default function PrivacyPage() {
   const config = getSiteConfig();
@@ -104,10 +106,11 @@ export default function PrivacyPage() {
                   same creator.
                 </li>
                 <li>
-                  Until {UPDATED} the site set two cookies for this log — <code>dv_vid</code>, a random visitor ID kept
-                  for up to two years, and <code>dv_sid</code> for a single visit — and also stored the city and the
-                  full browser string. It no longer does, and browsers that still have the cookies are told to delete
-                  them on their next visit.
+                  Until {COOKIELESS_SINCE} the site set two cookies for this log — <code>dv_vid</code>, a random visitor
+                  ID kept for up to two years, and <code>dv_sid</code> for a single visit — and also stored the city and
+                  the full browser string. It no longer does, and browsers that still have the cookies are told to
+                  delete them on their next visit. The IDs, cities and browser strings already in the log were deleted
+                  the same day.
                 </li>
                 <li>Google Analytics is not used.</li>
               </ul>
