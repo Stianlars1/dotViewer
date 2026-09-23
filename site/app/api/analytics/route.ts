@@ -1,74 +1,34 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
+import { MAX_PAYLOAD_BYTES, parseAnalyticsPayload } from "../../../lib/analytics/payload";
 import { getRequestContext, recordDownload, recordPageView } from "../../../lib/analytics/server";
 
 export const runtime = "nodejs";
 
-type AnalyticsPayload =
-  | {
-      path: string;
-      title: string;
-      type: "page_view";
-      url: string;
-      utmCampaign: string | null;
-      utmContent: string | null;
-      utmMedium: string | null;
-      utmSource: string | null;
-      utmTerm: string | null;
-    }
-  | {
-      assetKind: "app_store" | "checksum" | "dmg";
-      path: string;
-      releaseTag: string | null;
-      source: string;
-      targetUrl: string;
-      type: "download";
-    };
-
-function isPageViewPayload(payload: unknown): payload is Extract<AnalyticsPayload, { type: "page_view" }> {
-  return (
-    payload !== null &&
-    typeof payload === "object" &&
-    "path" in payload &&
-    "title" in payload &&
-    "type" in payload &&
-    "url" in payload &&
-    payload.type === "page_view"
-  );
-}
-
-function isDownloadPayload(payload: unknown): payload is Extract<AnalyticsPayload, { type: "download" }> {
-  return (
-    payload !== null &&
-    typeof payload === "object" &&
-    "assetKind" in payload &&
-    "path" in payload &&
-    "source" in payload &&
-    "targetUrl" in payload &&
-    "type" in payload &&
-    payload.type === "download"
-  );
-}
-
 export async function POST(request: Request) {
-  let payload: unknown;
+  const body = await request.text();
+  if (body.length > MAX_PAYLOAD_BYTES) {
+    return NextResponse.json({ error: "Analytics payload too large" }, { status: 413 });
+  }
 
+  let raw: unknown;
   try {
-    payload = await request.json();
+    raw = JSON.parse(body);
   } catch {
     return NextResponse.json({ error: "Invalid analytics payload" }, { status: 400 });
   }
 
+  const parsed = parseAnalyticsPayload(raw);
+  if (!parsed) {
+    return NextResponse.json({ error: "Unsupported analytics payload" }, { status: 400 });
+  }
+
+  // The beacon does not wait for the database.
   const context = getRequestContext(request);
+  after(() =>
+    parsed.type === "page_view"
+      ? recordPageView(parsed.event, context)
+      : recordDownload({ ...parsed.event, channel: "website" }, context),
+  );
 
-  if (isPageViewPayload(payload)) {
-    await recordPageView(payload, context);
-    return NextResponse.json({ ok: true }, { status: 202 });
-  }
-
-  if (isDownloadPayload(payload)) {
-    await recordDownload(payload, context);
-    return NextResponse.json({ ok: true }, { status: 202 });
-  }
-
-  return NextResponse.json({ error: "Unsupported analytics payload" }, { status: 400 });
+  return NextResponse.json({ ok: true }, { status: 202 });
 }

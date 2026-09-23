@@ -18,15 +18,15 @@ export type DownloadAnalyticsPayload = {
 };
 
 const ANALYTICS_ENDPOINT = "/api/analytics";
-const SESSION_COOKIE = "dv_sid";
-const VISITOR_COOKIE = "dv_vid";
-const VISITOR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 * 2;
+
+// Cookies the site set before it went cookieless. Expired on every visit so returning browsers
+// drop them; nothing reads them any more.
+const LEGACY_COOKIES = ["dv_vid", "dv_sid"];
 
 type AnalyticsEnvelope =
   | {
       path: string;
       referrer: string | null;
-      sessionId: string;
       title: string;
       type: "page_view";
       url: string;
@@ -35,65 +35,25 @@ type AnalyticsEnvelope =
       utmMedium: string | null;
       utmSource: string | null;
       utmTerm: string | null;
-      visitorId: string;
     }
   | {
       assetKind: "app_store" | "checksum" | "dmg";
       path: string;
       referrer: string | null;
       releaseTag: string | null;
-      sessionId: string;
       source: string;
       targetUrl: string;
       type: "download";
-      visitorId: string;
     };
 
-function readCookie(name: string) {
-  if (typeof document === "undefined") {
-    return null;
-  }
-
-  const prefix = `${name}=`;
-  const parts = document.cookie.split(";").map((part) => part.trim());
-  for (const part of parts) {
-    if (part.startsWith(prefix)) {
-      return decodeURIComponent(part.slice(prefix.length));
-    }
-  }
-
-  return null;
-}
-
-function writeCookie(name: string, value: string, maxAge?: number) {
+export function forgetLegacyCookies() {
   if (typeof document === "undefined") {
     return;
   }
 
-  const parts = [`${name}=${encodeURIComponent(value)}`, "Path=/", "SameSite=Lax"];
-  if (maxAge) {
-    parts.push(`Max-Age=${maxAge}`);
+  for (const name of LEGACY_COOKIES) {
+    document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;
   }
-
-  document.cookie = parts.join("; ");
-}
-
-function ensureCookie(name: string, options?: { maxAge?: number }) {
-  const existing = readCookie(name);
-  if (existing) {
-    return existing;
-  }
-
-  const value = crypto.randomUUID();
-  writeCookie(name, value, options?.maxAge);
-  return value;
-}
-
-function getVisitorSessionIds() {
-  return {
-    sessionId: ensureCookie(SESSION_COOKIE),
-    visitorId: ensureCookie(VISITOR_COOKIE, { maxAge: VISITOR_COOKIE_MAX_AGE }),
-  };
 }
 
 function sendAnalyticsEvent(event: AnalyticsEnvelope) {
@@ -111,7 +71,7 @@ function sendAnalyticsEvent(event: AnalyticsEnvelope) {
 
   void fetch(ANALYTICS_ENDPOINT, {
     body,
-    credentials: "same-origin",
+    credentials: "omit",
     headers: {
       "Content-Type": "application/json",
     },
@@ -134,12 +94,10 @@ export function trackGooglePageView(pagePath: string) {
 
 export function trackCustomPageView(pagePath: string, referrer: string | null) {
   const query = new URLSearchParams(window.location.search);
-  const { sessionId, visitorId } = getVisitorSessionIds();
 
   sendAnalyticsEvent({
     path: pagePath,
     referrer,
-    sessionId,
     title: document.title,
     type: "page_view",
     url: window.location.href,
@@ -148,7 +106,6 @@ export function trackCustomPageView(pagePath: string, referrer: string | null) {
     utmMedium: query.get("utm_medium"),
     utmSource: query.get("utm_source"),
     utmTerm: query.get("utm_term"),
-    visitorId,
   });
 }
 
@@ -160,31 +117,28 @@ export function trackDownloadClick(payload: DownloadAnalyticsPayload) {
     targetUrl: payload.targetUrl,
   });
 
-  if (typeof window.gtag !== "function") {
-    return;
+  if (typeof window.gtag === "function") {
+    window.gtag("event", "download_click", {
+      asset_kind: payload.assetKind,
+      download_source: payload.source,
+      link_url: payload.targetUrl,
+      release_tag: payload.releaseTag ?? undefined,
+    });
   }
 
-  window.gtag("event", "download_click", {
-    asset_kind: payload.assetKind,
-    download_source: payload.source,
-    link_url: payload.targetUrl,
-    release_tag: payload.releaseTag ?? undefined,
-  });
-
+  // Links through /download/latest are logged by that route; logging the click too would count
+  // them twice.
   if (payload.persistCustomEvent === false) {
     return;
   }
 
-  const { sessionId, visitorId } = getVisitorSessionIds();
   sendAnalyticsEvent({
     assetKind: payload.assetKind,
     path: `${window.location.pathname}${window.location.search}`,
     referrer: document.referrer || null,
     releaseTag: payload.releaseTag ?? null,
-    sessionId,
     source: payload.source,
     targetUrl: payload.targetUrl,
     type: "download",
-    visitorId,
   });
 }

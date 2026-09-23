@@ -1,64 +1,48 @@
 import { analyticsDownloads, analyticsPageViews } from "../db/schema";
 import { getDb } from "../db/client";
+import { isInternalHost, summarizeUserAgent, type DownloadChannel } from "./classify.ts";
+import type { DownloadEvent, PageViewEvent } from "./payload.ts";
 
-type RequestContext = {
-  city: string | null;
+// The first-party log stores coarse facts only: time, path, referrer host, UTM tags, country,
+// browser and OS family, device class and bot/internal flags. No cookies, IP addresses, visitor or
+// session IDs, cities or full user agents (see /privacy). The user agent is read to classify the
+// request and then dropped.
+
+export type RequestContext = {
   country: string | null;
-  referrer: string | null;
-  region: string | null;
-  requestId: string | null;
-  sessionId: string | null;
+  internal: boolean;
   userAgent: string | null;
-  visitorId: string | null;
 };
 
-type PageViewEvent = {
-  path: string;
-  title: string;
-  url: string;
-  utmCampaign: string | null;
-  utmContent: string | null;
-  utmMedium: string | null;
-  utmSource: string | null;
-  utmTerm: string | null;
-};
-
-type DownloadEvent = {
-  assetKind: "app_store" | "checksum" | "dmg";
-  path: string;
-  releaseTag: string | null;
-  source: string;
-  targetUrl: string;
-};
-
-function readCookieValue(cookieHeader: string | null, name: string) {
-  if (!cookieHeader) {
+function hostOf(url: string): string | null {
+  try {
+    return new URL(url).host;
+  } catch {
     return null;
   }
-
-  const entries = cookieHeader.split(";").map((part) => part.trim());
-  const prefix = `${name}=`;
-  for (const entry of entries) {
-    if (entry.startsWith(prefix)) {
-      return decodeURIComponent(entry.slice(prefix.length));
-    }
-  }
-
-  return null;
 }
 
 export function getRequestContext(request: Request): RequestContext {
-  const cookieHeader = request.headers.get("cookie");
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? hostOf(request.url);
+  const country = request.headers.get("x-vercel-ip-country");
 
   return {
-    city: request.headers.get("x-vercel-ip-city"),
-    country: request.headers.get("x-vercel-ip-country"),
-    referrer: request.headers.get("referer"),
-    region: request.headers.get("x-vercel-ip-country-region"),
-    requestId: request.headers.get("x-vercel-id"),
-    sessionId: readCookieValue(cookieHeader, "dv_sid"),
+    country: country && /^[A-Z]{2}$/.test(country) ? country : null,
+    internal: isInternalHost(host),
     userAgent: request.headers.get("user-agent"),
-    visitorId: readCookieValue(cookieHeader, "dv_vid"),
+  };
+}
+
+function classification(context: RequestContext, referrerHost: string | null) {
+  const summary = summarizeUserAgent(context.userAgent);
+  return {
+    browser: summary.browser,
+    country: context.country,
+    device: summary.device,
+    isBot: summary.isBot,
+    isInternal: context.internal,
+    os: summary.os,
+    referrerHost,
   };
 }
 
@@ -70,22 +54,15 @@ export async function recordPageView(event: PageViewEvent, context: RequestConte
 
   try {
     await db.insert(analyticsPageViews).values({
-      city: context.city,
-      country: context.country,
+      ...classification(context, event.referrerHost),
       path: event.path,
-      referrer: context.referrer,
-      region: context.region,
-      requestId: context.requestId,
-      sessionId: context.sessionId,
       title: event.title,
       url: event.url,
-      userAgent: context.userAgent,
       utmCampaign: event.utmCampaign,
       utmContent: event.utmContent,
       utmMedium: event.utmMedium,
       utmSource: event.utmSource,
       utmTerm: event.utmTerm,
-      visitorId: context.visitorId,
     });
     return true;
   } catch (error) {
@@ -94,7 +71,9 @@ export async function recordPageView(event: PageViewEvent, context: RequestConte
   }
 }
 
-export async function recordDownload(event: DownloadEvent, context: RequestContext) {
+export type DownloadRecord = DownloadEvent & { channel: DownloadChannel };
+
+export async function recordDownload(event: DownloadRecord, context: RequestContext) {
   const db = getDb();
   if (!db) {
     return false;
@@ -102,19 +81,13 @@ export async function recordDownload(event: DownloadEvent, context: RequestConte
 
   try {
     await db.insert(analyticsDownloads).values({
+      ...classification(context, event.referrerHost),
       assetKind: event.assetKind,
-      city: context.city,
-      country: context.country,
+      channel: event.channel,
       path: event.path,
-      referrer: context.referrer,
-      region: context.region,
       releaseTag: event.releaseTag,
-      requestId: context.requestId,
-      sessionId: context.sessionId,
       source: event.source,
       targetUrl: event.targetUrl,
-      userAgent: context.userAgent,
-      visitorId: context.visitorId,
     });
     return true;
   } catch (error) {

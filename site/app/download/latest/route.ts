@@ -1,26 +1,27 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { getLatestRelease } from "../../../lib/github-release";
 import { getSiteConfig } from "../../../lib/site-config";
+import { sanitizeSource } from "../../../lib/analytics/classify";
 import { getRequestContext, recordDownload } from "../../../lib/analytics/server";
 
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
   const config = getSiteConfig();
-  const source = new URL(request.url).searchParams.get("source") ?? "direct";
+  const source = sanitizeSource(new URL(request.url).searchParams.get("source"));
   const context = getRequestContext(request);
 
-  if (config.directDownloadUrl) {
-    await recordDownload(
-      {
-        assetKind: "dmg",
-        path: "/download/latest",
-        releaseTag: null,
-        source,
-        targetUrl: config.directDownloadUrl,
-      },
-      context,
+  // Logged after the redirect is sent, so a download never waits for the database.
+  const log = (targetUrl: string, releaseTag: string | null) =>
+    after(() =>
+      recordDownload(
+        { assetKind: "dmg", channel: "website", path: "/download/latest", referrerHost: null, releaseTag, source, targetUrl },
+        context,
+      ),
     );
+
+  if (config.directDownloadUrl) {
+    log(config.directDownloadUrl, null);
     return NextResponse.redirect(config.directDownloadUrl, 307);
   }
 
@@ -29,16 +30,7 @@ export async function GET(request: Request) {
       const latestRelease = await getLatestRelease(config.githubRepo);
       const assetUrl = latestRelease?.dmgAsset?.browser_download_url ?? null;
       if (latestRelease && assetUrl) {
-        await recordDownload(
-          {
-            assetKind: "dmg",
-            path: "/download/latest",
-            releaseTag: latestRelease.tagName,
-            source,
-            targetUrl: assetUrl,
-          },
-          context,
-        );
+        log(assetUrl, latestRelease.tagName);
         return NextResponse.redirect(assetUrl, 307);
       }
     } catch {

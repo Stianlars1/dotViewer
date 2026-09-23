@@ -1,10 +1,17 @@
 "use client";
 
-import { Analytics } from "@vercel/analytics/next";
+import { Analytics, type BeforeSendEvent } from "@vercel/analytics/next";
 import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
-import { trackCustomPageView, trackGooglePageView } from "../lib/analytics/client";
+import { forgetLegacyCookies, trackCustomPageView, trackGooglePageView } from "../lib/analytics/client";
+
+// The owner's own stats page is not site traffic.
+const isPrivatePath = (path: string) => path === "/stats" || path.startsWith("/stats/");
+
+function dropPrivatePages(event: BeforeSendEvent) {
+  return isPrivatePath(new URL(event.url).pathname) ? null : event;
+}
 
 type SiteAnalyticsProps = {
   googleAnalyticsId: string | null;
@@ -16,6 +23,14 @@ export function SiteAnalytics({ googleAnalyticsId }: SiteAnalyticsProps) {
   const previousUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
+    forgetLegacyCookies();
+  }, []);
+
+  useEffect(() => {
+    if (isPrivatePath(pathname)) {
+      return;
+    }
+
     const query = searchParams.toString();
     const pagePath = query ? `${pathname}?${query}` : pathname;
     const currentUrl = window.location.href;
@@ -31,7 +46,7 @@ export function SiteAnalytics({ googleAnalyticsId }: SiteAnalyticsProps) {
 
   return (
     <>
-      <Analytics />
+      <Analytics beforeSend={dropPrivatePages} />
       {googleAnalyticsId ? (
         <>
           <Script
