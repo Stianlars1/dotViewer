@@ -2,62 +2,36 @@
 
 ## Status
 
-**v1.5.7 (14) is the latest published release** (2026-09-22) — Status page logo that follows the pointer
-(`dotViewer/App/AnimatedLogoView.swift`, a port of `site/components/logo-animated.tsx`). Evidence:
-`docs/releases/1.5.7-verification.md`. 1.5.6 (same day) shipped the #31/#24/#29 fixes —
-`docs/releases/1.5.6-verification.md`.
+**v1.5.8 (15) is the latest published release** (2026-09-23): Settings in their own window (⌘,) with a
+sidebar and search, Interface text size that finally works (KI-020), and a main window that keeps its
+size across updates. Evidence: `docs/releases/1.5.8-verification.md`. `/Applications` runs the public
+1.5.8.
 
-**This Mac runs a local, unnotarized 1.5.8 (14) Developer ID build of `feat/settings-window`** in
-`/Applications`, installed 2026-09-23 for the Settings hands-on check. It has the same designated
-requirement as the release, so Accessibility and Finder access carried over. To go back: the public
-1.5.7 app is in the session scratchpad (`…/scratchpad/backup/dotViewer-1.5.7.app`, cleared on reboot);
-the 1.5.7 release archive (with dSYMs), export and DMG moved from `dotViewer/build/` to
-`~/Library/Developer/Xcode/Archives/2026-09-22/` so `release.sh` could not wipe them; the DMG is also on
-GitHub. Every public version stays downloadable from GitHub.
+**Website stats phase 1 is live** (deployed 2026-09-23 from `main`): cookieless first-party logging,
+the daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/privacy`, and `/stats` behind Basic Auth.
+Details and verification: §10 of `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`.
+`CRON_SECRET` is set; **`/stats` answers 503 until the owner sets `STATS_USER` and `STATS_PASSWORD`**
+on the Vercel project `dotviewer` and redeploys.
 
-## What happened to the "left-behind" work
-
-- `fix/issue-31-intel-mac-settings-tabs` (`68b016b`) was the only unreleased code. It had **never been
-  built**: the session that made it crashed mid-commit, leaving 0-byte `.git/index.lock`, `.git/HEAD.lock`
-  (and an old `objects/maintenance.lock`) plus an index that made `git status` show phantom staged
-  reversals. Locks removed, index resynced, tests rewritten, merged, released.
-- Its commit title "Fix #31: …" is a GitHub closing keyword, so pushing `main` **auto-closed #31** before
-  kiryph could confirm. Reopened by hand; close it once kiryph confirms.
-- `codex/v1.1.0-victor-feedback`: its 2 unmerged commits (Vercel/GA analytics) are superseded by `main`'s
-  `site/components/site-analytics.tsx`. Nothing to merge.
-- `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
-  `main`. Archive only — never merge.
-
-## In progress (2026-09-22 → 23) — two local branches, neither pushed
-
-- **`feat/settings-window`**: Settings redesigned as their own window (⌘,, dotViewer → Settings…) with
-  a sidebar of seven panes, System Settings-style grouped rows, and sidebar search. Spec and plan:
-  `docs/plans/2026-09-22-settings-window-{design,plan}.md`. **All plan tasks done**; 256 tests pass;
-  search ranks title matches first (owner's choice). Installed and checked by hand (see the plan's
-  "Result" section): the check fixed a 140 pt sidebar / 900 × 532 window, and found that "Interface
-  text size" has never worked on macOS (KI-020, owner to decide: remove or build real scaling).
-  Left: KI-020 decision, then push + PR (not pushed yet).
-- **`feat/usage-stats-and-updates`**: plan approved 2026-09-22. **Phase 1 (website) is built and tested
-  locally** (7 commits after the research doc): cookieless first-party log with the logging fixes,
-  daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/stats` behind Basic Auth, `/privacy`.
-  **Not applied to the database and not deployed.** The exact runbook (SQL first, then env vars, then
-  deploy) is §10 of `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`. Phase 2 (Sparkle) needs
-  the owner to create the EdDSA key first.
+Both feature branches (`feat/settings-window`, `feat/usage-stats-and-updates`) are on `main`; history
+stays linear (fast-forward, settings rebased on stats).
 
 ## Next steps
 
-1. **Wait for kiryph on #31** (release reply posted, issue reopened). If clicks still fail on macOS 15, a macOS 15 VM
-   (e.g. `tart`) can split the Intel-vs-macOS-15 confound; the Intel half cannot be emulated.
-2. Release announcements posted on #24 and #29 (both stay closed).
-3. **Fix `publish.sh` on bash 3.2**: without `--build-number` it dies on the empty `RELEASE_ARGS` array
-   under `set -u`. A task chip was created for it. Until fixed, publish with
-   `./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>`.
-4. **Optional corpus check** for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
+1. Owner: set the `/stats` credentials, then redeploy (commands in the 1.5.8 session summary):
+   `vercel env add STATS_USER production`, `vercel env add STATS_PASSWORD production` from `site/`,
+   then `vercel redeploy <latest production deployment URL>`.
+2. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
+   may settle it; ask kiryph to try 1.5.8 on the Intel Mac mini (macOS 15.7.7).
+3. Stats phase 2 (Sparkle 2.10 in 1.6.0) needs the EdDSA key from the owner first (plan §5.3). Feed URLs
+   must use `www.dotviewer.app`: the apex answers 308.
+4. Optional corpus check for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
    `examples/*.gp` (needs a download — ask first).
-5. Housekeeping done 2026-09-22: the `v2.5-claude-work`, `v2.5-pr26` and `v2.5-status-fix` worktrees were
-   moved to the Trash (recoverable until emptied) and 8 merged local branches deleted. Still present: the 4
-   merged remote branches of PRs #2, #26, #27 and #30, and the unmerged `codex/v1.1.0-victor-feedback`,
-   `v1-legacy` and `claude/research-quicklook-performance-7zcd5` (superseded or v1 history — keep or archive).
+5. Still present: the 4 merged remote branches of PRs #2, #26, #27 and #30, and the unmerged
+   `codex/v1.1.0-victor-feedback`, `v1-legacy` and `claude/research-quicklook-performance-7zcd5`
+   (superseded or v1 history — keep or archive). Two stale Quick Look registrations from old Debug
+   builds (1.5.4 in DerivedData, 1.5.6 in an old session scratchpad) show under Status → Extension
+   Conflicts; "Resolve All" there removes them.
 6. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
    right-click Quick Action for ⌥Space; arrow-key navigation in the panel; Shift+arrow selection in the
    search field; no App-target tests for `SearchBridgeServer` / `SearchKeyInterceptor` /
@@ -65,11 +39,9 @@ GitHub. Every public version stays downloadable from GitHub.
 
 ## Open questions
 
-- KI-020: remove "Interface text size", or build real text scaling for the app's windows?
-- Settings window: push `feat/settings-window` and open a PR?
-- Stats phase 1: run the runbook (apply `site/db/sql/001`, set `STATS_USER`/`STATS_PASSWORD`/`CRON_SECRET` on
-  Vercel project `dotviewer`, deploy)? Remove the old visitor IDs with the backfill's `--scrub` (irreversible)?
-  Which region is the dbHost database in (for `/privacy`)?
+- Remove the old visitor IDs with the backfill's `--scrub`? Irreversible; not run.
+- Which region is the dbHost database in (for `/privacy`)?
+- Sparkle: create the EdDSA key (the owner keeps it; Claude must never see it).
 
 ## Hard-won platform knowledge (do not re-derive)
 

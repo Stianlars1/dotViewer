@@ -501,7 +501,22 @@ not logged; no `Set-Cookie` anywhere.
 - Q3 test database: a local Docker container instead; none is needed in production.
 - Q1 database region: still open. `/privacy` names dbHost without a region; add it once known.
 
-**Runbook — in this order** (nothing below has been done):
+**Deployed 2026-09-23** (steps 1–6 below, except the two `/stats` credentials):
+- Site tests (26), typecheck and `next build` passed on the merged `main`.
+- `db/sql/001` applied to production through `pg` (no `psql` on this Mac): 219 download and 799 page-view
+  rows kept, the new columns and both snapshot tables present.
+- Backfill `--apply`: all 1,018 old rows classified (67 + 53 bots). **No `--scrub`.**
+- `CRON_SECRET` added to production (generated locally, never printed). `STATS_USER` and
+  `STATS_PASSWORD` are left for the owner, so `/stats` answers 503 until they are set and the project is
+  redeployed.
+- `main` pushed (`ebbc213`); Vercel built production in 37 s. `dotviewer.app` redirects to
+  `www.dotviewer.app` (308), so checks and future feed URLs should use `www`.
+- Verified live: no `Set-Cookie` on any page; `/stats` 503 with `noindex` and `no-store`; `/updates`
+  302 to the GitHub asset and 404 for other names; cron 401 without the secret and `ok` with it
+  (26 assets, 424 DMG downloads, Homebrew 18/36/56); `vercel crons ls` lists `/api/cron/snapshots` at
+  `17 4 * * *`; a test beacon stored no visitor/session ID, user agent, city, region or request ID.
+
+**Runbook — in this order** (done 2026-09-23 as above, except the `/stats` credentials):
 1. Review the branch; `cd site && npm test && npm run typecheck`.
 2. Apply the schema change *before* deploying (the new code writes the new columns):
    `psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f site/db/sql/001-cookieless-analytics-and-snapshots.sql`
