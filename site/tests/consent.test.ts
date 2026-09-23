@@ -9,6 +9,7 @@ import {
   cookieDomains,
   formatConsent,
   isCurrentConsent,
+  isSameOriginRequest,
   isVisitorId,
   parseConsent,
   parseConsentRequest,
@@ -119,4 +120,16 @@ test("cookie domains cover the host and each parent domain", () => {
   assert.deepEqual(cookieDomains("dotviewer.app"), ["", ".dotviewer.app"]);
   assert.deepEqual(cookieDomains("localhost"), [""]);
   assert.deepEqual(cookieDomains("127.0.0.1"), [""]);
+});
+
+test("only the site's own pages may make a choice", () => {
+  const url = "https://www.dotviewer.app/api/consent";
+  const headers = (entries: Record<string, string>) => new Headers({ "x-forwarded-host": "www.dotviewer.app", ...entries });
+  assert.equal(isSameOriginRequest(headers({ "sec-fetch-site": "same-origin" }), url), true);
+  assert.equal(isSameOriginRequest(headers({ "sec-fetch-site": "cross-site" }), url), false);
+  assert.equal(isSameOriginRequest(headers({ "sec-fetch-site": "same-site" }), url), false);
+  assert.equal(isSameOriginRequest(headers({ origin: "https://www.dotviewer.app" }), url), true);
+  assert.equal(isSameOriginRequest(headers({ origin: "https://evil.example" }), url), false);
+  assert.equal(isSameOriginRequest(headers({ origin: "null" }), url), false);
+  assert.equal(isSameOriginRequest(headers({}), url), true);
 });

@@ -100,3 +100,22 @@ export function cookieDomains(hostname: string): string[] {
   if (labels.length < 2 || hostname.includes(":") || /^[\d.]+$/.test(hostname)) return [""];
   return ["", ...labels.slice(0, -1).map((_, index) => `.${labels.slice(index).join(".")}`)];
 }
+
+/**
+ * Whether a request to /api/consent comes from the site's own pages. Another site must not be able
+ * to make a choice for a visitor, so browsers' `Sec-Fetch-Site` has to say same-origin, and without it
+ * `Origin`, when sent, has to match the host. Requests from outside a browser send neither.
+ */
+export function isSameOriginRequest(headers: Headers, requestUrl: string): boolean {
+  const site = headers.get("sec-fetch-site");
+  if (site) return site === "same-origin";
+
+  const origin = headers.get("origin");
+  if (!origin) return true;
+  const host = headers.get("x-forwarded-host") ?? headers.get("host") ?? new URL(requestUrl).host;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
