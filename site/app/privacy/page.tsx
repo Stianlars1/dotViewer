@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuroraBackground } from "../../components/aurora-background";
+import { CookieSettingsButton } from "../../components/cookie-settings-button";
 import { LogoAnimated } from "../../components/logo-animated";
 import { getSiteConfig } from "../../lib/site-config";
 import { CREATOR_NAME, CREATOR_URL, DBHOST_URL } from "../../lib/structured-data";
@@ -9,7 +10,8 @@ import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/privacy" },
-  description: "What the dotViewer app and dotviewer.app collect: the app sends nothing; the website sets no cookies and keeps a small log without identifiers.",
+  description:
+    "What the dotViewer app and dotviewer.app collect: the app sends nothing; the website counts visits without cookies and uses cookies only with your consent.",
   title: "Privacy",
 };
 
@@ -20,6 +22,8 @@ const COOKIELESS_SINCE = "23 September 2026";
 export default function PrivacyPage() {
   const config = getSiteConfig();
   const repoHref = config.repoUrl ?? "https://github.com/Stianlars1/dotViewer";
+  // Google's session cookie is named after the measurement ID without its "G-".
+  const googleCookies = config.googleAnalyticsId ? `_ga, _ga_${config.googleAnalyticsId.replace(/^G-/, "")}` : null;
 
   return (
     <div className={chrome.page}>
@@ -49,7 +53,9 @@ export default function PrivacyPage() {
         <div className={chrome.wrap}>
           <section className={chrome.hero}>
             <div className={chrome.eyebrow}>Privacy</div>
-            <h1 className={chrome.title}>The app sends nothing. The website keeps a small log without identifiers.</h1>
+            <h1 className={chrome.title}>
+              The app sends nothing. The website counts visits without cookies, and uses cookies only if you say yes.
+            </h1>
             <p className={chrome.body}>
               dotViewer is made by <a href={CREATOR_URL}>{CREATOR_NAME}</a> in Norway. This page covers the dotViewer
               app and this website. Last updated {UPDATED}.
@@ -83,7 +89,11 @@ export default function PrivacyPage() {
             <section>
               <h2>This website</h2>
               <ul>
-                <li>No cookies and no local storage, so there is no consent banner.</li>
+                <li>
+                  Until you choose, the site sets no cookies and stores nothing on your device. A banner asks whether it
+                  may use cookies for two purposes, described under <a href="#cookies">Cookies</a>; saying no changes
+                  nothing else about the site.
+                </li>
                 <li>
                   The site is hosted by Vercel, which handles each request, including your IP address, to serve it (
                   <a href="https://vercel.com/legal/privacy-policy">Vercel&apos;s privacy policy</a>).
@@ -94,25 +104,109 @@ export default function PrivacyPage() {
                   <a href="https://vercel.com/docs/analytics/privacy-policy">how it works</a>).
                 </li>
                 <li>
-                  The site also keeps its own log so downloads can be counted. For each page view and download click it
-                  stores the time, the page, the name of the site that linked here (not the full address), campaign tags
-                  in the link, the country (worked out from the IP address, which is not stored), the browser and
+                  The site also keeps its own log so visits and downloads can be counted. For each page view and
+                  download click it stores the time, the page, the name of the site that linked here (not the full
+                  address), campaign tags in the link, the country (worked out from the IP address), the browser and
                   operating system family — such as “Safari on macOS” — and whether the request looks like a bot. For
-                  downloads it adds which link was used and which version. It stores no IP address, no visitor or
-                  session ID, no city and no full browser string.
+                  downloads it adds which link was used and which version. It stores no IP address, no city and no full
+                  browser string.
+                </li>
+                <li>
+                  To count visitors per day, each entry also gets a code made from your IP address and browser together
+                  with a random value that changes every day. The random value is deleted when the day is over; after
+                  that the code can&apos;t be traced back to you or linked to another day.
                 </li>
                 <li>
                   That log is kept in a PostgreSQL database on <a href={DBHOST_URL}>dbHost</a>, another project by the
                   same creator.
                 </li>
                 <li>
-                  Until {COOKIELESS_SINCE} the site set two cookies for this log — <code>dv_vid</code>, a random visitor
-                  ID kept for up to two years, and <code>dv_sid</code> for a single visit — and also stored the city and
-                  the full browser string. It no longer does, and browsers that still have the cookies are told to
-                  delete them on their next visit. The IDs, cities and browser strings already in the log were deleted
-                  the same day.
+                  Until {COOKIELESS_SINCE} the site set two cookies for this log without asking — <code>dv_vid</code>, a
+                  random visitor ID kept for up to two years, and <code>dv_sid</code> for a single visit — and also stored
+                  the city and the full browser string. It stopped that day, browsers that still have those cookies are
+                  told to delete them, and the IDs, cities and browser strings already in the log were deleted.
                 </li>
-                <li>Google Analytics is not used.</li>
+              </ul>
+            </section>
+
+            <section id="cookies">
+              <h2>Cookies</h2>
+              <ul>
+                <li>
+                  Only with your consent, apart from the one that remembers your choice. Choose in the banner, and
+                  change your mind at any time: <CookieSettingsButton className={styles.inlineButton} />.
+                </li>
+              </ul>
+              <div className={styles.tableScroll}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Cookie</th>
+                      <th scope="col">What it is for</th>
+                      <th scope="col">Kept</th>
+                      <th scope="col">Goes to</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <code>dv_consent</code>
+                      </td>
+                      <td>Remembers your choice, including a no. Needed for the banner to work, so set without asking.</td>
+                      <td>12 months</td>
+                      <td>dotViewer</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <code>dv_visitor</code>
+                      </td>
+                      <td>
+                        <strong>dotViewer statistics:</strong> a random ID stored with your visits in the log above, to
+                        see whether people come back and which visits lead to a download.
+                      </td>
+                      <td>13 months</td>
+                      <td>dotViewer</td>
+                    </tr>
+                    {googleCookies ? (
+                      <tr>
+                        <td>
+                          <code>{googleCookies}</code>
+                        </td>
+                        <td>
+                          <strong>Google Analytics:</strong> tells your visits apart in Google&apos;s reports.
+                        </td>
+                        <td>13 months</td>
+                        <td>Google</td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+              <ul>
+                {googleCookies ? (
+                  <li>
+                    With Google Analytics allowed, your browser loads Google&apos;s script and sends Google the pages you
+                    visit here, how you arrived, and your device, browser and approximate location. Google Ireland
+                    Limited is responsible for it in Europe; Google may process the data in the United States, where
+                    Google LLC is certified under the EU–US Data Privacy Framework (
+                    <a href="https://policies.google.com/privacy">Google&apos;s privacy policy</a>). Google&apos;s script is
+                    not loaded at all without your consent.
+                  </li>
+                ) : null}
+                <li>
+                  Turning something off deletes its cookies at once. Browsers that send Global Privacy Control are
+                  treated as if you said no, and the banner is not shown.
+                </li>
+                <li>
+                  The legal basis for these cookies is your consent (GDPR Article 6(1)(a) and section 3-15 of the
+                  Norwegian Electronic Communications Act). The cookieless log and the daily codes rest on a legitimate
+                  interest in knowing how many people visit and download (Article 6(1)(f)).
+                </li>
+                <li>
+                  Visitor IDs are removed from the log after 13 months. Each choice is recorded — when, what you
+                  chose, and the visitor ID if you allowed dotViewer statistics — and kept for 2 years as proof of
+                  consent.
+                </li>
               </ul>
             </section>
 
@@ -139,13 +233,14 @@ export default function PrivacyPage() {
               <h2>Your rights</h2>
               <ul>
                 <li>
-                  The log exists to learn how many people download dotViewer and how they find it — a legitimate
-                  interest under GDPR Article 6(1)(f). Nothing is stored on or read from your device.
+                  The log exists to learn how many people visit and download dotViewer and how they find it. Without
+                  your consent nothing is stored on or read from your device except the cookie that remembers your
+                  choice.
                 </li>
                 <li>
-                  Because the log holds no identifiers, it cannot link rows to you. You can still ask what is kept, or
-                  object, through <a href={`${repoHref}/issues`}>GitHub issues</a> or the{" "}
-                  <a href={CREATOR_URL}>creator&apos;s site</a>.
+                  Without dotViewer statistics the log holds nothing that links rows to you. You can withdraw consent
+                  at any time under Cookie settings, and ask what is kept, or object, through{" "}
+                  <a href={`${repoHref}/issues`}>GitHub issues</a> or the <a href={CREATOR_URL}>creator&apos;s site</a>.
                 </li>
                 <li>
                   You can complain to <a href="https://www.datatilsynet.no/">Datatilsynet</a>, the Norwegian data

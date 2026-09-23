@@ -50,7 +50,7 @@ That is why the site copy repeatedly emphasizes:
 - `/download` - live download landing page with the public installer CTA, checksum link, and version history
 - `/download/latest` - stable redirect to the newest DMG asset
 - `/security` - crawlable trust page with signing, notarization, checksum, privacy, contact, and official-source details
-- `/privacy` - what the app and the site collect (the app: nothing; the site: no cookies, a log without identifiers)
+- `/privacy` - what the app and the site collect (the app: nothing; the site: a cookieless log, cookies only with consent)
 - `/stats` - owner-only download and visitor numbers behind HTTP Basic Auth (`proxy.ts`), `noindex`
 - `/updates/<file>` - stable URL for update archives (`dotViewer-X.Y.Z.dmg`); logs Sparkle / Homebrew / direct and redirects to the GitHub asset
 - `/api/cron/snapshots` - daily Vercel Cron job that snapshots GitHub's per-asset download counts and Homebrew's install counts
@@ -73,15 +73,16 @@ That is why the site copy repeatedly emphasizes:
 
 ## Analytics Stack
 
-The site counts traffic and downloads without cookies, in three layers:
+The site counts traffic and downloads without cookies, in three layers, and asks before using any
+(design: `docs/plans/2026-09-23-consent-banner-design.md`):
 
 - Vercel Web Analytics, mounted once in the root layout through `@vercel/analytics/next` (cookieless)
 - A first-party PostgreSQL log written by `/api/analytics`, `/download/latest` and `/updates/<file>`
 - Daily snapshots of GitHub's per-asset download totals and Homebrew's public install counts (`/api/cron/snapshots`)
 
-Google Analytics / Google tag code is still present but only loads when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set. Turning it on would need a consent banner first (Norway's ekomloven § 3-15).
+The consent banner (`components/consent-banner.tsx`) offers two purposes. *dotViewer statistics* sets `dv_visitor`, a random ID the log stores as `visitor_id`; *Google Analytics* loads Google's script, which is never requested before consent. `/api/consent` sets `dv_consent` (the choice) and `dv_visitor`, and records each choice in `analytics_consents`. The server stores a visitor ID only when the request's own `dv_consent` allows it. Browsers sending Global Privacy Control are treated as a no.
 
-What the first-party log stores per row: time, path, referrer host, UTM fields, country, browser and OS family, device class, `is_bot`, `is_internal` (deployment URLs and localhost), and for downloads `source` (plain identifiers only, otherwise `other`), `channel`, `release_tag`, `asset_kind` and target URL. It stores no IP address, cookie, visitor or session ID, city, or full user agent; the user agent is only read to classify the request. Rows from before the change still hold `visitor_id`, `session_id`, `city`, `region` and `user_agent` until `scripts/backfill-analytics.ts --apply --scrub` removes them.
+What the first-party log stores per row: time, path, referrer host, UTM fields, country, browser and OS family, device class, `is_bot`, `is_internal` (deployment URLs and localhost), `day_visitor` (a hash of the IP address and user agent with a salt that is deleted after its UTC day; page views and website downloads only), `visitor_id` only with consent, and for downloads `source` (plain identifiers only, otherwise `other`), `channel`, `release_tag`, `asset_kind` and target URL. It stores no IP address, city or full user agent. The daily cron clears visitor IDs older than 13 months, consent records older than 2 years and old salts. Identifying values in rows from before 23 September 2026 were deleted with `scripts/backfill-analytics.ts --apply --scrub`.
 
 Writes happen in `after()`, so neither a beacon nor a download redirect waits for the database.
 
@@ -127,11 +128,11 @@ npm test            # node --test on tests/*.test.ts, no extra dependencies
 | `NEXT_PUBLIC_APP_STORE_URL` | Optional public override | Client-visible fallback for the same App Store URL |
 | `DATABASE_URL` | Required for first-party analytics persistence | PostgreSQL connection string used by Drizzle and the runtime analytics route |
 | `NEXT_PUBLIC_GOOGLE_TAG_ID` | Optional | Google tag / GA measurement ID (`G-...` or `GT-...`) for client-side Google tracking |
-| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional legacy alias | Backward-compatible alias for the same Google tag ID |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional | GA4 measurement ID (`G-F0Q1EGB3EM` for dotviewer.app); inlined at build time, so a change needs a redeploy |
 | `STATS_USER`, `STATS_PASSWORD` | Required for `/stats` | Basic Auth credentials; without both the page answers 503 |
 | `CRON_SECRET` | Required for the snapshot cron | Vercel Cron sends it as `Authorization: Bearer …`; without it the route answers 503 |
 
-Google tracking stays off unless one of the Google ID variables is set. No measurement ID is hard-coded in the repo.
+Google Analytics needs one of the Google ID variables and then still loads only for visitors who allow it. Without an ID the banner leaves Google out.
 
 ## Database Bootstrap
 
@@ -146,6 +147,7 @@ The live database was created that way and has no migration history, so changes 
 
 ```bash
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/sql/001-cookieless-analytics-and-snapshots.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/sql/002-consent-and-day-visitors.sql
 ```
 
 Never run `db:push --force` against production. The schema has:
@@ -153,6 +155,8 @@ Never run `db:push --force` against production. The schema has:
 - `analytics_page_views`, `analytics_downloads` - the first-party log
 - `github_asset_snapshots` - GitHub's running download total per release asset, one row per day
 - `homebrew_install_snapshots` - Homebrew's 30/90/365-day install counts for the cask, one row per day
+- `analytics_daily_salts` - today's salt for the day codes (earlier days are deleted)
+- `analytics_consents` - one row per consent choice, as proof of consent
 
 Rows logged before the cookieless change are classified (and, only on request, stripped of identifiers) by:
 

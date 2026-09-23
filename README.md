@@ -283,15 +283,15 @@ Dedicated Gnuplot highlighting supports `.gnuplot`, `.gplt`, `.gnu`, `gnuplotrc`
 
 ## Privacy And Analytics
 
-The app sends nothing: no analytics, no telemetry, no update checks, and the Quick Look extensions that read your files run sandboxed without network access. The website sets no cookies. Details: [dotviewer.app/privacy](https://dotviewer.app/privacy).
+The app sends nothing: no analytics, no telemetry, no update checks, and the Quick Look extensions that read your files run sandboxed without network access. The website counts visits without cookies and asks before using any: a self-made consent banner covers dotViewer's own returning-visitor statistics and Google Analytics. Details: [dotviewer.app/privacy](https://dotviewer.app/privacy).
 
 The marketing site in `site/` counts downloads in three layers:
 
 - Vercel Web Analytics (cookieless) for aggregated traffic and custom events
-- A first-party PostgreSQL log (`analytics_page_views`, `analytics_downloads`) without identifiers: page, referrer host, UTM tags, country, browser and OS family, a bot flag
+- A first-party PostgreSQL log (`analytics_page_views`, `analytics_downloads`): page, referrer host, UTM tags, country, browser and OS family, a bot flag, a visitor code valid for one day, and a visitor ID only with consent
 - Daily snapshots of GitHub's per-asset download counts and Homebrew's public install counts (`/api/cron/snapshots`)
 
-The owner-only `/stats` page (HTTP Basic Auth) puts them side by side. The Google Analytics code only loads when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, which would need a consent banner first.
+The owner-only `/stats` page (HTTP Basic Auth) puts them side by side. Google Analytics loads only after a visitor allows it in the consent banner.
 
 Setup, environment variables and queries live in [site/README.md](site/README.md).
 
