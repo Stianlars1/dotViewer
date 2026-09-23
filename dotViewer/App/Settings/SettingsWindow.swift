@@ -10,6 +10,10 @@ struct SettingsWindow: View {
     @State private var query = ""
     @State private var highlighted: SettingID?
     @State private var model = SettingsModel()
+    @Environment(\.appTextScale) private var textScale
+
+    /// Larger text widens the sidebar; smaller text leaves it as it is.
+    private var sidebarScale: CGFloat { max(1, textScale) }
 
     var body: some View {
         NavigationSplitView {
@@ -17,7 +21,7 @@ struct SettingsWindow: View {
             // sidebar falls back to 140 pt (SettingsWindowLayoutTests).
             SettingsSidebar(selection: $selection, query: query, onOpen: open)
                 .toolbar(removing: .sidebarToggle)
-                .navigationSplitViewColumnWidth(min: 190, ideal: 210, max: 260)
+                .navigationSplitViewColumnWidth(min: 190 * sidebarScale, ideal: 210 * sidebarScale, max: 260 * sidebarScale)
         } detail: {
             let pane = selection ?? .general
             SettingsPaneView(pane: pane)
@@ -63,6 +67,7 @@ struct SettingsSidebar: View {
                         Section {
                             ForEach(SettingsPane.groups[index]) { pane in
                                 Label(pane.title, systemImage: pane.systemImage)
+                                    .appFontWhenScaled()
                                     .tag(pane)
                             }
                         }
@@ -76,12 +81,13 @@ struct SettingsSidebar: View {
                         VStack(alignment: .leading, spacing: 1) {
                             Text(entry.title)
                             Text(entry.pane.title)
-                                .font(.subheadline)
+                                .appFont(.subheadline)
                                 .foregroundStyle(.secondary)
                         }
                     } icon: {
                         Image(systemName: entry.pane.systemImage)
                     }
+                    .appFontWhenScaled()
                     .tag(entry.id)
                 }
             }

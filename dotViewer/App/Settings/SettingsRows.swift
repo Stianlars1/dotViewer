@@ -4,6 +4,27 @@ import SwiftUI
 // label on the leading edge and the control on the trailing edge of each row; these components keep
 // the label side identical everywhere — a title, optionally one secondary line under it.
 
+/// A titled pane section. Its header keeps the Form's own style at the default text size and is a
+/// scaled headline at the others, where the window's font would make it plain body text.
+struct SettingsSection<Content: View>: View {
+    private let title: LocalizedStringKey
+    private let content: Content
+
+    init(_ title: LocalizedStringKey, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+
+    var body: some View {
+        Section {
+            content
+        } header: {
+            Text(title)
+                .appFontWhenScaled(.headline)
+        }
+    }
+}
+
 /// A row label: the setting's name and, when it needs one, a short secondary description.
 struct SettingsLabel: View {
     private let title: String
@@ -19,7 +40,7 @@ struct SettingsLabel: View {
             Text(title)
             if let description {
                 Text(description)
-                    .font(.subheadline)
+                    .appFont(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
@@ -36,6 +57,7 @@ struct SettingsSliderRow: View {
     private let range: ClosedRange<Double>
     private let step: Double
     private let format: (Double) -> String
+    @Environment(\.appTextScale) private var textScale
 
     init(
         _ title: String,
@@ -71,7 +93,7 @@ struct SettingsSliderRow: View {
                 Text(format(value))
                     .monospacedDigit()
                     .foregroundStyle(.secondary)
-                    .frame(minWidth: 58, alignment: .trailing)
+                    .frame(minWidth: 58 * textScale, alignment: .trailing)
             }
         } label: {
             SettingsLabel(title, description: description)

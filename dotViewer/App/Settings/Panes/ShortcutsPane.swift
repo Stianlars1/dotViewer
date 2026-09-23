@@ -20,7 +20,7 @@ struct ShortcutsPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Find in preview") {
+            SettingsSection("Find in preview") {
                 Toggle(isOn: $model.showSearchButton) {
                     SettingsLabel("Find button in preview", description: "Adds a search button to the preview header.")
                 }
@@ -39,7 +39,7 @@ struct ShortcutsPane: View {
                 }
             }
 
-            Section("⌥Space preview") {
+            SettingsSection("⌥Space preview") {
                 Toggle(isOn: $model.previewPanelEnabled) {
                     SettingsLabel(
                         "Preview with ⌥Space",
@@ -105,8 +105,10 @@ struct ShortcutsPane: View {
                 }
             } header: {
                 Text("Permissions")
+                    .appFontWhenScaled(.headline)
             } footer: {
                 Text("Keystrokes are read only after ⌘F or ⌥Space, never stored, and never leave this Mac.")
+                    .appFontWhenScaled(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }

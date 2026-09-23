@@ -6789,9 +6789,15 @@ targets:
       - path: Utilities/StatusProcessRunner.swift
       - path: Utilities/ExtensionStatusChecker.swift
       - path: Utilities/ExtensionConflictScanner.swift
-      # The Settings window and what its panes use, so the sidebar can be tested with real clicks
-      # and the panes rendered offscreen without building (and registering) the app.
+      # The Settings window, the main window's views and what they use, so the sidebar can be tested
+      # with real clicks and the windows rendered offscreen without building (and registering) the app.
+      # Everything in App except dotViewerApp.swift (the @main entry point) and resources.
       - path: App/Settings
+      - path: App/ContentView.swift
+      - path: App/StatusView.swift
+      - path: App/FileTypesView.swift
+      - path: App/AddCustomExtensionSheet.swift
+      - path: Utilities/ExtensionHelper.swift
       - path: App/PreviewFontMenu.swift
       - path: App/AppUIFontSizing.swift
       - path: App/PermissionTroubleshooting.swift

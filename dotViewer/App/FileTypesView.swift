@@ -96,10 +96,11 @@ struct FileTypesView: View {
                     } label: {
                         HStack {
                             Label(category.rawValue, systemImage: category.icon)
-                                .font(.headline)
+                                .labelStyle(ScaledIconLabelStyle())
+                                .appFont(.headline)
                             Spacer()
                             Text("\(types.count)")
-                                .font(.caption)
+                                .appFont(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -138,21 +139,23 @@ struct FileTypesView: View {
                     } label: {
                         HStack {
                             Label(FileTypeCategory.custom.rawValue, systemImage: FileTypeCategory.custom.icon)
-                                .font(.headline)
+                                .labelStyle(ScaledIconLabelStyle())
+                                .appFont(.headline)
                             Spacer()
                             Text("\(customExtensions.count)")
-                                .font(.caption)
+                                .appFont(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
 
                 Text("Custom mappings change highlighting for files that already reach dotViewer. Most common developer file extensions are built in, but completely unknown extensions may still need a shipped file-type update before macOS routes them here.")
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.horizontal)
             }
             .listStyle(.inset(alternatesRowBackgrounds: true))
+            .appFontWhenScaled()
         }
         .navigationTitle("File Types")
         .sheet(isPresented: $showAddCustom) {
@@ -203,6 +206,26 @@ struct FileTypesView: View {
     }
 }
 
+/// A list row's label whose icon column grows with the Interface text size. The list's own label
+/// style keeps the icon column's width while the icon grows, so at large sizes the icon ran into the
+/// name; at the default size that style is used unchanged.
+private struct ScaledIconLabelStyle: LabelStyle {
+    @Environment(\.appTextScale) private var textScale
+
+    func makeBody(configuration: Configuration) -> some View {
+        if textScale == 1 {
+            Label(configuration)
+        } else {
+            HStack(spacing: 6 * textScale) {
+                configuration.icon
+                    .foregroundStyle(.tint)
+                    .frame(width: 20 * textScale)
+                configuration.title
+            }
+        }
+    }
+}
+
 private struct FileTypeRow: View {
     let type: SupportedFileType
     let isEnabled: Bool
@@ -223,7 +246,7 @@ private struct FileTypeRow: View {
                     .fontWeight(.medium)
 
                 Text(type.extensionDisplay)
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
             }
 
@@ -231,7 +254,7 @@ private struct FileTypeRow: View {
 
             if type.isSystemUTI {
                 Text("System")
-                    .font(.caption2)
+                    .appFont(.caption2)
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
                     .background(.blue.opacity(0.1))
@@ -271,17 +294,17 @@ private struct CustomExtensionRow: View {
                 HStack(spacing: 8) {
                     if let filename = customExtension.filenameMatch {
                         Text(filename)
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
                     } else {
                         Text(".\(customExtension.extensionName)")
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
                     }
 
                     if isOverride {
                         Text("OVERRIDE")
-                            .font(.caption2)
+                            .appFont(.caption2)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.blue.opacity(0.1))
@@ -289,7 +312,7 @@ private struct CustomExtensionRow: View {
                             .clipShape(Capsule())
                     } else {
                         Text(customExtension.highlightLanguage.uppercased())
-                            .font(.caption2)
+                            .appFont(.caption2)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
                             .background(.orange.opacity(0.1))
@@ -300,7 +323,7 @@ private struct CustomExtensionRow: View {
 
                 if let overrideName = overriddenTypeName {
                     Text("Overrides built-in: \(overrideName)")
-                        .font(.caption2)
+                        .appFont(.caption2)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -327,6 +350,7 @@ private struct CustomExtensionRow: View {
 
 private struct EditCustomExtensionSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appTextScale) private var textScale
 
     @State private var extensionName: String
     @State private var displayName: String
@@ -351,7 +375,7 @@ private struct EditCustomExtensionSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text(isFilenameMode ? "Edit Filename Mapping" : "Edit Custom Extension")
-                    .font(.headline)
+                    .appFont(.headline)
                 Spacer()
                 Button {
                     dismiss()
@@ -441,7 +465,7 @@ private struct EditCustomExtensionSheet: View {
             }
             .padding()
         }
-        .frame(width: 400, height: 380)
+        .frame(width: 400 * textScale, height: 380 * textScale)
     }
 }
 

@@ -75,7 +75,7 @@ struct PermissionTroubleshooting: View {
         DisclosureGroup(isExpanded: $isExpanded) {
             VStack(alignment: .leading, spacing: 6) {
                 Text(explanation)
-                    .font(.caption)
+                    .appFont(.caption)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
@@ -116,11 +116,11 @@ struct PermissionTroubleshooting: View {
                     "This permission was working before — macOS invalidated it",
                     systemImage: "exclamationmark.triangle.fill"
                 )
-                .font(.caption)
+                .appFont(.caption)
                 .foregroundStyle(.orange)
             } else {
                 Text("Already granted, but still not working?")
-                    .font(.caption)
+                    .appFont(.caption)
             }
         }
     }

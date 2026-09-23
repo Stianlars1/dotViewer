@@ -8,7 +8,7 @@ struct AdvancedPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Preview cache") {
+            SettingsSection("Preview cache") {
                 Toggle(isOn: $model.previewCacheEnabled) {
                     SettingsLabel("Cache rendered previews", description: "Reuses a preview when you reopen the same file soon after.")
                 }
@@ -40,14 +40,14 @@ struct AdvancedPane: View {
                 .settingsAnchor(.clearCache)
             }
 
-            Section("Diagnostics") {
+            SettingsSection("Diagnostics") {
                 Toggle(isOn: $model.performanceLogging) {
                     SettingsLabel("Performance logging", description: "Writes preview timings to the system log.")
                 }
                 .settingsAnchor(.performanceLogging)
             }
 
-            Section("Uninstall") {
+            SettingsSection("Uninstall") {
                 LabeledContent {
                     Button("Uninstall…", role: .destructive) { Self.uninstall() }
                 } label: {

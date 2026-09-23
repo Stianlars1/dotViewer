@@ -621,7 +621,6 @@ public final class SharedSettings: @unchecked Sendable {
         "system",
         "xSmall",
         "small",
-        "medium",
         "large",
         "xLarge",
         "xxLarge",

@@ -7,7 +7,7 @@ struct WindowPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Quick Look window") {
+            SettingsSection("Quick Look window") {
                 Picker(selection: $model.windowSizeMode) {
                     Text("Fixed").tag("fixed")
                     Text("Auto").tag("auto")
@@ -81,8 +81,10 @@ struct WindowPane: View {
                     .settingsAnchor(.markdownRawAlignment)
             } header: {
                 Text("Code and raw text")
+                    .appFontWhenScaled(.headline)
             } footer: {
                 Text("Applies to code files and Markdown's raw view.")
+                    .appFontWhenScaled(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }

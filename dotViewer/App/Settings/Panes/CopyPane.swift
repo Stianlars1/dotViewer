@@ -19,7 +19,7 @@ struct CopyPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Selecting text") {
+            SettingsSection("Selecting text") {
                 Picker(selection: $model.copyBehavior) {
                     ForEach(Self.presets, id: \.id) { preset in
                         Text(preset.title).tag(preset.id)
@@ -30,7 +30,7 @@ struct CopyPane: View {
                 .settingsAnchor(.copyBehavior)
             }
 
-            Section("Copied text") {
+            SettingsSection("Copied text") {
                 Toggle(isOn: $model.includeLineNumbersInCopy) {
                     SettingsLabel(
                         "Include line numbers",

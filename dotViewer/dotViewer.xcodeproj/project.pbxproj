@@ -10,6 +10,7 @@
 		00EC2C2733B1483C1F8EDEC0 /* SettingsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E900FD3C801406DCBF758908 /* SettingsModel.swift */; };
 		02DA01EC1E22D4046ED7B571 /* scala.scm in Resources */ = {isa = PBXBuildFile; fileRef = 93FAF2FE5D188454E650D2C0 /* scala.scm */; };
 		03408A657871B5E87E4C92B9 /* ShortcutsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC035F3E213AB2E97BF4B84 /* ShortcutsPane.swift */; };
+		03711F55BE23359C94370FC1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F26B2C6544012B75082740 /* ContentView.swift */; };
 		03AE24A7824F13C8E3CFA030 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 660D41E28B30126E791C2001 /* scanner.c */; };
 		0449576278CF8DB239B9E24A /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 6856643FDB9C222B9D0862E7 /* parser.c */; };
 		06409C61F8E5D36FE20DB61E /* MarkdownPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E22F74D374EED5FB58A5485 /* MarkdownPane.swift */; };
@@ -115,6 +116,7 @@
 		4C28280B6AD346C5D1D6D973 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 4A652354FAA97CF3B3A0A2DF /* parser.c */; };
 		4C5FF91CFB8BADA534D69599 /* GeneralPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2055D70D1C0191752FA4F0AE /* GeneralPane.swift */; };
 		4CF254B2E77AD4546B9FEEEF /* AnimatedLogoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83F911D4264FEE195F6435FD /* AnimatedLogoView.swift */; };
+		4DD55D35A4E1EAEFB8A82216 /* FileTypesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 318F4F0BB4898CA6BD06F770 /* FileTypesView.swift */; };
 		4E2FD02532A8D768CA65B350 /* toml.scm in Resources */ = {isa = PBXBuildFile; fileRef = 8BC70D59C38219CD20BD0EE9 /* toml.scm */; };
 		4E43E607DC590CBF2A8D8F18 /* GnuplotHighlightingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E9E4AF5812978CA13EDF1D /* GnuplotHighlightingTests.swift */; };
 		4EE5EF9D8D456959CC4009B2 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C821E9C8D577521126C5707F /* scanner.c */; };
@@ -155,6 +157,7 @@
 		6B12BEC9C1473AAC77121C28 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F0F9B57446BBF270B6838217 /* scanner.c */; };
 		6B8BE4ADF082A46EF569CA0B /* regex.scm in Resources */ = {isa = PBXBuildFile; fileRef = D7E359E21E48F94E1FACE881 /* regex.scm */; };
 		6BFAD180BB692038E8895BBB /* json.scm in Resources */ = {isa = PBXBuildFile; fileRef = FC060A4B8651EABB4D49D720 /* json.scm */; };
+		6C950A1F2DC9A6FE7EC75111 /* AddCustomExtensionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0951EE51E03E8716B50F3FF /* AddCustomExtensionSheet.swift */; };
 		6D8CC563034EECE03908B432 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = F5FE103F979F797D6B4182AB /* scanner.c */; };
 		6D946A6B9B80FA1041FC3FC7 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 14619558D20AA956A456A5DD /* scanner.c */; };
 		6EE6C17F5CB0267A3E69657B /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = F51B594E5300E8EF03BD5D01 /* parser.c */; };
@@ -171,6 +174,7 @@
 		7A34D4B22C6D2DAEE1B85817 /* make.scm in Resources */ = {isa = PBXBuildFile; fileRef = AF3984CBF85E85A7BAE9404E /* make.scm */; };
 		7A3C491AB1715D870A7E6FA2 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = E06C6DEF843AABF7499524CF /* Color+Hex.swift */; };
 		7AB902F836ACCBAAB0A96BF1 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = F8ADCB9D1451BDF312E01869 /* README.md */; };
+		7B342DA803B2C91ABD4D43EA /* AppUIFontSizingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 010F066247DCDD8D948C66A9 /* AppUIFontSizingTests.swift */; };
 		7BFC412E54B05A7ACBCDB7D5 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 628FF1D65D974FBC3DBDEC3A /* scanner.c */; };
 		7CACEA663307713DA519B12F /* gap.scm in Resources */ = {isa = PBXBuildFile; fileRef = E2E05DB7F8F7245E5B8621C8 /* gap.scm */; };
 		7E9FBD710D35FFF66491F076 /* cpp.scm in Resources */ = {isa = PBXBuildFile; fileRef = A8ED8FB528C431A42B8E915C /* cpp.scm */; };
@@ -185,6 +189,7 @@
 		87471639BCD893E7C5A16453 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 242EC05AC9E0E268ABD5F63B /* scanner.c */; };
 		874C0A923E3334FD1D3812F9 /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8841D2305C2E3BFA80041 /* tree.c */; };
 		87C51A3479EE483AC134824D /* CopyPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D63F50EE3D7E67CB83C649 /* CopyPane.swift */; };
+		87EFE2F9AB2AC0E3FEF460E8 /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E05B3CBF1B83F9A14DD59A /* StatusView.swift */; };
 		88145B026826D56D387CA837 /* FileLanguageResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E11B23EE4433F80B3F05EB /* FileLanguageResolverTests.swift */; };
 		8825F59EE956BDE3682FBD44 /* ThemePalette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB6EC19A6B26491A5AC3170 /* ThemePalette.swift */; };
 		894BD8D9870184719D4D897F /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = C754DA54F009CB2766DC0291 /* scanner.c */; };
@@ -222,6 +227,7 @@
 		A0D39C36DD0F10D772BB9F84 /* parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 06A3208D305C34B9FDEEC0DB /* parser.c */; };
 		A24F8B95DDCED59E254E3407 /* AppUIFontSizing.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9308234010C55C3231E813 /* AppUIFontSizing.swift */; };
 		A380A6F4A8E021ABE9AAB071 /* stdlib-symbols.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0E41DF4EACEE51C1C314A88D /* stdlib-symbols.txt */; };
+		A3A783D89F791043C8C2B760 /* ExtensionHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A243CB0C0AE3E36D3B19AC47 /* ExtensionHelper.swift */; };
 		A5277C2629A3DA14F16A3A5D /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 86F5D9BA48BB8C5131C336B9 /* scanner.c */; };
 		A533AF7B92C8C4B9D4F0A33A /* tree.c in Sources */ = {isa = PBXBuildFile; fileRef = 8DD8841D2305C2E3BFA80041 /* tree.c */; };
 		A5B796A2BED90D7E1FC98A52 /* AppearancePane.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA091AA7BE6D6600C0E72627 /* AppearancePane.swift */; };
@@ -512,6 +518,7 @@
 /* Begin PBXFileReference section */
 		0062E680606ED1A30AE63D73 /* scanner.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = scanner.c; sourceTree = "<group>"; };
 		009BB63C7C8A81C97FEB54E3 /* parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = parser.h; sourceTree = "<group>"; };
+		010F066247DCDD8D948C66A9 /* AppUIFontSizingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUIFontSizingTests.swift; sourceTree = "<group>"; };
 		01D81D9C209AE01E95F1D8B6 /* parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = parser.c; sourceTree = "<group>"; };
 		026BDE49AFA15CFA40F6C257 /* ruby.scm */ = {isa = PBXFileReference; path = ruby.scm; sourceTree = "<group>"; };
 		03823D49B613FC38A81E10DB /* alloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = alloc.c; sourceTree = "<group>"; };
@@ -2788,6 +2795,7 @@
 			isa = PBXGroup;
 			children = (
 				32E77F6809B16542CB342F97 /* AnimatedLogoViewTests.swift */,
+				010F066247DCDD8D948C66A9 /* AppUIFontSizingTests.swift */,
 				0775AE59AE72EE58BB6E16D1 /* DelimitedTextRendererTests.swift */,
 				57650CF38D886063939CEAEA /* ExtensionStatusTests.swift */,
 				42A2D8BDC8DB414F765A2441 /* FileAttributesTests.swift */,
@@ -3569,21 +3577,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6C950A1F2DC9A6FE7EC75111 /* AddCustomExtensionSheet.swift in Sources */,
 				9BE2242237245BD7A221F6E3 /* AdvancedPane.swift in Sources */,
 				4CF254B2E77AD4546B9FEEEF /* AnimatedLogoView.swift in Sources */,
 				FEE386A0A0FF04143B00591C /* AnimatedLogoViewTests.swift in Sources */,
 				F00A16A4BFEC83BDDE5653DD /* AppUIFontSizing.swift in Sources */,
+				7B342DA803B2C91ABD4D43EA /* AppUIFontSizingTests.swift in Sources */,
 				B16883BD8277BCBAA4612A88 /* AppearancePane.swift in Sources */,
 				4AFFC90D55A769E126F8A480 /* Color+Hex.swift in Sources */,
+				03711F55BE23359C94370FC1 /* ContentView.swift in Sources */,
 				87C51A3479EE483AC134824D /* CopyPane.swift in Sources */,
 				5E0351A9B397D96BFE300A18 /* DelimitedTextRendererTests.swift in Sources */,
 				556193E8EE3326859D24A956 /* ExtensionConflictScanner.swift in Sources */,
+				A3A783D89F791043C8C2B760 /* ExtensionHelper.swift in Sources */,
 				52FB7B09FE3C401A99DE8782 /* ExtensionStatusChecker.swift in Sources */,
 				2B9184E53A3A29C76522DC59 /* ExtensionStatusTests.swift in Sources */,
 				78463844AEDCF3340F111150 /* FileAttributesTests.swift in Sources */,
 				88145B026826D56D387CA837 /* FileLanguageResolverTests.swift in Sources */,
 				CE30C7340922C9649647A93F /* FileTypeRegistryTests.swift in Sources */,
 				F43722B0C8BAD2E8DA6F0CC6 /* FileTypeResolutionTests.swift in Sources */,
+				4DD55D35A4E1EAEFB8A82216 /* FileTypesView.swift in Sources */,
 				89DEA0E34BE0DC92D20F5DBC /* FinderSelection.swift in Sources */,
 				F233DF70D58C87A9492F6855 /* GAPHighlightingTests.swift in Sources */,
 				D527738DFE3D858AEEE72CEA /* GAPTestInputRanges.swift in Sources */,
@@ -3617,6 +3630,7 @@
 				03408A657871B5E87E4C92B9 /* ShortcutsPane.swift in Sources */,
 				736B371C6114155A44D47111 /* StatusProcessRunner.swift in Sources */,
 				39746430044AB2D040BCAF3E /* StatusProcessRunnerTests.swift in Sources */,
+				87EFE2F9AB2AC0E3FEF460E8 /* StatusView.swift in Sources */,
 				3C2C7EAD38244DEEFF78F3B3 /* SystemAppearanceTests.swift in Sources */,
 				465268D4439B4BD3EAD53CF5 /* TextLineUtilitiesTests.swift in Sources */,
 				FC334B0B7C6BB549900EF8B8 /* TextThumbnailRenderer.swift in Sources */,

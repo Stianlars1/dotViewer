@@ -42,6 +42,27 @@ final class SettingsSnapshotTests: XCTestCase {
         }
     }
 
+    /// The Appearance pane and the main window's two views at four Interface text sizes (KI-020).
+    func testRenderTextSizes() throws {
+        guard let path = ProcessInfo.processInfo.environment["DV_SNAPSHOT_DIR"], !path.isEmpty else {
+            throw XCTSkip("Set DV_SNAPSHOT_DIR to render Settings snapshots")
+        }
+        let folder = URL(fileURLWithPath: path, isDirectory: true)
+        try FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true)
+
+        for preset in [AppUIFontSizePreset.xSmall, .system, .large, .xxxLarge] {
+            let settings = try render(
+                SettingsSample(pane: .appearance, query: "").appUIFontSizing(preset.rawValue),
+                appearance: .aqua
+            )
+            try settings.write(to: folder.appendingPathComponent("text-\(preset.rawValue)-settings.png"))
+            let status = try render(MainWindowSample(detail: StatusView()).appUIFontSizing(preset.rawValue), appearance: .aqua)
+            try status.write(to: folder.appendingPathComponent("text-\(preset.rawValue)-status.png"))
+            let types = try render(MainWindowSample(detail: FileTypesView()).appUIFontSizing(preset.rawValue), appearance: .aqua)
+            try types.write(to: folder.appendingPathComponent("text-\(preset.rawValue)-filetypes.png"))
+        }
+    }
+
     private func render<V: View>(_ view: V, appearance: NSAppearance.Name) throws -> Data {
         let host = NSHostingView(rootView: view)
         let size = host.fittingSize
@@ -91,14 +112,31 @@ private struct SettingsSample: View {
 /// The main window's sidebar as `ContentView` builds it, for the footer. Selectable like the real
 /// one: a sidebar list without a selection draws its rows dimmed.
 private struct MainSidebarSample: View {
+    @Environment(\.appTextScale) private var textScale
+
     var body: some View {
         List(selection: .constant("Status")) {
-            Label("Status", systemImage: "checkmark.circle").tag("Status")
-            Label("File Types", systemImage: "doc.text").tag("File Types")
+            Label("Status", systemImage: "checkmark.circle").appFontWhenScaled().tag("Status")
+            Label("File Types", systemImage: "doc.text").appFontWhenScaled().tag("File Types")
         }
         .listStyle(.sidebar)
         .safeAreaInset(edge: .bottom) { SettingsFooterLink() }
-        .frame(width: 200, height: 260)
+        .frame(width: 200 * max(1, textScale), height: 260)
         .background(.background.secondary)
+    }
+}
+
+/// The main window's sidebar and one of its views, side by side, at the window's minimum size.
+private struct MainWindowSample<Detail: View>: View {
+    let detail: Detail
+
+    var body: some View {
+        HStack(spacing: 0) {
+            MainSidebarSample()
+                .frame(height: 640)
+            Divider()
+            detail
+        }
+        .frame(width: 900, height: 640)
     }
 }

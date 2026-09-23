@@ -9,7 +9,7 @@ struct MarkdownPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Opening") {
+            SettingsSection("Opening") {
                 Picker(selection: $model.markdownDefaultMode) {
                     Text("Rendered").tag("rendered")
                     Text("Raw").tag("raw")
@@ -30,7 +30,7 @@ struct MarkdownPane: View {
                 .settingsAnchor(.markdownInlineImages)
             }
 
-            Section("Table of contents") {
+            SettingsSection("Table of contents") {
                 Toggle(isOn: $model.markdownShowTOC) {
                     SettingsLabel("Table of contents button", description: "Adds a contents button to the rendered header.")
                 }
@@ -43,7 +43,7 @@ struct MarkdownPane: View {
                 .settingsAnchor(.markdownTOCOpen)
             }
 
-            Section("Rendered text") {
+            SettingsSection("Rendered text") {
                 LabeledContent {
                     SettingsFontPicker(
                         selection: $model.markdownFont,
@@ -109,7 +109,7 @@ struct MarkdownPane: View {
                 .settingsAnchor(.markdownCustomCSS)
 
                 TextEditor(text: $model.customCSS)
-                    .font(.system(.body, design: .monospaced))
+                    .appFont(.body, design: .monospaced)
                     .scrollContentBackground(.hidden)
                     .padding(6)
                     .frame(minHeight: 160)
@@ -118,8 +118,10 @@ struct MarkdownPane: View {
                     .accessibilityLabel("Custom CSS")
             } header: {
                 Text("Custom CSS")
+                    .appFontWhenScaled(.headline)
             } footer: {
                 Text("Off: your CSS is added after the built-in styles. On: only your CSS is used.")
+                    .appFontWhenScaled(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }

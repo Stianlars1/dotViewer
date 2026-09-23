@@ -8,6 +8,7 @@ struct AddCustomExtensionSheet: View {
     }
 
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.appTextScale) private var textScale
 
     @State private var matchMode: MatchMode = .extensionMode
     @State private var extensionName = ""
@@ -61,7 +62,7 @@ struct AddCustomExtensionSheet: View {
         VStack(spacing: 0) {
             HStack {
                 Text("Add Custom Mapping")
-                    .font(.headline)
+                    .appFont(.headline)
                 Spacer()
                 Button {
                     dismiss()
@@ -107,12 +108,12 @@ struct AddCustomExtensionSheet: View {
                     } footer: {
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Enter the extension without the leading dot. Dots are allowed (e.g. env.local).")
-                                .font(.caption)
+                                .appFont(.caption)
                                 .foregroundStyle(.secondary)
 
                             if showsRoutingWarning {
                                 Text("Quick Look can only use custom mappings for extensions dotViewer already ships with routing support for. Brand-new extensions may still need a dotViewer update before Finder sends them to the extension.")
-                                    .font(.caption)
+                                    .appFont(.caption)
                                     .foregroundStyle(.orange)
                             }
                         }
@@ -128,7 +129,7 @@ struct AddCustomExtensionSheet: View {
                         Text("Filename")
                     } footer: {
                         Text("Exact filename to match (e.g. Jenkinsfile, Caddyfile)")
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
                     }
                 }
@@ -146,7 +147,7 @@ struct AddCustomExtensionSheet: View {
                     Text("Display Name")
                 } footer: {
                     Text("How this file type appears in the list")
-                        .font(.caption)
+                        .appFont(.caption)
                         .foregroundStyle(.secondary)
                 }
 
@@ -161,7 +162,7 @@ struct AddCustomExtensionSheet: View {
                     Text("Syntax Highlighting")
                 } footer: {
                     Text("Choose which language to use for syntax highlighting")
-                        .font(.caption)
+                        .appFont(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
@@ -185,7 +186,7 @@ struct AddCustomExtensionSheet: View {
             }
             .padding()
         }
-        .frame(width: 420, height: 500)
+        .frame(width: 420 * textScale, height: 500 * textScale)
         .alert("Error", isPresented: $showError) {
             Button("OK") {}
         } message: {

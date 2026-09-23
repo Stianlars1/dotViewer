@@ -14,6 +14,7 @@ struct StatusView: View {
     @State private var resolveResult: String?
     @State private var resolveFailed = false
     @State private var pointer = PointerLocation()
+    @Environment(\.appTextScale) private var textScale
 
     var body: some View {
         ScrollView {
@@ -21,10 +22,10 @@ struct StatusView: View {
                 VStack(spacing: 12) {
                     AnimatedLogoView(size: 96, pointer: pointer)
                     Text("dotViewer")
-                        .font(.largeTitle)
                         .fontWeight(.bold)
+                        .appFont(.largeTitle)
                     Text("Quick Look for dotfiles, source code & markdown")
-                        .font(.subheadline)
+                        .appFont(.subheadline)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.top, 20)
@@ -36,14 +37,14 @@ struct StatusView: View {
                             
                             HStack(spacing: 12) {
                                 Image(systemName: "puzzlepiece.extension")
-                                    .font(.title2)
+                                    .appFont(.title2)
                                     .foregroundStyle(.blue)
                                 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text("Enable Quick Look Extension")
-                                        .font(.headline)
+                                        .appFont(.headline)
                                     Text("Follow these steps to enable dotViewer")
-                                        .font(.caption)
+                                        .appFont(.caption)
                                         .foregroundStyle(.secondary)
                                 }
                                 
@@ -59,9 +60,9 @@ struct StatusView: View {
 
                         VStack(alignment: .leading, spacing: 4) {
                             Text(extensionStatus.title)
-                                .font(.headline)
+                                .appFont(.headline)
                             Text(extensionStatus.description)
-                                .font(.caption)
+                                .appFont(.caption)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
@@ -89,11 +90,11 @@ struct StatusView: View {
                         openSettingsButton
                     }
                 }
-                .frame(maxWidth: 420)
+                .frame(maxWidth: 420 * textScale)
 
                 VStack(spacing: 16) {
                     Text("Quick Stats")
-                        .font(.headline)
+                        .appFont(.headline)
 
                     HStack(spacing: 24) {
                         StatCard(
@@ -123,7 +124,7 @@ struct StatusView: View {
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text("How to Use")
-                        .font(.headline)
+                        .appFont(.headline)
 
                     VStack(alignment: .leading, spacing: 8) {
                         HowToRow(number: 1, text: "Select any code file in Finder")
@@ -133,23 +134,23 @@ struct StatusView: View {
                     .padding()
                     .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
                 }
-                .frame(maxWidth: 420)
+                .frame(maxWidth: 420 * textScale)
 
                 Spacer(minLength: 20)
 
                 HStack {
                     Text("v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "_x.x")")
-                        .font(.caption)
+                        .appFont(.caption)
                         .foregroundStyle(.secondary)
 
                     Spacer()
 
                     Link(destination: URL(string: "https://github.com/stianlars1/dotViewer")!) {
                         Label("GitHub", systemImage: "arrow.up.right.square")
-                            .font(.caption)
+                            .appFont(.caption)
                     }
                 }
-                .frame(maxWidth: 420)
+                .frame(maxWidth: 420 * textScale)
             }
             .padding(32)
         }
@@ -174,10 +175,10 @@ private extension StatusView {
         ZStack {
             Circle()
                 .fill(extensionStatus.backgroundColor)
-                .frame(width: 56, height: 56)
+                .frame(width: 56 * textScale, height: 56 * textScale)
 
             Image(systemName: extensionStatus.icon)
-                .font(.system(size: 24))
+                .appFont(size: 24)
                 .foregroundStyle(extensionStatus.iconColor)
                 .symbolEffect(.pulse, options: .repeating, isActive: extensionStatus == .checking)
         }
@@ -243,7 +244,7 @@ private extension StatusView {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("Extension Conflicts")
-                    .font(.headline)
+                    .appFont(.headline)
 
                 Spacer()
 
@@ -273,20 +274,20 @@ private extension StatusView {
                     HStack(spacing: 10) {
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                            .font(.title3)
+                            .appFont(.title3)
                         VStack(alignment: .leading, spacing: 2) {
                             Text("No conflicts detected")
-                                .font(.subheadline)
                                 .fontWeight(.medium)
+                                .appFont(.subheadline)
                             Text("dotViewer has priority for all its registered file types.")
-                                .font(.caption)
+                                .appFont(.caption)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 } else {
                     if !conflicts.isEmpty {
                         Text("These Quick Look extensions may override dotViewer for some file types:")
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
 
                         ForEach(conflicts) { ext in
@@ -318,7 +319,7 @@ private extension StatusView {
                         if !conflicts.isEmpty { Divider() }
 
                         Text("Old dotViewer registrations from previous builds:")
-                            .font(.caption)
+                            .appFont(.caption)
                             .foregroundStyle(.secondary)
 
                         ForEach(staleRegistrations) { ext in
@@ -346,7 +347,7 @@ private extension StatusView {
 
                 if let result = resolveResult {
                     Text(result)
-                        .font(.caption)
+                        .appFont(.caption)
                         .foregroundStyle(resolveFailed ? .orange : .green)
                         .transition(.opacity)
                 }
@@ -354,21 +355,21 @@ private extension StatusView {
             .padding()
             .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
         }
-        .frame(maxWidth: 420)
+        .frame(maxWidth: 420 * textScale)
     }
 
     func conflictRow(_ ext: QLExtensionInfo) -> some View {
         HStack(spacing: 10) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(.orange)
-                .font(.body)
+                .appFont(.body)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(ext.appName)
-                    .font(.subheadline)
                     .fontWeight(.medium)
+                    .appFont(.subheadline)
                 Text(ext.id)
-                    .font(.caption2)
+                    .appFont(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.middle)
@@ -391,13 +392,13 @@ private extension StatusView {
         HStack(spacing: 10) {
             Image(systemName: "clock.arrow.circlepath")
                 .foregroundStyle(.gray)
-                .font(.body)
+                .appFont(.body)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text("dotViewer \(ext.version)")
-                    .font(.subheadline)
+                    .appFont(.subheadline)
                 Text(ext.path)
-                    .font(.caption2)
+                    .appFont(.caption2)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.head)
@@ -413,22 +414,23 @@ private struct StatCard: View {
     let label: String
     let icon: String
     let color: Color
+    @Environment(\.appTextScale) private var textScale
 
     var body: some View {
         VStack(spacing: 8) {
             Image(systemName: icon)
-                .font(.title2)
+                .appFont(.title2)
                 .foregroundStyle(color)
 
             Text(value)
-                .font(.title)
                 .fontWeight(.bold)
+                .appFont(.title)
 
             Text(label)
-                .font(.caption)
+                .appFont(.caption)
                 .foregroundStyle(.secondary)
         }
-        .frame(width: 100)
+        .frame(width: 100 * textScale)
         .padding()
         .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 12))
     }
@@ -437,18 +439,19 @@ private struct StatCard: View {
 private struct HowToRow: View {
     let number: Int
     let text: String
+    @Environment(\.appTextScale) private var textScale
 
     var body: some View {
         HStack(spacing: 12) {
             Text("\(number)")
-                .font(.caption)
                 .fontWeight(.bold)
+                .appFont(.caption)
                 .foregroundStyle(.white)
-                .frame(width: 20, height: 20)
+                .frame(width: 20 * textScale, height: 20 * textScale)
                 .background(.blue, in: Circle())
 
             Text(text)
-                .font(.subheadline)
+                .appFont(.subheadline)
         }
     }
 }
@@ -456,18 +459,19 @@ private struct HowToRow: View {
 private struct SetupStepRow: View {
     let step: Int
     let text: String
+    @Environment(\.appTextScale) private var textScale
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             Text("\(step)")
-                .font(.caption)
                 .fontWeight(.bold)
+                .appFont(.caption)
                 .foregroundStyle(.white)
-                .frame(width: 20, height: 20)
+                .frame(width: 20 * textScale, height: 20 * textScale)
                 .background(.blue, in: Circle())
 
             Text(text)
-                .font(.subheadline)
+                .appFont(.subheadline)
                 .foregroundStyle(.primary)
         }
     }

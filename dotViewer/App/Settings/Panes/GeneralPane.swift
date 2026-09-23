@@ -6,7 +6,7 @@ struct GeneralPane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Preview") {
+            SettingsSection("Preview") {
                 Toggle(isOn: $model.showFileInfoHeader) {
                     SettingsLabel(
                         "File info header",
@@ -16,7 +16,7 @@ struct GeneralPane: View {
                 .settingsAnchor(.fileInfoHeader)
             }
 
-            Section("Unknown file types") {
+            SettingsSection("Unknown file types") {
                 Toggle(isOn: $model.previewUnknownFiles) {
                     SettingsLabel(
                         "Preview unknown file types",
@@ -34,7 +34,7 @@ struct GeneralPane: View {
                 .settingsAnchor(.forceTextForUnknown)
             }
 
-            Section("Large files") {
+            SettingsSection("Large files") {
                 SettingsSliderRow(
                     "Maximum file size",
                     description: "Larger files are cut off in the preview.",

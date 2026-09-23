@@ -11,7 +11,7 @@ struct AppearancePane: View {
     var body: some View {
         @Bindable var model = model
         Form {
-            Section("Theme") {
+            SettingsSection("Theme") {
                 ThemePreview(
                     theme: model.theme,
                     fontFamily: model.codeFontFamily,
@@ -29,7 +29,7 @@ struct AppearancePane: View {
                 .settingsAnchor(.theme)
             }
 
-            Section("Code") {
+            SettingsSection("Code") {
                 LabeledContent {
                     SettingsFontPicker(
                         selection: $model.codeFontFamily,
@@ -55,13 +55,13 @@ struct AppearancePane: View {
                 .settingsAnchor(.wordWrap)
             }
 
-            Section("This app") {
+            SettingsSection("This app") {
                 Picker(selection: $model.interfaceTextSize) {
                     ForEach(AppUIFontSizePreset.allCases) { preset in
                         Text(preset.title).tag(preset.rawValue)
                     }
                 } label: {
-                    SettingsLabel("Interface text size", description: "dotViewer's own windows. System follows macOS.")
+                    SettingsLabel("Interface text size", description: "Text in dotViewer's own windows, not in previews.")
                 }
                 .settingsAnchor(.interfaceTextSize)
             }
