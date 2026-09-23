@@ -6,16 +6,19 @@ import {
   integer,
   pgTable,
   primaryKey,
+  smallint,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
 
-// Columns written since the cookieless change (2026-09): coarse facts derived at insert time.
-// The older identifying columns (visitor_id, session_id, city, region, user_agent, request_id) are
-// no longer written; they stay in the schema until the owner decides about the existing rows.
+// Columns written since the cookieless change (2026-09): coarse facts derived at insert time, a
+// code for the visitor that is valid for one UTC day (lib/analytics/day-visitor.ts) and, only with
+// the visitor's consent, visitor_id. The older identifying columns (session_id, city, region,
+// user_agent, request_id) are no longer written; their old values were deleted on 2026-09-23.
 const classification = () => ({
   browser: varchar("browser", { length: 32 }),
+  dayVisitor: varchar("day_visitor", { length: 16 }),
   device: varchar("device", { length: 16 }),
   isBot: boolean("is_bot"),
   isInternal: boolean("is_internal"),
@@ -50,6 +53,7 @@ export const analyticsPageViews = pgTable(
   },
   (table) => ({
     createdAtIdx: index("analytics_page_views_created_at_idx").on(table.createdAt),
+    dayVisitorIdx: index("analytics_page_views_day_visitor_idx").on(table.createdAt, table.dayVisitor),
     pathIdx: index("analytics_page_views_path_idx").on(table.path),
     visitorIdx: index("analytics_page_views_visitor_id_idx").on(table.visitorId),
   }),
@@ -81,6 +85,7 @@ export const analyticsDownloads = pgTable(
   },
   (table) => ({
     createdAtIdx: index("analytics_downloads_created_at_idx").on(table.createdAt),
+    dayVisitorIdx: index("analytics_downloads_day_visitor_idx").on(table.createdAt, table.dayVisitor),
     sourceIdx: index("analytics_downloads_source_idx").on(table.source),
     visitorIdx: index("analytics_downloads_visitor_id_idx").on(table.visitorId),
   }),
@@ -117,7 +122,33 @@ export const homebrewInstallSnapshots = pgTable(
   }),
 );
 
+// Today's salt for the day codes. Earlier days are deleted, so their codes cannot be recomputed.
+export const analyticsDailySalts = pgTable("analytics_daily_salts", {
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+  day: date("day", { mode: "string" }).primaryKey(),
+  salt: text("salt").notNull(),
+});
+
+// One row per consent choice, as proof of consent; visitor_id only when statistics was accepted.
+export const analyticsConsents = pgTable(
+  "analytics_consents",
+  {
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
+    google: boolean("google").notNull(),
+    id: bigserial("id", { mode: "number" }).primaryKey(),
+    source: varchar("source", { length: 16 }).notNull(),
+    statistics: boolean("statistics").notNull(),
+    version: smallint("version").notNull(),
+    visitorId: varchar("visitor_id", { length: 64 }),
+  },
+  (table) => ({
+    createdAtIdx: index("analytics_consents_created_at_idx").on(table.createdAt),
+  }),
+);
+
 export const analyticsSchema = {
+  analyticsConsents,
+  analyticsDailySalts,
   analyticsDownloads,
   analyticsPageViews,
   githubAssetSnapshots,
