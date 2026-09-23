@@ -13,49 +13,41 @@ the daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/privacy`, and `/st
 scrubbed on the owner's request the same day. Details: §10 of
 `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`.
 
-**Consent banner: built, not live.** Branch `feat/consent-banner` (pushed, 13 commits on `main`): a
-cookie card with equal Reject/Accept, a daily visitor code for everyone without cookies, a visitor-ID
-cookie and Google Analytics (`G-F0Q1EGB3EM`) only with consent, consent records, retention in the cron,
-a Cookies section on `/privacy`, and a Visitors section on `/stats`. Spec, rollout and the local
-end-to-end verification: `docs/plans/2026-09-23-consent-banner-design.md`; task plan:
-`docs/plans/2026-09-23-consent-banner-plan.md`. Preview (behind Vercel login):
-https://dotviewer-git-feat-consent-banner-stians-applications.vercel.app — it has the GA ID but no
-database, so nothing is logged from it.
+**Consent banner is live** (2026-09-23, `main` at `23a96da`): a cookie card with equal Reject/Accept,
+a daily visitor code for everyone without cookies, a visitor-ID cookie and Google Analytics
+(`G-F0Q1EGB3EM`) only with consent, consent records, retention in the cron, a Cookies section on
+`/privacy`, and a Visitors section on `/stats`. `002` is applied to production and
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` is set for Preview and Production. Spec, rollout and the local and live
+verification: `docs/plans/2026-09-23-consent-banner-design.md`; task plan:
+`docs/plans/2026-09-23-consent-banner-plan.md`. **Roll back only with Vercel's Instant Rollback** —
+redeploying a commit from before the banner would bake the GA ID into code that loads GA for everyone.
 
 ## Next steps
 
-1. **Owner: click through the preview** — the card on first visit, Reject / Accept / Choose…, Cookie
-   settings in the footer and on `/privacy`, the cookie table at `/privacy#cookies`.
-2. **After the owner's OK, in this order** (spec, Rollout):
-   1. Apply `site/db/sql/002-consent-and-day-visitors.sql` to production — additive and idempotent.
-      Pull the env to a private scratch file, run it with node + `pg`, delete the file. Never
-      `db:push --force` on production.
-   2. From `site/`, after confirming the project slug is `dotviewer`:
-      `vercel env add NEXT_PUBLIC_GA_MEASUREMENT_ID production` (value `G-F0Q1EGB3EM`). It must exist
-      before the production build: it is inlined at build time and `/privacy` is prerendered. Not
-      earlier either: the code on `main` loads GA for everyone whenever it is set.
-   3. Fast-forward `main` to `feat/consent-banner` and push; Vercel deploys production.
-   4. Verify live on `www.dotviewer.app` (the apex answers 308): spec, Rollout step 4.
-3. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
+1. **Owner: look at `/stats` → Visitors.** Consent records 1 and 2 (2026-09-23 11:53 and 11:54 UTC) are
+   Claude's live test (Accept, then withdraw everything); they count in the 30-day consent shares.
+   Delete them if you prefer (`DELETE FROM analytics_consents WHERE id IN (1, 2)`) — ask first. The
+   test page views are logged as bots and never count. The first cron run after the deploy is the
+   first with retention; its JSON now carries `retention`.
+2. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
    may settle it; ask kiryph to try 1.5.8 on the Intel Mac mini (macOS 15.7.7) — needs the owner's OK
    to post.
-4. Stats phase 2 (Sparkle 2.10 in 1.6.0) needs the EdDSA key from the owner first (plan §5.3). Feed URLs
+3. Stats phase 2 (Sparkle 2.10 in 1.6.0) needs the EdDSA key from the owner first (plan §5.3). Feed URLs
    must use `www.dotviewer.app`: the apex answers 308.
-5. Optional corpus check for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
+4. Optional corpus check for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
    `examples/*.gp` (needs a download — ask first).
-6. Still present: the 4 merged remote branches of PRs #2, #26, #27 and #30, and the unmerged
+5. Still present: the 4 merged remote branches of PRs #2, #26, #27 and #30, and the unmerged
    `codex/v1.1.0-victor-feedback`, `v1-legacy` and `claude/research-quicklook-performance-7zcd5`
    (superseded or v1 history — keep or archive). Two stale Quick Look registrations from old Debug
    builds (1.5.4 in DerivedData, 1.5.6 in an old session scratchpad) show under Status → Extension
    Conflicts; "Resolve All" there removes them.
-7. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
+6. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
    right-click Quick Action for ⌥Space; arrow-key navigation in the panel; Shift+arrow selection in the
    search field; no App-target tests for `SearchBridgeServer` / `SearchKeyInterceptor` /
    `PreviewPanelController`.
 
 ## Open questions
 
-- The owner's OK on the consent preview (step 1).
 - Which region is the dbHost database in (for `/privacy`)?
 - Sparkle: create the EdDSA key (the owner keeps it; Claude must never see it).
 
@@ -118,11 +110,12 @@ to `/Applications` — Developer ID signed, so the TCC grant survives.
 - `dotViewer/App/PermissionTroubleshooting.swift` — the TCC explanation and reset command
 - `docs/research/quicklook-search-keyboard-2026-08.md` — every measurement, including dead ends
 - `KNOWN_ISSUES.md` — KI-009 now records the real ⌘C fix, not just the workarounds; KI-019 is #31
-- `dotViewer/App/Settings/SettingsWindow.swift` + `dotViewerTests/SettingsSidebarTests.swift` — #31 on
-  `feat/settings-window`, where the tab bar is replaced by a native sidebar list (tests send real mouse
-  events to an ordered-in offscreen window; SwiftUI ignores clicks on a never-shown window, and the
-  mouse-up must be queued before the down because `NSTableView` tracks the click itself). On `main`
-  it is still `App/SettingsTabPage.swift` + `SettingsTabBarTests.swift`
+- `dotViewer/App/Settings/SettingsWindow.swift` + `dotViewer/dotViewerTests/SettingsSidebarTests.swift` —
+  #31: the tab bar is replaced by a native sidebar list since 1.5.8 (tests send real mouse events to an
+  ordered-in offscreen window; SwiftUI ignores clicks on a never-shown window, and the mouse-up must be
+  queued before the down because `NSTableView` tracks the click itself)
+- `site/lib/consent/`, `site/components/consent-banner.tsx`, `site/app/api/consent/route.ts` — the
+  website's consent banner; `site/lib/stats/visitors.ts` — the `/stats` Visitors figures
 - `dotViewer/Shared/FileTypeRegistry.swift` `isExtensionEnabled` — #24 custom-mapping precedence
 - `dotViewer/Shared/GnuplotSourceDetector.swift` + `dotViewerTests/GnuplotSourceDetectorTests.swift` — #29
 

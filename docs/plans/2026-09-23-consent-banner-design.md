@@ -1,7 +1,8 @@
 # Consent banner and visitor statistics — design
 
-**Status (2026-09-23):** built on `feat/consent-banner` and verified locally end to end (see
-Verification); the branch preview is ready. Production waits for the owner's OK on the preview.
+**Status (2026-09-23):** live. The owner approved the preview; `002` applied to production, the GA
+variable added for Production, `main` fast-forwarded to `23a96da` and deployed, then verified live
+(see Verification).
 
 Approved in conversation on 2026-09-23 (three parts, each confirmed). Reverses the "no banner"
 recommendation of §6.2 in `2026-09-22-usage-stats-telemetry-updates.md` at the owner's request: the
@@ -149,7 +150,7 @@ The "no cookies" statements and the page description are rewritten; the last-upd
    withdrawing; GA requested only after consent; consent rows recorded; day codes on new rows; the
    Visitors section on `/stats`.
 
-## Verification (local, 2026-09-23)
+## Verification (local, before the rollout)
 
 `next dev` against a throwaway Postgres 17 with `001` and `002` applied, `NEXT_PUBLIC_GA_MEASUREMENT_ID`
 set, in the built-in browser. Its user agent contains `Claude/`, so its own rows are logged as bots.
@@ -172,6 +173,26 @@ set, in the built-in browser. Its user agent contains `Claude/`, so its own rows
 - `/stats` Visitors with seeded sample rows: every figure (today, 7-day average, visited-and-downloaded,
   consent shares, sources, returning per week, downloads by visit) matched a hand count.
 - `npm test` 50/50, `npm run typecheck`, `npm run build` pass.
+
+## Verification (live, 2026-09-23)
+
+- `002` on production: `day_visitor` on both log tables, both new tables and all three indexes present;
+  page views (805) and downloads (225) unchanged.
+- HTTP on `www.dotviewer.app`: `/` sets no cookie and its HTML mentions no Google host; `/privacy` lists
+  `_ga_F0Q1EGB3EM`, so the variable was present at build time; a cross-site `POST /api/consent` gets
+  403; `/stats` asks for the login (401).
+- Built-in browser (logged as a bot): first visit shows the card with no cookies and no request to
+  Google. Accept sets `dv_consent` (this host only, 365 days) and GA's `_ga` and `_ga_F0Q1EGB3EM` on
+  `.dotviewer.app` (395 days), loads gtag.js and sends a collect hit. Cookie settings on `/privacy`
+  opens with both switches on; switching both off and saving deletes the `.dotviewer.app` GA cookies,
+  removes the script, clears `window.gtag` and sets `ga-disable-<id>`. The next page load keeps the
+  card closed and makes no request to Google.
+- Database: consent records 1 (card, both allowed, with a visitor ID) and 2 (settings, both off, no ID)
+  are these test choices. Page views after the deploy carry day codes; the `/privacy` view after Accept
+  carries record 1's visitor ID and the view after withdrawing carries none; one salt row, today's.
+
+Rolling back: use Vercel's Instant Rollback, which reuses an earlier build. Do not redeploy a commit
+from before this change: the rebuild would bake the GA ID into code that loads GA for everyone.
 
 ## Out of scope
 
