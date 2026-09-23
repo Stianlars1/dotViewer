@@ -9,6 +9,11 @@
 - The main window's sidebar keeps Status and File Types, with a Settings link and its ⌘, shortcut at the bottom.
 - The tab bar that lost mouse clicks on an Intel Mac with macOS 15 is gone: panes are rows of a native sidebar list ([#31](https://github.com/Stianlars1/dotViewer/issues/31)).
 
+### Fixed
+
+- Settings → Appearance → Interface text size works. It never changed anything before, because macOS ignores the Dynamic Type sizes it relied on. Text in dotViewer's own windows now runs from 11 pt (Extra Small) to 21 pt (XXX Large) around the default 13 pt, and changes the moment you pick a size. Controls keep their usual size, as they do with macOS's own per-app text size. Medium, which was the same size as the default, is now Default. Previews are not affected; they have their own font size.
+- The main window remembers its size and position across updates. Every earlier version saved them under a new name, so each update forgot them and left the old entry in dotViewer's preferences; those entries are removed.
+
 ## v1.5.7 (2026-09-22)
 
 ### Changed

@@ -436,16 +436,18 @@ Implementation: `SharedSettings.copyBehavior` (App Group synced) → `PreviewInf
 | Field | Value |
 |-------|-------|
 | **Priority** | Medium |
-| **Status** | Open — needs a decision (found 2026-09-23) |
+| **Status** | Fixed in 1.5.8 (2026-09-23) |
 
-**Impact**: Settings → Appearance → Interface text size (added 2026-02-17 as "App UI Text Size") changes nothing. dotViewer's windows look the same from Extra Small to XXX Large.
+**Impact**: Settings → Appearance → Interface text size (added 2026-02-17 as "App UI Text Size") changed nothing. dotViewer's windows looked the same from Extra Small to XXX Large.
 
-**Root cause**: The setting applies SwiftUI's `.dynamicTypeSize` at the root of each window (`App/AppUIFontSizing.swift`). On macOS that modifier does not change text layout: body, headline and toggle text measure 95 × 58 pt at every size from `.xSmall` to `.accessibility5` (macOS 26.4). The research that chose it (`docs/research/preview-width-and-app-font-size-research.md`, Approach D) assumed semantic text would scale; that was never checked. The installed 1.5.8 build confirmed it: switching to XXX Large left every label in both windows the same size.
+**Root cause**: The setting applied SwiftUI's `.dynamicTypeSize` at the root of each window. On macOS that modifier does not change text layout: body, headline and toggle text measure 95 × 58 pt at every size from `.xSmall` to `.accessibility5` (macOS 26.4). The research that chose it (`docs/research/preview-width-and-app-font-size-research.md`, Approach D) assumed semantic text would scale; that was never checked.
 
-**Measured alternatives** (a two-row grouped `Form`, 131 pt tall):
-- `.controlSize(.large)` → 138 pt, `.controlSize(.extraLarge)` → 146 pt: controls grow, text barely.
-- A root `.font(.system(size: 16))` → 136 pt: only text without its own font changes.
+**Fix** (`App/AppUIFontSizing.swift`): the app scales its own fonts, text only.
+- Each preset is a body size: 11, 12, 13 (Default), 15, 17, 19, 21 pt. The scale is size ÷ 13.
+- `appUIFontSizing(_:)` puts `appTextScale` in the environment and gives the window the scaled body font, which reaches every text without a style of its own (Form labels, values).
+- Styled text uses `appFont(_:)` instead of `font(_:)`; the text styles' macOS sizes and weights are in `Font.TextStyle.macOSMetrics` (tested against `NSFont.preferredFont(forTextStyle:)`).
+- List rows (the List sets their font, out of reach of the window's) and Form section headers and footers (the window's font would make them plain body text) use `appFontWhenScaled(_:)`, which leaves the system's styling alone at the default size.
+- Controls keep their size. Any `controlSize`, even a no-op environment write, turns the Form's mini switches into regular ones, and macOS's own per-app text size doesn't scale controls either.
+- At Default every Settings pane renders pixel-identical to 1.5.7 (`SettingsSnapshotTests`). `AppUIFontSizingTests` checks the presets, the metrics and that every larger preset makes text taller. Verified in the installed app with the AX driver: switching sizes resizes text in both windows at once.
+- `medium`, the same size as the default, is no longer an option; SharedSettings reads it as `system`.
 
-**Options**:
-1. Remove the setting. It has never worked, so nobody loses anything; the stored value is harmless.
-2. Real scaling: a font-scale environment value read by a few helpers that replace the `.font(.body)`, `.font(.subheadline)` … calls in app views, plus `.controlSize` for the larger steps. Medium effort, touches every app view (the research's Approach E, rejected at the time as risky).

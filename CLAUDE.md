@@ -93,6 +93,8 @@ Settings UI for the extension (font families, font size, theme). Source in `dotV
 - `Settings/SettingsModel.swift` — `@Observable` model; every property writes through to `SharedSettings`
 - `Settings/SettingsRows.swift` — shared rows (label + description, slider, status, font picker) and `settingsPaneStyle()`
 - `Settings/SettingsCatalog.swift` — every setting's `SettingID`, pane, title and search keywords. A new setting needs a catalog entry and `.settingsAnchor(id)` on its row, or search can't find it
+- `Settings/SettingsRows.swift` also has `SettingsSection("Title")`, which every titled pane section uses so its header stays bold at every text size
+- `AppUIFontSizing.swift` — Interface text size. macOS ignores Dynamic Type, so app views scale their own text: use `.appFont(.caption)` instead of `.font(.caption)`, `.appFontWhenScaled()` on List rows and on custom Form section headers and footers, and multiply fixed text-bearing widths by `@Environment(\.appTextScale)`. `AppUIFontSizingTests` and the `testRenderTextSizes` snapshots cover it
 - `StatusView.swift` — shows extension registration status + extension conflict scanner UI
 - `Utilities/ExtensionHelper.swift`, `ExtensionStatusChecker.swift`
 - `Utilities/ExtensionConflictScanner.swift` — discovers competing Quick Look extensions via `pluginkit`, offers per-extension disable and one-click "Resolve All"
