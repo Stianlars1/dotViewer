@@ -105,8 +105,9 @@ export default function PrivacyPage() {
                 </li>
                 <li>
                   The site also keeps its own log so visits and downloads can be counted. For each page view and
-                  download click it stores the time, the page, the name of the site that linked here (not the full
-                  address), campaign tags in the link, the country (worked out from the IP address), the browser and
+                  download click it stores the time, the page (without anything after “?” in its address), the name of
+                  the site that linked here (not the full address), campaign tags in the link, the country (worked out
+                  from the IP address), the browser and
                   operating system family — such as “Safari on macOS” — and whether the request looks like a bot. For
                   downloads it adds which link was used and which version. It stores no IP address, no city and no full
                   browser string.
@@ -123,8 +124,10 @@ export default function PrivacyPage() {
                 <li>
                   Until {COOKIELESS_SINCE} the site set two cookies for this log without asking — <code>dv_vid</code>, a
                   random visitor ID kept for up to two years, and <code>dv_sid</code> for a single visit — and also stored
-                  the city and the full browser string. It stopped that day, browsers that still have those cookies are
-                  told to delete them, and the IDs, cities and browser strings already in the log were deleted.
+                  the city, the full browser string, the full address of the site that linked here and the whole page
+                  address. It stopped that day, browsers that still have those cookies are told to delete them, and the
+                  IDs, cities, browser strings, linking addresses and the parts of page addresses after “?” already in
+                  the log were deleted.
                 </li>
               </ul>
             </section>

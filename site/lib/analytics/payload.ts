@@ -45,6 +45,15 @@ function text(fields: Fields, key: string, max: number): string | null {
   return trimmed ? trimmed.slice(0, max) : null;
 }
 
+/**
+ * An address without its query string and fragment. Those can carry per-click IDs such as fbclid or
+ * gclid; campaign tags arrive in their own fields, so nothing the log keeps is lost.
+ */
+function withoutQuery(value: string): string {
+  const end = value.search(/[?#]/);
+  return end === -1 ? value : value.slice(0, end);
+}
+
 function isWebUrl(value: string): boolean {
   try {
     const url = new URL(value);
@@ -60,10 +69,10 @@ function parsePageView(fields: Fields): PageViewEvent | null {
   if (!path?.startsWith("/") || !url || !isWebUrl(url)) return null;
 
   return {
-    path,
+    path: withoutQuery(path),
     referrerHost: referrerHost(text(fields, "referrer", 2048)),
     title: text(fields, "title", 512) ?? "",
-    url,
+    url: withoutQuery(url),
     utmCampaign: text(fields, "utmCampaign", 128),
     utmContent: text(fields, "utmContent", 128),
     utmMedium: text(fields, "utmMedium", 128),
@@ -82,7 +91,7 @@ function parseDownload(fields: Fields): DownloadEvent | null {
   const releaseTag = text(fields, "releaseTag", 64);
   return {
     assetKind: assetKind as AssetKind,
-    path,
+    path: withoutQuery(path),
     referrerHost: referrerHost(text(fields, "referrer", 2048)),
     releaseTag: releaseTag && RELEASE_TAG.test(releaseTag) ? releaseTag : null,
     source: sanitizeSource(text(fields, "source", 128)),

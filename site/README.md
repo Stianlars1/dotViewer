@@ -148,7 +148,10 @@ The live database was created that way and has no migration history, so changes 
 ```bash
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/sql/001-cookieless-analytics-and-snapshots.sql
 psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/sql/002-consent-and-day-visitors.sql
+psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f db/sql/003-drop-full-referrers-and-queries.sql
 ```
+
+`003` is a one-off cleanup of rows logged before 23 September 2026 (full linking addresses, and the parts of page addresses after `?`); on a new database it changes nothing.
 
 Never run `db:push --force` against production. The schema has:
 
