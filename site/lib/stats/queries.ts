@@ -5,6 +5,16 @@ import { getGitHubReleases } from "../github-release";
 import { getSiteConfig } from "../site-config";
 import { pageViewSummary, versionTable, type DownloadRow, type PageViewRow, type PageViewSummary, type VersionRow } from "./report.ts";
 import { downloadsInLast, weeklyDownloads, type DailyTotal, type WeeklyDownloads } from "./snapshots.ts";
+import {
+  consentRate,
+  dailyVisitors,
+  downloadsByVisit,
+  returningVisitors,
+  sameDayConversion,
+  type Conversion,
+  type ConsentRow,
+  type VisitorEvent,
+} from "./visitors.ts";
 
 // Everything /stats shows, read in one pass. Each part degrades on its own: before the first daily
 // snapshot the totals come live from GitHub, and before db/sql/001 is applied the page says so.
@@ -21,6 +31,13 @@ export type StatsReport = {
   homebrew: { date: string; installs: number; periodDays: number }[];
   pageViews: PageViewSummary;
   versions: VersionRow[];
+  visitors: {
+    consent: { choices: number; google: number | null; statistics: number | null };
+    conversion: Conversion;
+    daily: { day: string; visitors: number }[];
+    firstVisitDownloads: { firstVisit: number; laterVisit: number };
+    returning: { newVisitors: number; returning: number; week: string }[];
+  };
   warnings: string[];
 };
 
@@ -32,11 +49,11 @@ function toDate(value: Date | string | null | undefined): Date | null {
   return value instanceof Date ? value : new Date(value);
 }
 
-// A missing table means db/sql/001 has not been applied; anything else is a bug worth logging.
+// A missing table or column means a file in db/sql has not been applied; anything else is a bug.
 function explain(error: unknown, what: string): string {
   const message = error instanceof Error ? error.message : String(error);
   return /does not exist/i.test(message)
-    ? `${what}: a table is missing — apply site/db/sql/001 to the database.`
+    ? `${what}: a table or column is missing — apply the files in site/db/sql to the database.`
     : `${what} could not be read (${message}).`;
 }
 
@@ -56,6 +73,13 @@ export async function loadStats(now = new Date()): Promise<StatsReport> {
     homebrew: [],
     pageViews: EMPTY_PAGE_VIEWS,
     versions: [],
+    visitors: {
+      consent: consentRate([], now),
+      conversion: sameDayConversion([], now, ""),
+      daily: dailyVisitors([], now),
+      firstVisitDownloads: { firstVisit: 0, laterVisit: 0 },
+      returning: returningVisitors([], now),
+    },
     warnings: [],
   };
 
@@ -150,6 +174,42 @@ export async function loadStats(now = new Date()): Promise<StatsReport> {
     } catch (error) {
       console.error("[stats] analytics tables unreadable", error);
       report.warnings.push(explain(error, "The site's log"));
+    }
+  }
+
+  if (db) {
+    try {
+      // Day codes for the last 31 days; every consented visitor's events (visitor IDs are cleared after
+      // 13 months, which bounds this). Website downloads only: /updates fetches are not visits.
+      const events = await db.execute<Omit<VisitorEvent, "createdAt"> & { createdAt: Date | string }>(sql`
+        SELECT 'view' AS kind, created_at AS "createdAt", day_visitor AS "dayVisitor", is_bot AS "isBot",
+               is_internal AS "isInternal", referrer_host AS "referrerHost", visitor_id AS "visitorId"
+          FROM analytics_page_views
+         WHERE (created_at > now() - interval '31 days' AND day_visitor IS NOT NULL) OR visitor_id IS NOT NULL
+        UNION ALL
+        SELECT 'download', created_at, day_visitor, is_bot, is_internal, referrer_host, visitor_id
+          FROM analytics_downloads
+         WHERE channel = 'website'
+           AND ((created_at > now() - interval '31 days' AND day_visitor IS NOT NULL) OR visitor_id IS NOT NULL)`);
+      const consents = await db.execute<Omit<ConsentRow, "createdAt"> & { createdAt: Date | string }>(sql`
+        SELECT created_at AS "createdAt", google, statistics
+          FROM analytics_consents
+         WHERE created_at > now() - interval '31 days'`);
+
+      const visitorEvents = events.rows.map((row) => ({ ...row, createdAt: toDate(row.createdAt) ?? new Date(0) }));
+      report.visitors = {
+        consent: consentRate(
+          consents.rows.map((row) => ({ ...row, createdAt: toDate(row.createdAt) ?? new Date(0) })),
+          now,
+        ),
+        conversion: sameDayConversion(visitorEvents, now, hostOf(siteUrl) ?? "dotviewer.app"),
+        daily: dailyVisitors(visitorEvents, now),
+        firstVisitDownloads: downloadsByVisit(visitorEvents),
+        returning: returningVisitors(visitorEvents, now),
+      };
+    } catch (error) {
+      console.error("[stats] visitor tables unreadable", error);
+      report.warnings.push(explain(error, "Visitors"));
     }
   }
 

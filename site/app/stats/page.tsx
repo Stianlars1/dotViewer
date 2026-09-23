@@ -17,8 +17,9 @@ export const metadata: Metadata = {
   title: "Stats",
 };
 
-const numbers = new Intl.NumberFormat("en-US");
+const numbers = new Intl.NumberFormat("en-US", { maximumFractionDigits: 1 });
 const show = (value: number | null | undefined) => (value === null || value === undefined ? "—" : numbers.format(value));
+const percent = (share: number | null) => (share === null ? "—" : `${Math.round(share * 100)}%`);
 
 function ago(date: Date | null, now: Date): string {
   if (!date) return "never";
@@ -94,6 +95,38 @@ function WeeklyBars({ weeks }: { weeks: { downloads: number | null; week: string
   );
 }
 
+function DailyBars({ days }: { days: { day: string; visitors: number }[] }) {
+  if (days.every((day) => day.visitors === 0)) {
+    return <p className={styles.empty}>No visitors counted yet; day codes started with the consent update.</p>;
+  }
+
+  const height = 120;
+  const width = 640;
+  const gap = 3;
+  const max = Math.max(...days.map((day) => day.visitors), 1);
+  const barWidth = (width - gap * (days.length - 1)) / days.length;
+
+  return (
+    <svg aria-label="Visitors per day" className={styles.chart} role="img" viewBox={`0 0 ${width} ${height + 22}`}>
+      {days.map((day, index) => {
+        const barHeight = day.visitors > 0 ? Math.max(2, (day.visitors / max) * height) : 0;
+        const x = index * (barWidth + gap);
+        return (
+          <g key={day.day}>
+            <title>{`${day.day}: ${day.visitors} visitors`}</title>
+            <rect className={styles.bar} height={barHeight} rx={2} width={barWidth} x={x} y={height - barHeight} />
+            {index % 7 === 0 ? (
+              <text className={styles.axis} x={x} y={height + 16}>
+                {day.day.slice(5)}
+              </text>
+            ) : null}
+          </g>
+        );
+      })}
+    </svg>
+  );
+}
+
 function RankedList({ empty, items, title }: { empty: string; items: Ranked[]; title: string }) {
   return (
     <div className={styles.ranked}>
@@ -130,6 +163,10 @@ export default async function StatsPage() {
   const { downloads } = report;
   const homebrew = new Map(report.homebrew.map((row) => [row.periodDays, row.installs]));
   const recentWeeks = report.pageViews.weekly.slice(-8).reverse();
+  const { consent, conversion, daily, firstVisitDownloads, returning } = report.visitors;
+  const lastWeek = daily.slice(-7);
+  const weekAverage = lastWeek.length > 0 ? lastWeek.reduce((sum, day) => sum + day.visitors, 0) / lastWeek.length : null;
+  const consentedWeeks = returning.filter((week) => week.newVisitors + week.returning > 0).reverse();
 
   return (
     <main className={styles.page}>
@@ -222,10 +259,91 @@ export default async function StatsPage() {
         </section>
 
         <section className={styles.panel}>
-          <h2>Website</h2>
+          <h2>Visitors</h2>
           <p className={styles.note}>
-            First-party log, last 120 days. Unique visitors are in Vercel Web Analytics; this log keeps no visitor IDs.
+            Everyone is counted once a day by a code that can&apos;t be linked across days. Returning visitors and
+            downloads after an earlier visit come only from people who allowed dotViewer statistics.
           </p>
+          <div className={`${styles.cards} ${styles.panelCards}`}>
+            <article>
+              <span>Visitors today</span>
+              <strong>{show(daily.at(-1)?.visitors)}</strong>
+              <small>UTC day so far</small>
+            </article>
+            <article>
+              <span>Visitors · 7-day average</span>
+              <strong>{show(weekAverage)}</strong>
+            </article>
+            <article>
+              <span>Visited and downloaded · 30 days</span>
+              <strong>{percent(conversion.rate)}</strong>
+              <small>
+                {show(conversion.downloaders)} of {show(conversion.visitors)} visitor-days
+              </small>
+            </article>
+            <article>
+              <span>Consent · 30 days</span>
+              <strong>
+                {percent(consent.statistics)} / {percent(consent.google)}
+              </strong>
+              <small>allowed dotViewer statistics / Google Analytics, of {show(consent.choices)} choices</small>
+            </article>
+          </div>
+          <DailyBars days={daily} />
+          <div className={`${styles.columns} ${styles.afterChart}`}>
+            <div className={styles.ranked}>
+              <h3>Sources · visitor-days → downloaded · 30 days</h3>
+              {conversion.sources.length === 0 ? (
+                <p className={styles.empty}>No visitors counted yet.</p>
+              ) : (
+                <ol>
+                  {conversion.sources.map((source) => (
+                    <li key={source.key}>
+                      <span>{source.key}</span>
+                      <strong>
+                        {show(source.visitors)} <em>→ {show(source.downloaders)}</em>
+                      </strong>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+            <div className={styles.ranked}>
+              <h3>Returning visitors per week</h3>
+              {consentedWeeks.length === 0 ? (
+                <p className={styles.empty}>Nobody has allowed dotViewer statistics yet.</p>
+              ) : (
+                <ol>
+                  {consentedWeeks.map((week) => (
+                    <li key={week.week}>
+                      <span>{week.week}</span>
+                      <strong>
+                        {show(week.newVisitors)} new <em>+ {show(week.returning)} returning</em>
+                      </strong>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+            <div className={styles.ranked}>
+              <h3>Downloads by visit</h3>
+              <ol>
+                <li>
+                  <span>On a first visit</span>
+                  <strong>{show(firstVisitDownloads.firstVisit)}</strong>
+                </li>
+                <li>
+                  <span>After an earlier visit</span>
+                  <strong>{show(firstVisitDownloads.laterVisit)}</strong>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.panel}>
+          <h2>Website</h2>
+          <p className={styles.note}>First-party log, last 120 days. Visitors are counted in the section above.</p>
           <div className={styles.columns}>
             <div className={styles.ranked}>
               <h3>Page views per week</h3>

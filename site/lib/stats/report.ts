@@ -104,6 +104,9 @@ export function pageViewSummary(rows: PageViewRow[], now: Date, siteHost: string
   const countries = new Map<string, number>();
   const monthAgo = now.getTime() - 30 * 24 * 60 * 60 * 1000;
   const bump = (map: Map<string, number>, key: string) => map.set(key, (map.get(key) ?? 0) + 1);
+  // The site answers on both dotviewer.app and www.dotviewer.app; neither is an outside referrer.
+  const bare = (host: string) => host.replace(/^www\./, "");
+  const site = bare(siteHost);
 
   for (const row of rows) {
     if (row.isInternal) continue;
@@ -116,7 +119,7 @@ export function pageViewSummary(rows: PageViewRow[], now: Date, siteHost: string
 
     if (isBot || row.createdAt.getTime() < monthAgo) continue;
     bump(paths, row.path.split("?")[0] || "/");
-    if (row.referrerHost && row.referrerHost !== siteHost) bump(referrers, row.referrerHost);
+    if (row.referrerHost && bare(row.referrerHost) !== site) bump(referrers, row.referrerHost);
     if (row.country) bump(countries, row.country);
   }
 

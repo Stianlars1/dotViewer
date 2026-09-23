@@ -212,3 +212,17 @@
   font-style: normal;
   font-weight: 400;
 }
+
+/* Cards inside a panel: flatter than the page-level ones. */
+.panelCards {
+  margin-bottom: 18px;
+}
+
+.panelCards article {
+  background: var(--dv-bg);
+  box-shadow: none;
+}
+
+.afterChart {
+  margin-top: 18px;
+}
