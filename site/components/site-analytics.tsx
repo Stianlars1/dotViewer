@@ -1,10 +1,10 @@
 "use client";
 
 import { Analytics, type BeforeSendEvent } from "@vercel/analytics/next";
-import Script from "next/script";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { forgetLegacyCookies, trackCustomPageView, trackGooglePageView } from "../lib/analytics/client";
+import { applyGoogleAnalytics, CONSENT_CHANGED_EVENT, readStoredConsent } from "../lib/consent/client";
 
 // The owner's own stats page is not site traffic.
 const isPrivatePath = (path: string) => path === "/stats" || path.startsWith("/stats/");
@@ -26,6 +26,23 @@ export function SiteAnalytics({ googleAnalyticsId }: SiteAnalyticsProps) {
     forgetLegacyCookies();
   }, []);
 
+  // Google Analytics only with the visitor's consent: applied from the stored choice (before the page
+  // view below, so the first view is queued for it) and again whenever the choice changes.
+  useEffect(() => {
+    const apply = () => {
+      const allowed = readStoredConsent()?.google === true;
+      applyGoogleAnalytics(googleAnalyticsId, allowed);
+      return allowed;
+    };
+    apply();
+
+    const onChange = () => {
+      if (apply()) trackGooglePageView(`${window.location.pathname}${window.location.search}`);
+    };
+    window.addEventListener(CONSENT_CHANGED_EVENT, onChange);
+    return () => window.removeEventListener(CONSENT_CHANGED_EVENT, onChange);
+  }, [googleAnalyticsId]);
+
   useEffect(() => {
     if (isPrivatePath(pathname)) {
       return;
@@ -39,31 +56,9 @@ export function SiteAnalytics({ googleAnalyticsId }: SiteAnalyticsProps) {
     trackCustomPageView(pagePath, referrer);
     previousUrlRef.current = currentUrl;
 
-    if (googleAnalyticsId) {
-      trackGooglePageView(pagePath);
-    }
-  }, [googleAnalyticsId, pathname, searchParams]);
+    // A no-op unless Google Analytics was loaded with consent.
+    trackGooglePageView(pagePath);
+  }, [pathname, searchParams]);
 
-  return (
-    <>
-      <Analytics beforeSend={dropPrivatePages} />
-      {googleAnalyticsId ? (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
-            strategy="afterInteractive"
-          />
-          <Script id="google-analytics" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              window.gtag = gtag;
-              gtag('js', new Date());
-              gtag('config', '${googleAnalyticsId}', { send_page_view: false });
-            `}
-          </Script>
-        </>
-      ) : null}
-    </>
-  );
+  return <Analytics beforeSend={dropPrivatePages} />;
 }

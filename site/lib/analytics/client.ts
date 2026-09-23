@@ -69,9 +69,10 @@ function sendAnalyticsEvent(event: AnalyticsEnvelope) {
     }
   }
 
+  // Same-origin credentials carry the consent cookies; the server reads a visitor ID only with consent.
   void fetch(ANALYTICS_ENDPOINT, {
     body,
-    credentials: "omit",
+    credentials: "same-origin",
     headers: {
       "Content-Type": "application/json",
     },
