@@ -43,7 +43,8 @@ and cover only visitors who accept.
 - **Global Privacy Control** (`navigator.globalPrivacyControl === true`): treated as Reject, card never
   shown, nothing recorded. Cookie settings still lets such a visitor opt in explicitly.
 - Keyboard and screen reader: a labelled region (`aria-label="Cookie choices"`), buttons in reading
-  order, visible focus, focus not stolen on load; no animation under reduced motion; light and dark.
+  order, visible focus, focus not stolen on load; no animation under reduced motion; the site's
+  light design and tokens (the site has no dark theme).
 
 ## Data
 
@@ -128,8 +129,8 @@ The "no cookies" statements and the page description are rewritten; the last-upd
   ID only with consent; the new stats functions on synthetic rows.
 - End to end against a throwaway local Postgres (Docker), as for phase 1: `002` applied twice; beacons
   with and without consent cookies; consent endpoint; retention.
-- In the built-in browser against the local dev server: the card on desktop and phone widths, light and
-  dark, keyboard only; Reject and Accept; withdrawing deletes cookies; `googletagmanager.com` is
+- In the built-in browser against the local dev server: the card on desktop and phone widths, keyboard
+  only; Reject and Accept; withdrawing deletes cookies; `googletagmanager.com` is
   requested only after Google is allowed.
 
 ## Rollout
