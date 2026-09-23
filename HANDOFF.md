@@ -9,6 +9,7 @@ size across updates. Evidence: `docs/releases/1.5.8-verification.md`. `/Applicat
 
 **Website stats phase 1 is live** (deployed 2026-09-23 from `main`): cookieless first-party logging,
 the daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/privacy`, and `/stats` behind Basic Auth.
+The old rows' identifiers were scrubbed on the owner's request the same day.
 Details and verification: §10 of `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`.
 `CRON_SECRET` is set; **`/stats` answers 503 until the owner sets `STATS_USER` and `STATS_PASSWORD`**
 on the Vercel project `dotviewer` and redeploys.
@@ -39,7 +40,6 @@ stays linear (fast-forward, settings rebased on stats).
 
 ## Open questions
 
-- Remove the old visitor IDs with the backfill's `--scrub`? Irreversible; not run.
 - Which region is the dbHost database in (for `/privacy`)?
 - Sparkle: create the EdDSA key (the owner keeps it; Claude must never see it).
 

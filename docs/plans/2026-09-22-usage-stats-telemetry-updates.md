@@ -496,8 +496,9 @@ not logged; no `Set-Cookie` anywhere.
 **Decisions taken on the §9 questions** (defaults, change freely):
 - Q4 stats access: Basic Auth (`proxy.ts`).
 - Q5 Google Analytics: code kept dormant, unchanged; `/privacy` says it is not used.
-- Q2 scrub: script ready (`--apply --scrub`), **not run** — irreversible, your call. `/privacy` is accurate
-  either way: it says what the site did until 23 September, not that old rows were cleaned.
+- Q2 scrub: **run 2026-09-23 on the owner's request** (`--apply --scrub`): 799 page-view and 219 download
+  rows lost their visitor/session IDs, city, region, user agent and request ID; all 1,029 rows kept,
+  none holds an identifying value. `/privacy` now says the old values were deleted the same day.
 - Q3 test database: a local Docker container instead; none is needed in production.
 - Q1 database region: still open. `/privacy` names dbHost without a region; add it once known.
 
@@ -505,7 +506,7 @@ not logged; no `Set-Cookie` anywhere.
 - Site tests (26), typecheck and `next build` passed on the merged `main`.
 - `db/sql/001` applied to production through `pg` (no `psql` on this Mac): 219 download and 799 page-view
   rows kept, the new columns and both snapshot tables present.
-- Backfill `--apply`: all 1,018 old rows classified (67 + 53 bots). **No `--scrub`.**
+- Backfill `--apply`: all 1,018 old rows classified (67 + 53 bots). Scrubbed later the same day (Q2).
 - `CRON_SECRET` added to production (generated locally, never printed). `STATS_USER` and
   `STATS_PASSWORD` are left for the owner, so `/stats` answers 503 until they are set and the project is
   redeployed.
