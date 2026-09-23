@@ -17,7 +17,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Security & Trust | dotViewer",
+  title: "Security & Trust",
   description:
     "Security, signing, notarization, official download, checksum, privacy, and contact details for dotViewer, a macOS Quick Look utility.",
   alternates: {
@@ -209,6 +209,7 @@ export default async function SecurityPage() {
                 documents. dotViewer is free, and there is nothing to purchase.
               </p>
               <div className={styles.cardLinks}>
+                <Link href="/privacy">Privacy details</Link>
                 <a href={CREATOR_URL}>Creator site</a>
                 <a href={issuesHref}>Contact through GitHub</a>
               </div>

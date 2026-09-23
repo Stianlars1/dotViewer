@@ -281,17 +281,19 @@ GAP source (`.g`, `.gi`) and tests (`.tst`) use dedicated tree-sitter grammars. 
 
 Dedicated Gnuplot highlighting supports `.gnuplot`, `.gplt`, `.gnu`, `gnuplotrc`, `.gnuplot` and `.gnuplot_history`. `.gp` is shared with PARI/GP: recognizable Gnuplot commands select the grammar; ambiguous files remain plain text. An explicit Gnuplot mapping takes priority. Conflicting `.gpi`, `.gpl`, `.plt`, `.plot` and `.dem` are not claimed as Gnuplot by default.
 
-## Website And Download Analytics
+## Privacy And Analytics
 
-The marketing site in `site/` now records visitor and download intent in three layers:
+The app sends nothing: no analytics, no telemetry, no update checks, and the Quick Look extensions that read your files run sandboxed without network access. The website sets no cookies. Details: [dotviewer.app/privacy](https://dotviewer.app/privacy).
 
-- Vercel Analytics for aggregated site traffic and custom events
-- Optional Google Analytics / Google tag instrumentation when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set
-- First-party PostgreSQL analytics tables, written through Drizzle, for raw `analytics_page_views` and `analytics_downloads` data
+The marketing site in `site/` counts downloads in three layers:
 
-This means download CTA clicks, checksum clicks, and stable `/download/latest` redirects can all be inspected in the database alongside Vercel's hosted analytics views.
+- Vercel Web Analytics (cookieless) for aggregated traffic and custom events
+- A first-party PostgreSQL log (`analytics_page_views`, `analytics_downloads`) without identifiers: page, referrer host, UTM tags, country, browser and OS family, a bot flag
+- Daily snapshots of GitHub's per-asset download counts and Homebrew's public install counts (`/api/cron/snapshots`)
 
-Site-specific setup and query examples live in [site/README.md](/Users/stian/Developer/macOS%20Apps/v2.5/site/README.md).
+The owner-only `/stats` page (HTTP Basic Auth) puts them side by side. The Google Analytics code only loads when `NEXT_PUBLIC_GOOGLE_TAG_ID` or `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set, which would need a consent banner first.
+
+Setup, environment variables and queries live in [site/README.md](site/README.md).
 
 ## Known macOS Platform Limitations
 

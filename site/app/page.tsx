@@ -717,6 +717,7 @@ export default function HomePage() {
               <a href="#faq">FAQ</a>
               <Link href="/download">Download</Link>
               <Link href="/security">Security</Link>
+              <Link href="/privacy">Privacy</Link>
               {appStoreHref ? <a href={appStoreHref}>App Store</a> : null}
               <a href={releasesHref}>Releases</a>
               <a href={repoHref}>GitHub</a>
