@@ -28,7 +28,7 @@ export type ReleaseRecord = {
   tagName: string;
 };
 
-function buildHeaders() {
+export function githubHeaders() {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github+json",
     "User-Agent": "dotviewer-site",
@@ -81,7 +81,7 @@ export async function getGitHubReleases(
       `https://api.github.com/repos/${githubRepo}/releases?per_page=${limit}`,
       {
         cache: "no-store",
-        headers: buildHeaders(),
+        headers: githubHeaders(),
         signal: AbortSignal.timeout(8000),
       },
     );
