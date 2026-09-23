@@ -1,5 +1,8 @@
 # Consent banner and visitor statistics — design
 
+**Status (2026-09-23):** built on `feat/consent-banner` and verified locally end to end (see
+Verification); the branch preview is ready. Production waits for the owner's OK on the preview.
+
 Approved in conversation on 2026-09-23 (three parts, each confirmed). Reverses the "no banner"
 recommendation of §6.2 in `2026-09-22-usage-stats-telemetry-updates.md` at the owner's request: the
 owner wants returning visitors and Google Analytics, and both need consent.
@@ -51,7 +54,7 @@ and cover only visitors who accept.
 ### Daily visitor code (everyone, no cookie)
 
 - For each logged page view and download, the server computes
-  `sha256(salt ‖ ip ‖ "\n" ‖ user-agent)` and stores the first 16 hex characters in a new
+  `sha256(salt ‖ "\n" ‖ ip ‖ "\n" ‖ user-agent)` and stores the first 16 hex characters in a new
   `day_visitor` column. IP (`x-real-ip`, else the first `x-forwarded-for` entry) and user agent are used
   in memory only; neither is stored.
 - `salt` is 32 random bytes per UTC day in a new table `analytics_daily_salts (day date primary key,
@@ -140,10 +143,35 @@ The "no cookies" statements and the page description are rewritten; the last-upd
    (done 2026-09-23). The preview has no database, so nothing is logged from it.
 3. After the owner's OK: apply `002` to production, add `NEXT_PUBLIC_GA_MEASUREMENT_ID` to
    **Production** — not earlier: the code on `main` today loads GA for everyone whenever the variable is
-   set — then merge and deploy.
+   set — then merge and deploy. Not later either: the variable is inlined at build time and `/privacy`
+   is prerendered, so it must exist before the production build that ships this branch.
 4. Verify live: no cookies before a choice; `dv_consent`/`dv_visitor`/`_ga*` after Accept and gone after
    withdrawing; GA requested only after consent; consent rows recorded; day codes on new rows; the
    Visitors section on `/stats`.
+
+## Verification (local, 2026-09-23)
+
+`next dev` against a throwaway Postgres 17 with `001` and `002` applied, `NEXT_PUBLIC_GA_MEASUREMENT_ID`
+set, in the built-in browser. Its user agent contains `Claude/`, so its own rows are logged as bots.
+
+- First visit: no cookies and no request to Google before a choice; the page view carries a day code
+  and no visitor ID; today's salt row exists.
+- Reject (first visit): only `dv_consent=v1.s0.g0`; any `dv_visitor` expires; a consent row without a
+  visitor ID; later page views carry no visitor ID. The card stays closed after a reload.
+- Accept (first visit): `dv_consent` for 365 days, a new `dv_visitor`, `_ga` and `_ga_F0Q1EGB3EM` for
+  395 days, gtag.js loaded and a collect hit sent; the consent row and later page views share the ID.
+- Cookie settings: opens on the choices with the current state and takes focus; keyboard only works
+  (Tab, Space, Enter). Turning Google off deletes `_ga*`, removes the script, clears `window.gtag` and
+  sets `ga-disable-<id>`; turning it on again reloads GA. Changing only the Google choice keeps the
+  visitor ID.
+- `/api/consent`: 403 for another origin, 400 for a bad body, 204 with the cookies otherwise, also
+  without a database (the record is skipped).
+- Phone width (375 px): 16 px gutters, Reject and Accept 148 × 44 each, no horizontal scroll.
+- Retention via the cron (401 without the secret): with yesterday's salt, two 14-month-old visitor IDs
+  and a 3-year-old consent seeded, it deleted 1 salt, cleared 2 IDs, deleted 1 consent, kept today's salt.
+- `/stats` Visitors with seeded sample rows: every figure (today, 7-day average, visited-and-downloaded,
+  consent shares, sources, returning per week, downloads by visit) matched a hand count.
+- `npm test` 50/50, `npm run typecheck`, `npm run build` pass.
 
 ## Out of scope
 

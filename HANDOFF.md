@@ -8,38 +8,54 @@ size across updates. Evidence: `docs/releases/1.5.8-verification.md`. `/Applicat
 1.5.8.
 
 **Website stats phase 1 is live** (deployed 2026-09-23 from `main`): cookieless first-party logging,
-the daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/privacy`, and `/stats` behind Basic Auth.
-The old rows' identifiers were scrubbed on the owner's request the same day.
-Details and verification: §10 of `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`.
-`CRON_SECRET` is set; **`/stats` answers 503 until the owner sets `STATS_USER` and `STATS_PASSWORD`**
-on the Vercel project `dotviewer` and redeploys.
+the daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/privacy`, and `/stats` behind Basic Auth
+(credentials set by the owner; the page answers with a login prompt). The old rows' identifiers were
+scrubbed on the owner's request the same day. Details: §10 of
+`docs/plans/2026-09-22-usage-stats-telemetry-updates.md`.
 
-Both feature branches (`feat/settings-window`, `feat/usage-stats-and-updates`) are on `main`; history
-stays linear (fast-forward, settings rebased on stats).
+**Consent banner: built, not live.** Branch `feat/consent-banner` (pushed, 13 commits on `main`): a
+cookie card with equal Reject/Accept, a daily visitor code for everyone without cookies, a visitor-ID
+cookie and Google Analytics (`G-F0Q1EGB3EM`) only with consent, consent records, retention in the cron,
+a Cookies section on `/privacy`, and a Visitors section on `/stats`. Spec, rollout and the local
+end-to-end verification: `docs/plans/2026-09-23-consent-banner-design.md`; task plan:
+`docs/plans/2026-09-23-consent-banner-plan.md`. Preview (behind Vercel login):
+https://dotviewer-git-feat-consent-banner-stians-applications.vercel.app — it has the GA ID but no
+database, so nothing is logged from it.
 
 ## Next steps
 
-1. Owner: set the `/stats` credentials, then redeploy (commands in the 1.5.8 session summary):
-   `vercel env add STATS_USER production`, `vercel env add STATS_PASSWORD production` from `site/`,
-   then `vercel redeploy <latest production deployment URL>`.
-2. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
-   may settle it; ask kiryph to try 1.5.8 on the Intel Mac mini (macOS 15.7.7).
-3. Stats phase 2 (Sparkle 2.10 in 1.6.0) needs the EdDSA key from the owner first (plan §5.3). Feed URLs
+1. **Owner: click through the preview** — the card on first visit, Reject / Accept / Choose…, Cookie
+   settings in the footer and on `/privacy`, the cookie table at `/privacy#cookies`.
+2. **After the owner's OK, in this order** (spec, Rollout):
+   1. Apply `site/db/sql/002-consent-and-day-visitors.sql` to production — additive and idempotent.
+      Pull the env to a private scratch file, run it with node + `pg`, delete the file. Never
+      `db:push --force` on production.
+   2. From `site/`, after confirming the project slug is `dotviewer`:
+      `vercel env add NEXT_PUBLIC_GA_MEASUREMENT_ID production` (value `G-F0Q1EGB3EM`). It must exist
+      before the production build: it is inlined at build time and `/privacy` is prerendered. Not
+      earlier either: the code on `main` loads GA for everyone whenever it is set.
+   3. Fast-forward `main` to `feat/consent-banner` and push; Vercel deploys production.
+   4. Verify live on `www.dotviewer.app` (the apex answers 308): spec, Rollout step 4.
+3. **Wait for kiryph on #31** (issue open). 1.5.8 replaces the tab bar with a native sidebar list, which
+   may settle it; ask kiryph to try 1.5.8 on the Intel Mac mini (macOS 15.7.7) — needs the owner's OK
+   to post.
+4. Stats phase 2 (Sparkle 2.10 in 1.6.0) needs the EdDSA key from the owner first (plan §5.3). Feed URLs
    must use `www.dotviewer.app`: the apex answers 308.
-4. Optional corpus check for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
+5. Optional corpus check for the Gnuplot detector against gnuplot's `demo/*.dem` and PARI/GP's
    `examples/*.gp` (needs a download — ask first).
-5. Still present: the 4 merged remote branches of PRs #2, #26, #27 and #30, and the unmerged
+6. Still present: the 4 merged remote branches of PRs #2, #26, #27 and #30, and the unmerged
    `codex/v1.1.0-victor-feedback`, `v1-legacy` and `claude/research-quicklook-performance-7zcd5`
    (superseded or v1 history — keep or archive). Two stale Quick Look registrations from old Debug
    builds (1.5.4 in DerivedData, 1.5.6 in an old session scratchpad) show under Status → Extension
    Conflicts; "Resolve All" there removes them.
-6. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
+7. Carried over from 2026-08-10: App Store listing still serves 1.4.0 (only the owner can remove it);
    right-click Quick Action for ⌥Space; arrow-key navigation in the panel; Shift+arrow selection in the
    search field; no App-target tests for `SearchBridgeServer` / `SearchKeyInterceptor` /
    `PreviewPanelController`.
 
 ## Open questions
 
+- The owner's OK on the consent preview (step 1).
 - Which region is the dbHost database in (for `/privacy`)?
 - Sparkle: create the EdDSA key (the owner keeps it; Claude must never see it).
 
@@ -66,8 +82,8 @@ page cannot do without a gesture must be done by the host app instead — that i
 
 ## Release process
 
-`./scripts/publish.sh <version> --build-number=<CURRENT_PROJECT_VERSION>` — 5 steps: notarized DMG → tag →
-GitHub release → Homebrew cask. The flag is required until the bash 3.2 empty-array bug is fixed.
+`./scripts/publish.sh <version> [--build-number=<CURRENT_PROJECT_VERSION>]` — 5 steps: notarized DMG →
+tag → GitHub release → Homebrew cask. The flag is optional since the bash 3.2 empty-array fix (145c967).
 There is deliberately **no App Store stage**; it was removed because the host app is unsandboxed and
 that stage ran *after* the release was already live under `set -euo pipefail`.
 
