@@ -28,7 +28,7 @@ GitHub. Every public version stays downloadable from GitHub.
 - `v1-legacy`, `claude/research-quicklook-performance-7zcd5`: the v1 app, **no common ancestor** with
   `main`. Archive only — never merge.
 
-## In progress (later on 2026-09-22) — two local branches, neither pushed
+## In progress (2026-09-22 → 23) — two local branches, neither pushed
 
 - **`feat/settings-window`**: Settings redesigned as their own window (⌘,, dotViewer → Settings…) with
   a sidebar of seven panes, System Settings-style grouped rows, and sidebar search. Spec and plan:
@@ -37,9 +37,12 @@ GitHub. Every public version stays downloadable from GitHub.
   "Result" section): the check fixed a 140 pt sidebar / 900 × 532 window, and found that "Interface
   text size" has never worked on macOS (KI-020, owner to decide: remove or build real scaling).
   Left: KI-020 decision, then push + PR (not pushed yet).
-- **`feat/usage-stats-and-updates`**: research doc only,
-  `docs/plans/2026-09-22-usage-stats-telemetry-updates.md` (download stats, opt-in telemetry, Sparkle).
-  Waiting for the owner's approval and answers to its §9 open questions before any code.
+- **`feat/usage-stats-and-updates`**: plan approved 2026-09-22. **Phase 1 (website) is built and tested
+  locally** (7 commits after the research doc): cookieless first-party log with the logging fixes,
+  daily GitHub/Homebrew snapshot cron, `/updates/<file>`, `/stats` behind Basic Auth, `/privacy`.
+  **Not applied to the database and not deployed.** The exact runbook (SQL first, then env vars, then
+  deploy) is §10 of `docs/plans/2026-09-22-usage-stats-telemetry-updates.md`. Phase 2 (Sparkle) needs
+  the owner to create the EdDSA key first.
 
 ## Next steps
 
@@ -64,7 +67,9 @@ GitHub. Every public version stays downloadable from GitHub.
 
 - KI-020: remove "Interface text size", or build real text scaling for the app's windows?
 - Settings window: push `feat/settings-window` and open a PR?
-- Usage stats / telemetry / updates: approve the research doc and answer its §9 questions.
+- Stats phase 1: run the runbook (apply `site/db/sql/001`, set `STATS_USER`/`STATS_PASSWORD`/`CRON_SECRET` on
+  Vercel project `dotviewer`, deploy)? Remove the old visitor IDs with the backfill's `--scrub` (irreversible)?
+  Which region is the dbHost database in (for `/privacy`)?
 
 ## Hard-won platform knowledge (do not re-derive)
 
