@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { shouldShowBanner, type ConsentChoice, type ConsentSource } from "../lib/consent/consent";
 import { hasGlobalPrivacyControl, OPEN_CONSENT_EVENT, readStoredConsent, saveConsent } from "../lib/consent/client";
 import styles from "./consent-banner.module.css";
@@ -19,6 +19,8 @@ export function ConsentBanner({ googleAnalyticsId }: { googleAnalyticsId: string
   const pathname = usePathname();
   const hasGoogle = Boolean(googleAnalyticsId);
   const panelRef = useRef<HTMLElement>(null);
+  const statisticsId = useId();
+  const googleId = useId();
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>("summary");
   const [source, setSource] = useState<ConsentSource>("banner");
@@ -89,10 +91,14 @@ export function ConsentBanner({ googleAnalyticsId }: { googleAnalyticsId: string
           <h2 className={styles.title}>Cookie choices</h2>
           <label className={styles.option}>
             <span>
-              <strong>dotViewer statistics</strong>
-              <small>A random ID in a cookie for 13 months, used only on dotViewer&apos;s own server to see if you come back.</small>
+              <strong id={`${statisticsId}-name`}>dotViewer statistics</strong>
+              <small id={`${statisticsId}-about`}>
+                A random ID in a cookie for 13 months, used only on dotViewer&apos;s own server to see if you come back.
+              </small>
             </span>
             <input
+              aria-describedby={`${statisticsId}-about`}
+              aria-labelledby={`${statisticsId}-name`}
               checked={choice.statistics}
               className={styles.switch}
               onChange={(event) => setChoice({ ...choice, statistics: event.target.checked })}
@@ -103,10 +109,12 @@ export function ConsentBanner({ googleAnalyticsId }: { googleAnalyticsId: string
           {hasGoogle ? (
             <label className={styles.option}>
               <span>
-                <strong>Google Analytics</strong>
-                <small>Google&apos;s cookies for 13 months. Google receives your visits to this site.</small>
+                <strong id={`${googleId}-name`}>Google Analytics</strong>
+                <small id={`${googleId}-about`}>Google&apos;s cookies for 13 months. Google receives your visits to this site.</small>
               </span>
               <input
+                aria-describedby={`${googleId}-about`}
+                aria-labelledby={`${googleId}-name`}
                 checked={choice.google}
                 className={styles.switch}
                 onChange={(event) => setChoice({ ...choice, google: event.target.checked })}
