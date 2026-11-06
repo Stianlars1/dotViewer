@@ -24,6 +24,15 @@ final class MarkdownRendererTests: XCTestCase {
         XCTAssertTrue(html.contains("Deep"))
     }
 
+    func testHashWithoutSpaceIsParagraph() {
+        // Used to loop forever: not a heading, and the paragraph parser stopped on "#".
+        let md = "#Keywords: #Spec #Customer\n\nText"
+        let html = MarkdownRenderer.renderHTML(from: md)
+        XCTAssertFalse(html.contains("<h1"))
+        XCTAssertTrue(html.contains("<p>#Keywords: #Spec #Customer</p>"))
+        XCTAssertTrue(html.contains("<p>Text</p>"))
+    }
+
     func testSetextHeadingH1() {
         let md = "Title\n====="
         let html = MarkdownRenderer.renderHTML(from: md)

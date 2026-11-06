@@ -192,15 +192,20 @@ public enum MarkdownRenderer {
             }
 
             // === Paragraphs (multi-line merge) ===
+            // The first line always belongs to the paragraph: the blocks above
+            // did not take it, so breaking on it (e.g. "#tag" with no space after
+            // the hash) would leave i unchanged and loop forever.
             var paraLines: [String] = []
             while i < lines.count {
                 let pt = lines[i].trimmingCharacters(in: .whitespaces)
                 if pt.isEmpty { break }
-                if pt.hasPrefix("#") || pt.hasPrefix("```") || pt.hasPrefix("~~~") { break }
-                if pt.hasPrefix(">") || isListItem(pt) || looksLikeHTMLBlock(pt) { break }
-                if isHorizontalRule(pt) { break }
-                if pt.contains("|") && (i + 1) < lines.count
-                    && isTableSeparator(lines[i + 1].trimmingCharacters(in: .whitespaces)) { break }
+                if !paraLines.isEmpty {
+                    if pt.hasPrefix("#") || pt.hasPrefix("```") || pt.hasPrefix("~~~") { break }
+                    if pt.hasPrefix(">") || isListItem(pt) || looksLikeHTMLBlock(pt) { break }
+                    if isHorizontalRule(pt) { break }
+                    if pt.contains("|") && (i + 1) < lines.count
+                        && isTableSeparator(lines[i + 1].trimmingCharacters(in: .whitespaces)) { break }
+                }
                 paraLines.append(pt)
                 i += 1
             }
