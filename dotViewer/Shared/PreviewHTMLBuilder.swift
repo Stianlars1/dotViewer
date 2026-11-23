@@ -546,6 +546,12 @@ public enum PreviewHTMLBuilder {
           flex: 1;
         }
 
+        /* WebKit sets a default font family on both tags in unnumbered previews. */
+        .code-view pre.code,
+        .code-view pre.code > code {
+          font-family: inherit;
+        }
+
         pre.code {
           white-space: \(info.wordWrap ? "pre-wrap" : "pre");
           \(info.wordWrap ? "word-break: break-word; overflow-wrap: break-word;" : "")
